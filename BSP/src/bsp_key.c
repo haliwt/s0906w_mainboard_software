@@ -21,8 +21,6 @@
 
 
 
-
-
 KEY_PROCESS_TYPEDEF  g_key;
 
 //uint8_t gl_set_temperture_value;
@@ -32,8 +30,6 @@ uint8_t  key_set_temperature_flag;
 int8_t  gl_timer_minutes_value;
 uint8_t define_timer_mode;
 uint8_t key_up_down_pressed_flag;
-
-
 
 
 
@@ -130,7 +126,7 @@ static void adjust_temperature(int8_t delta)
     g_pro.g_manual_shutoff_dry_flag = 0;
     key_up_down_pressed_flag = 1;
     g_pro.key_set_temperature_flag = 1;
-		//g_pro.gset_temperture_value= gl_set_temperture_value; //WT.EDIT 2025.05.05
+		
     TM1639_Display_Temperature(g_pro.gset_temperture_value);
     g_pro.gTimer_input_set_temp_times = 0;
     g_pro.gTimer_switch_temp_hum = 0;
