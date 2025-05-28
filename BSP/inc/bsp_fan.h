@@ -26,6 +26,7 @@ void Fan_Full_Speed(void);
 
 void Fan_RunSpeed_Fun(void);
 
+void SetLevel_Fan_PWMA(uint8_t levelval);
 
 
 //void fan_run_handler(void);

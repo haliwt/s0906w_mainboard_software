@@ -28,13 +28,13 @@ KEY_PROCESS_TYPEDEF  g_key;
 //uint8_t gl_set_temperture_value;
 
 uint8_t  key_set_temperature_flag;
-uint16_t check_time;
+
 int8_t  gl_timer_minutes_value;
 uint8_t define_timer_mode;
 uint8_t key_up_down_pressed_flag;
-uint8_t set_first_close_dry_flag;
 
-uint8_t default_first_close_dry;
+
+
 
 
 static void adjust_temperature(int8_t delta) ;
@@ -118,10 +118,10 @@ uint8_t sys_read_gpio_pin_value(GPIO_TypeDef *p_gpiox, uint16_t pinx)
 static void adjust_temperature(int8_t delta) 
 {
 
-   static uint8_t temperature_init_value ;
-	if (temperature_init_value == 0 && g_pro.key_set_temperature_flag !=2) {
-        temperature_init_value++;
-        g_pro.gset_temperture_value = (delta > 0) ? 21 : 39;
+   //static uint8_t temperature_init_value ;
+	if (g_pro.temperature_init_value == 0 && g_pro.key_set_temperature_flag !=2) {
+        g_pro.temperature_init_value++;
+        g_pro.gset_temperture_value = (delta > 0) ? 20 : 40;
     } else {
         g_pro.gset_temperture_value += delta;
         if (g_pro.gset_temperture_value > MAX_TEMPERATURE) g_pro.gset_temperture_value = MAX_TEMPERATURE;
@@ -134,6 +134,8 @@ static void adjust_temperature(int8_t delta)
     TM1639_Display_Temperature(g_pro.gset_temperture_value);
     g_pro.gTimer_input_set_temp_times = 0;
     g_pro.gTimer_switch_temp_hum = 0;
+	SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
+	osDelay(5);
 }
 
 /**
@@ -206,9 +208,10 @@ void key_dwon_fun(void)
 void set_temperature_value_handler(void)
 {
    static uint8_t send_data_flag;
-   if((g_pro.key_set_temperature_flag==1 || read_wifi_temperature_value()==1) && g_pro.gTimer_input_set_temp_timer >= 4)
+   if((g_pro.key_set_temperature_flag==1 || g_wifi.g_wifi_set_temp_flag==1) && g_pro.gTimer_input_set_temp_timer >= 4)
 	{
         g_pro.key_set_temperature_flag=2;
+        g_wifi.g_wifi_set_temp_flag=0;
 		send_data_flag=1;
 		
 //		if(read_wifi_temperature_value()==1){
@@ -225,7 +228,7 @@ void set_temperature_value_handler(void)
 //			///osDelay(5);
 //			//}
 //		}
-		set_first_close_dry_flag=0;
+		
 		g_pro.g_manual_shutoff_dry_flag =0;
 		
 
@@ -239,12 +242,11 @@ void set_temperature_value_handler(void)
             publishMqttData(DRY_STATE_OFF, g_pro.gset_temperture_value);
 			osDelay(100);
 			}
-            if (g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0) {
-				
-	                sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-	                osDelay(5);
-				
-            }
+            if(g_disp.g_second_disp_flag == 1) {
+				 sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
+	             osDelay(5);
+				    
+			}
         } 
 		else if (current_temperature < g_pro.gset_temperture_value){
 			if(g_pro.works_two_hours_interval_flag ==0){
@@ -259,37 +261,41 @@ void set_temperature_value_handler(void)
 			osDelay(100);
 			}
             if (g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0) {
+				
                 sendDisplayCommand(0x02,0x01); // 打开干燥功能
                 osDelay(5);
+				
             }
         }
 		key_up_down_pressed_flag=0;
 		//g_disp.g_set_temp_value_flag =0;
     }
     else{
-
+#if 0
         if(send_data_flag ==1){
 			send_data_flag++;
-			if(read_wifi_temperature_value()==1){
+			if(read_wifi_temperature_value()==1){ //smart phone set up temperature value .
 				g_wifi.g_wifi_set_temp_flag=0;
-				if(g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){//the second displaybaord
-			      SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
-				  osDelay(5);
-				}
+//				if(g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){//the second displaybaord
+//			      SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
+//				  osDelay(5);
+//				}
 			}
 			else{
-				g_pro.gset_temperture_value = g_pro.gset_temperture_value;
+			
 				if(g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){//the second displaybaord
-				SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
-				osDelay(5);
-				}
+//				SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
+//				osDelay(5);
+//				}
 			}
         }
+	#endif 
         if(g_pro.key_set_temperature_flag==2  && read_wifi_temperature_value()==0){
-		    handleTemperatureControl();
-           
-          
-        }
+		
+		       handleTemperatureControl();
+
+			
+         }
 		else if(g_pro.key_set_temperature_flag==0){ //don't set temperature value 
 				handleDefaultTemperatureControl();
 		 
@@ -315,86 +321,52 @@ uint8_t readTemperature(void)
 static void handleTemperatureControl(void) 
 {
 	//uint8_t current_temperature;
-	static uint8_t check_time = 0;
-    check_time++;
-    if (check_time >= CHECK_TIME_THRESHOLD_4S) { // 4秒
-        check_time = 0;
+	//static uint8_t check_time = 0;
+   
+    if( g_pro.gTimer_set_temp_counter >= CHECK_TIME_THRESHOLD_4S) { // 4秒
+          g_pro.gTimer_set_temp_counter =0;
         current_temperature = readTemperature();
 
-        if (current_temperature > g_pro.gset_temperture_value){
+        if ( g_pro.gset_temperture_value < current_temperature ){
             g_pro.gDry = DRY_STATE_OFF;
 		    DRY_CLOSE();//setDryState(g_pro.gDry);
-			if(set_first_close_dry_flag ==0){
-
-				set_first_close_dry_flag =1;
-                 
-
-			}
-		    if(g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){
-				sendDisplayCommand(0x02,g_pro.gDry);
+		    LED_DRY_OFF();
+	
+		    if(g_disp.g_second_disp_flag == 1){
+				sendDisplayCommand(0x02,0);
 				osDelay(5);
 		    }
 			
-		   if (g_wifi.gwifi_link_net_state_flag == 1){
+		   if (g_wifi.gwifi_link_net_state_flag == wifi_link_success){
 		    MqttData_Publish_SetPtc(0x0);
 			osDelay(50);
 		   	}
 			
         }
-		else if (set_first_close_dry_flag == 0 && current_temperature < g_pro.gset_temperture_value ){
-
-		    if(g_pro.g_manual_shutoff_dry_flag ==0){
-			    if(g_pro.works_two_hours_interval_flag==0){
-
-				    g_pro.gDry = DRY_STATE_ON;
+        else if ((g_pro.gset_temperture_value - TEMPERATURE_DIFF_THRESHOLD) > current_temperature ) {
+				
+            	if(g_pro.g_manual_shutoff_dry_flag ==0){
+					g_pro.gDry = DRY_STATE_ON;
 					LED_DRY_ON();
-					if(g_pro.works_two_hours_interval_flag == 0){
-					     //setDryState(g_pro.gDry);
-                         DRY_OPEN();
-					 }
-					
-
-			    }
-				
-				if (g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){
-					sendDisplayCommand(0x02,0x01); // 打开干燥功能
-					osDelay(5);
-				}
-				if (g_wifi.gwifi_link_net_state_flag == 1) {
-					MqttData_Publish_SetPtc(0x01);
-					osDelay(50);
-				 }
-           
-            }
-
-        }
-        else if (current_temperature < (g_pro.gset_temperture_value - TEMPERATURE_DIFF_THRESHOLD)) {
-            if(g_pro.g_manual_shutoff_dry_flag ==0){
-				if(g_pro.works_two_hours_interval_flag == 0){
-					 g_pro.gDry = DRY_STATE_ON;
-					 LED_DRY_ON();
-					 if(g_pro.works_two_hours_interval_flag == 0){
-					     //setDryState(g_pro.gDry);
-                         DRY_OPEN();
-					 }
-
-				}
-				
-				if (g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){
+	               if(g_pro.works_two_hours_interval_flag == 0){
+						
+						DRY_OPEN();
+					}
+            	}
+				if (g_disp.g_second_disp_flag == 1){
 				   sendDisplayCommand(0x02,0x01); // 打开干燥功能
 				   osDelay(5);
 				}
-				 if (g_wifi.gwifi_link_net_state_flag == 1) {
+				 if (g_wifi.gwifi_link_net_state_flag == wifi_link_success) {
 					MqttData_Publish_SetPtc(0x01);
 					 osDelay(50);
 				 }
            
             }
+			
         }
-    }
-	g_disp.g_set_temp_value_flag =0;
+	 g_disp.g_set_temp_value_flag =0;
 }
-
 /******************************************************************************
 	*
 	*Function Name:static void handleDefaultTemperatureControl(void)
@@ -405,29 +377,32 @@ static void handleTemperatureControl(void)
 ******************************************************************************/
 static void handleDefaultTemperatureControl(void) 
 {
-    static uint8_t check_time = 0;
-	//uint8_t current_temperature;
-    //check_time++;
-    if ( g_pro.gTimer_disp_temp_humidity_vlaue > 2) { // 3秒
+    
+
+	static uint8_t default_first_close_dry;
+  
+    if ( g_pro.gTimer_disp_temp_humidity_vlaue > 3) { // 3秒
          g_pro.gTimer_disp_temp_humidity_vlaue = 0;
         current_temperature = readTemperature();
 
-        if (current_temperature > 0x27) {
-			if(default_first_close_dry==0)default_first_close_dry=1;
+        if(current_temperature > 39) {
+			default_first_close_dry=1;
 			g_pro.gDry =  DRY_STATE_OFF;
-            setDryState(g_pro.gDry);
+            //setDryState(g_pro.gDry);
+            LED_DRY_OFF();
+			DRY_CLOSE();
 		    if(g_disp.g_second_disp_flag ==1){
 		     sendDisplayCommand(0x02,0x0); // send data to the second displayboard .关闭干燥功能
 			 osDelay(5);
 			}
-			 if (g_wifi.gwifi_link_net_state_flag == 1) {
+			 if (g_wifi.gwifi_link_net_state_flag == wifi_link_success) {
 			   	MqttData_Publish_SetPtc(DRY_STATE_OFF) ;
 			    osDelay(50);
 			 }
         } 
-		else if(current_temperature <=0x26) {
+		else{
 
-		      if(default_first_close_dry==0){
+		      if(default_first_close_dry==0 && current_temperature <=39){
 
 			  if(g_pro.g_manual_shutoff_dry_flag ==0){
 
@@ -437,8 +412,9 @@ static void handleDefaultTemperatureControl(void)
 					if(g_pro.works_two_hours_interval_flag ==0){
 
 					  g_pro.gDry= DRY_STATE_ON;
-					   setDryState(g_pro.gDry);
-
+					   DRY_OPEN();//setDryState(g_pro.gDry);
+					}
+			  	}
 
 					if(g_disp.g_second_disp_flag ==1){
 					sendDisplayCommand(0x02,0x01); // 打开干燥功能
@@ -449,36 +425,37 @@ static void handleDefaultTemperatureControl(void)
 					osDelay(50);
 					}
 
-					}
-
-
-			  	}
-			 }
-		     else if (current_temperature <= 0x26) {
+			  }
+              else if (current_temperature < 38 && default_first_close_dry==1) {
 	           if(g_pro.g_manual_shutoff_dry_flag ==0){
 
-				 g_pro.gDry= DRY_STATE_ON;
+			    if(g_pro.g_manual_shutoff_dry_flag ==0){ //manual turn off PTC function.
 
-			     LED_DRY_ON();
-				if(g_pro.works_two_hours_interval_flag ==0){
+					 g_pro.gDry= DRY_STATE_ON;
+
+				     LED_DRY_ON();
 					
-					DRY_OPEN();//setDryState(g_pro.gDry);
-					
+					if(g_pro.works_two_hours_interval_flag ==0){
+						
+						DRY_OPEN();//setDryState(g_pro.gDry);
+					  }
+			     }
 				 if(g_disp.g_second_disp_flag ==1){
 				  sendDisplayCommand(0x02,0x01); // 第二个显示板，打开干燥功能
 				  osDelay(5);
 				 }
-				  if (g_wifi.gwifi_link_net_state_flag == 1) {
-				  MqttData_Publish_SetPtc(DRY_STATE_ON);//publishMqttData(DRY_STATE_ON, current_temperature) ;
-	              osDelay(50);
+				  if (g_wifi.gwifi_link_net_state_flag == wifi_link_success) {
+				   
+				     MqttData_Publish_SetPtc(DRY_STATE_ON);//publishMqttData(DRY_STATE_ON, current_temperature) ;
+	                 osDelay(50);
 				  }
 	            }
 
 	           }
         }
     }
-	}
 }
+
 /******************************************************************************
 	*
 	*Function Name:void set_timer_timing_value_handler(void)
@@ -523,7 +500,7 @@ void publishMqttData(DryState state, uint8_t temperature)
 void sendDisplayCommand(uint8_t command,uint8_t data) 
 {
     if(g_disp.g_second_disp_flag ==1){
-	SendData_Set_Command(command, data);
+		SendData_Set_Command(command, data);
     }
 }
 
@@ -550,7 +527,7 @@ void set_timer_timing_value_handler(void)
 			g_pro.key_gtime_timer_define_flag = normal_time_mode; //define UP and down key is set temperature value 
 			g_pro.key_set_timer_flag++;
 			g_pro.gTimer_timer_time_second=0;
-			gl_timer_minutes_value=0;
+			g_pro.disp_timer_minutes_value=0;//gl_timer_minutes_value=0;
 			g_pro.gAI = 0;
 			LED_AI_OFF();
 
@@ -579,13 +556,13 @@ void set_timer_timing_value_handler(void)
        if(g_pro.gTimer_timer_time_second > 59){
 	       g_pro.gTimer_timer_time_second=0;
 		   #if TEST_UNIT
-		   	 gl_timer_minutes_value = gl_timer_minutes_value - 40;
+		   	 g_pro.disp_timer_minutes_value =g_pro.disp_timer_minutes_value - 40;
 		   #else
 		     gl_timer_minutes_value--;
 		   #endif 
 
-		   if(gl_timer_minutes_value< 0){
-			  gl_timer_minutes_value =59;
+		   if(g_pro.disp_timer_minutes_value< 0){
+			  g_pro.disp_timer_minutes_value =59;
 			  g_pro.gdisp_timer_hours_value--;
 
 			  if(g_pro.gdisp_timer_hours_value < 0){

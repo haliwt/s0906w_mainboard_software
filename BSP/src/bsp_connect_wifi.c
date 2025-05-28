@@ -59,7 +59,7 @@ void wifi_communication_tnecent_handler(void)
 void wifi_auto_detected_link_state(void)
 {
     static uint8_t dc_power_on;
-	if(power_on_login_tencent_cloud_flag < 5 && g_wifi.gwifi_link_net_state_flag==0){
+	if(g_wifi.gwifi_link_net_state_flag==0 && g_pro.gpower_on == power_off){
 		
       g_wifi.linking_tencent_cloud_doing = 1;
      
@@ -70,7 +70,7 @@ void wifi_auto_detected_link_state(void)
 	  
 	 }
 
-      if(g_wifi.gwifi_link_net_state_flag==1  && dc_power_on ==0){
+     if(g_wifi.gwifi_link_net_state_flag==1  && dc_power_on ==0){
               
             dc_power_on++;
            //wifi_t.linking_tencent_cloud_doing = 0;
@@ -79,21 +79,24 @@ void wifi_auto_detected_link_state(void)
         
           if(g_pro.gpower_on == power_off){
 		     MqttData_Publish_PowerOff_Ref();
-             HAL_Delay(200);
+             HAL_Delay(50);
 
           }
 		  
           
           Subscriber_Data_FromCloud_Handler();
-          HAL_Delay(200);
+          HAL_Delay(50);
          
-
-          SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-         
-   }
+     }
 
   
+	   if(dc_power_on==1){
+	   	   dc_power_on ++;
+	       SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+		    osDelay(5);
 
+
+	   }
    
    
 }
@@ -231,13 +234,14 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 				g_wifi.wifi_get_beijing_step = 2;
            		g_wifi.linking_tencent_cloud_doing  =0; //receive from tencent command state .
                 SendWifiData_One_Data(0x1F,0x01); //connect net flag 1: connect .0: don't connect.
-                
+                osDelay(5);
 
          }
          else{
               
                SendWifiData_One_Data(0x1F,0x0); //0x1F: 0x1=wifi link net is succes ,0x0 = wifi link net is fail
-               g_wifi.wifi_get_beijing_step = 10;
+               osDelay(5);
+		       g_wifi.wifi_get_beijing_step = 10;
                g_wifi.linking_tencent_cloud_doing  =1; //receive from tencent command state .
              
          }
@@ -329,7 +333,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
                     g_wifi.get_beijing_time_success = 1;
 
                     SendWifiData_To_PanelTime(g_pro.gdisp_hours_value,g_pro.gdisp_minutes_value,g_pro.gTimer_disp_time_second);
-                    osDelay(50);
+                    osDelay(10);
 
                    g_wifi.wifi_get_beijing_step = 6; //WT.EDIT 2025.01.06
                     

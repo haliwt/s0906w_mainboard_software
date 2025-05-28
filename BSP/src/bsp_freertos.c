@@ -100,7 +100,7 @@ void freeRTOS_Handler(void)
 static void vTaskDecoderPro(void *pvParameters)
 {
     BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(9000); /* 设置最大等待时间为30ms */
+	//const TickType_t xMaxBlockTime = pdMS_TO_TICKS(5000); /* 设置最大等待时间为30ms */
 	uint32_t ulValue;
 
 
@@ -108,9 +108,9 @@ static void vTaskDecoderPro(void *pvParameters)
     {
 
 	xResult = xTaskNotifyWait(0x00000000,
-								  0xFFFFFFFF,     /* Reset the notification value to 0 on */
-								&ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
-								portMAX_DELAY);//portMAX_DELAY);  /* 阻塞时间30ms，释放CUP控制权,给其它任务执行的权限*/
+						0xFFFFFFFF,     /* Reset the notification value to 0 on */
+						&ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
+						portMAX_DELAY);//portMAX_DELAY);  /* 阻塞时间30ms，释放CUP控制权,给其它任务执行的权限*/
 
 	if( xResult == pdPASS )
 	{
@@ -176,6 +176,7 @@ static void vTaskRunPro(void *pvParameters)
 				SendData_Set_Command(CMD_CONNECT_WIFI,0x01);
 				osDelay(5);
 			}
+			wifi_led_fast_blink(); //WT.EDIT 2025.05.20
 		}
 	}
 	else if(g_key.key_mode_flag == KEY_MODEL_ID ){ //&& MODEL_KEY_VALUE()==KEY_UP){
@@ -185,39 +186,48 @@ static void vTaskRunPro(void *pvParameters)
 			g_key.key_mode_flag = KEY_NULL;
 			mode_key_counter=0;
 			g_pro.gTimer_switch_set_timer_times = 0;
+			if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			buzzer_sound();
 	        mode_key_fun();
+		    }
 		}
 		else if(KEY_MODE_VALUE() == KEY_DOWN && mode_key_counter >= 60 && mode_key_counter < 200){
 
 			g_key.key_mode_flag = KEY_NULL;
 			mode_key_counter=202;
-			buzzer_sound();
-			g_pro.key_gtime_timer_define_flag = input_set_timer_mode;
-			g_pro.gTimer_switch_set_timer_times = 0;
-	        HUMIDITY_ICON_OFF(); //WT.EDIT 2025.04.23
-			TEMP_ICON_OFF();//WT.EDIT 2025.04.23
-			TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);//WT.EDIT 2025.04.23
+		    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+				buzzer_sound();
+				g_pro.key_gtime_timer_define_flag = input_set_timer_mode;
+				g_pro.gTimer_switch_set_timer_times = 0;
+		        HUMIDITY_ICON_OFF(); //WT.EDIT 2025.04.23
+				TEMP_ICON_OFF();//WT.EDIT 2025.04.23
+				TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);//WT.EDIT 2025.04.23
+		    }
 
 		}
 	}
 	else if(g_key.key_down_flag ==KEY_DOWN_ID && KEY_DOWN_VALUE() == KEY_UP ){// && DEC_KEY_VALUE()==KEY_UP){
 		g_key.key_down_flag = KEY_NULL;
 		g_key.mode_key_switch_time_mode= normal_time_mode; //WT.EDIT 2025.04.30
-		buzzer_sound();
+		if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+		   buzzer_sound();
 
-		key_dwon_fun();
+		    key_dwon_fun();
+		}
 	}
 	else if(g_key.key_up_flag ==KEY_UP_ID && KEY_UP_VALUE() == KEY_UP ){ // && ADD_KEY_VALUE()==KEY_UP){
 		g_key.key_up_flag =KEY_NULL;
 		g_key.mode_key_switch_time_mode= normal_time_mode; //WT.EDIT 2025.04.30
-		buzzer_sound();
+		
+		if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+		   buzzer_sound();
+           key_up_fun();
 
-		key_up_fun();
+		}
 	}
 
 	power_onoff_handler(g_pro.gpower_on);
-    
+
 	
 
 	if(g_wifi.wifi_led_fast_blink_flag==0 ){
@@ -226,9 +236,8 @@ static void vTaskRunPro(void *pvParameters)
 		wifi_auto_detected_link_state();
 	}
 
-	copy_cmd_hanlder();
-
-	//ack_cmd_second_disp_hanlder();
+	//copy_cmd_hanlder();
+    //ack_cmd_second_disp_hanlder();
 	vTaskDelay(10);
 
 	  
@@ -419,25 +428,23 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
    else if(huart->Instance==USART2) //WIFI USART2
 	   {
 	  //  DISABLE_INT();
-		if(g_wifi.linking_tencent_cloud_doing ==1 && g_wifi.wifi_data_parse_flag==0){
+		if(g_wifi.linking_tencent_cloud_doing ==1){
 	
 			   g_wifi.wifi_rx_data_array[g_wifi.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
 			   g_wifi.wifi_rx_data_counter++;
-
+	
                if(g_wifi.wifi_rx_data_counter >1){
 			   if(g_wifi.wifi_rx_data_array[g_wifi.wifi_rx_data_counter-2]==0x0D \
 			   	&& g_wifi.wifi_rx_data_array[g_wifi.wifi_rx_data_counter-1]==0x0A){
-			   	  
-                    //Wifi_Rx_InputInfo_Handler();
-					g_wifi.wifi_data_parse_flag = 1;
-					g_wifi.wifi_rx_data_counter=0;
-			            
-
+			   
+				   
+				   Wifi_Rx_InputInfo_Handler();
+				   g_wifi.wifi_rx_data_counter=0;
 			   }
-              
-              }   
+               }
 	
-		} 
+		       
+		}
 		else{
 	
 			   if(g_wifi.get_rx_beijing_time_enable==1){

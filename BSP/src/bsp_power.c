@@ -29,7 +29,7 @@ typedef enum {
 
 //DisplayMode disp_temp_hum = DISPLAY_TEMP;  // 默认显示温度
 uint8_t disp_temp_hum;
-
+uint8_t send_wifi_power_on_state;
 
 
 /**********************************************************************
@@ -49,15 +49,22 @@ void power_onoff_handler(uint8_t data)
 
 	
 		power_on_run_handler();
-		link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
-		
-		wifi_parse_handler();//wifi_receive_parse_data_handler();
-		set_temperature_value_handler();
-		set_timer_timing_value_handler();
+       
+       if(gl_run.process_on_step !=0){ //logically rigorous
 
-		wifi_led_fast_blink();
-		works_run_two_hours_state();
-		
+	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+		    smart_phone_timer_power_on_handler();
+	        
+			link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
+			
+			set_temperature_value_handler();
+			set_timer_timing_value_handler();
+
+			wifi_led_fast_blink();
+			works_run_two_hours_state();
+	    }
+
+        }
 			
         break;
 
@@ -124,16 +131,36 @@ void power_on_init_ref(void)
 void power_on_run_handler(void)
 {
 
-   static uint8_t send_data_disp_counter,read_error_flag,switch_adc;
-
+   static uint8_t read_error_flag,switch_adc,switch_dht11;
+   static uint8_t temp_second_displboard;
 	switch(gl_run.process_on_step){
 
 
      case 0:  //initial reference 
        gl_run.process_off_step =0 ; //clear power off process step .
-		 
-      
-       if(g_wifi.gwifi_link_net_state_flag == wifi_no_link || g_wifi.app_timer_power_on_flag == 0){
+
+	   if(g_wifi.app_timer_power_on_flag ==1){
+	      
+	   	  g_wifi.gwifi_link_net_state_flag=wifi_link_success;
+          MqttData_Publish_SetOpen(1);  
+		   osDelay(50);//HAL_Delay(350);
+		}
+        else{
+		   
+		   	  
+		   	SendData_Set_Command(CMD_POWER,open);
+			osDelay(5);
+		   	
+		    if(g_wifi.gwifi_link_net_state_flag == wifi_link_success){ 
+		       MqttData_Publish_SetOpen(1);  
+		       osDelay(100);//HAL_Delay(200);
+		    }
+        }
+		Update_DHT11_ToDisplayBoard_Value();
+			 
+		   
+		   
+      if(g_wifi.gwifi_link_net_state_flag == wifi_no_link){//逻辑不严谨//if(g_wifi.gwifi_link_net_state_flag == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	      
 		   power_on_init_ref();
 
@@ -142,61 +169,86 @@ void power_on_run_handler(void)
 		  
 		   power_on_init_ref();
 		
-       	
-		  MqttData_Publish_SetOpen(1);  
-		  osDelay(50);//HAL_Delay(200);
+		  
 		  Update_DHT11_ToDisplayBoard_Value();
-		  osDelay(50);//HAL_Delay(200);
-	        
+	      osDelay(5);
+		   	
+	        send_wifi_power_on_state = 1;
 		
-		   MqttData_Publish_Update_Data();
-		   osDelay(50);//HAL_Delay(200);
 	   }
 	   else{
 
-		  smartphone_timer_power_handler();
+		    power_on_smart_app_led();
 
 	   }
 	   key_referen_init();
-	   wifi_decoder_refer_init();
-	   if(g_disp.g_second_disp_flag == 1){
-	   	  SendData_Set_Command(CMD_POWER,open);
-		  osDelay(5);
-         send_data_disp_counter=200;
-		  Update_DHT11_ToDisplayBoard_Value();
-		  osDelay(5);
 	   
-	   }
-	   
+	 
+	   g_pro.gTimer_send_dht11_disp=5;
        
 	   g_pro.gTimer_two_hours_counter = 0;
 	   g_pro.g_fan_switch_gears_flag++;
 	   gl_run.process_off_step=0;
-	   gl_run.process_on_step =1;
+	   
+	   g_wifi.wifi_led_fast_blink_flag=0;
+	   g_pro.key_set_temperature_flag=0;
+	   g_pro.temperature_init_value=0;
+	   
+	    g_pro.g_manual_shutoff_dry_flag = 0;
+		 g_pro.gTimer_disp_time_second= 0;
+	    g_pro.gTimer_timer_time_second=0;
+		g_wifi.set_wind_speed_value = 100;
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
+	   g_pro.fan_warning =0 ;
+	   g_pro.ptc_warning =0;
+	   g_pro.gTimer_display_adc_value=0;
+	   g_pro.delay_run_adc_counter=0;
+	   temp_second_displboard=0;
+
+	   gl_run.process_on_step =1;
 	 break;
 
 	 case 1:
 
+      if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+	
+		  if(g_disp.g_second_disp_flag == 1 || temp_second_displboard < 5){
 
-	  if(g_disp.g_second_disp_flag == 1){
-          send_data_disp_counter++;
-	    if(send_data_disp_counter > 150 && (g_pro.wifi_link_tencent_doing_flag == 0)){ //3s
-	        send_data_disp_counter=0;
-         Update_DHT11_ToDisplayBoard_Value();
+		     if(temp_second_displboard < 8){
+                   temp_second_displboard ++;
+			 }
+		    if(g_pro.gTimer_send_dht11_disp > 2){ //3s
+		       g_pro.gTimer_send_dht11_disp=0;
+	           Update_DHT11_ToDisplayBoard_Value();
 
-	   }
+		   }
+		  }
+
+		  if(send_wifi_power_on_state ==1){
+		      send_wifi_power_on_state++;
+		      g_pro.gset_temperture_value = 40;
+			   MqttData_Publish_Update_Data();
+			   osDelay(300);//HAL_Delay(200);
+
+
+		  }
+		  gl_run.process_on_step =2; 
+      }
+	  else{
+	  
+	     fault_handler();
+         gl_run.process_on_step =4; 
 	  }
-	   gl_run.process_on_step =2;
 
 
 	case 2:
 
-	
+	  if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+	  	
       if(g_pro.key_set_temperature_flag==1){
 
-         read_error_flag= DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
-         if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_TEMP);
+          DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
+        
 
       }
       else if(g_key.mode_key_switch_time_mode == timer_time_mode){
@@ -225,7 +277,8 @@ void power_on_run_handler(void)
 
       }
       else if((g_pro.g_disp_timer_or_temp_flag == timer_time_mode) && read_wifi_temperature_value()==0){
-		// 如果计时器超过阈值，切换显示模式
+             
+	    // 如果计时器超过阈值，切换显示模式
 
 		  if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD) {
 			g_pro.gTimer_switch_temp_hum = 0; // 重置计时器
@@ -260,6 +313,7 @@ void power_on_run_handler(void)
 		}
 	} 
 	else {
+		
 		// 如果计时器超过阈值，切换布尔显示状态,不显示时间
        if((g_pro.g_disp_timer_or_temp_flag == normal_time_mode) && read_key_up_down_mode()!=1 && read_wifi_temperature_value()==0){ //正常模式
 
@@ -275,57 +329,78 @@ void power_on_run_handler(void)
 			 }
 		 	}
        	}
-
+	   	}
 	  gl_run.process_on_step =3;
 
 	 break;
 
 	 case 3: //WIFI link process
-	  
-		  if(g_wifi.gTimer_update_dht11_data > 3){
+	 
+         if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+		 
+		if(g_wifi.gTimer_update_dht11_data > 7 && g_wifi.gwifi_link_net_state_flag ==wifi_link_success){
 			   g_wifi.gTimer_update_dht11_data=0;
 
 			   if(g_wifi.gwifi_link_net_state_flag ==1){
-		           Update_Dht11_Totencent_Value()  ;
-				   osDelay(200);
+
+			       switch_dht11 = switch_dht11 ^0x01;
+				   if(switch_dht11==1){
+		         	   Subscriber_Data_FromCloud_Handler();
+				
+	                  osDelay(50);
+				   	}
+				    else{
+					Update_Dht11_Totencent_Value()	;
+					osDelay(50);
+
+
+					}
 				   
 			   	}
+
+            
 				if(g_disp.g_second_disp_flag == 1){                     
-					 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);				
+					 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
+					 osDelay(5);
 
 				}
 		    }
 		
 
-	   gl_run.process_on_step =4;
+	            gl_run.process_on_step =4;
+
+         	}
+		    
+	     gl_run.process_on_step =4;
 
 	 break;
 
 	 case 4: // wifi function
-         if(g_pro.gTimer_display_adc_value > 4 && (g_pro.wifi_link_tencent_doing_flag == 0) ){
+	    
+         if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
 		 	g_pro.gTimer_display_adc_value=0;
 
-		    switch_adc = switch_adc ^ 0x01;
+            switch_adc = switch_adc ^ 0x01;
 		    if(switch_adc==1){
-               Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,5);
+               Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,10);
 			}
 			else{
 				
-
-				if(g_pro.works_two_hours_interval_flag==0){
-	                Get_Fan_Adc_Fun(ADC_CHANNEL_0,5);
+				if(g_pro.delay_run_adc_counter < 5){
+					g_pro.delay_run_adc_counter++;
+					g_pro.fan_detect_voltage= 0xFEE;
+				    SetLevel_Fan_PWMA(40);
+				}
+                else if(g_pro.works_two_hours_interval_flag==0){
+	                Get_Fan_Adc_Fun(ADC_CHANNEL_0,10);
 
 		        }
 
             }
+		   }
 
-         }
-		 
-		
-
-		 
-		    
-	    gl_run.process_on_step =1;
+        
+	  gl_run.process_on_step =1;
 
 	 break;
 
@@ -353,7 +428,7 @@ void power_off_run_handler(void)
 
    case 0:
    	  gl_run.process_on_step =0;
-   	  g_disp.g_second_disp_flag=1;
+
    	  power_off_led();
       TM1639_Display_ON_OFF(0);
 	  g_key.key_long_power_flag  = 0;
@@ -364,24 +439,25 @@ void power_off_run_handler(void)
 	  fan_run_one_minute = 1;
 	  g_pro.gTimer_fan_run_one_minute =0;
 
-	  if(g_wifi.gwifi_link_net_state_flag == 1){
+	  if(g_wifi.gwifi_link_net_state_flag == wifi_link_success){
             MqttData_Publish_SetOpen(0);  
 			osDelay(50);
 	        MqttData_Publish_PowerOff_Ref() ;//
 	        osDelay(100);
            
 	  }
-	  if(g_disp.g_second_disp_flag ==1){
-
-	  
-	   	  SendData_Set_Command(CMD_POWER,close);
-          osDelay(5);
+	 
+	  SendData_Set_Command(CMD_POWER,close);
+	  osDelay(5);
+    
 	
-         
-
-       }
+        
 	   g_pro.g_fan_switch_gears_flag++;
-      gl_run.process_off_step = 1;
+       gl_run.process_off_step = 1;
+	   g_pro.key_set_temperature_flag=0;
+	   g_wifi.app_timer_power_on_flag =0;
+	   g_pro.fan_warning =0 ;
+	   g_pro.ptc_warning =0;
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
 	  
 
@@ -413,11 +489,12 @@ void power_off_run_handler(void)
 	
 
      LED_Power_Breathing();
+	 wifi_first_connect++;
 
-	 if(g_wifi.gwifi_link_net_state_flag == 1 && wifi_first_connect==0){
-	 	    wifi_first_connect++;
+	 if(g_wifi.gwifi_link_net_state_flag == wifi_link_success && wifi_first_connect > 200){
+	 	    wifi_first_connect=0;
             MqttData_Publish_SetOpen(0);  
-			osDelay(50);
+			osDelay(100);
 	        MqttData_Publish_PowerOff_Ref() ;//
 	        osDelay(100);
            

@@ -34,7 +34,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		   g_pro.gTimer_two_hours_counter++;
 		   g_pro.gTimer_disp_temp_humidity_vlaue++;
 		   g_pro.gTimer_display_adc_value++;
-		   g_pro.gTimer_wifi_led_slowly_blink++;
+		   g_pro.gTimer_wifi_slowly_blink ++;
+		    g_pro.gTimer_send_dht11_disp++;
+			g_pro.gTimer_set_temp_counter++;
 		   
 		  
 

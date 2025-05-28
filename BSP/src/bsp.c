@@ -63,10 +63,14 @@ void mainboard_fun_handler(void)
 	if(g_pro.gDry == 1 && read_wifi_dry_value()==0){
 		DRY_OPEN();
 		LED_DRY_ON();
+	    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
+	    osDelay(5);
 	}
 	else{
 		LED_DRY_OFF();
 		DRY_CLOSE();
+	    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
+	    osDelay(5);
 
 	}
 
@@ -92,7 +96,7 @@ void mainboard_fun_handler(void)
 	
    	}
 	
-
+   
 }
 
 static void mainboard_special_fun(void)
@@ -175,15 +179,16 @@ void works_run_two_hours_state(void)
     if(g_pro.gTimer_two_hours_counter > 7200 ){ //two hours
 
    #endif 
+    g_pro.delay_run_adc_counter=0;
 	g_pro.gTimer_two_hours_counter= 0;
-
+    g_pro.g_fan_switch_gears_flag++;
     g_pro.works_two_hours_interval_flag=1;
 
 	PLASMA_CLOSE(); //
 	DRY_CLOSE();
 	mouse_close();
     g_pro.gTimer_fan_run_one_minute=0;
-
+   
 
 	timer_fan_flag=1;
 
@@ -200,9 +205,9 @@ void works_run_two_hours_state(void)
 	 if(g_pro.gTimer_two_hours_counter  > 600){ //2minutes x 60s = 120s
            
          g_pro.gTimer_two_hours_counter =0;  
-		 
+		 g_pro.delay_run_adc_counter =0;
          g_pro.works_two_hours_interval_flag=0;
-    
+           
      
 
          mainboard_special_fun();
@@ -211,14 +216,12 @@ void works_run_two_hours_state(void)
      #else 
 
       if(g_pro.gTimer_two_hours_counter  > 600){ //10*60s=600s
-         g_pro.gTimer_two_hours_counter =0;  
+         g_pro.gTimer_two_hours_counter =0; 
 		 
+		 g_pro.delay_run_adc_counter=0;
          g_pro.works_two_hours_interval_flag=0;
-    
-     
-
          mainboard_special_fun();
-                
+              
       }
 
 
@@ -240,6 +243,7 @@ void works_run_two_hours_state(void)
 			  timer_fan_flag=0;
              
 			   FAN_Stop();
+			   g_pro.delay_run_adc_counter=0;
 	       }
 
 	  }
@@ -258,7 +262,14 @@ void works_run_two_hours_state(void)
 
 
 
-
+/**********************************************************************
+    *
+    *Functin Name: void works_run_two_hours_state(void)
+    *Function :  
+    *Input Ref: NO
+    *Return Ref: NO
+    *
+************************************************************************/
 void copy_cmd_hanlder(void)
 {
     if(g_pro.g_copy_power_onoff_flag == power_on){
@@ -276,6 +287,76 @@ void copy_cmd_hanlder(void)
         osDelay(5);
 
 	}
+
+}
+
+
+/**********************************************************************
+    *
+    *Functin Name: void works_run_two_hours_state(void)
+    *Function :  
+    *Input Ref: NO
+    *Return Ref: NO
+    *
+************************************************************************/
+void  smart_phone_timer_power_on_handler(void)
+{
+  if(g_wifi.app_timer_power_on_flag ==1){
+       g_wifi.app_timer_power_on_flag++; 
+       
+	    smartphone_timer_power_handler();
+		 
+
+   }
+   else if(g_wifi.app_timer_power_on_flag==2){
+			g_wifi.app_timer_power_on_flag++; 
+
+		    MqttData_Publish_Update_Data();//property_report_phone_timer_on_data();// MqttData_Publish_Update_Data();
+	        osDelay(100);//HAL_Delay(100);
+
+
+
+   }
+  
+
+}
+
+
+/**********************************************************************
+    *
+    *Functin Name: void fault_handler(void)
+    *Function :  
+    *Input Ref: NO
+    *Return Ref: NO
+    *
+************************************************************************/
+void fault_handler(void)
+{
+
+    if(g_pro.fan_warning == 1){
+       HUMIDITY_ICON_OFF();
+	   TEMP_ICON_OFF();//WT.EDIT 2025.04.28
+	   DRY_CLOSE();
+	   LED_DRY_OFF();
+       SMG_Display_Err(2);
+	   osDelay(1000);
+
+
+	}
+
+	if(g_pro.ptc_warning ==1){
+         HUMIDITY_ICON_OFF();
+		 TEMP_ICON_OFF();//WT.EDIT 2025.04.28
+		 DRY_CLOSE();
+	     LED_DRY_OFF();
+         
+	     SMG_Display_Err(1);
+	     osDelay(1000);
+		 
+
+
+	}
+
 
 }
 

@@ -33,7 +33,6 @@
 #include "bsp_cmd_link.h"
 #include "bsp_led_tape.h"
 #include "bsp_adc.h"
-#include "bsp_wifi_parse.h"
 #include "interrupt_manager.h"
 
 //wifi function
@@ -65,7 +64,7 @@
 
 #define  USE_FreeRTOS      1
   
-#define  TEST_UNIT        1
+#define  TEST_UNIT        0
 
 
 #if USE_FreeRTOS == 1
@@ -108,7 +107,7 @@ typedef enum{
 typedef struct _process{
 
    //main board reference
-
+   uint16_t fan_detect_voltage;
    uint16_t gTimer_two_hours_counter;
    uint8_t gpower_on;
    uint8_t gDry;
@@ -121,25 +120,29 @@ typedef struct _process{
 
    uint8_t g_humidity_value;
    uint8_t g_temperature_value;
+
   
 
    uint8_t g_fan_switch_gears_flag;
    uint8_t key_set_temperature_flag;
-   uint8_t wifi_link_tencent_doing_flag;
    
 
    uint8_t gTemp_value;
    uint8_t gset_temperture_value;
+   uint8_t temperature_init_value;
 
    uint8_t key_gtime_timer_define_flag;
    uint8_t g_disp_timer_or_temp_flag;
    uint8_t gdisp_hours_value;
    uint8_t gdisp_minutes_value;
+   uint8_t  disp_timer_minutes_value;
 
    uint8_t g_copy_power_onoff_flag;
+   uint8_t delay_run_adc_counter;
 
 
    uint8_t first_connect_wifi_flag;
+   uint8_t DMA_txComplete;
 
    int8_t gdisp_timer_hours_value;
    
@@ -166,7 +169,9 @@ typedef struct _process{
    uint8_t   gTimer_input_set_temp_timer;
    uint8_t gTimer_disp_temp_humidity_vlaue;
    uint8_t gTimer_display_adc_value;
-   uint8_t gTimer_wifi_led_slowly_blink;
+   uint8_t  gTimer_wifi_slowly_blink ;
+   uint8_t gTimer_send_dht11_disp;
+   uint8_t gTimer_set_temp_counter;
 }process_t;
 
 extern process_t g_pro;
@@ -182,5 +187,9 @@ void mainboard_close_all_fun(void);
 void works_run_two_hours_state(void);
 
 void copy_cmd_hanlder(void);
+
+void  smart_phone_timer_power_on_handler(void);
+
+void fault_handler(void);
 
 #endif /* BSP_INC_BSP_H_ */

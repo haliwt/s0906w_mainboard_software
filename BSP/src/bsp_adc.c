@@ -10,7 +10,7 @@ static void Judge_PTC_Temperature_Value(uint16_t adc_ptc);
 static void Judge_Fan_State(uint16_t adc_value);
 
 uint16_t ptc_temp_voltage;
-uint16_t fan_detect_voltage;
+
 /*****************************************************************
 *
 	*Function Name: static uint16_t Get_Adc(uint32_t ch)  
@@ -139,11 +139,11 @@ void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 	
 	adc_fan_hex = Get_Adc_Average(channel,times);
 
-    fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
+    g_pro.fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 	HAL_Delay(5);
 
 
-	Judge_Fan_State(fan_detect_voltage);
+	Judge_Fan_State(g_pro.fan_detect_voltage);
 
 
     
@@ -154,7 +154,7 @@ static void Judge_Fan_State(uint16_t adc_value)
 {
 
   static uint8_t detect_error_times;
-   if(adc_value <300){ //500
+   if(adc_value <550){ //500
          detect_error_times++;
 	          
 		if(detect_error_times >0){
@@ -162,13 +162,15 @@ static void Judge_Fan_State(uint16_t adc_value)
 		   g_pro.fan_warning = 1;
 
 		  Publish_Data_Warning(fan_warning,g_pro.fan_warning);
-	      HAL_Delay(200);
+	      osDelay(200);//HAL_Delay(200);
 
 		   MqttData_Publis_SetFan(0);
-	       HAL_Delay(100);
+	       osDelay(100);//HAL_Delay(100);
 
 		  Buzzer_Fan_Error_Sound();
 
+		  SendWifiData_To_Cmd(0x09,0x01);//Fan fault warning .
+		  osDelay(5);
 
 		}
 		detect_error_times++;

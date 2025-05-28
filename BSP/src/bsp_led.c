@@ -27,6 +27,19 @@ void power_on_led(void)
 	//TEMP_ICON_ON() ;
 	//HUMIDITY_ICON_ON();
 }
+
+void power_on_smart_app_led(void)
+{
+    LED_POWER_ON();
+    LED_TAPE_CTL_ON();
+    LED_AI_ON();
+    LED_WIFI_ON();
+    LED_TEMP_SINGLE_ON();
+	LED_FUN_ON();
+	DHT11_Display_Data(0); //display temperature value 
+   
+}
+
 /**************************************************************************
  * power_off_led(void)
  * 功能:关闭所有LED
@@ -111,50 +124,31 @@ void LED_FUN_ON(void)
  ************************************************************************/
 void wifi_led_fast_blink(void)
 {
-   if(g_wifi.wifi_led_fast_blink_flag==1){
+   if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_state_flag==0){
 	  LED_WIFI_TOGGLE();
 	  osDelay(50);
    	}
-    else{
+    else if(g_wifi.gwifi_link_net_state_flag==1){
 
-        if(g_key.key_long_power_flag !=  KEY_LONG_POWER && g_wifi.gwifi_link_net_state_flag ==0){
+       LED_WIFI_ON();
+	}
+	else if(g_wifi.gwifi_link_net_state_flag ==0){
 
              wifi_led_slowly_blink();
-       	}
-		else if(g_wifi.gwifi_link_net_state_flag==1 && g_pro.gTimer_wifi_led_slowly_blink> 2){
-
-			g_pro.gTimer_wifi_led_slowly_blink=0;
-			   LED_WIFI_ON();
-		}
-	    
-	}
+     }
 }
 
 
 void wifi_led_slowly_blink(void)
 {
-   
-   static uint8_t wifi_led_blink;
-    
  
-    if( g_pro.gTimer_wifi_led_slowly_blink> 1)  // 1.5s // blink 周期1秒 =50 =3s
+    if(g_pro.gTimer_wifi_slowly_blink > 1)  // 1.5s // blink 周期1秒 =50 =3s
     {
-      
-		g_pro.gTimer_wifi_led_slowly_blink=0;
-
-	    wifi_led_blink = wifi_led_blink ^ 0x01;
-		if(wifi_led_blink ==1){
-              LED_WIFI_ON();
-
-		}
-		else{
-             LED_WIFI_OFF();
-		}
+        g_pro.gTimer_wifi_slowly_blink = 0;
        
-        //LED_WIFI_TOGGLE();
+        LED_WIFI_TOGGLE();
         
     }
-	
 }
 
 

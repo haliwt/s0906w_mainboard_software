@@ -80,7 +80,7 @@ typedef enum _JSONTYPE {
 
 extern uint8_t TCMQTTRCVPUB[40];
 
-void wifi_decoder_refer_init(void);
+
 
 void Receive_Data_FromCloud_Data(int type, char *str);
 void Wifi_Rx_InputInfo_Handler(void);
@@ -97,7 +97,6 @@ void Json_Parse_Command_Fun(void);
 
 void clear_rx_copy_data(void);
 
-void wifi_receive_parse_data_handler(void);
 
 
 uint8_t  read_wifi_dry_value(void);
