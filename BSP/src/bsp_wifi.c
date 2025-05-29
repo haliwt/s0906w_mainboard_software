@@ -45,20 +45,11 @@ void link_wifi_to_tencent_handler(uint8_t data)
 
     }
     else{
-	   if(g_wifi.gwifi_link_net_state_flag ==0){
-	     wifi_led_fast_blink();
-	   	}
-
-        link_wifi_net_handler();
+	   
+       link_wifi_net_handler();
     }
     }
         
-
-//   if(g_wifi.gwifi_link_net_state_flag ==1 && g_pro.first_connect_wifi_flag ==1){
-//         g_pro.first_connect_wifi_flag++;
-//          SendWifiData_One_Data(0x1F,0x01); //link wifi order 1 --link wifi net is success.//Update_Dht11_Totencent_Value();
-//          osDelay(5);//HAL_Delay(200) //WT.EDIT 2024.08.10
-//     }
 
 	send_connect_wifi_init();
        
@@ -91,8 +82,15 @@ static void link_wifi_net_handler(void)
         		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
         		//HAL_Delay(1000);
         		 wifi_led_fast_blink();
-        		 osDelay(1000);
+        		 osDelay(200);
                  wifi_led_fast_blink();
+				 osDelay(200);
+				 wifi_led_fast_blink();
+				 osDelay(200);
+				  wifi_led_fast_blink();
+				  osDelay(200);
+				  wifi_led_fast_blink();
+				 osDelay(200);
 				  g_wifi.gTimer_link_net_timer_time = 0;
                  g_wifi.link_net_step = 1;
 
@@ -105,8 +103,18 @@ static void link_wifi_net_handler(void)
                  randomName[0]=HAL_GetUIDw0();
 				 wifi_led_fast_blink();
 
+				
+        		 //osDelay(1000);
+        		  wifi_led_fast_blink();
+        		 osDelay(200);
+                 wifi_led_fast_blink();
+				 osDelay(200);
+				 wifi_led_fast_blink();
+				 osDelay(200);
 				  wifi_led_fast_blink();
-        		 osDelay(1000);
+				  osDelay(200);
+				  wifi_led_fast_blink();
+				 osDelay(200);
                  wifi_led_fast_blink();
 			      
                   g_wifi.gTimer_link_net_timer_time = 0;
@@ -127,7 +135,17 @@ static void link_wifi_net_handler(void)
                         sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,randomName[0]);
             			at_send_data(device_massage, strlen((const char *)device_massage));
 						
-            	  		osDelay(1000);//HAL_Delay(1000);
+            	  		//osDelay(1000);//HAL_Delay(1000);
+            	  		 wifi_led_fast_blink();
+		        		 osDelay(200);
+		                 wifi_led_fast_blink();
+						 osDelay(200);
+						 wifi_led_fast_blink();
+						 osDelay(200);
+						  wifi_led_fast_blink();
+						  osDelay(200);
+						  wifi_led_fast_blink();
+						 osDelay(200);
                         wifi_led_fast_blink();
                        g_wifi.link_net_step = 3;
 
@@ -145,7 +163,18 @@ static void link_wifi_net_handler(void)
 			
             HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册 
            
-	  		osDelay(1000);//HAL_Delay(1000);
+	  		//osDelay(1000);//HAL_Delay(1000);
+	  		 wifi_led_fast_blink();
+		        		 osDelay(200);
+		                 wifi_led_fast_blink();
+						 osDelay(200);
+						 wifi_led_fast_blink();
+						 osDelay(200);
+						  wifi_led_fast_blink();
+						  osDelay(200);
+						  wifi_led_fast_blink();
+						 osDelay(200);
+                        wifi_led_fast_blink();
             wifi_led_fast_blink();
           
             }
@@ -163,8 +192,18 @@ static void link_wifi_net_handler(void)
 	            sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",randomName[0]);
 				
                  at_send_data(device_massage, strlen((const char *)device_massage));
-				 osDelay(1000);//HAL_Delay(1000);
+				 //osDelay(1000);//HAL_Delay(1000);
+				  wifi_led_fast_blink();
+        		 osDelay(200);
+                 wifi_led_fast_blink();
+				 osDelay(200);
 				 wifi_led_fast_blink();
+				 osDelay(200);
+				  wifi_led_fast_blink();
+				  osDelay(200);
+				  wifi_led_fast_blink();
+				  osDelay(200);
+				   wifi_led_fast_blink();
 
 
                    g_wifi.link_net_step = 5;
@@ -182,10 +221,20 @@ static void link_wifi_net_handler(void)
 
              g_wifi.soft_ap_config_success=0;
             HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-            osDelay(1000);
+            //osDelay(1000);
             // HAL_Delay(1000);
             ///HAL_Delay(1000);
-            wifi_led_fast_blink();
+             wifi_led_fast_blink();
+        		 osDelay(200);
+                 wifi_led_fast_blink();
+				 osDelay(200);
+				 wifi_led_fast_blink();
+				 osDelay(200);
+				  wifi_led_fast_blink();
+				  osDelay(200);
+				  wifi_led_fast_blink();
+				  osDelay(200);
+				  wifi_led_fast_blink();
 
             g_wifi.link_net_step = 6;
             g_wifi.gTimer_link_net_timer_time = 0;
