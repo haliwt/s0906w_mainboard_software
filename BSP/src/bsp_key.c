@@ -349,7 +349,7 @@ static void handleTemperatureControl(void)
 						DRY_OPEN();
 					}
             	}
-				if (g_disp.g_second_disp_flag == 1){
+				if(g_disp.g_second_disp_flag == 1 && g_pro.g_manual_shutoff_dry_flag ==0){
 				   sendDisplayCommand(0x02,0x01); // 打开干燥功能
 				   osDelay(5);
 				}
@@ -412,14 +412,14 @@ static void handleDefaultTemperatureControl(void)
 					}
 			  	}
 
-					if(g_disp.g_second_disp_flag ==1){
+				if(g_disp.g_second_disp_flag ==1 && g_pro.g_manual_shutoff_dry_flag ==0){
 					sendDisplayCommand(0x02,0x01); // 打开干燥功能
 					osDelay(5);
-					}
-					if (g_wifi.gwifi_link_net_state_flag == 1) {
+				}
+				if (g_wifi.gwifi_link_net_state_flag == 1) {
 					MqttData_Publish_SetPtc(DRY_STATE_ON);//publishMqttData(DRY_STATE_ON, current_temperature) ;
 					osDelay(50);
-					}
+				}
 
 			  }
               else if (current_temperature < 38 && default_first_close_dry==1) {
@@ -436,7 +436,7 @@ static void handleDefaultTemperatureControl(void)
 						DRY_OPEN();//setDryState(g_pro.gDry);
 					  }
 			     }
-				 if(g_disp.g_second_disp_flag ==1){
+				 if(g_disp.g_second_disp_flag ==1 && g_pro.g_manual_shutoff_dry_flag ==0){
 				  sendDisplayCommand(0x02,0x01); // 第二个显示板，打开干燥功能
 				  osDelay(5);
 				 }
