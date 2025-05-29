@@ -161,7 +161,7 @@ typedef struct _process{
    
    uint8_t  gTimer_disp_time_second;
    uint8_t  gTimer_timer_time_second;
-   uint8_t  gTimer_wifi_led_fast_blink;
+
    uint8_t  gTimer_switch_temp_hum;
    uint8_t  gTimer_switch_set_timer_times;
    uint8_t  gTimer_input_set_temp_times;
@@ -172,6 +172,8 @@ typedef struct _process{
    uint8_t  gTimer_wifi_slowly_blink ;
    uint8_t gTimer_send_dht11_disp;
    uint8_t gTimer_set_temp_counter;
+   uint8_t gTimer_led_wifi_bilnk_counter;
+   
 }process_t;
 
 extern process_t g_pro;

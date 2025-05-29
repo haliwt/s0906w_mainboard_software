@@ -235,9 +235,11 @@ static void vTaskRunPro(void *pvParameters)
 		getBeijingTime_cofirmLinkNetState_handler();
 		wifi_auto_detected_link_state();
 	}
+	else{
+         wifi_led_fast_blink();
 
-	//copy_cmd_hanlder();
-    //ack_cmd_second_disp_hanlder();
+	}
+
 	vTaskDelay(10);
 
 	  
