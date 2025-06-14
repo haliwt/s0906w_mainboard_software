@@ -48,7 +48,7 @@ void LED_Power_Breathing(void);   // LED呼吸灯函数
 
 void LED_FUN_ON(void);
 
-void wifi_led_fast_blink(void);
+void wifi_led_fast_blink_handler(void);
 
 void wifi_led_slowly_blink(void);
 

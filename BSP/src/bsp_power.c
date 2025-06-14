@@ -53,6 +53,7 @@ void power_onoff_handler(uint8_t data)
        if(gl_run.process_on_step !=0){ //logically rigorous
 
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+			wifi_led_fast_blink_handler();
 		    smart_phone_timer_power_on_handler();
 	        
 			link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
@@ -60,7 +61,7 @@ void power_onoff_handler(uint8_t data)
 			set_temperature_value_handler();
 			set_timer_timing_value_handler();
 
-			wifi_led_fast_blink();
+			
 			works_run_two_hours_state();
 	    }
 

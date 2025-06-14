@@ -117,30 +117,35 @@ void LED_FUN_ON(void)
 
 }
 /************************************************************************
- * Function Name: void wifi_led_fast_blink(void)
+ * Function Name: void wifi_led_fast_blink_handler(void)
  * 功能:
  * 参数:无
  * 返回值:无
  ************************************************************************/
-void wifi_led_fast_blink(void)
+void wifi_led_fast_blink_handler(void)
 {
    static uint8_t flag_counter;
    if(g_pro.gpower_on==power_on){
 
+     
+
    if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_state_flag==0){
-	  if( g_pro.gTimer_led_wifi_bilnk_counter > 99){
+
+       
+	   if( g_pro.gTimer_led_wifi_bilnk_counter > 99){
 
 	       g_pro.gTimer_led_wifi_bilnk_counter=0;
+	
            flag_counter = flag_counter ^ 0x01;
 	       if(flag_counter == 1) LED_WIFI_ON();
-		   else LED_WIFI_OFF();
+	       else LED_WIFI_OFF();
+	  	}
+	   
 
-	  }
-	 
-   	}
-    else if(g_wifi.gwifi_link_net_state_flag==1){
+	 }
+	 else if(g_wifi.gwifi_link_net_state_flag==1){
 
-       LED_WIFI_ON();
+       		LED_WIFI_ON();
 	}
 	else if(g_wifi.gwifi_link_net_state_flag ==0){
 
