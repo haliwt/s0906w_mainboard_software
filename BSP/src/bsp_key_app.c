@@ -39,11 +39,15 @@ void key_handler(void)
 			buzzer_sound();
 			if(g_pro.gpower_on == power_off){
 				g_pro.gpower_on = power_on;
+			    SendData_Set_Command(CMD_POWER,open);
+			    osDelay(5);
 
 			}
 			else{
 
 				g_pro.gpower_on = power_off;
+				SendData_Set_Command(CMD_POWER,close);
+			    osDelay(5);
 			}
 		}
 		else if(KEY_POWER_VALUE() ==KEY_DOWN && g_pro.gpower_on == power_on && power_on_key_counter==200){

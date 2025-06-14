@@ -117,7 +117,7 @@ static void adjust_temperature(int8_t delta)
    //static uint8_t temperature_init_value ;
 	if (g_pro.temperature_init_value == 0 && g_pro.key_set_temperature_flag !=2) {
         g_pro.temperature_init_value++;
-        g_pro.gset_temperture_value = (delta > 0) ? 20 : 40;
+        g_pro.gset_temperture_value = (delta > 0) ? 40 : 20;
     } else {
         g_pro.gset_temperture_value += delta;
         if (g_pro.gset_temperture_value > MAX_TEMPERATURE) g_pro.gset_temperture_value = MAX_TEMPERATURE;
@@ -554,7 +554,7 @@ void set_timer_timing_value_handler(void)
 		   #if TEST_UNIT
 		   	 g_pro.disp_timer_minutes_value =g_pro.disp_timer_minutes_value - 40;
 		   #else
-		     gl_timer_minutes_value--;
+		    g_pro.disp_timer_minutes_value--;
 		   #endif 
 
 		   if(g_pro.disp_timer_minutes_value< 0){
@@ -564,6 +564,8 @@ void set_timer_timing_value_handler(void)
 			  if(g_pro.gdisp_timer_hours_value < 0){
                    buzzer_sound();
 			       g_pro.gpower_on = power_off;
+			      SendData_Set_Command(CMD_POWER,close);
+	              osDelay(5);
 			  	
 			  }
 			 

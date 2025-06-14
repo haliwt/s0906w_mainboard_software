@@ -149,8 +149,8 @@ void power_on_run_handler(void)
         else{
 		   
 		   	  
-		   	SendData_Set_Command(CMD_POWER,open);
-			osDelay(5);
+		   //	SendData_Set_Command(CMD_POWER,open);
+			//  osDelay(5);
 		   	
 		    if(g_wifi.gwifi_link_net_state_flag == wifi_link_success){ 
 		       MqttData_Publish_SetOpen(1);  
@@ -448,8 +448,8 @@ void power_off_run_handler(void)
            
 	  }
 	 
-	  SendData_Set_Command(CMD_POWER,close);
-	  osDelay(5);
+	  //SendData_Set_Command(CMD_POWER,close);
+	  //osDelay(5);
     
 	
         

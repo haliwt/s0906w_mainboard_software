@@ -1,17 +1,13 @@
 /*
  * bsp_phone_decoder.c
  *
- *  Created on: 2025ๅนด3ๆ10ๆ—ฅ
+ *  Created on: 2025ๅน?3ๆ?10ๆ—?
  *      Author: Administrator
  */
 #include "bsp.h"
 
 
 uint8_t TCMQTTRCVPUB[40];
-
-
-
-
 
 typedef struct{
 
@@ -637,7 +633,7 @@ void Json_Parse_Command_Fun(void)
 	  	
 	  	break;
 
-	  case ANION_OFF_ITEM: //"ๆ€่" //5
+	  case ANION_OFF_ITEM: //"ๆ?่?" //5
 	  	if(g_pro.gpower_on ==power_on){
 			
             MqttData_Publish_SetPlasma(0);
