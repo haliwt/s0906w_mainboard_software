@@ -1,8 +1,8 @@
 #include "bsp.h"
 
-// 数码管段码表，0-9的显示码
+// 数码管段码表�?0-9的显示码
 static const uint8_t TM1639_Number_Table[] = {
-    0xF3, // 0: 0011 1111   （f,e,d,c,b,a）--0x3F
+    0xF3, // 0: 0011 1111   （f,e,d,c,b,a�?--0x3F
     0x60, // 1: 0000 0110 --0x06--写数据式冲低位开始，向高位开始写
     0xB5, // 2: 0101 1011 --0x5B
     0xF4, // 3: 0100 1111 --0x4F
@@ -27,10 +27,10 @@ static const uint8_t TM1639_Char_Table[] = {
 #define TM1639_CHAR_C TM1639_Char_Table[2]
 #define TM1639_CHAR_RH TM1639_Char_Table[3]
 
-#define TM1639_DOT 0x08 // 小数点段码,from low position start
+#define TM1639_DOT 0x08 // 小数点段�?,from low position start
 
 /**
- * @brief  TM1639写入一个字节
+ * @brief  TM1639写入�?个字�?
  * @param  byte: 要写入的字节
  * @retval None
  */
@@ -40,22 +40,22 @@ static void TM1639_Write_Byte(uint8_t byte)
     for(i = 0; i < 8; i++)
     {
         TM1639_CLK_SetLow();
-        delay_us(2);
+        //delay_us(2); //is big error .DATA.2025.06.13
         
         if(byte & 0x01)
-            TM1639_DIO_SetHigh(); //写入数据 ‘1’
+            TM1639_DIO_SetHigh(); //写入数据 �?1�?
         else
-            TM1639_DIO_SetLow(); //写入数据 ‘0’
+            TM1639_DIO_SetLow(); //写入数据 �?0�?
             
-        delay_us(2);
+       // delay_us(2);//is big error .DATA.2025.06.13
         TM1639_CLK_SetHigh();
-        delay_us(2);
+       // delay_us(2);//is big error .DATA.2025.06.13
         byte >>= 1;
     }
 }
 
 /**
- * @brief  TM1639开始信号
+ * @brief  TM1639�?始信�?
  * @param  None
  * @retval None
  */
@@ -91,12 +91,12 @@ static void TM1639_Stop(void)
  */
 void TM1639_Init(void)
 {
-    // 设置数据命令：自动地址增加
+    // 设置数据命令：自动地�?增加
     TM1639_Start();
     TM1639_Write_Byte(TM1639_CMD_DATA);
     TM1639_Stop();
     
-    // 设置显示控制：显示开，最大亮度
+    // 设置显示控制：显示开，最大亮�?
     TM1639_Display_ON_OFF(1);
     TM1639_Set_Brightness(TM1639_BRIGHTNESS_MAX);
 }
@@ -117,8 +117,8 @@ void TM1639_Set_Brightness(uint8_t bright)
 }
 
 /**
- * @brief  显示开关控制
- * @param  status: 1-开显示，0-关显示
+ * @brief  显示�?关控�?
+ * @param  status: 1-�?显示�?0-关显�?
  * @retval None
  */
 void TM1639_Display_ON_OFF(uint8_t status)
@@ -132,31 +132,31 @@ void TM1639_Display_ON_OFF(uint8_t status)
 }
 
 /**
- * @brief  写入完整的一位数码管（包括高4位和低4位）
- * @param  addr_h: 高4位地址
- * @param  addr_l: 低4位地址
+ * @brief  写入完整的一位数码管（包括高4位和�?4位）
+ * @param  addr_h: �?4位地�?
+ * @param  addr_l: �?4位地�?
  * @param  data: 要显示的段码数据
  * @retval None
  */
 void TM1639_Write_Digit_Full(uint8_t addr_h, uint8_t addr_l, uint8_t data)
 {
-    // 先写入低4位
+    // 先写入低4�?
     TM1639_Start();
     TM1639_Write_Byte(addr_l);
-    TM1639_Write_Byte(data & 0x0F);  // 低4位数据
+    TM1639_Write_Byte(data & 0x0F);  // �?4位数�?
     TM1639_Stop();
     
-    // 再写入高4位
+    // 再写入高4�?
     TM1639_Start();
     TM1639_Write_Byte(addr_h);
-    TM1639_Write_Byte(data >> 4);  // 高4位数据
+    TM1639_Write_Byte(data >> 4);  // �?4位数�?
     TM1639_Stop();
 }
 
 /**
- * @brief  写入半个一位数码管（包括高4位或低4位）
- * @param  addr_h: 高4位地址
- * @param  addr_l: 低4位地址
+ * @brief  写入半个�?位数码管（包括高4位或�?4位）
+ * @param  addr_h: �?4位地�?
+ * @param  addr_l: �?4位地�?
  * @param  data: 要显示的段码数据
  * @retval None
  */
@@ -164,10 +164,10 @@ void TM1639_Write_Half_Digit(uint8_t addr, uint8_t data)
 {
 
     
-    // 先写入4位--高字节或者低字节
+    // 先写�?4�?--高字节或者低字节
     TM1639_Start();
     TM1639_Write_Byte(addr);
-    TM1639_Write_Byte(data);  // 低4位数据
+    TM1639_Write_Byte(data);  // �?4位数�?
     TM1639_Stop();
     
   
@@ -175,7 +175,7 @@ void TM1639_Write_Half_Digit(uint8_t addr, uint8_t data)
 
 
 /**
- * @brief  显示3位数字
+ * @brief  显示3位数�?
  * @param  num: 要显示的数字(0-999)
  * @retval None
  */
@@ -188,7 +188,7 @@ void TM1639_Display_3_Digit(uint8_t num)
     ten = num  / 10;
     one = num % 10;
     
-    // 写入十位（最左边）
+    // 写入十位（最左边�?
   
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L, TM1639_Number_Table[ten]);
         
@@ -196,14 +196,14 @@ void TM1639_Display_3_Digit(uint8_t num)
  
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Number_Table[one]);
         
-    // 写入个位（最右边）'H'
+    // 写入个位（最右边�?'H'
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_H);
 }
 
 /**
- * @brief  显示带小数点的数字
+ * @brief  显示带小数点的数�?
  * @param  num: 要显示的数字(0-999)
- * @param  dot_pos: 小数点位置(0-2)，0表示第一位数字后的小数点
+ * @param  dot_pos: 小数点位�?(0-2)�?0表示第一位数字后的小数点
  * @retval None
  */
 void TM1639_Display_Decimal(uint16_t num, uint8_t dot_pos)
@@ -232,8 +232,8 @@ void TM1639_Display_Decimal(uint16_t num, uint8_t dot_pos)
 }
 
 /**
- * @brief  显示温度值
- * @param  temp: 温度值（-9到99℃）
+ * @brief  显示温度�?
+ * @param  temp: 温度值（-9�?99℃）
  * @retval None
  */
 void TM1639_Display_Temperature(int8_t temp)
@@ -256,12 +256,12 @@ void TM1639_Display_Temperature(int8_t temp)
         
         // 显示度数符号
        //TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, TM1639_CHAR_DEGREE);
-        //显示小数点“。” 显示数字“0”
+        //显示小数点�?��?��?? 显示数字�?0�?
       TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_Number_Table[0] | TM1639_DOT);
 }
 /**
- * @brief  显示湿度值
- * @param  humi: 湿度值（0-99%RH）
+ * @brief  显示湿度�?
+ * @param  humi: 湿度值（0-99%RH�?
  * @retval None
  */
 void TM1639_Display_Humidity(uint8_t humi)
@@ -283,7 +283,7 @@ void TM1639_Display_Humidity(uint8_t humi)
     
     // 显示RH符号
     //TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, TM1639_CHAR_RH);
-    //显示小数点‘。’ + 数字 “0”
+    //显示小数点�?��?��?? + 数字 �?0�?
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, TM1639_Number_Table[0] | TM1639_DOT );
 }
 
@@ -294,7 +294,7 @@ void TM1639_Display_Humidity(uint8_t humi)
  */
 void TM1639_Clear(void)
 {
-    // 清空所有显示位
+    // 清空�?有显示位
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L, 0x00);
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, 0x00);
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, 0x00);
@@ -302,7 +302,7 @@ void TM1639_Clear(void)
 
 /**
  * @brief  在指定位置显示字母H
- * @param  position: 显示位置(0-2)，0为最左边
+ * @param  position: 显示位置(0-2)�?0为最左边
  * @retval None
  */
 void TM1639_Display_H(uint8_t position)
@@ -313,23 +313,23 @@ void TM1639_Display_H(uint8_t position)
     
     TM1639_Start();
     TM1639_Write_Byte(position); // 设置显示位置
-    TM1639_Write_Byte(TM1639_CHAR_H);              // 写入字母H的段码
+    TM1639_Write_Byte(TM1639_CHAR_H);              // 写入字母H的段�?
     TM1639_Stop();
 }
 
 /**
- * @brief  关闭所有显示（包括数码管和LED）
+ * @brief  关闭�?有显示（包括数码管和LED�?
  * @param  None
  * @retval None
  */
 void TM1639_All_Off(void)
 {
-    // 关闭数码管显示（GRID1-GRID3）
+    // 关闭数码管显示（GRID1-GRID3�?
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L, 0x00);
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, 0x00);
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, 0x00);
     
-    // 关闭LED显示（GRID4-GRID8）
+    // 关闭LED显示（GRID4-GRID8�?
     TM1639_Write_Digit_Full(TM1639_ADDR_GRID4_H, TM1639_ADDR_GRID4_L, 0x00);
     TM1639_Write_Digit_Full(TM1639_ADDR_GRID5_H, TM1639_ADDR_GRID5_L, 0x00);
     TM1639_Write_Digit_Full(TM1639_ADDR_GRID6_H, TM1639_ADDR_GRID6_L, 0x00);
@@ -341,7 +341,7 @@ void TM1639_All_Off(void)
 }
 
 /**
- * @brief  显示小数点
+ * @brief  显示小数�?
  * @param  num: 
  * @retval None
  */
