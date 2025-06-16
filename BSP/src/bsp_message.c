@@ -1,7 +1,7 @@
 /*
  * bsp_message.c
  *
- *  Created on: 2025�?3�?4�?
+ *  Created on: 2025�??3�??4�??
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -49,9 +49,9 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      break;
 
-     case 0x01: //表示�?机指�?
+     case 0x01: //表示�??机指�??
 
-        if(pdata[3] == 0x00){ // comand 判断是数据还是命�?
+        if(pdata[3] == 0x00){ // comand 判断是数据还是命�??
 
 		
           if(pdata[4] == 0x01){ 
@@ -82,7 +82,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 
 	 case 0x11: //has the second display board exist .this notice 
-		   if(pdata[3] == 0x00){ // comand 判断是数据还是命�?
+		   if(pdata[3] == 0x00){ // comand 判断是数据还是命�??
 		   
 				  
 		if(pdata[4] == 0x01){ 
@@ -95,7 +95,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      case 0x02: //PTC打开关闭指令
 
-     if(pdata[3] == 0x00){ //判断是否是数据，或�?�指令�?�知�? 00- 命令和指令，下一个字节是指令 �?0x0F- 数据，下�?个字节是数据个数
+     if(pdata[3] == 0x00){ //判断是否是数据，或�?�指令�?�知�?? 00- 命令和指令，下一个字节是指令 �??0x0F- 数据，下�??个字节是数据个数
 	 	if(pdata[4]==0x01){
 	 	if(g_pro.gpower_on == power_on){
 		 
@@ -108,8 +108,9 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  if(g_pro.works_two_hours_interval_flag==0){
 		      DRY_OPEN();
 		  }
-
-	 	 
+		 g_pro.gTimer_set_temp_counter=10;
+		 compare_temperature_value_hanlder();
+    
          if(g_wifi.gwifi_link_net_state_flag==wifi_link_success){
               MqttData_Publish_SetPtc(0x01);
 	  	      osDelay(50);//HAL_Delay(350);
@@ -143,7 +144,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 	  case 0x22: //notice cmd ,PTC打开关闭指令,buzzer don't sound,温度对比后的指令
 
-	  if(pdata[3]==0){ //表示是指�?
+	  if(pdata[3]==0){ //表示是指�??
 
       if(pdata[4] == 0x01){
         
@@ -346,7 +347,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         }
       break;
 
-      case 0x1C: //表示时间：小时，分，�?
+      case 0x1C: //表示时间：小时，分，�??
 
         if(pdata[3] == 0x0F){ //数据
 
@@ -355,7 +356,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         }
       break;
 
-        case 0x1D: //表示日期�? 年，月，�?
+        case 0x1D: //表示日期�?? 年，月，�??
 
         if(pdata[3] == 0x0F){ //数据
 

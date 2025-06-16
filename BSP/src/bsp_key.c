@@ -1,7 +1,7 @@
 /*
  * bsp_key.c
  *
- *  Created on: 2025�?3�?4�?
+ *  Created on: 2025�???3�???4�???
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -13,11 +13,11 @@
 #define MIN_TIMER_HOURS 	0
 #define TIMER_SECONDS_PER_MINUTE 60
 
-#define CHECK_TIME_THRESHOLD_4S  200  // 4�?
-#define CHECK_TIME_THRESHOLD_3S  150  // 3�?
-#define TEMPERATURE_HIGH_THRESHOLD  39  // 高温阈�??
-#define TEMPERATURE_LOW_THRESHOLD   38  // 低温阈�??
-#define TEMPERATURE_DIFF_THRESHOLD  1   // 温度差阈�?
+#define CHECK_TIME_THRESHOLD_4S  3  // 4�???
+#define CHECK_TIME_THRESHOLD_3S  150  // 3�???
+#define TEMPERATURE_HIGH_THRESHOLD  39  // 高温阈�??
+#define TEMPERATURE_LOW_THRESHOLD   38  // 低温阈�??
+#define TEMPERATURE_DIFF_THRESHOLD  1   // 温度差阈�???
 
 
 
@@ -47,7 +47,6 @@ static void set_normal_mode(void);
 uint8_t readTemperature(void);
 
 
-uint8_t current_temperature ; //WT.EDIT 2025.05.05
 
 uint8_t timer_power_off_flag;
 
@@ -62,33 +61,33 @@ void key_referen_init(void)
 }
 
 /**
- * @brief       设置GPIO某个引脚的输出状�?
+ * @brief       设置GPIO某个引脚的输出状�???
  * @param       p_gpiox: GPIOA~GPIOG, GPIO指针
- * @param       0X0000~0XFFFF, 引脚位置, 每个位代表一个IO, �?0位代表Px0, �?1位代表Px1, 依次类推. 比如0X0101, 代表同时设置Px0和Px8.
+ * @param       0X0000~0XFFFF, 引脚位置, 每个位代表一个IO, �???0位代表Px0, �???1位代表Px1, 依次类推. 比如0X0101, 代表同时设置Px0和Px8.
  *   @arg       SYS_GPIO_PIN0~SYS_GPIO_PIN15, 1<<0 ~ 1<<15
- * @param       status: 0/1, 引脚状�??(仅最低位有效), 设置如下:
- *   @arg       0, 输出低电�?
- *   @arg       1, 输出高电�?
- * @retval      �?
+ * @param       status: 0/1, 引脚状�??(仅最低位有效), 设置如下:
+ *   @arg       0, 输出低电�???
+ *   @arg       1, 输出高电�???
+ * @retval      �???
  */
 void sys_write_gpio_pin_value(GPIO_TypeDef *p_gpiox, uint16_t pinx, uint8_t status)
 {
     if (status & 0X01)
     {
-        p_gpiox->BSRR |= pinx;  /* 设置GPIOx的pinx�?1 */
+        p_gpiox->BSRR |= pinx;  /* 设置GPIOx的pinx�???1 */
     }
     else
     {
-        p_gpiox->BSRR |= (uint32_t)pinx << 16;  /* 设置GPIOx的pinx�?0 */
+        p_gpiox->BSRR |= (uint32_t)pinx << 16;  /* 设置GPIOx的pinx�???0 */
     }
 }
 
 /**
- * @brief       读取GPIO某个引脚的状�?
+ * @brief       读取GPIO某个引脚的状�???
  * @param       p_gpiox: GPIOA~GPIOG, GPIO指针
- * @param       0X0000~0XFFFF, 引脚位置, 每个位代表一个IO, �?0位代表Px0, �?1位代表Px1, 依次类推. 比如0X0101, 代表同时设置Px0和Px8.
+ * @param       0X0000~0XFFFF, 引脚位置, 每个位代表一个IO, �???0位代表Px0, �???1位代表Px1, 依次类推. 比如0X0101, 代表同时设置Px0和Px8.
  *   @arg       SYS_GPIO_PIN0~SYS_GPIO_PIN15, 1<<0 ~ 1<<15
- * @retval      返回引脚状�??, 0, 低电�?; 1, 高电�?
+ * @retval      返回引脚状�??, 0, 低电�???; 1, 高电�???
  */
 uint8_t sys_read_gpio_pin_value(GPIO_TypeDef *p_gpiox, uint16_t pinx)
 {
@@ -209,27 +208,8 @@ void set_temperature_value_handler(void)
         g_pro.key_set_temperature_flag=2;
         g_wifi.g_wifi_set_temp_flag=0;
 		send_data_flag=1;
-		
-//		if(read_wifi_temperature_value()==1){
-//			g_wifi.g_wifi_set_temp_flag=0;
-////			if(g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){//the second displaybaord
-////		      SendWifiData_One_Data(0x2A,gl_set_temperture_value);
-////			  osDelay(5);
-////			}
-//		}
-//		else{
-//			g_pro.gset_temperture_value = gl_set_temperture_value;
-//			//if(g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){//the second displaybaord
-//			//SendWifiData_One_Data(0x11,gl_set_temperture_value);
-//			///osDelay(5);
-//			//}
-//		}
-		
 		g_pro.g_manual_shutoff_dry_flag =0;
-		
-
-        current_temperature = readTemperature();
-        if (current_temperature > g_pro.gset_temperture_value){
+		if (g_pro.current_temperature > g_pro.gset_temperture_value){
 
 			g_pro.gDry= DRY_STATE_OFF;
             setDryState(g_pro.gDry);
@@ -244,7 +224,7 @@ void set_temperature_value_handler(void)
 				    
 			}
         } 
-		else if (current_temperature < g_pro.gset_temperture_value){
+		else if (g_pro.current_temperature < g_pro.gset_temperture_value){
 			if(g_pro.works_two_hours_interval_flag ==0){
 
 			   g_pro.gDry = DRY_STATE_ON;
@@ -266,26 +246,8 @@ void set_temperature_value_handler(void)
 		key_up_down_pressed_flag=0;
 		//g_disp.g_set_temp_value_flag =0;
     }
-    else{
-#if 0
-        if(send_data_flag ==1){
-			send_data_flag++;
-			if(read_wifi_temperature_value()==1){ //smart phone set up temperature value .
-				g_wifi.g_wifi_set_temp_flag=0;
-//				if(g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){//the second displaybaord
-//			      SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
-//				  osDelay(5);
-//				}
-			}
-			else{
-			
-				if(g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0){//the second displaybaord
-//				SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
-//				osDelay(5);
-//				}
-			}
-        }
-	#endif 
+    else {
+
         if(g_pro.key_set_temperature_flag==2  && read_wifi_temperature_value()==0){
 		
 		       handleTemperatureControl();
@@ -296,11 +258,27 @@ void set_temperature_value_handler(void)
 				handleDefaultTemperatureControl();
 		 
 			}
-        }
+    }
                 
   }
 
-// 读取温度�?
+void compare_temperature_value_hanlder(void)
+{
+	if(g_pro.key_set_temperature_flag==2 ){
+
+			  handleTemperatureControl();
+
+
+	   }
+	   else if(g_pro.key_set_temperature_flag==0){ //don't set temperature value
+					handleDefaultTemperatureControl();
+
+		}
+}
+
+
+
+// 读取温度�???
 uint8_t readTemperature(void) 
 {
     return read_dht11_temperature_value();
@@ -319,11 +297,12 @@ static void handleTemperatureControl(void)
 	//uint8_t current_temperature;
 	//static uint8_t check_time = 0;
    
-    if( g_pro.gTimer_set_temp_counter >= CHECK_TIME_THRESHOLD_4S) { // 4�?
+    if( g_pro.gTimer_set_temp_counter >= CHECK_TIME_THRESHOLD_4S) { // 4�???
           g_pro.gTimer_set_temp_counter =0;
-        current_temperature = readTemperature();
 
-        if ( g_pro.gset_temperture_value < current_temperature ){
+
+
+        if ( g_pro.gset_temperture_value < g_pro.current_temperature){
             g_pro.gDry = DRY_STATE_OFF;
 		    DRY_CLOSE();//setDryState(g_pro.gDry);
 		    LED_DRY_OFF();
@@ -339,7 +318,7 @@ static void handleTemperatureControl(void)
 		   	}
 			
         }
-        else if ((g_pro.gset_temperture_value - TEMPERATURE_DIFF_THRESHOLD) > current_temperature ) {
+        else if ((g_pro.gset_temperture_value - TEMPERATURE_DIFF_THRESHOLD) > g_pro.current_temperature ) {
 				
             	if(g_pro.g_manual_shutoff_dry_flag ==0){
 					g_pro.gDry = DRY_STATE_ON;
@@ -375,11 +354,11 @@ static void handleDefaultTemperatureControl(void)
 {
     static uint8_t default_first_close_dry;
   
-    if ( g_pro.gTimer_disp_temp_humidity_vlaue > 3) { // 3�?
+    if ( g_pro.gTimer_disp_temp_humidity_vlaue > 3) { // 3�???
          g_pro.gTimer_disp_temp_humidity_vlaue = 0;
-        current_temperature = readTemperature();
+      
 
-        if(current_temperature > 39) {
+        if(g_pro.current_temperature > 39) {
 			default_first_close_dry=1;
 			g_pro.gDry =  DRY_STATE_OFF;
             //setDryState(g_pro.gDry);
@@ -396,7 +375,7 @@ static void handleDefaultTemperatureControl(void)
         } 
 		else{
 
-		      if(default_first_close_dry==0 && current_temperature <=39){
+		      if(default_first_close_dry==0 && g_pro.current_temperature <=39){
 
 			  if(g_pro.g_manual_shutoff_dry_flag ==0){
 
@@ -420,7 +399,7 @@ static void handleDefaultTemperatureControl(void)
 				}
 
 			  }
-              else if (current_temperature < 38 && default_first_close_dry==1) {
+              else if (g_pro.current_temperature < 38 && default_first_close_dry==1) {
 	           if(g_pro.g_manual_shutoff_dry_flag ==0){
 
 			    if(g_pro.g_manual_shutoff_dry_flag ==0){ //manual turn off PTC function.
@@ -435,7 +414,7 @@ static void handleDefaultTemperatureControl(void)
 					  }
 			     }
 				 if(g_disp.g_second_disp_flag ==1 && g_pro.g_manual_shutoff_dry_flag ==0){
-				  sendDisplayCommand(0x02,0x01); // 第二个显示板，打�?干燥功能
+				  sendDisplayCommand(0x02,0x01); // 第二个显示板，打�???干燥功能
 				  osDelay(5);
 				 }
 				  if (g_wifi.gwifi_link_net_state_flag == wifi_link_success) {
@@ -453,7 +432,7 @@ static void handleDefaultTemperatureControl(void)
 /******************************************************************************
 	*
 	*Function Name:void set_timer_timing_value_handler(void)
-	*Funcion: // 设置干燥状�??
+	*Funcion: // 设置干燥状�??
 	*Input Ref: state: 0-off,1-on
 	*Return Ref:NO
 	*
@@ -486,7 +465,7 @@ void publishMqttData(DryState state, uint8_t temperature)
 /******************************************************************************
 	*
 	*Function Name:void set_timer_timing_value_handler(void)
-	*Funcion: // 发�?�显示命�?
+	*Funcion: // 发�?�显示命�???
 	*Input Ref: NO
 	*Return Ref:NO
 	*
@@ -600,7 +579,7 @@ void mode_key_fun(void)
   
 }
 
-// 提取的辅助函�?
+// 提取的辅助函�???
 static void set_normal_mode(void)
 {
     uint8_t error_dht11_flag;

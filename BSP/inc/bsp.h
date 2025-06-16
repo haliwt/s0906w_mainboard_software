@@ -146,6 +146,7 @@ typedef struct _process{
    uint8_t first_connect_wifi_flag;
    uint8_t DMA_txComplete;
    uint8_t timer_powerOff_oneHour_flag;
+   uint8_t current_temperature;
 
    int8_t gdisp_timer_hours_value;
    int8_t  disp_timer_minutes_value;
@@ -153,8 +154,7 @@ typedef struct _process{
    uint8_t ptc_warning;
    uint8_t fan_warning ;
 
- //  uint8_t  gdisp_time_minutes;
- //  uint8_t  gdisp_timer_time_minutes;
+
 
 
 

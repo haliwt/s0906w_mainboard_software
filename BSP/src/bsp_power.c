@@ -226,7 +226,7 @@ void power_on_run_handler(void)
 		      send_wifi_power_on_state++;
 		      g_pro.gset_temperture_value = 40;
 			   MqttData_Publish_Update_Data();
-			   osDelay(300);//HAL_Delay(200);
+			   osDelay(100);//HAL_Delay(200);
 
 
 		  }
@@ -245,7 +245,8 @@ void power_on_run_handler(void)
 	  	
       if(g_pro.key_set_temperature_flag==1){
 
-          DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
+          //DHT11_Display_Data(DISPLAY_TEMP); 显示�
+          TM1639_Display_Temperature(g_pro.gset_temperture_value);
         
 
       }

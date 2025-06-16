@@ -1,7 +1,7 @@
 /*
  * bsp_key.h
  *
- *  Created on: 2025�?3�?4�?
+ *  Created on: 2025�?3�?4�?
  *      Author: Administrator
  */
 
@@ -13,10 +13,10 @@
 // GPIOD 寄存器基地址
 //#define GPIOD_BASE        0x48000C00UL
 
-// GPIOD 输入数据寄存�? (IDR) 偏移�?
+// GPIOD 输入数据寄存�? (IDR) 偏移�?
 #define GPIOD_IDR_OFFSET  0x10
 
-// GPIOD_IDR 寄存器指�?
+// GPIOD_IDR 寄存器指�?
 //#define GPIOD_IDR         (*(volatile uint32_t *)(GPIOD_BASE + GPIOD_IDR_OFFSET))
 
 // 引脚掩码
@@ -44,7 +44,7 @@ typedef enum{
 }AIState_TypeDef;
 
 
-// 干燥状�?�枚�?
+// 干燥状�?�枚�?
 typedef enum {
     DRY_STATE_OFF = 0,
     DRY_STATE_ON = 1
@@ -85,7 +85,7 @@ typedef enum{
 
 #else
 
-#define KEY_POWER_VALUE()          sys_read_gpio_pin_value(GPIOD, KEY_POWER_Pin) //GPIO_1 按键按下，返回�??: 1
+#define KEY_POWER_VALUE()          sys_read_gpio_pin_value(GPIOD, KEY_POWER_Pin) //GPIO_1 按键按下，返回�??: 1
 #define KEY_MODE_VALUE()           sys_read_gpio_pin_value(GPIOD, KEY_MODE_Pin)
 
 #define KEY_DOWN_VALUE()           sys_read_gpio_pin_value(GPIOD, KEY_DOWN_Pin)
@@ -129,6 +129,8 @@ void set_timer_timing_value_handler(void);
 
 void sendDisplayCommand(uint8_t command,uint8_t data) ;
 void mode_key_fun(void);
+
+void compare_temperature_value_hanlder(void);
 
 
 #endif /* BSP_INC_BSP_KEY_H_ */

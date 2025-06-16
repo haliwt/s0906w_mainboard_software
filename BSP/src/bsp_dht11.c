@@ -315,7 +315,8 @@ void Update_DHT11_ToDisplayBoard_Value(void)
 		
 	    sendData_Real_TimeHum(dht11_data.humidity,dht11_data.temperature);
 		copy_dht11_temp= dht11_data.temperature;
-	     copy_dht11_hum = dht11_data.humidity;
+	    copy_dht11_hum = dht11_data.humidity;
+		g_pro.current_temperature= copy_dht11_temp;
 		
 		osDelay(5);
     }
