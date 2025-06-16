@@ -1,7 +1,7 @@
 /*
  * bsp.h
  *
- *  Created on: 2025å¹´3æœˆ4æ—¥
+ *  Created on: 2025å¹?3æœ?4æ—?
  *      Author: Administrator
  */
 
@@ -133,10 +133,10 @@ typedef struct _process{
    uint8_t temperature_init_value;
 
    uint8_t key_gtime_timer_define_flag;
-   uint8_t g_disp_timer_or_temp_flag;
+   uint8_t g_disp_smg_timer_or_temp_hours_item;
    uint8_t gdisp_hours_value;
    uint8_t gdisp_minutes_value;
-   uint8_t  disp_timer_minutes_value;
+   
 
    uint8_t g_copy_power_onoff_flag;
    uint8_t delay_run_adc_counter;
@@ -146,7 +146,7 @@ typedef struct _process{
    uint8_t DMA_txComplete;
 
    int8_t gdisp_timer_hours_value;
-   
+   int8_t  disp_timer_minutes_value;
    
    uint8_t ptc_warning;
    uint8_t fan_warning ;

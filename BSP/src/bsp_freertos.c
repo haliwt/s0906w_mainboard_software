@@ -148,8 +148,6 @@ static void vTaskRunPro(void *pvParameters)
 
 	power_onoff_handler(g_pro.gpower_on);
 
-	
-
 	if(g_wifi.wifi_led_fast_blink_flag==0 ){
 		wifi_communication_tnecent_handler();//
 		getBeijingTime_cofirmLinkNetState_handler();

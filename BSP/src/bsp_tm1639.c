@@ -189,7 +189,7 @@ void TM1639_Display_3_Digit(uint8_t num)
     one = num % 10;
     
     // 写入十位（最左边�?
-  
+    
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L, TM1639_Number_Table[ten]);
         
     // 写入十位（中间）

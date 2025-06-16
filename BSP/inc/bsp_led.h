@@ -28,11 +28,11 @@
 
 
 
-#define LED_TEMP_SINGLE_ON()     do{LED_TEMP_SYMBOL_GPIO_Port->BSRR |=(uint32_t)LED_TEMP_SYMBOL_Pin;}while(0)//        sys_write_gpio_pin_value(LED_TEMP_SYMBOL_GPIO_Port, LED_TEMP_SYMBOL_Pin, GPIO_PIN_RESET)
-#define LED_TEMP_SINGLE_OFF()    do{LED_TEMP_SYMBOL_GPIO_Port->BSRR |=LED_TEMP_SYMBOL_Pin;}while(0)      //sys_write_gpio_pin_value(LED_TEMP_SYMBOL_GPIO_Port, LED_TEMP_SYMBOL_Pin, GPIO_PIN_SET)
+#define LED_TEMP_ICON_ON()     do{LED_TEMP_SYMBOL_GPIO_Port->BSRR |=(uint32_t)LED_TEMP_SYMBOL_Pin;}while(0)//        sys_write_gpio_pin_value(LED_TEMP_SYMBOL_GPIO_Port, LED_TEMP_SYMBOL_Pin, GPIO_PIN_RESET)
+#define LED_TEMP_ICON_OFF()    do{LED_TEMP_SYMBOL_GPIO_Port->BSRR |=LED_TEMP_SYMBOL_Pin;}while(0)      //sys_write_gpio_pin_value(LED_TEMP_SYMBOL_GPIO_Port, LED_TEMP_SYMBOL_Pin, GPIO_PIN_SET)
 
-#define LED_HUM_SINGLE_ON()      do{LED_HUM_SYMBOL_GPIO_Port->BSRR |=(uint32_t)LED_HUM_SYMBOL_Pin;}while(0)//sys_write_gpio_pin_value(LED_HUM_SYMBOL_GPIO_Port, LED_HUM_SYMBOL_Pin, GPIO_PIN_RESET)
-#define LED_HUM_SINGLE_OFF()     do{LED_HUM_SYMBOL_GPIO_Port->BSRR |=LED_HUM_SYMBOL_Pin;}while(0)//sys_write_gpio_pin_value(LED_HUM_SYMBOL_GPIO_Port, LED_HUM_SYMBOL_Pin, GPIO_PIN_SET)
+#define LED_HUM_ICON_ON()      do{LED_HUM_SYMBOL_GPIO_Port->BSRR |=(uint32_t)LED_HUM_SYMBOL_Pin;}while(0)//sys_write_gpio_pin_value(LED_HUM_SYMBOL_GPIO_Port, LED_HUM_SYMBOL_Pin, GPIO_PIN_RESET)
+#define LED_HUM_ICON_OFF()     do{LED_HUM_SYMBOL_GPIO_Port->BSRR |=LED_HUM_SYMBOL_Pin;}while(0)//sys_write_gpio_pin_value(LED_HUM_SYMBOL_GPIO_Port, LED_HUM_SYMBOL_Pin, GPIO_PIN_SET)
 
 
 

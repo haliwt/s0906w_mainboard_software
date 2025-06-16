@@ -1,7 +1,7 @@
 /*
  * bsp_key.c
  *
- *  Created on: 2025年3月4日
+ *  Created on: 2025�?3�?4�?
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -13,11 +13,11 @@
 #define MIN_TIMER_HOURS 	0
 #define TIMER_SECONDS_PER_MINUTE 60
 
-#define CHECK_TIME_THRESHOLD_4S  200  // 4秒
-#define CHECK_TIME_THRESHOLD_3S  150  // 3秒
-#define TEMPERATURE_HIGH_THRESHOLD  39  // 高温阈值
-#define TEMPERATURE_LOW_THRESHOLD   38  // 低温阈值
-#define TEMPERATURE_DIFF_THRESHOLD  1   // 温度差阈值
+#define CHECK_TIME_THRESHOLD_4S  200  // 4�?
+#define CHECK_TIME_THRESHOLD_3S  150  // 3�?
+#define TEMPERATURE_HIGH_THRESHOLD  39  // 高温阈�??
+#define TEMPERATURE_LOW_THRESHOLD   38  // 低温阈�??
+#define TEMPERATURE_DIFF_THRESHOLD  1   // 温度差阈�?
 
 
 
@@ -49,7 +49,7 @@ uint8_t readTemperature(void);
 
 uint8_t current_temperature ; //WT.EDIT 2025.05.05
 
-
+uint8_t timer_power_off_flag;
 
 void key_referen_init(void)
 {
@@ -62,33 +62,33 @@ void key_referen_init(void)
 }
 
 /**
- * @brief       设置GPIO某个引脚的输出状态
+ * @brief       设置GPIO某个引脚的输出状�?
  * @param       p_gpiox: GPIOA~GPIOG, GPIO指针
- * @param       0X0000~0XFFFF, 引脚位置, 每个位代表一个IO, 第0位代表Px0, 第1位代表Px1, 依次类推. 比如0X0101, 代表同时设置Px0和Px8.
+ * @param       0X0000~0XFFFF, 引脚位置, 每个位代表一个IO, �?0位代表Px0, �?1位代表Px1, 依次类推. 比如0X0101, 代表同时设置Px0和Px8.
  *   @arg       SYS_GPIO_PIN0~SYS_GPIO_PIN15, 1<<0 ~ 1<<15
- * @param       status: 0/1, 引脚状态(仅最低位有效), 设置如下:
- *   @arg       0, 输出低电平
- *   @arg       1, 输出高电平
- * @retval      无
+ * @param       status: 0/1, 引脚状�??(仅最低位有效), 设置如下:
+ *   @arg       0, 输出低电�?
+ *   @arg       1, 输出高电�?
+ * @retval      �?
  */
 void sys_write_gpio_pin_value(GPIO_TypeDef *p_gpiox, uint16_t pinx, uint8_t status)
 {
     if (status & 0X01)
     {
-        p_gpiox->BSRR |= pinx;  /* 设置GPIOx的pinx为1 */
+        p_gpiox->BSRR |= pinx;  /* 设置GPIOx的pinx�?1 */
     }
     else
     {
-        p_gpiox->BSRR |= (uint32_t)pinx << 16;  /* 设置GPIOx的pinx为0 */
+        p_gpiox->BSRR |= (uint32_t)pinx << 16;  /* 设置GPIOx的pinx�?0 */
     }
 }
 
 /**
- * @brief       读取GPIO某个引脚的状态
+ * @brief       读取GPIO某个引脚的状�?
  * @param       p_gpiox: GPIOA~GPIOG, GPIO指针
- * @param       0X0000~0XFFFF, 引脚位置, 每个位代表一个IO, 第0位代表Px0, 第1位代表Px1, 依次类推. 比如0X0101, 代表同时设置Px0和Px8.
+ * @param       0X0000~0XFFFF, 引脚位置, 每个位代表一个IO, �?0位代表Px0, �?1位代表Px1, 依次类推. 比如0X0101, 代表同时设置Px0和Px8.
  *   @arg       SYS_GPIO_PIN0~SYS_GPIO_PIN15, 1<<0 ~ 1<<15
- * @retval      返回引脚状态, 0, 低电平; 1, 高电平
+ * @retval      返回引脚状�??, 0, 低电�?; 1, 高电�?
  */
 uint8_t sys_read_gpio_pin_value(GPIO_TypeDef *p_gpiox, uint16_t pinx)
 {
@@ -146,10 +146,10 @@ static void adjust_timer(int8_t delta)
     g_pro.gdisp_timer_hours_value += delta;
     if (g_pro.gdisp_timer_hours_value > MAX_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MAX_TIMER_HOURS;
     if (g_pro.gdisp_timer_hours_value < MIN_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MIN_TIMER_HOURS;
-    g_pro.g_disp_timer_or_temp_flag = input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
+    g_pro.g_disp_smg_timer_or_temp_hours_item = input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
     TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
-	SendWifiData_One_Data(0x4C,g_pro.gdisp_timer_hours_value);
-	osDelay(5);
+	//SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
+	//osDelay(5);
 }
 
 
@@ -300,7 +300,7 @@ void set_temperature_value_handler(void)
                 
   }
 
-// 读取温度值
+// 读取温度�?
 uint8_t readTemperature(void) 
 {
     return read_dht11_temperature_value();
@@ -319,7 +319,7 @@ static void handleTemperatureControl(void)
 	//uint8_t current_temperature;
 	//static uint8_t check_time = 0;
    
-    if( g_pro.gTimer_set_temp_counter >= CHECK_TIME_THRESHOLD_4S) { // 4秒
+    if( g_pro.gTimer_set_temp_counter >= CHECK_TIME_THRESHOLD_4S) { // 4�?
           g_pro.gTimer_set_temp_counter =0;
         current_temperature = readTemperature();
 
@@ -373,11 +373,9 @@ static void handleTemperatureControl(void)
 ******************************************************************************/
 static void handleDefaultTemperatureControl(void) 
 {
-    
-
-	static uint8_t default_first_close_dry;
+    static uint8_t default_first_close_dry;
   
-    if ( g_pro.gTimer_disp_temp_humidity_vlaue > 3) { // 3秒
+    if ( g_pro.gTimer_disp_temp_humidity_vlaue > 3) { // 3�?
          g_pro.gTimer_disp_temp_humidity_vlaue = 0;
         current_temperature = readTemperature();
 
@@ -437,7 +435,7 @@ static void handleDefaultTemperatureControl(void)
 					  }
 			     }
 				 if(g_disp.g_second_disp_flag ==1 && g_pro.g_manual_shutoff_dry_flag ==0){
-				  sendDisplayCommand(0x02,0x01); // 第二个显示板，打开干燥功能
+				  sendDisplayCommand(0x02,0x01); // 第二个显示板，打�?干燥功能
 				  osDelay(5);
 				 }
 				  if (g_wifi.gwifi_link_net_state_flag == wifi_link_success) {
@@ -455,7 +453,7 @@ static void handleDefaultTemperatureControl(void)
 /******************************************************************************
 	*
 	*Function Name:void set_timer_timing_value_handler(void)
-	*Funcion: // 设置干燥状态
+	*Funcion: // 设置干燥状�??
 	*Input Ref: state: 0-off,1-on
 	*Return Ref:NO
 	*
@@ -488,7 +486,7 @@ void publishMqttData(DryState state, uint8_t temperature)
 /******************************************************************************
 	*
 	*Function Name:void set_timer_timing_value_handler(void)
-	*Funcion: // 发送显示命令
+	*Funcion: // 发�?�显示命�?
 	*Input Ref: NO
 	*Return Ref:NO
 	*
@@ -504,7 +502,7 @@ void sendDisplayCommand(uint8_t command,uint8_t data)
 /******************************************************************************
 	*
 	*Function Name:void set_timer_timing_value_handler(void)
-	*Funcion: 
+	*Function:
 	*Input Ref: NO
 	*Return Ref:NO
 	*
@@ -512,21 +510,23 @@ void sendDisplayCommand(uint8_t command,uint8_t data)
 void set_timer_timing_value_handler(void)
 {
 
-   
+  
    if(g_pro.key_gtime_timer_define_flag == input_set_timer_mode && g_pro.gTimer_switch_set_timer_times > 3 ){
    	      g_pro.gTimer_switch_set_timer_times=0;
 
           if(g_pro.key_set_timer_flag==1){
 
 			if(g_pro.gdisp_timer_hours_value>0){
-			g_pro.g_disp_timer_or_temp_flag = timer_time_mode;
+
+			g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;
 			g_pro.key_gtime_timer_define_flag = normal_time_mode; //define UP and down key is set temperature value 
 			g_pro.key_set_timer_flag++;
 			g_pro.gTimer_timer_time_second=0;
 			g_pro.disp_timer_minutes_value=0;//gl_timer_minutes_value=0;
 			g_pro.gAI = 0;
 			LED_AI_OFF();
-
+            SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
+	        osDelay(5);
 
 
 			}
@@ -536,7 +536,7 @@ void set_timer_timing_value_handler(void)
 
 				g_pro.key_set_timer_flag=0;
 
-				g_pro.g_disp_timer_or_temp_flag = normal_time_mode;
+				g_pro.g_disp_smg_timer_or_temp_hours_item = normal_time_mode;
 				g_pro.key_gtime_timer_define_flag = normal_time_mode;
 			}
 		}
@@ -547,7 +547,7 @@ void set_timer_timing_value_handler(void)
 
 		}
    	}
-    else if(g_pro.key_set_timer_flag==2){
+    else if(g_pro.key_set_timer_flag==2){ //has been set up timer timing value .
 
        if(g_pro.gTimer_timer_time_second > 59){
 	       g_pro.gTimer_timer_time_second=0;
@@ -560,21 +560,24 @@ void set_timer_timing_value_handler(void)
 		   if(g_pro.disp_timer_minutes_value< 0){
 			  g_pro.disp_timer_minutes_value =59;
 			  g_pro.gdisp_timer_hours_value--;
+		   
+			  if(g_pro.gdisp_timer_hours_value==0 && timer_power_off_flag!=1){
+			      g_pro.gdisp_timer_hours_value=1;
+			      timer_power_off_flag=1;
 
-			  if(g_pro.gdisp_timer_hours_value < 0){
+			  }
+			  else if(g_pro.gdisp_timer_hours_value ==0 && timer_power_off_flag==1){
+            	  timer_power_off_flag=0;
+				   g_pro.gdisp_timer_hours_value=0;
                    buzzer_sound();
 			       g_pro.gpower_on = power_off;
-			      SendData_Set_Command(CMD_POWER,close);
-	              osDelay(5);
-			  	
+			       SendData_Set_Command(CMD_POWER,close);
+	               osDelay(5);
+
 			  }
 			 
-
-            }
-
-
-
-	   }
+          }
+      }
 
    }
 	
@@ -597,7 +600,7 @@ void mode_key_fun(void)
   
 }
 
-// 提取的辅助函数
+// 提取的辅助函�?
 static void set_normal_mode(void)
 {
     uint8_t error_dht11_flag;

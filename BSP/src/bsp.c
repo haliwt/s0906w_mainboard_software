@@ -1,7 +1,7 @@
 /*
  * bsp.c
  *
- *  Created on: 2025å¹´3æœˆ4æ—¥
+ *  Created on: 2025å¹?3æœ?4æ—?
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -154,7 +154,8 @@ void mainboard_close_all_fun(void)
 	mouse_close();
 
 	PLASMA_CLOSE();
-
+    TM1639_Display_ON_OFF(0);
+	power_off_led();
 
 }
 

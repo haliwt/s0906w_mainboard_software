@@ -18,10 +18,10 @@ void power_on_led(void)
     LED_TAPE_CTL_ON();
     LED_AI_ON();
     LED_WIFI_ON();
-    LED_TEMP_SINGLE_ON();
+    LED_TEMP_ICON_ON();
     LED_DRY_ON();
     LED_PLASMA_ON();
-    LED_HUM_SINGLE_ON();
+    LED_HUM_ICON_ON();
     LED_MOUSE_ON();
     LED_FUN_ON();
 	//TEMP_ICON_ON() ;
@@ -34,7 +34,7 @@ void power_on_smart_app_led(void)
     LED_TAPE_CTL_ON();
     LED_AI_ON();
     LED_WIFI_ON();
-    LED_TEMP_SINGLE_ON();
+    LED_TEMP_ICON_ON();
 	LED_FUN_ON();
 	DHT11_Display_Data(0); //display temperature value 
    
@@ -48,14 +48,14 @@ void power_on_smart_app_led(void)
  ************************************************************************/
 void power_off_led(void)
 {
-    LED_POWER_OFF();
+    //LED_POWER_OFF();
     LED_TAPE_CTL_OFF();
     LED_AI_OFF();
     LED_WIFI_OFF();
-    LED_TEMP_SINGLE_OFF();
+    LED_TEMP_ICON_OFF();
     LED_DRY_OFF();
     LED_PLASMA_OFF();
-    LED_HUM_SINGLE_OFF();
+    LED_HUM_ICON_OFF();
     LED_MOUSE_OFF();
 	TEMP_ICON_OFF() ;
 	HUMIDITY_ICON_OFF();

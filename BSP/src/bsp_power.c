@@ -1,7 +1,7 @@
 /*
  * bsp_power.c
  *
- *  Created on: 2025年3月4日
+ *  Created on: 2025�?3�?4�?
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -34,7 +34,7 @@ uint8_t send_wifi_power_on_state;
 
 /**********************************************************************
 	*
-	*Functin Name: void power_on_init_ref(void)
+	*Function Name: void power_on_init_ref(void)
 	*Function : 
 	*Input Ref: NO
 	*Return Ref: NO
@@ -83,7 +83,7 @@ void power_onoff_handler(uint8_t data)
 	}
 /**********************************************************************
 	*
-	*Functin Name: void power_on_init_ref(void)
+	*Function Name: void power_on_init_ref(void)
 	*Function : 
 	*Input Ref: NO
 	*Return Ref: NO
@@ -98,10 +98,10 @@ void power_on_init_ref(void)
 		   g_pro.gTemp_value = 40;
 		   //display time timing value 
 		   g_pro.gdisp_hours_value =0;
-		   g_pro.gdisp_timer_hours_value =0; //设置定时时间，
+		   g_pro.gdisp_timer_hours_value =0; //设置定时时间�?
 
 		   g_pro.key_gtime_timer_define_flag=normal_time_mode; //
-		   g_pro.g_disp_timer_or_temp_flag = normal_time_mode;
+		   g_pro.g_disp_smg_timer_or_temp_hours_item = normal_time_mode;
 		
 		 
 		   // function led is turn on 
@@ -161,7 +161,7 @@ void power_on_run_handler(void)
 			 
 		   
 		   
-      if(g_wifi.gwifi_link_net_state_flag == wifi_no_link){//逻辑不严谨//if(g_wifi.gwifi_link_net_state_flag == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
+      if(g_wifi.gwifi_link_net_state_flag == wifi_no_link){//逻辑不严�?//if(g_wifi.gwifi_link_net_state_flag == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	      
 		   power_on_init_ref();
 
@@ -262,7 +262,7 @@ void power_on_run_handler(void)
     	 		   TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);//WT.EDIT 2025.04.23
     	  }
     	 else{
-    		 if(g_pro.g_disp_timer_or_temp_flag == normal_time_mode){
+    		 if(g_pro.g_disp_smg_timer_or_temp_hours_item == normal_time_mode){
     			 g_pro.gAI=1;
     			 LED_AI_ON();
     			 TEMP_ICON_ON();//WT.EDIT 2025.04.28
@@ -277,37 +277,37 @@ void power_on_run_handler(void)
 
 
       }
-      else if((g_pro.g_disp_timer_or_temp_flag == timer_time_mode) && read_wifi_temperature_value()==0){
+      else if((g_pro.g_disp_smg_timer_or_temp_hours_item == timer_time_mode) && read_wifi_temperature_value()==0){
              
 	    // 如果计时器超过阈值，切换显示模式
 
 		  if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD) {
-			g_pro.gTimer_switch_temp_hum = 0; // 重置计时器
+			g_pro.gTimer_switch_temp_hum = 0; // 重置计时�?
 	
 			disp_temp_hum++;
 			if (disp_temp_hum > 3) {
-				disp_temp_hum = 1; // 循环显示状态
+				disp_temp_hum = 1; // 循环显示状�??
 			}
 	
-			// 根据状态调用显示函数
+			// 根据状�?�调用显示函�?
 			switch (disp_temp_hum) {
 				case 1:
-					LED_TEMP_SINGLE_ON();
-					LED_HUM_SINGLE_OFF();
+					LED_TEMP_ICON_ON();
+					LED_HUM_ICON_OFF();
 
 					read_error_flag =DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
 					if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
 					break;
 				case 2:
-                    LED_TEMP_SINGLE_OFF();
-					LED_HUM_SINGLE_ON();
+                    LED_TEMP_ICON_OFF();
+					LED_HUM_ICON_ON();
 				    read_error_flag =DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
 					if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
 					break;
 				case 3:
 					LED_AI_OFF();
-					LED_TEMP_SINGLE_OFF();
-					LED_HUM_SINGLE_OFF();
+					LED_TEMP_ICON_OFF();
+					LED_HUM_ICON_OFF();
 					TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value); // 显示时间
 					break;
 			}
@@ -315,17 +315,17 @@ void power_on_run_handler(void)
 	} 
 	else {
 		
-		// 如果计时器超过阈值，切换布尔显示状态,不显示时间
-       if((g_pro.g_disp_timer_or_temp_flag == normal_time_mode) && read_key_up_down_mode()!=1 && read_wifi_temperature_value()==0){ //正常模式
+		// 如果计时器超过阈值，切换布尔显示状�??,不显示时�?
+       if((g_pro.g_disp_smg_timer_or_temp_hours_item == normal_time_mode) && read_key_up_down_mode()!=1 && read_wifi_temperature_value()==0){ //正常模式
 
 			   g_pro.gAI=1;
 			   LED_AI_ON();
                if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD ){
-				g_pro.gTimer_switch_temp_hum = 0; // 重置计时器
+				g_pro.gTimer_switch_temp_hum = 0; // 重置计时�?
 		        if(disp_temp_hum > 1)disp_temp_hum=0;
-				disp_temp_hum = disp_temp_hum ^ 0x01;   // 切换布尔状态
-				read_error_flag= DHT11_Display_Data(disp_temp_hum); // 显示温度或湿度
-				if(read_error_flag == 0)DHT11_Display_Data(disp_temp_hum); // 显示温度或湿度
+				disp_temp_hum = disp_temp_hum ^ 0x01;   // 切换布尔状�??
+				read_error_flag= DHT11_Display_Data(disp_temp_hum); // 显示温度或湿�?
+				if(read_error_flag == 0)DHT11_Display_Data(disp_temp_hum); // 显示温度或湿�?
 				
 			 }
 		 	}

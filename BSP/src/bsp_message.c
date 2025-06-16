@@ -1,7 +1,7 @@
 /*
  * bsp_message.c
  *
- *  Created on: 2025年3月4日
+ *  Created on: 2025�?3�?4�?
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -49,9 +49,9 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      break;
 
-     case 0x01: //表示开机指令
+     case 0x01: //表示�?机指�?
 
-        if(pdata[3] == 0x00){ // comand 判断是数据还是命令
+        if(pdata[3] == 0x00){ // comand 判断是数据还是命�?
 
 		
           if(pdata[4] == 0x01){ 
@@ -82,7 +82,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 
 	 case 0x11: //has the second display board exist .this notice 
-		   if(pdata[3] == 0x00){ // comand 判断是数据还是命令
+		   if(pdata[3] == 0x00){ // comand 判断是数据还是命�?
 		   
 				  
 		if(pdata[4] == 0x01){ 
@@ -95,7 +95,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      case 0x02: //PTC打开关闭指令
 
-     if(pdata[3] == 0x00){ //判断是否是数据，或者指令通知， 00- 命令和指令，下一个字节是指令 ；0x0F- 数据，下一个字节是数据个数
+     if(pdata[3] == 0x00){ //判断是否是数据，或�?�指令�?�知�? 00- 命令和指令，下一个字节是指令 �?0x0F- 数据，下�?个字节是数据个数
 	 	if(pdata[4]==0x01){
 	 	if(g_pro.gpower_on == power_on){
 		 
@@ -143,7 +143,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 	  case 0x22: //notice cmd ,PTC打开关闭指令,buzzer don't sound,温度对比后的指令
 
-	  if(pdata[3]==0){ //表示是指令
+	  if(pdata[3]==0){ //表示是指�?
 
       if(pdata[4] == 0x01){
         
@@ -224,7 +224,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
       case 0x04: //ultrasonic  打开关闭指令
 
-       if(pdata[3] == 0x00){ // 00-》表示是指令或者通知，不是数据，下一个数据就是命令或者通知
+       if(pdata[3] == 0x00){ // 00-》表示是指令或�?��?�知，不是数据，下一个数据就是命令或者�?�知
 	 	if(pdata[4]==0x01){
           if(g_pro.gpower_on == power_on){ 
             buzzer_sound();
@@ -346,7 +346,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         }
       break;
 
-      case 0x1C: //表示时间：小时，分，秒
+      case 0x1C: //表示时间：小时，分，�?
 
         if(pdata[3] == 0x0F){ //数据
 
@@ -355,7 +355,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         }
       break;
 
-        case 0x1D: //表示日期： 年，月，日
+        case 0x1D: //表示日期�? 年，月，�?
 
         if(pdata[3] == 0x0F){ //数据
 
@@ -418,32 +418,29 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      break;
 
-	case 0x4C: //set up timer timing value 
+	case 0x2B: //set up timer timing value 
 		if(pdata[3] == 0x0F){ //数据
 
 			if(pdata[4]==0x01){ // has dat only one value ,next receive byte is value
 
 			if(g_pro.gpower_on == power_on){ 
-                buzzer_sound();
+                g_pro.gdisp_timer_hours_value = pdata[5];
 				g_key.mode_key_switch_time_mode = timer_time_mode;
-				g_pro.key_gtime_timer_define_flag = input_set_timer_mode;
-				g_pro.key_set_timer_flag =1;
+				//g_pro.key_gtime_timer_define_flag = input_set_timer_mode;
+				//g_pro.key_set_timer_flag =1;
 				g_pro.gTimer_switch_set_timer_times = 0;
+				g_pro.gTimer_timer_time_second=0;
+				 g_pro.disp_timer_minutes_value=0;
+				g_pro.key_set_timer_flag=2;
 			  
-			    g_pro.gdisp_timer_hours_value = pdata[5];
-			
-			    g_pro.g_disp_timer_or_temp_flag = input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
+			    g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;//input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
                 if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
 				TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
-                	}
-				
+                }
+			 }
 
 			}
-
-			}
-
-
-		}
+       }
 	 	
      break;
 
@@ -452,18 +449,16 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 			if(pdata[4]==0x03){ // has dat only one value ,next receive byte is value
 
-			if(g_pro.gpower_on == power_on){ 
-              
-			g_pro.gdisp_timer_hours_value = pdata[5];
-			g_pro.disp_timer_minutes_value=pdata[6];
-			g_pro.gTimer_timer_time_second=pdata[7];
-				
+				if(g_pro.gpower_on == power_on){
 
+                if(g_pro.gdisp_timer_hours_value > 1){
+				   g_pro.gdisp_timer_hours_value = pdata[5];
+
+                }
+				g_pro.disp_timer_minutes_value=pdata[6];
+				g_pro.gTimer_timer_time_second=pdata[7];
+				}
 			}
-
-			}
-
-
 		}
 	 	
      break;
