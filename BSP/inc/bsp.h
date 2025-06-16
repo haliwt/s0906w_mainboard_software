@@ -147,6 +147,8 @@ typedef struct _process{
    uint8_t DMA_txComplete;
    uint8_t timer_powerOff_oneHour_flag;
    uint8_t current_temperature;
+   uint8_t set_temperature_value_success;
+   uint8_t g_dispboard_set_temp_flag ;
 
    int8_t gdisp_timer_hours_value;
    int8_t  disp_timer_minutes_value;

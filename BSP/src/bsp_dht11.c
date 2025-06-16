@@ -205,28 +205,18 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
    
     // 读取DHT11数据
     status = dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
-    //dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
-	//osDelay(100);
+
 
 	if(status !=0){
 	    if(mode == 0)
 	    {
-	        // 显示温度
-	//        if(dht11_data.is_negative){
-	//            TM1639_Display_Temperature(-dht11_data.temperature);
-	//        }
-	//        else{
-	        	LED_TEMP_ICON_ON();
-	        	LED_HUM_ICON_OFF();
-	            if(g_pro.key_set_temperature_flag==1){
-					
-				   TM1639_Display_Temperature(g_pro.gset_temperture_value);
 
-				}
-				else{
-	                TM1639_Display_Temperature(copy_temp_value);
+	         LED_TEMP_ICON_ON();
+	         LED_HUM_ICON_OFF();
+	           
+	         TM1639_Display_Temperature(copy_temp_value);
 	               
-				}
+				
 	        
 	    }
 	    else
@@ -252,15 +242,10 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
 //        else{
         	LED_TEMP_ICON_ON();
         	LED_HUM_ICON_OFF();
-            if(g_pro.key_set_temperature_flag==1){
+           
+            TM1639_Display_Temperature(dht11_data.temperature);
+		     copy_temp_value = dht11_data.temperature;
 				
-			   TM1639_Display_Temperature(g_pro.gset_temperture_value);
-                
-			}
-			else{
-                TM1639_Display_Temperature(dht11_data.temperature);
-				 copy_temp_value = dht11_data.temperature;
-				}
         
     }
     else

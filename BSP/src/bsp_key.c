@@ -114,7 +114,7 @@ static void adjust_temperature(int8_t delta)
 {
 
    //static uint8_t temperature_init_value ;
-	if (g_pro.temperature_init_value == 0 && g_pro.key_set_temperature_flag !=2) {
+	if (g_pro.temperature_init_value == 0 && g_pro.set_temperature_value_success !=1) {
         g_pro.temperature_init_value++;
         g_pro.gset_temperture_value = (delta > 0) ? 40 : 20;
     } else {
@@ -122,6 +122,7 @@ static void adjust_temperature(int8_t delta)
         if (g_pro.gset_temperture_value > MAX_TEMPERATURE) g_pro.gset_temperture_value = MAX_TEMPERATURE;
         if (g_pro.gset_temperture_value < MIN_TEMPERATURE) g_pro.gset_temperture_value = MIN_TEMPERATURE;
     }
+	g_pro.gTimer_input_set_temp_timer=0;
     g_pro.g_manual_shutoff_dry_flag = 0;
     key_up_down_pressed_flag = 1;
     g_pro.key_set_temperature_flag = 1;
@@ -129,8 +130,9 @@ static void adjust_temperature(int8_t delta)
     TM1639_Display_Temperature(g_pro.gset_temperture_value);
     g_pro.gTimer_input_set_temp_times = 0;
     g_pro.gTimer_switch_temp_hum = 0;
-	SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
-	osDelay(5);
+	g_pro.gTimer_input_set_temp_timer=0;
+	
+	
 }
 
 /**
@@ -203,25 +205,36 @@ void key_dwon_fun(void)
 void set_temperature_value_handler(void)
 {
    static uint8_t send_data_flag;
-   if((g_pro.key_set_temperature_flag==1 || g_wifi.g_wifi_set_temp_flag==1) && g_pro.gTimer_input_set_temp_timer >= 4)
+   if(g_pro.g_dispboard_set_temp_flag ==1 && g_pro.gTimer_input_set_temp_timer >2){
+       g_pro.g_dispboard_set_temp_flag++;
+       g_pro.key_set_temperature_flag ++;
+
+
+   }
+   else if((g_pro.key_set_temperature_flag==1 || g_wifi.g_wifi_set_temp_flag==1) && g_pro.gTimer_input_set_temp_timer >2)
 	{
         g_pro.key_set_temperature_flag=2;
         g_wifi.g_wifi_set_temp_flag=0;
 		send_data_flag=1;
 		g_pro.g_manual_shutoff_dry_flag =0;
+		g_pro.set_temperature_value_success=1;
 		if (g_pro.current_temperature > g_pro.gset_temperture_value){
 
 			g_pro.gDry= DRY_STATE_OFF;
             setDryState(g_pro.gDry);
 		
-			if(g_wifi.gwifi_link_net_state_flag==wifi_link_success){
-            publishMqttData(DRY_STATE_OFF, g_pro.gset_temperture_value);
-			osDelay(100);
-			}
+			
             if(g_disp.g_second_disp_flag == 1) {
+				 SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
+	             osDelay(5);
 				 sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
 	             osDelay(5);
 				    
+			}
+
+			if(g_wifi.gwifi_link_net_state_flag==wifi_link_success){
+            publishMqttData(DRY_STATE_OFF, g_pro.gset_temperture_value);
+			osDelay(100);
 			}
         } 
 		else if (g_pro.current_temperature < g_pro.gset_temperture_value){
@@ -232,29 +245,37 @@ void set_temperature_value_handler(void)
 
 		   }
 			
-			if(g_wifi.gwifi_link_net_state_flag==wifi_link_success){
-            publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
-			osDelay(100);
-			}
+			
             if (g_disp.g_second_disp_flag == 1 && g_disp.g_set_temp_value_flag ==0) {
+
+			    SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
+	            osDelay(5);
 				
                 sendDisplayCommand(0x02,0x01); // 打开干燥功能
                 osDelay(5);
 				
             }
-        }
-		key_up_down_pressed_flag=0;
-		//g_disp.g_set_temp_value_flag =0;
-    }
-    else {
 
-        if(g_pro.key_set_temperature_flag==2  && read_wifi_temperature_value()==0){
+
+			if(g_wifi.gwifi_link_net_state_flag==wifi_link_success){
+            publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
+			osDelay(100);
+			}
+        }
+
+	   
+		key_up_down_pressed_flag=0;
+		
+    }
+    else if(g_pro.key_set_temperature_flag !=1){
+
+        if(g_pro.set_temperature_value_success==1  && read_wifi_temperature_value()==0){
 		
 		       handleTemperatureControl();
 
 			
          }
-		else if(g_pro.key_set_temperature_flag==0){ //don't set temperature value 
+		else if(g_pro.set_temperature_value_success==0){ //don't set temperature value 
 				handleDefaultTemperatureControl();
 		 
 			}
