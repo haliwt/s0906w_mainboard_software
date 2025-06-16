@@ -108,8 +108,8 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  if(g_pro.works_two_hours_interval_flag==0){
 		      DRY_OPEN();
 		  }
-		 g_pro.gTimer_set_temp_counter=10;
-		 compare_temperature_value_hanlder();
+		  g_pro.gTimer_set_temp_counter=1;
+		 //compare_temperature_value_hanlder();
     
          if(g_wifi.gwifi_link_net_state_flag==wifi_link_success){
               MqttData_Publish_SetPtc(0x01);
