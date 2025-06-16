@@ -46,9 +46,7 @@ void power_onoff_handler(uint8_t data)
    switch(data){	
 
 	   case power_on :
-
-	
-		power_on_run_handler();
+		   power_on_run_handler();
        
        if(gl_run.process_on_step !=0){ //logically rigorous
 
@@ -61,7 +59,6 @@ void power_onoff_handler(uint8_t data)
 			set_temperature_value_handler();
 			set_timer_timing_value_handler();
 
-			
 			works_run_two_hours_state();
 	    }
 
@@ -261,23 +258,20 @@ void power_on_run_handler(void)
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
     	 		   TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);//WT.EDIT 2025.04.23
     	  }
-    	 else{
-    		 if(g_pro.g_disp_smg_timer_or_temp_hours_item == normal_time_mode){
+		  else{
+
+              g_key.mode_key_switch_time_mode=input_normal_null;
+		  }
+      }
+      else  if(g_pro.g_disp_smg_timer_or_temp_hours_item == normal_time_mode){
     			 g_pro.gAI=1;
     			 LED_AI_ON();
     			 TEMP_ICON_ON();//WT.EDIT 2025.04.28
     			 read_error_flag=DHT11_Display_Data(0); // 显示温度
     			 if(read_error_flag==0)DHT11_Display_Data(0); 
 
-    		 }
-
-    		  g_key.mode_key_switch_time_mode=input_normal_null;
-
-    	 }
-
-
-      }
-      else if((g_pro.g_disp_smg_timer_or_temp_hours_item == timer_time_mode) && read_wifi_temperature_value()==0){
+     }
+     else if((g_pro.g_disp_smg_timer_or_temp_hours_item == timer_time_mode) && read_wifi_temperature_value()==0){
              
 	    // 如果计时器超过阈值，切换显示模式
 

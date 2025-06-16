@@ -68,6 +68,15 @@ typedef enum{
 
 }KEYName_Typedef;
 
+
+typedef enum{
+
+   WORKS_TIME,
+   TIMER_TIME=2,
+
+
+}timerTypedef ;
+
 #if 0
 #define KEY_POWER_VALUE()           HAL_GPIO_ReadPin(GPIOD ,POWER_KEY_Pin)
 #define KEY_MODE_VALUE()            HAL_GPIO_ReadPin(GPIOD,MODEL_KEY_Pin)

@@ -561,13 +561,13 @@ void set_timer_timing_value_handler(void)
 			  g_pro.disp_timer_minutes_value =59;
 			  g_pro.gdisp_timer_hours_value--;
 		   
-			  if(g_pro.gdisp_timer_hours_value==0 && timer_power_off_flag!=1){
+			  if(g_pro.gdisp_timer_hours_value==0 && g_pro.timer_powerOff_oneHour_flag!=1){
 			      g_pro.gdisp_timer_hours_value=1;
-			      timer_power_off_flag=1;
+			      g_pro.timer_powerOff_oneHour_flag=1;
 
 			  }
-			  else if(g_pro.gdisp_timer_hours_value ==0 && timer_power_off_flag==1){
-            	  timer_power_off_flag=0;
+			  else if(g_pro.gdisp_timer_hours_value ==0 && g_pro.timer_powerOff_oneHour_flag==1){
+            	  g_pro.timer_powerOff_oneHour_flag=0;
 				   g_pro.gdisp_timer_hours_value=0;
                    buzzer_sound();
 			       g_pro.gpower_on = power_off;

@@ -17,6 +17,7 @@
 #include "bsp_freertos.h"
 #include "bsp_streamlight.h"
 #include "bsp_key.h"
+#include "bsp_key_app.h"
 #include "bsp_fan.h"
 #include "bsp_buzzer.h"
 #include "bsp_tm1639.h"
@@ -97,11 +98,11 @@ typedef enum{
 	disp_timer_mode=3,
 	disp_temp_hum_mode=4,
 	input_set_timer_mode=5, //WT.EDIT 2025.04.23
-	input_set_temperature_mode, //WT.EDIT 2025.04.23
-	input_set_null,
-	input_set_timer_mode_null,
-	input_set_normal_time_mode,
-	input_normal_null
+	input_set_temperature_mode=6, //WT.EDIT 2025.04.23
+	input_set_null=7,
+	input_set_timer_mode_null=8,
+	input_set_normal_time_mode=9,
+	input_normal_null=10
 	
 }time_state;
 
@@ -144,6 +145,7 @@ typedef struct _process{
 
    uint8_t first_connect_wifi_flag;
    uint8_t DMA_txComplete;
+   uint8_t timer_powerOff_oneHour_flag;
 
    int8_t gdisp_timer_hours_value;
    int8_t  disp_timer_minutes_value;
