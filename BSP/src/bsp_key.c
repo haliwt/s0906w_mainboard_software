@@ -285,14 +285,14 @@ void set_temperature_value_handler(void)
 
 void compare_temperature_value_hanlder(void)
 {
-	if(g_pro.key_set_temperature_flag==2 ){
+	if(g_pro.set_temperature_value_success==1 ){
 
 			  handleTemperatureControl();
 
 
 	   }
-	   else if(g_pro.key_set_temperature_flag==0){ //don't set temperature value
-					handleDefaultTemperatureControl();
+	   else{ //don't set temperature value
+			handleDefaultTemperatureControl();
 
 		}
 }
