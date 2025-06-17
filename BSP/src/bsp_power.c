@@ -260,13 +260,23 @@ void power_on_run_handler(void)
 		  else{
 
               g_key.mode_key_switch_time_mode=input_normal_null;
+			  if(g_pro.disp_set_timer_zero ==1 || g_pro.gdisp_timer_hours_value==0){
+				   g_pro.disp_set_timer_zero=0;
+                   g_pro.gAI = 1;
+				   LED_AI_ON();
+				   g_pro.key_set_timer_flag =0xff;
+			       g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;
+
+			  }
+			
 		  }
       }
       else  if(g_pro.g_disp_smg_timer_or_temp_hours_item == works_time_mode && (g_pro.key_set_temperature_flag!=1)){
     			
           if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD) {
 			  g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
-	
+	          g_pro.gAI = 1;
+			  LED_AI_ON();
 			   disp_temp_hum++;
 			if (disp_temp_hum > 2) {
 				disp_temp_hum = 1; // 循环显示状�??
@@ -325,25 +335,9 @@ void power_on_run_handler(void)
 					break;
 			}
 		}
-	} 
-	else {
-		
-		// 如果计时器超过阈值，切换布尔显示状�??,不显示时�??
-       if((g_pro.g_disp_smg_timer_or_temp_hours_item == works_time_mode && (g_pro.key_set_temperature_flag!=1)) && read_key_up_down_mode()!=1 && read_wifi_temperature_value()==0){ //正常模式
-
-			   g_pro.gAI=1;
-			   LED_AI_ON();
-               if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD ){
-				g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
-		        if(disp_temp_hum > 1)disp_temp_hum=0;
-				disp_temp_hum = disp_temp_hum ^ 0x01;   // 切换布尔状�??
-				read_error_flag= DHT11_Display_Data(disp_temp_hum); // 显示温度或湿�??
-				if(read_error_flag == 0)DHT11_Display_Data(disp_temp_hum); // 显示温度或湿�??
-				
-			 }
-		 	}
-       	}
-	   	}
+	}
+  
+	 }
 	  gl_run.process_on_step =3;
 
 	 break;

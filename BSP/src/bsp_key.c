@@ -543,11 +543,14 @@ void set_timer_timing_value_handler(void)
 		else{ //times is done ,exit this process
 
 		     g_pro.key_gtime_timer_define_flag = works_time_mode; //WT.EDIT 2025.04.30
+		     g_pro.gdisp_timer_hours_value=0;
+		     SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
+	         osDelay(5);
 
 
 		}
    	}
-    else if(g_pro.key_set_timer_flag==2){ //has been set up timer timing value .
+    else if(g_pro.key_set_timer_flag==TIMER_TIME){ //has been set up timer timing value .
 
        if(g_pro.gTimer_timer_time_second > 59){
 	       g_pro.gTimer_timer_time_second=0;
