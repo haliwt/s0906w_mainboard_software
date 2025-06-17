@@ -455,7 +455,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 				g_pro.key_set_timer_flag=0xf0;
 
-                g_pro.disp_set_timer_zero=1;
+             
 				g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;
 				g_pro.key_gtime_timer_define_flag = 0xf0;
 			

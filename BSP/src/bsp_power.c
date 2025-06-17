@@ -260,8 +260,8 @@ void power_on_run_handler(void)
 		  else{
 
               g_key.mode_key_switch_time_mode=input_normal_null;
-			  if(g_pro.disp_set_timer_zero ==1 || g_pro.gdisp_timer_hours_value==0){
-				   g_pro.disp_set_timer_zero=0;
+			  if(g_pro.gdisp_timer_hours_value==0){
+				 
                    g_pro.gAI = 1;
 				   LED_AI_ON();
 				   g_pro.key_set_timer_flag =0xff;
@@ -275,8 +275,7 @@ void power_on_run_handler(void)
     			
           if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD) {
 			  g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
-	          g_pro.gAI = 1;
-			  LED_AI_ON();
+	         
 			   disp_temp_hum++;
 			if (disp_temp_hum > 2) {
 				disp_temp_hum = 1; // 循环显示状�??

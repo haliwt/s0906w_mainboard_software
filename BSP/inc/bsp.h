@@ -122,7 +122,7 @@ typedef struct _process{
 
    uint8_t g_humidity_value;
    uint8_t g_temperature_value;
-   uint8_t disp_set_timer_zero;
+ 
 
   
 
