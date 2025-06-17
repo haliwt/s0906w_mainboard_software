@@ -264,7 +264,7 @@ void power_on_run_handler(void)
 				 
                    g_pro.gAI = 1;
 				   LED_AI_ON();
-				   g_pro.key_set_timer_flag =0xff;
+				   g_pro.key_add_dec_be_pressed_flag =0xff;
 			       g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;
 
 			  }

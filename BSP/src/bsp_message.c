@@ -438,7 +438,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 				g_pro.gTimer_timer_time_second=0;
 				 g_pro.disp_timer_minutes_value=0;
-				g_pro.key_set_timer_flag=TIMER_TIME;
+				g_pro.key_add_dec_be_pressed_flag=TIMER_TIME;
 			  
 			    g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;//input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
                 if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
@@ -453,7 +453,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 			    g_pro.gAI = 1;
 				LED_AI_ON();
 
-				g_pro.key_set_timer_flag=0xf0;
+				g_pro.key_add_dec_be_pressed_flag=0xf0;
 
              
 				g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;

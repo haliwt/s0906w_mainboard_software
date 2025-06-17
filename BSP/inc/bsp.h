@@ -118,7 +118,7 @@ typedef struct _process{
    uint8_t gMouse;
    uint8_t works_two_hours_interval_flag;
    uint8_t g_manual_shutoff_dry_flag;
-   uint8_t key_set_timer_flag;
+   uint8_t key_add_dec_be_pressed_flag;
 
    uint8_t g_humidity_value;
    uint8_t g_temperature_value;

@@ -1,7 +1,7 @@
 /*
  * bsp_key.h
  *
- *  Created on: 2025�?3�?4�?
+ *  Created on: 2025�??3�??4�??
  *      Author: Administrator
  */
 
@@ -13,10 +13,10 @@
 // GPIOD 寄存器基地址
 //#define GPIOD_BASE        0x48000C00UL
 
-// GPIOD 输入数据寄存�? (IDR) 偏移�?
+// GPIOD 输入数据寄存�?? (IDR) 偏移�??
 #define GPIOD_IDR_OFFSET  0x10
 
-// GPIOD_IDR 寄存器指�?
+// GPIOD_IDR 寄存器指�??
 //#define GPIOD_IDR         (*(volatile uint32_t *)(GPIOD_BASE + GPIOD_IDR_OFFSET))
 
 // 引脚掩码
@@ -44,7 +44,7 @@ typedef enum{
 }AIState_TypeDef;
 
 
-// 干燥状�?�枚�?
+// 干燥状�?�枚�??
 typedef enum {
     DRY_STATE_OFF = 0,
     DRY_STATE_ON = 1
@@ -104,6 +104,7 @@ typedef struct __KEY_PROCESS{
 	uint8_t key_down_flag;
 	uint8_t key_up_flag;
 	uint8_t  mode_key_switch_time_mode;
+	uint8_t key_mode_long_flag ;
 
 	uint8_t key_long_power_flag;
 	uint8_t key_long_mode_flag;

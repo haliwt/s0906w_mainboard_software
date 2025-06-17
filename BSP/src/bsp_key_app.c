@@ -73,6 +73,7 @@ void key_handler(void)
 		    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 				buzzer_sound();
 				g_pro.key_gtime_timer_define_flag = input_set_timer_mode;
+			    g_key.key_mode_long_flag =1;
 				g_pro.gTimer_switch_set_timer_times = 0;
 		        HUMIDITY_ICON_OFF(); //WT.EDIT 2025.04.23
 				TEMP_ICON_OFF();//WT.EDIT 2025.04.23

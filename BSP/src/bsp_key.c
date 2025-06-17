@@ -56,7 +56,7 @@ void key_referen_init(void)
   gl_timer_minutes_value =0;
   define_timer_mode=0;
   key_up_down_pressed_flag=0;
-  g_pro.key_set_timer_flag=0;
+  g_pro.key_add_dec_be_pressed_flag=0;
   
 }
 
@@ -143,7 +143,7 @@ static void adjust_temperature(int8_t delta)
 static void adjust_timer(int8_t delta) 
 {
     g_pro.gTimer_switch_set_timer_times = 0;
-    g_pro.key_set_timer_flag = 1;
+    g_pro.key_add_dec_be_pressed_flag = 1;
     g_pro.gdisp_timer_hours_value += delta;
     if (g_pro.gdisp_timer_hours_value > MAX_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MAX_TIMER_HOURS;
     if (g_pro.gdisp_timer_hours_value < MIN_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MIN_TIMER_HOURS;
@@ -511,16 +511,17 @@ void set_timer_timing_value_handler(void)
 {
 
   
-   if(g_pro.key_gtime_timer_define_flag == input_set_timer_mode && g_pro.gTimer_switch_set_timer_times > 3 ){
+   if(g_pro.key_gtime_timer_define_flag == input_set_timer_mode && g_key.key_mode_long_flag ==1 && g_pro.gTimer_switch_set_timer_times > 3 ){
    	      g_pro.gTimer_switch_set_timer_times=0;
+		  g_key.key_mode_long_flag++;
 
-          if(g_pro.key_set_timer_flag==1){
+          if(g_pro.key_add_dec_be_pressed_flag==1){
 
 			if(g_pro.gdisp_timer_hours_value>0){
 
 			g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;
 			g_pro.key_gtime_timer_define_flag = works_time_mode; //define UP and down key is set temperature value 
-			g_pro.key_set_timer_flag++;
+			g_pro.key_add_dec_be_pressed_flag++;
 			g_pro.gTimer_timer_time_second=0;
 			g_pro.disp_timer_minutes_value=0;//gl_timer_minutes_value=0;
 			g_pro.gAI = 0;
@@ -533,24 +534,22 @@ void set_timer_timing_value_handler(void)
 			else{
 				g_pro.gAI = 1;
 				LED_AI_ON();
+				g_pro.gdisp_timer_hours_value=0;
 
-				g_pro.key_set_timer_flag=0;
+				g_pro.key_add_dec_be_pressed_flag=0;
 
 				g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;
 				g_pro.key_gtime_timer_define_flag = works_time_mode;
+				SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
+	            osDelay(5);
 			}
 		}
 		else{ //times is done ,exit this process
-
-		     g_pro.key_gtime_timer_define_flag = works_time_mode; //WT.EDIT 2025.04.30
-		     g_pro.gdisp_timer_hours_value=0;
-		     SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
-	         osDelay(5);
-
-
-		}
+		   
+		 
+        }
    	}
-    else if(g_pro.key_set_timer_flag==TIMER_TIME){ //has been set up timer timing value .
+    else if(g_pro.key_add_dec_be_pressed_flag==TIMER_TIME){ //has been set up timer timing value .
 
        if(g_pro.gTimer_timer_time_second > 59){
 	       g_pro.gTimer_timer_time_second=0;
