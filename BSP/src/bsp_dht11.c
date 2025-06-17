@@ -306,7 +306,7 @@ void Update_DHT11_ToDisplayBoard_Value(void)
 		osDelay(5);
     }
 	else{
-	    sendData_Real_TimeHum(dht11_data.humidity,copy_dht11_temp);
+	    sendData_Real_TimeHum(copy_dht11_hum,copy_dht11_temp);
 		   
 		osDelay(5);
 
