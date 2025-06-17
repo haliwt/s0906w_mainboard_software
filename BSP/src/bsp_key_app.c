@@ -98,7 +98,7 @@ void key_handler(void)
 	}
 	else if(g_key.key_down_flag ==KEY_DOWN_ID && KEY_DOWN_VALUE() == KEY_UP ){// && DEC_KEY_VALUE()==KEY_UP){
 		g_key.key_down_flag = KEY_NULL;
-		g_key.mode_key_switch_time_mode= normal_time_mode; //WT.EDIT 2025.04.30
+		g_key.mode_key_switch_time_mode= works_time_mode; //WT.EDIT 2025.04.30
 		if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		   buzzer_sound();
 
@@ -107,7 +107,7 @@ void key_handler(void)
 	}
 	else if(g_key.key_up_flag ==KEY_UP_ID && KEY_UP_VALUE() == KEY_UP ){ // && ADD_KEY_VALUE()==KEY_UP){
 		g_key.key_up_flag =KEY_NULL;
-		g_key.mode_key_switch_time_mode= normal_time_mode; //WT.EDIT 2025.04.30
+		g_key.mode_key_switch_time_mode= works_time_mode; //WT.EDIT 2025.04.30
 		
 		if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		   buzzer_sound();

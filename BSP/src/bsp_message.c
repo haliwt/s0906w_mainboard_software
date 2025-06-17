@@ -447,6 +447,22 @@ void receive_data_from_displayboard(uint8_t *pdata)
 			 }
 
 			}
+			else{
+
+			g_pro.gdisp_timer_hours_value = 0;
+			g_key.mode_key_switch_time_mode = works_time_mode;
+			g_pro.gTimer_switch_set_timer_times = 0;
+		
+			g_pro.timer_powerOff_oneHour_flag=0;//only one hour don't 00H,that	"01H",flag
+
+			g_pro.gTimer_timer_time_second=0;
+			 g_pro.disp_timer_minutes_value=0;
+			g_pro.key_set_timer_flag=WORKS_TIME;
+		  
+			g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;//input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
+			if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
+			TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+			}
        }
 	 	
      break;

@@ -92,7 +92,7 @@ typedef enum{
 }wifi_state;
 
 typedef enum{
-	normal_time_mode,
+	works_time_mode,
 	timer_time_mode=1,
 	beijing_time_mode=2,
 	disp_timer_mode=3,
