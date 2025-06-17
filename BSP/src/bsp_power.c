@@ -1,7 +1,7 @@
 /*
  * bsp_power.c
  *
- *  Created on: 2025�?3�?4�?
+ *  Created on: 2025�??3�??4�??
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -95,7 +95,7 @@ void power_on_init_ref(void)
 		   g_pro.gTemp_value = 40;
 		   //display time timing value 
 		   g_pro.gdisp_hours_value =0;
-		   g_pro.gdisp_timer_hours_value =0; //设置定时时间�?
+		   g_pro.gdisp_timer_hours_value =0; //设置定时时间�??
 
 		   g_pro.key_gtime_timer_define_flag=normal_time_mode; //
 		   g_pro.g_disp_smg_timer_or_temp_hours_item = normal_time_mode;
@@ -145,11 +145,7 @@ void power_on_run_handler(void)
 		}
         else{
 		   
-		   	  
-		   //	SendData_Set_Command(CMD_POWER,open);
-			//  osDelay(5);
-		   	
-		    if(g_wifi.gwifi_link_net_state_flag == wifi_link_success){ 
+		   	 if(g_wifi.gwifi_link_net_state_flag == wifi_link_success && g_wifi.gwifi_normal_power_on_flag == 0){
 		       MqttData_Publish_SetOpen(1);  
 		       osDelay(100);//HAL_Delay(200);
 		    }
@@ -158,7 +154,7 @@ void power_on_run_handler(void)
 			 
 		   
 		   
-      if(g_wifi.gwifi_link_net_state_flag == wifi_no_link){//逻辑不严�?//if(g_wifi.gwifi_link_net_state_flag == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
+      if(g_wifi.gwifi_link_net_state_flag == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_state_flag == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	      
 		   power_on_init_ref();
 
@@ -202,6 +198,7 @@ void power_on_run_handler(void)
 	   g_pro.gTimer_display_adc_value=0;
 	   g_pro.delay_run_adc_counter=0;
 	   g_pro.set_temperature_value_success=0;
+	   
 	   temp_second_displboard=0;
 
 	   gl_run.process_on_step =1;
@@ -246,7 +243,7 @@ void power_on_run_handler(void)
 	  	
       if(g_pro.key_set_temperature_flag==1){
 
-          //DHT11_Display_Data(DISPLAY_TEMP); 显示�
+          //DHT11_Display_Data(DISPLAY_TEMP); 显示�?
           TM1639_Display_Temperature(g_pro.gset_temperture_value);
         
 
@@ -268,11 +265,11 @@ void power_on_run_handler(void)
       else  if(g_pro.g_disp_smg_timer_or_temp_hours_item == normal_time_mode && (g_pro.key_set_temperature_flag!=1)){
     			
           if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD) {
-			  g_pro.gTimer_switch_temp_hum = 0; // 重置计时�?
+			  g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
 	
 			   disp_temp_hum++;
 			if (disp_temp_hum > 2) {
-				disp_temp_hum = 1; // 循环显示状�??
+				disp_temp_hum = 1; // 循环显示状�??
 			}
 
 				switch (disp_temp_hum) {
@@ -298,14 +295,14 @@ void power_on_run_handler(void)
 	    // 如果计时器超过阈值，切换显示模式
 
 		  if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD) {
-			g_pro.gTimer_switch_temp_hum = 0; // 重置计时�?
+			g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
 	
 			disp_temp_hum++;
 			if (disp_temp_hum > 3) {
-				disp_temp_hum = 1; // 循环显示状�??
+				disp_temp_hum = 1; // 循环显示状�??
 			}
 	
-			// 根据状�?�调用显示函�?
+			// 根据状�?�调用显示函�??
 			switch (disp_temp_hum) {
 				case 1:
 					LED_TEMP_ICON_ON();
@@ -331,17 +328,17 @@ void power_on_run_handler(void)
 	} 
 	else {
 		
-		// 如果计时器超过阈值，切换布尔显示状�??,不显示时�?
+		// 如果计时器超过阈值，切换布尔显示状�??,不显示时�??
        if((g_pro.g_disp_smg_timer_or_temp_hours_item == normal_time_mode && (g_pro.key_set_temperature_flag!=1)) && read_key_up_down_mode()!=1 && read_wifi_temperature_value()==0){ //正常模式
 
 			   g_pro.gAI=1;
 			   LED_AI_ON();
                if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD ){
-				g_pro.gTimer_switch_temp_hum = 0; // 重置计时�?
+				g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
 		        if(disp_temp_hum > 1)disp_temp_hum=0;
-				disp_temp_hum = disp_temp_hum ^ 0x01;   // 切换布尔状�??
-				read_error_flag= DHT11_Display_Data(disp_temp_hum); // 显示温度或湿�?
-				if(read_error_flag == 0)DHT11_Display_Data(disp_temp_hum); // 显示温度或湿�?
+				disp_temp_hum = disp_temp_hum ^ 0x01;   // 切换布尔状�??
+				read_error_flag= DHT11_Display_Data(disp_temp_hum); // 显示温度或湿�??
+				if(read_error_flag == 0)DHT11_Display_Data(disp_temp_hum); // 显示温度或湿�??
 				
 			 }
 		 	}
@@ -355,7 +352,7 @@ void power_on_run_handler(void)
 	 
          if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
-		if(g_wifi.gTimer_update_dht11_data > 7 && g_wifi.gwifi_link_net_state_flag ==wifi_link_success){
+		if(g_wifi.gTimer_update_dht11_data > 20 && g_wifi.gwifi_link_net_state_flag ==wifi_link_success){
 			   g_wifi.gTimer_update_dht11_data=0;
 
 			   if(g_wifi.gwifi_link_net_state_flag ==1){
@@ -376,11 +373,7 @@ void power_on_run_handler(void)
 			   	}
 
             
-				if(g_disp.g_second_disp_flag == 1){                     
-					 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-					 osDelay(5);
-
-				}
+				
 		    }
 		
 
@@ -414,6 +407,12 @@ void power_on_run_handler(void)
 		        }
 
             }
+
+			   if(g_disp.g_second_disp_flag == 1){                     
+					 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
+					 osDelay(5);
+
+				}
 		   }
 
         
@@ -464,13 +463,8 @@ void power_off_run_handler(void)
            
 	  }
 	 
-	  //SendData_Set_Command(CMD_POWER,close);
-	  //osDelay(5);
-    
-	
-        
 	   g_pro.g_fan_switch_gears_flag++;
-       gl_run.process_off_step = 1;
+      
 	   g_pro.key_set_temperature_flag=0;
 	   g_wifi.app_timer_power_on_flag =0;
 	   g_pro.fan_warning =0 ;
@@ -478,6 +472,7 @@ void power_off_run_handler(void)
 	   g_pro.set_temperature_value_success=0;
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
 	  
+        gl_run.process_off_step = 1;
 
    break;
 
@@ -509,7 +504,7 @@ void power_off_run_handler(void)
      LED_Power_Breathing();
 	 wifi_first_connect++;
 
-	 if(g_wifi.gwifi_link_net_state_flag == wifi_link_success && wifi_first_connect > 200){
+	 if(g_wifi.gwifi_link_net_state_flag == wifi_link_success && wifi_first_connect > 250){
 	 	    wifi_first_connect=0;
             MqttData_Publish_SetOpen(0);  
 			osDelay(100);

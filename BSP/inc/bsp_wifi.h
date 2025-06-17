@@ -1,7 +1,7 @@
 /*
  * bsp_wifi.h
  *
- *  Created on: 2025å¹´3æœˆ7æ—¥
+ *  Created on: 2025å¹?3æœ?7æ—?
  *      Author: Administrator
  */
 
@@ -38,6 +38,8 @@ typedef struct _wifi_state_ref{
    uint8_t link_net_step ;
 
    uint8_t g_wifi_set_temp_flag;
+
+   uint8_t gwifi_normal_power_on_flag ;
 
 
   

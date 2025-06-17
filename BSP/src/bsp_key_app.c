@@ -39,6 +39,7 @@ void key_handler(void)
 			buzzer_sound();
 			if(g_pro.gpower_on == power_off){
 				g_pro.gpower_on = power_on;
+				g_wifi.gwifi_normal_power_on_flag =0;
 			    SendData_Set_Command(CMD_POWER,open);
 			    osDelay(5);
 
@@ -46,6 +47,7 @@ void key_handler(void)
 			else{
 
 				g_pro.gpower_on = power_off;
+				g_wifi.gwifi_normal_power_on_flag =0;
 				SendData_Set_Command(CMD_POWER,close);
 			    osDelay(5);
 			}

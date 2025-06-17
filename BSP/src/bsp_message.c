@@ -6,7 +6,7 @@
  */
 #include "bsp.h"
 
-static void copy_receive_data(uint8_t cmd,uint8_t data);
+static void copy_receive_data(uint8_t cmd,uint8_t type,uint8_t mycmd);
 
 
 uint8_t power_off_test_counter;
@@ -472,7 +472,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      case 0xFF: //copy send cmd acknowlege
 
-	 copy_receive_data(pdata[3],pdata[4]);
+	 copy_receive_data(pdata[3],pdata[4],pdata[5]);
 
 	       
      break;
@@ -495,28 +495,29 @@ void receive_data_from_displayboard(uint8_t *pdata)
 	*Return Ref:NO
 	*
 *********************************************************************/
-static void copy_receive_data(uint8_t cmd,uint8_t data)
+static void copy_receive_data(uint8_t cmd,uint8_t type,uint8_t mycmd)
 {
      switch(cmd){
 
        case CMD_POWER:
 
-	        if(data == 1){
-                buzzer_sound();
-			    g_pro.gpower_on = power_on;
-
-			}
-			else{
-               buzzer_sound();
-			   g_pro.gpower_on = power_off;
-			}
+   
+	        if(type == 0x0){
+				if(mycmd ==1){
+                 g_disp.g_second_disp_flag =1;
+			    }
+                else{
+             
+			    g_disp.g_second_disp_flag =0;
+			   }
+            }
 	 
 
 	   break;
 	  
 
 	   case CMD_PTC :
-	   	if(data == 1){
+	   	if(mycmd == 1){
 
 		   buzzer_sound();
 		   g_pro.gDry=1;
@@ -538,7 +539,7 @@ static void copy_receive_data(uint8_t cmd,uint8_t data)
 	   break;
 
 	   case CMD_CONNECT_WIFI:
-	   	if(data == 1){
+	   	if(mycmd == 1){
 			buzzer_sound();
             g_key.key_long_power_flag =  KEY_LONG_POWER; //wifi led blink fast .
 			g_wifi.gTimer_wifi_led_fast_blink = 0; //time start 120s ->look for wifi information 120s,timer.

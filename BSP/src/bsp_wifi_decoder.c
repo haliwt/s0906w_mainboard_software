@@ -553,13 +553,13 @@ void Json_Parse_Command_Fun(void)
 
         Publish_Data_ToTencent_Initial_Data();
 	    HAL_Delay(200);
-
-		g_pro.ptc_warning =0;
 		
          g_pro.gpower_on = power_on;
-  
-	     SendWifiData_To_Cmd(0x31,0x01); //smart phone is power on
-         osDelay(5);
+		 g_disp.g_second_disp_flag = 1;
+	     g_wifi.gwifi_link_net_state_flag =1;
+          g_wifi.gwifi_normal_power_on_flag= 1;
+          SendData_Set_Command(CMD_POWER,open);
+		  osDelay(5);
 
        
 		buzzer_temp_on=0;
@@ -574,9 +574,10 @@ void Json_Parse_Command_Fun(void)
 			osDelay(100);
 
             g_pro.gpower_on = power_off;
-	
-            SendWifiData_To_Cmd(0x31,0x0); //smart phone is power off
-			osDelay(5);//HAL_Delay(5);
+	        g_wifi.gwifi_link_net_state_flag =1;
+            g_disp.g_second_disp_flag = 1;
+			SendData_Set_Command(CMD_POWER,close);
+			osDelay(5);
           
 			buzzer_temp_on=0;
 	
@@ -825,11 +826,10 @@ void Json_Parse_Command_Fun(void)
 			  
 			   SendWifiData_To_Cmd(0x21,0x01); //smart phone is open that App timer 
                osDelay(5);
-			   
-			  
-
-		       g_pro.gpower_on = power_on; //WT.EDIT 
+			    g_wifi.gwifi_link_net_state_flag =1;
+			   g_pro.gpower_on = power_on; //WT.EDIT 
 			   g_wifi.link_net_step = 0; //WT.EDIT 2025.05.12
+			   g_wifi.gwifi_normal_power_on_flag =0;
 			    buzzer_temp_on=0;
    
 
@@ -839,6 +839,7 @@ void Json_Parse_Command_Fun(void)
 		   
 		   
 			    g_wifi.app_timer_power_on_flag = 0;
+		         g_wifi.gwifi_link_net_state_flag =1;
 
 		 		  MqttData_Publish_SetOpen(0);  
 			       osDelay(100);//HAL_Delay(350);

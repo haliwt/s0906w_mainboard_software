@@ -1,7 +1,7 @@
 /*
  * bsp_connect_link.c
  *
- *  Created on: 2025å¹´3æœˆ10æ—¥
+ *  Created on: 2025å¹?3æœ?10æ—?
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -146,7 +146,7 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
    if(power_on_login_tencent_cloud_flag==3 ){
 	 power_on_login_tencent_cloud_flag++;
 	   g_wifi.gTimer_link_net_timer_time=0;
-       HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//å¼€
+       HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//å¼?
        HAL_Delay(1000);
 	  
 	}
@@ -191,7 +191,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
              flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Subscriber_Data_FromCloud_Handler();
-            osDelay(30);//HAL_Delay(200)
+            osDelay(50);//HAL_Delay(200)
              g_wifi.wifi_get_beijing_step = 1; //g_wifi.get_beijing_flag = 1;
 
             
@@ -317,6 +317,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
 
           case 2:
+			g_wifi.get_rx_beijing_time_enable=0;
 
             if(g_wifi.wifi_rx_data_array[50] > 0x31 ){
            
@@ -451,7 +452,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 	      
              auto_link_net_flag =2;
    
-	        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//å¼€å§‹è¿žæŽ¥
+	        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//å¼?å§‹è¿žæŽ?
             HAL_Delay(1000);
          
            
