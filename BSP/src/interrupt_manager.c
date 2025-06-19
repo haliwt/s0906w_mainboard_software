@@ -6,6 +6,30 @@
  */
 #include "bsp.h"
 
+
+#if 1
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) 
+{
+    if (huart->Instance == USART1) { // 检查是哪个UART触发的错误
+        // 清除错误标志
+        __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_OREF | UART_CLEAR_NEF | UART_CLEAR_PEF | UART_CLEAR_FEF);
+        
+        // 重新启动接收
+        UART_Start_Receive_IT(&huart1,inputBuf,1);
+    }
+	else if (huart->Instance == USART2) { // 检查是哪个UART触发的错误
+        // 清除错误标志
+        __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_OREF | UART_CLEAR_NEF | UART_CLEAR_PEF | UART_CLEAR_FEF);
+        
+        // 重新启动接收
+       UART_Start_Receive_IT(&huart2,wifi_rx_inputBuf,1);
+    }
+}
+
+#endif 
+
+
 /********************************************************************************
 	**
 	*Function Name:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)

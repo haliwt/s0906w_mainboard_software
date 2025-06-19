@@ -6,12 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
+  * S0906W version: 01 . data:2025.06.18
+  * 
   *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  * 
+  * 
   *
   ******************************************************************************
   */
@@ -87,6 +87,8 @@ int main(void)
     MX_USART2_UART_Init();
     
     /* USER CODE BEGIN 2 */
+	// Ê¹ÄÜUSART´íÎóÖÐ¶Ï
+    __HAL_UART_ENABLE_IT(&huart1, UART_IT_ERR);
     bsp_init();
     HAL_TIM_Base_Start_IT(&htim17);
 	UART_Start_Receive_IT(&huart1,inputBuf,1);
