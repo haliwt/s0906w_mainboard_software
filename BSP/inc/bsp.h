@@ -34,6 +34,7 @@
 #include "bsp_cmd_link.h"
 #include "bsp_led_tape.h"
 #include "bsp_adc.h"
+#include "bsp_iap.h"
 
 #include "interrupt_manager.h"
 

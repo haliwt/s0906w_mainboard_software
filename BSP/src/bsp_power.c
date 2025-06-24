@@ -150,7 +150,7 @@ void power_on_run_handler(void)
 		       osDelay(100);//HAL_Delay(200);
 		    }
         }
-		Update_DHT11_ToDisplayBoard_Value();
+		updateDht11_toDisplayBoard_value();
 			 
 		   
 		   
@@ -164,7 +164,7 @@ void power_on_run_handler(void)
 		   power_on_init_ref();
 		
 		  
-		  Update_DHT11_ToDisplayBoard_Value();
+		  updateDht11_toDisplayBoard_value();
 	      osDelay(5);
 		   	
 	        send_wifi_power_on_state = 1;
@@ -215,7 +215,7 @@ void power_on_run_handler(void)
 			 }
 		    if(g_pro.gTimer_send_dht11_disp > 2){ //3s
 		       g_pro.gTimer_send_dht11_disp=0;
-	           Update_DHT11_ToDisplayBoard_Value();
+	           updateDht11_toDisplayBoard_value();
 
 		   }
 		  }
