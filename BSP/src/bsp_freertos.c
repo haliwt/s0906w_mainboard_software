@@ -142,6 +142,10 @@ static void vTaskDecoderPro(void *pvParameters)
 **********************************************************************************************************/
 static void vTaskRunPro(void *pvParameters)
 {
+
+ uint8_t tx_buffer[20];
+ uint8_t tx_len;
+
   while(1){
     
 	key_handler();
@@ -155,6 +159,14 @@ static void vTaskRunPro(void *pvParameters)
 	}
 	else{
          wifi_led_fast_blink_handler();
+		 if(gl_tMsg.ucMessageID ==0xFE){
+            gl_tMsg.ucMessageID = 0xFF; //display command head
+            strcpy((char*)tx_buffer, "has IAP Update \r\n");//tx_buffer[]="has NOT IAP Update \r\n";
+			tx_len = strlen((char*)tx_buffer);//tx_len = tx_buffer[]/tx_buffer[0];
+			HAL_UART_Transmit(&huart1,tx_buffer,tx_len, 0xffff);
+            JumpToBootloader();
+
+		  }
 
 	}
 
@@ -282,11 +294,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		case 0:  //#0
 			if(inputBuf[0] == 0xA5){  // 0xA5 -- second display board ID
                gl_tMsg.rx_data_counter=0;
-				         gl_tMsg.ulid=0;
+			   gl_tMsg.ulid=0;
                gl_tMsg.usData[gl_tMsg.rx_data_counter] = inputBuf[0];
 				state=1; //=1
 
              }
+			else if(inputBuf[0]== 0xFE){//IAP boodloader flag
+        
+	          gl_tMsg.ucMessageID = 0xFE;
+			}
             else
                 state=0;
 		break;
