@@ -88,7 +88,7 @@ int main(void)
     
     /* USER CODE BEGIN 2 */
 	// Ê¹ÄÜUSART´íÎóÖÐ¶Ï
-    __HAL_UART_ENABLE_IT(&huart1, UART_IT_ERR);
+ 
     bsp_init();
     HAL_TIM_Base_Start_IT(&htim17);
 	UART_Start_Receive_IT(&huart1,inputBuf,1);

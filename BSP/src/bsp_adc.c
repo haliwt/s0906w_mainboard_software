@@ -25,7 +25,7 @@ static uint16_t Get_Adc_Channel(uint32_t ch)
     ADC_ChannelConfTypeDef ADC1_ChanConf;
 
 	ADC1_ChanConf.Channel=ch;                                   //Í¨µÀ
-    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序列
+    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序�?
     ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //²ÉÑùÊ±¼ä               
 
 
@@ -154,7 +154,7 @@ static void Judge_Fan_State(uint16_t adc_value)
 {
 
   static uint8_t detect_error_times;
-   if(adc_value <550){ //500
+   if(adc_value <420){ //500
          detect_error_times++;
 	          
 		if(detect_error_times >0){

@@ -1,7 +1,7 @@
 /*
  * bsp_buzzer.c
  *
- *  Created on: 2025å¹´3æœˆ4æ—¥
+ *  Created on: 2025å¹?3æœ?4æ—?
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -29,13 +29,13 @@ void Buzzer_Fan_Error_Sound(void)
    
  
     buzzer_sound();
-	HAL_Delay(100);
+	osDelay(100);//HAL_Delay(100);
 	  buzzer_sound();
-	HAL_Delay(100);
+	osDelay(100);//HAL_Delay(100);
 	  buzzer_sound();
-	HAL_Delay(100);
+	osDelay(100);//HAL_Delay(100);
 	  buzzer_sound();
-	HAL_Delay(100);
+	osDelay(100);//HAL_Delay(100);
 
 }
 

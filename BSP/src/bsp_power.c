@@ -394,10 +394,16 @@ void power_on_run_handler(void)
 					g_pro.fan_detect_voltage= 0xFEE;
 				    SetLevel_Fan_PWMA(40);
 				}
-                else if(g_pro.works_two_hours_interval_flag==0){
+                else if(g_pro.works_two_hours_interval_flag==0 &&  g_pro.fan_warning ==0){
+					SetLevel_Fan_PWMA(40);
 	                Get_Fan_Adc_Fun(ADC_CHANNEL_0,10);
 
 		        }
+				else if(g_pro.works_two_hours_interval_flag==0 && g_pro.fan_warning ==1){
+
+                        Buzzer_Fan_Error_Sound();
+				
+				}
 
             }
 
