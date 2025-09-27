@@ -160,7 +160,7 @@ static void vTaskRunPro(void *pvParameters)
 			gl_tMsg.ucMessageID = 0; //display command head
 			strcpy((char*)tx_buffer, "has IAP Update \r\n");//tx_buffer[]="has NOT IAP Update \r\n";
 			tx_len = strlen((char*)tx_buffer);//tx_len = tx_buffer[]/tx_buffer[0];
-			HAL_UART_Transmit(&huart1,tx_buffer,tx_len, 0xffff);
+			//HAL_UART_Transmit(&huart1,tx_buffer,tx_len, 0xffff);
 			JumpToBootloader();
 
 		}
@@ -272,11 +272,11 @@ void AppTaskCreate (void)
 	*Return Ref:NO
 	*
 *******************************************************************************/
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void HAL_UART_RxCpltCallback(void)
 {
      static uint8_t state,rx_end_flag ;
      BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
+    #if 0
 
     if(huart->Instance == USART1) // mainBoard receive data from display board send data USART1
 	{
@@ -358,8 +358,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         break;
 		}
          ENABLE_INT();//WT.EDIT 2025.05.18
-    __HAL_UART_CLEAR_OREFLAG(&huart1);
-	HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
+   // __HAL_UART_CLEAR_OREFLAG(&huart1);
+	//HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
 
    }
    else if(huart->Instance==USART2) //WIFI USART2
@@ -393,8 +393,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				   Subscribe_Rx_Interrupt_Handler();
 		}
 		//	ENABLE_INT();
-		 __HAL_UART_CLEAR_OREFLAG(&huart2);
-		 HAL_UART_Receive_IT(&huart2,wifi_rx_inputBuf,1);
+		// __HAL_UART_CLEAR_OREFLAG(&huart2);
+		// HAL_UART_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 	}
 }
 /**********************************************************
@@ -476,4 +476,5 @@ void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
 
 
     }
+ #endif 
 }

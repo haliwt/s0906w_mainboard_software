@@ -25,8 +25,8 @@
 ********************************************************/
 void SetLevel_Fan_PWMA(uint8_t levelval)
 {
-	 MX_TIM16_Init(levelval);
-	 HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
+	// MX_TIM16_Init(levelval);
+	// HAL_TIM_PWM_Start(&htim16,TIM_CHANNEL_1);
 	
 }
 

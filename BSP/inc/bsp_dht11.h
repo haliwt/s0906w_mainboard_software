@@ -45,8 +45,8 @@ DHT11_Status DHT11_Read_Data(void);
 DHT11_Status DHT11_Display_Data(uint8_t mode);   // 在TM1639上显示温湿度
 #endif 
 
-#define TEMP_ICON_ON()         	do{LED_TEMP_SYMBOL_GPIO_Port->BSRR |=(uint32_t)LED_TEMP_SYMBOL_Pin << 16 ;}while(0) //low level
-#define TEMP_ICON_OFF()         do{LED_TEMP_SYMBOL_GPIO_Port->BSRR |=LED_TEMP_SYMBOL_Pin;}while(0) //high level
+#define TEMP_ICON_ON()         	do{LED_TEMP_GPIO_Port->BSRR |=(uint32_t)LED_TEMP_Pin << 16 ;}while(0) //low level
+#define TEMP_ICON_OFF()         do{LED_TEMP_GPIO_Port->BSRR |=LED_TEMP_Pin;}while(0) //high level
 
 #define HUMIDITY_ICON_ON()      do{LED_HUM_SYMBOL_GPIO_Port->BSRR |=(uint32_t)LED_HUM_SYMBOL_Pin << 16;}while(0)
 #define HUMIDITY_ICON_OFF()     do{LED_HUM_SYMBOL_GPIO_Port->BSRR |=LED_HUM_SYMBOL_Pin;}while(0)
@@ -69,7 +69,8 @@ DHT11_Status DHT11_Display_Data(uint8_t mode);   // 在TM1639上显示温湿度
                                 HAL_GPIO_WritePin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN, GPIO_PIN_SET) : \
                                 HAL_GPIO_WritePin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN, GPIO_PIN_RESET); \
                             }while(0)                                                /* 数据端口输出 */
-#define DHT11_DQ_IN         HAL_GPIO_ReadPin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN)  /* 数据端口输入 */
+//#define DHT11_DQ_IN         HAL_GPIO_ReadPin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN)  /* 数据端口输入 */
+#define DHT11_DQ_IN         LL_GPIO_IsInputPinSet(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN)
 
 
 uint8_t dht11_init(void);   /* 初始化DHT11 */

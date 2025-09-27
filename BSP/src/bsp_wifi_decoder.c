@@ -52,7 +52,7 @@ void Subscriber_Data_FromCloud_Handler(void)
          randomName[0]=HAL_GetUIDw0();
       
          sprintf((char *)device_massage,"AT+TCMQTTSUB=\"$thing/down/property/%s/UYIJIA01-%d\",0\r\n", PRODUCT_ID,randomName[0]);
-         HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000); 
+         //HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000); 
         // free(device_massage);
 }
 /*******************************************************************************

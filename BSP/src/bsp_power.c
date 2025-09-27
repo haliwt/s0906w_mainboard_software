@@ -385,7 +385,7 @@ void power_on_run_handler(void)
 
             switch_adc = switch_adc ^ 0x01;
 		    if(switch_adc==1){
-               Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,10);
+            //   Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,10);
 			}
 			else{
 				
@@ -396,7 +396,7 @@ void power_on_run_handler(void)
 				}
                 else if(g_pro.works_two_hours_interval_flag==0 &&  g_pro.fan_warning ==0){
 					SetLevel_Fan_PWMA(40);
-	                Get_Fan_Adc_Fun(ADC_CHANNEL_0,10);
+	              //  Get_Fan_Adc_Fun(ADC_CHANNEL_0,10);
 
 		        }
 				else if(g_pro.works_two_hours_interval_flag==0 && g_pro.fan_warning ==1){

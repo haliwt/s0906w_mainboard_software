@@ -363,7 +363,7 @@ void TransmitData(uint8_t *buf, uint8_t size)
         HAL_UART_Transmit_IT(&huart1, buf, transferSize);
     }
     #else
-    	HAL_UART_Transmit_DMA(&huart1, buf, transferSize);
+    	//HAL_UART_Transmit_DMA(&huart1, buf, transferSize);
     #endif
 }
 
@@ -500,7 +500,7 @@ void Start_DMA_Receive(void)
     dataReceived = 0;
     
     // 启动DMA接收
-    HAL_UART_Receive_DMA(&huart1, rxBuffer,sizeof(rxBuffer));
+   // HAL_UART_Receive_DMA(&huart1, rxBuffer,sizeof(rxBuffer));
 }
 
 /********************************************************************************
@@ -511,26 +511,26 @@ void Start_DMA_Receive(void)
 	*Return Ref:NO
 	*
 *******************************************************************************/
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if(huart->Instance == USART1)
-	{
-        #if USART1_IT_FLAG 
-		transOngoingFlag=0; //UART Transmit interrupt flag =0 ,RUN
-		#else
+//void HAL_UART_TxCpltCallback(void)
+//{
+//	if(huart->Instance == USART1)
+//	{
+//        #if USART1_IT_FLAG 
+//		transOngoingFlag=0; //UART Transmit interrupt flag =0 ,RUN
+//		#else
 
-		g_pro.DMA_txComplete = 1;//uartTxComplete = 1; // 标记发送完成
+//		g_pro.DMA_txComplete = 1;//uartTxComplete = 1; // 标记发送完成
 
-		#endif 
-	}
-
-//	if(huart== &huart2){
-//
-//       usart2_transOngoingFlag =0;
-//
+//		#endif 
 //	}
 
-}
+////	if(huart== &huart2){
+////
+////       usart2_transOngoingFlag =0;
+////
+////	}
+
+//}
 
 /**
   * @brief  UART错误回调函数，处理USART1通信错误

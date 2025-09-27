@@ -22,20 +22,20 @@ uint16_t ptc_temp_voltage;
 *****************************************************************/
 static uint16_t Get_Adc_Channel(uint32_t ch)   
 {
-    ADC_ChannelConfTypeDef ADC1_ChanConf;
+//    ADC_ChannelConfTypeDef ADC1_ChanConf;
 
-	ADC1_ChanConf.Channel=ch;                                   //Í¨µÀ
-    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序�?
-    ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //²ÉÑùÊ±¼ä               
+//	ADC1_ChanConf.Channel=ch;                                   //Í¨µÀ
+//    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序�?
+//    ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //²ÉÑùÊ±¼ä               
 
 
-	HAL_ADC_ConfigChannel(&hadc1,&ADC1_ChanConf);        //Í¨µÀÅäÖÃ
-	
-    HAL_ADC_Start(&hadc1);                               //start ADC transmit
-	
-    HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
- 
-	return (uint16_t)HAL_ADC_GetValue(&hadc1);	        	//·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
+//	HAL_ADC_ConfigChannel(&hadc1,&ADC1_ChanConf);        //Í¨µÀÅäÖÃ
+//	
+//    HAL_ADC_Start(&hadc1);                               //start ADC transmit
+//	
+//    HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
+// 
+//	return (uint16_t)HAL_ADC_GetValue(&hadc1);	        	//·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
 }
 /*****************************************************************
 *
