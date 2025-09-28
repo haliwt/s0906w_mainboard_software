@@ -19,6 +19,13 @@
 #define MODE_LONG_KEY_8         (1 << 8)
 #define DECODER_BIT_9          (1<< 9)
 
+// 定义EXTI线，根据实际GPIO引脚对应的EXTI线号修改
+#define KEY_POWER_EXTI_LINE    LL_EXTI_LINE_0
+#define KEY_MODE_EXTI_LINE     LL_EXTI_LINE_1  
+#define KEY_DOWN_EXTI_LINE     LL_EXTI_LINE_2
+#define KEY_UP_EXTI_LINE       LL_EXTI_LINE_3
+
+
 
 uint8_t inputBuf[1];
 
@@ -169,7 +176,7 @@ static void vTaskRunPro(void *pvParameters)
          wifi_led_fast_blink_handler();
 	}
 
-	vTaskDelay(10);
+	vTaskDelay(30);
 
 	  
     }
@@ -272,11 +279,13 @@ void AppTaskCreate (void)
 	*Return Ref:NO
 	*
 *******************************************************************************/
+#if 0
+
 void HAL_UART_RxCpltCallback(void)
 {
      static uint8_t state,rx_end_flag ;
      BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    #if 0
+    
 
     if(huart->Instance == USART1) // mainBoard receive data from display board send data USART1
 	{
@@ -397,14 +406,15 @@ void HAL_UART_RxCpltCallback(void)
 		// HAL_UART_Receive_IT(&huart2,wifi_rx_inputBuf,1);
 	}
 }
+#endif 
 /**********************************************************
 **********************************************************/
-void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
+void ll_gpio_falling_callback(uint16_t gpio_pin)
 {
    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    __HAL_GPIO_EXTI_CLEAR_RISING_IT(GPIO_Pin);
+    
 
-   switch(GPIO_Pin){
+   switch(gpio_pin){
 
    case KEY_POWER_Pin:
        // DISABLE_INT(); //WT.EDIT 2024.08.15 modify.
@@ -476,5 +486,22 @@ void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
 
 
     }
- #endif 
+
+}
+
+
+
+void vtask_isq_handler(void)
+{
+	 BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+	 xTaskNotifyFromISR(xHandleTaskDecoderPro,  /* 目标任务 */
+                                    DECODER_BIT_9,     /* 设置目标任务事件标志位bit0  */
+                                    eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志�? */
+                                    &xHigherPriorityTaskWoken);
+
+                /* 如果xHigherPriorityTaskWoken = pdTRUE，那么�??出中断后切到当前�?高优先级任务执行 */
+                portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
+
 }

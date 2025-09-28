@@ -35,14 +35,20 @@ static uint8_t device_massage[128];
  */
 uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 {
-	//if(HAL_OK == HAL_UART_Transmit(&huart2, pdata, len, 10000))
+    #if 0
+	if(HAL_OK == HAL_UART_Transmit(&huart2, pdata, len, 10000))
 	{
 		return len;
 	}
-	//else
+	else
 	{
 		return 0;
-	}	
+	}
+	#else
+	 USART2_DMA_Send(pdata,len);
+
+	#endif
+	
 }
 
 

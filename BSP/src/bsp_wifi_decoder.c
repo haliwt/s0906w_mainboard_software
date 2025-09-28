@@ -44,9 +44,7 @@ uint8_t test_flag;
 ********************************************************************************/
 void Subscriber_Data_FromCloud_Handler(void)
 {
-          // uint8_t *device_massage;
-
-         //device_massage = (uint8_t *)malloc(128);
+    
 
 		  uint8_t device_massage[128];
          randomName[0]=HAL_GetUIDw0();
@@ -54,6 +52,8 @@ void Subscriber_Data_FromCloud_Handler(void)
          sprintf((char *)device_massage,"AT+TCMQTTSUB=\"$thing/down/property/%s/UYIJIA01-%d\",0\r\n", PRODUCT_ID,randomName[0]);
          //HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000); 
         // free(device_massage);
+        USART2_DMA_Send(device_massage, sizeof(device_massage));
+		vTaskDelay(pdMS_TO_TICKS(200));
 }
 /*******************************************************************************
 **

@@ -131,7 +131,7 @@ void MX_USART1_UART_Init(void)
   {
   }
   /* USER CODE BEGIN USART1_Init 2 */
-
+   LL_USART_EnableIT_RXNE(USART1); //WT.EDIT 2025.09.28
   /* USER CODE END USART1_Init 2 */
 
 }
@@ -237,7 +237,7 @@ void MX_USART2_UART_Init(void)
   {
   }
   /* USER CODE BEGIN USART2_Init 2 */
-
+  LL_USART_EnableIT_RXNE(USART2);
   
 
   /* USER CODE END USART2_Init 2 */

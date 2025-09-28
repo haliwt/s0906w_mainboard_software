@@ -30,6 +30,8 @@
 #include "bsp_mouse.h"
 #include "bsp_plasma.h"
 #include "bsp_disp.h"
+#include "bsp_usart.h"
+#include "bsp_dma_usart.h"
 #include "bsp_message.h"
 #include "bsp_cmd_link.h"
 #include "bsp_led_tape.h"

@@ -112,20 +112,27 @@ void EXTI0_1_IRQHandler(void)
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
 
   /* USER CODE END EXTI0_1_IRQn 0 */
-  if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_0) != RESET)
+  if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_0) != RESET)
   {
-    LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_0);
+    LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_0);
     /* USER CODE BEGIN LL_EXTI_LINE_0_RISING */
+	ll_gpio_falling_callback(KEY_POWER_Pin);
 
     /* USER CODE END LL_EXTI_LINE_0_RISING */
   }
-  if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_1) != RESET)
-  {
-    LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_1);
+  else if(LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_1) != RESET){
+
+      LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_1);
+	  /* USER CODE BEGIN LL_EXTI_LINE_0_RISING */
+	  ll_gpio_falling_callback(KEY_MODE_Pin);
+
+
+  }
+ 
     /* USER CODE BEGIN LL_EXTI_LINE_1_RISING */
 
     /* USER CODE END LL_EXTI_LINE_1_RISING */
-  }
+  
   /* USER CODE BEGIN EXTI0_1_IRQn 1 */
 
   /* USER CODE END EXTI0_1_IRQn 1 */
@@ -142,13 +149,15 @@ void EXTI2_3_IRQHandler(void)
   if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_2) != RESET)
   {
     LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_2);
+	ll_gpio_falling_callback(KEY_UP_Pin);
     /* USER CODE BEGIN LL_EXTI_LINE_2_RISING */
 
     /* USER CODE END LL_EXTI_LINE_2_RISING */
   }
-  if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_3) != RESET)
+  else if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_3) != RESET)
   {
     LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_3);
+	ll_gpio_falling_callback(KEY_DOWN_Pin);
     /* USER CODE BEGIN LL_EXTI_LINE_3_RISING */
 
     /* USER CODE END LL_EXTI_LINE_3_RISING */
@@ -229,9 +238,20 @@ void TIM17_IRQHandler(void)
   */
 void USART1_IRQHandler(void)
 {
+  volatile uint8_t data;
   /* USER CODE BEGIN USART1_IRQn 0 */
+  if(LL_USART_IsActiveFlag_RXNE(USART1)){
+
+      data = LL_USART_ReceiveData8(USART1);
+	  usart1_isr_callback_handler(data);
+
+  }
 
   /* USER CODE END USART1_IRQn 0 */
+  if(LL_USART_IsActiveFlag_ORE(USART1)){
+
+       LL_USART_ClearFlag_ORE(USART1);
+   }
   /* USER CODE BEGIN USART1_IRQn 1 */
 
   /* USER CODE END USART1_IRQn 1 */
@@ -243,9 +263,23 @@ void USART1_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
+  volatile uint8_t data;
+  
+	if(LL_USART_IsActiveFlag_RXNE(USART2)){
+  
+	   //LL_USART_ClearFlag_RXNE(USART2);
+	  data = LL_USART_ReceiveData8(USART2);
+	  usart2_isr_callback_handler(data);
+  
+	}
+
 
   /* USER CODE END USART2_IRQn 0 */
   /* USER CODE BEGIN USART2_IRQn 1 */
+  if(LL_USART_IsActiveFlag_ORE(USART2)){
+
+       LL_USART_ClearFlag_ORE(USART2);
+   }
 
   /* USER CODE END USART2_IRQn 1 */
 }

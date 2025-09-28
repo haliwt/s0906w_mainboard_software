@@ -15,7 +15,9 @@ extern uint8_t inputBuf[1];
 void freeRTOS_Handler(void);
 
 
+void ll_gpio_falling_callback(uint16_t gpio_pin);
 
 
+void vtask_isq_handler(void);
 
 #endif /* BSP_INC_BSP_FREERTOS_H_ */

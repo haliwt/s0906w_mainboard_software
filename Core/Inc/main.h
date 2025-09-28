@@ -98,18 +98,23 @@ void Error_Handler(void);
 #define LED_TAPE_CTL_GPIO_Port GPIOA
 #define PLASMA_Pin LL_GPIO_PIN_15
 #define PLASMA_GPIO_Port GPIOA
+//KEY GPIO 
 #define KEY_POWER_Pin LL_GPIO_PIN_0
 #define KEY_POWER_GPIO_Port GPIOD
 #define KEY_POWER_EXTI_IRQn EXTI0_1_IRQn
+
 #define KEY_MODE_Pin LL_GPIO_PIN_1
 #define KEY_MODE_GPIO_Port GPIOD
 #define KEY_MODE_EXTI_IRQn EXTI0_1_IRQn
+
 #define KEY_UP_Pin LL_GPIO_PIN_2
 #define KEY_UP_GPIO_Port GPIOD
 #define KEY_UP_EXTI_IRQn EXTI2_3_IRQn
+
 #define KEY_DOWN_Pin LL_GPIO_PIN_3
 #define KEY_DOWN_GPIO_Port GPIOD
 #define KEY_DOWN_EXTI_IRQn EXTI2_3_IRQn
+//LED GPIO
 #define LED_WIFI_Pin LL_GPIO_PIN_3
 #define LED_WIFI_GPIO_Port GPIOB
 #define LED_AI_Pin LL_GPIO_PIN_4

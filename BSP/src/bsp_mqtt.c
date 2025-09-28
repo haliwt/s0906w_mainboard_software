@@ -184,7 +184,7 @@ void property_topic_publish(void)
     randomName[0]=HAL_GetUIDw0();
     size = snprintf(topic, sizeof(topic), "AT+TCMQTTPUB=\"$thing/up/property/%s/UYIJIA01-%d\",0,", PRODUCT_ID,randomName[0]);
     at_send_data((uint8_t *)topic, size);
- 
+    vTaskDelay(pdMS_TO_TICKS(200));
    
 }
 /********************************************************************************
@@ -207,6 +207,7 @@ static void property_report_state(void)
                                
  
 	at_send_data((uint8_t *)message, message_len);
+	 vTaskDelay(pdMS_TO_TICKS(200));
    
 }
 
@@ -222,6 +223,7 @@ void property_report_update_data(void)
 								   
 	 
 	at_send_data((uint8_t *)message, message_len);
+	 vTaskDelay(pdMS_TO_TICKS(200));
 
 
 }
@@ -237,6 +239,7 @@ void property_report_phone_timer_on_data(void)
 								   
 	 
 	at_send_data((uint8_t *)message, message_len);
+	vTaskDelay(pdMS_TO_TICKS(200));
 
 
 }
@@ -254,6 +257,7 @@ static void property_report_power_off_state(void)
                                
  
   at_send_data((uint8_t *)message, message_len);
+   vTaskDelay(pdMS_TO_TICKS(200));
 
 
 }
@@ -277,6 +281,7 @@ static void property_report_ReadTempHum(uint8_t tempvalue,uint8_t humvalue)
 								,tempvalue,humvalue);
 								  
 		at_send_data((uint8_t *)message, message_len);
+		 vTaskDelay(pdMS_TO_TICKS(200));
 }
 
 static void property_report_SetState(uint8_t dat)
@@ -288,6 +293,7 @@ static void property_report_SetState(uint8_t dat)
 	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up04\\\"\\,\\\"params\\\":{\\\"state\\\":%d}}\"\r\n",dat);
 								  
 	at_send_data((uint8_t *)message, message_len);
+	 vTaskDelay(pdMS_TO_TICKS(200));
 
 }
 /********************************************************************************
@@ -307,6 +313,7 @@ static void property_report_SetTemp(uint8_t temp)
 	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up03\\\"\\,\\\"params\\\":{\\\"temperature\\\":%d}}\"\r\n",temp);
 								  
 	at_send_data((uint8_t *)message, message_len);
+	 vTaskDelay(pdMS_TO_TICKS(200));
 
 }
 static void property_report_SetOpen(uint8_t open)
@@ -318,6 +325,7 @@ static void property_report_SetOpen(uint8_t open)
 	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up04\\\"\\,\\\"params\\\":{\\\"open\\\":%d}}\"\r\n",open);
 								  
 	at_send_data((uint8_t *)message, message_len);
+	 vTaskDelay(pdMS_TO_TICKS(200));
 
 }
 /********************************************************************************
@@ -338,6 +346,7 @@ static void property_report_SetSonic(uint8_t datsonic)
 								,datsonic);
 								  
 	at_send_data((uint8_t *)message, message_len);
+	 vTaskDelay(pdMS_TO_TICKS(200));
 
 }
 /********************************************************************************
@@ -358,6 +367,7 @@ static void property_report_SetAnion(uint8_t datanion)
 								,datanion);
 								  
 	at_send_data((uint8_t *)message, message_len);
+	 vTaskDelay(pdMS_TO_TICKS(200));
 
 }
 /********************************************************************************
@@ -378,6 +388,7 @@ static void property_report_SetPtc(uint8_t datptc)
 								,datptc);
 								  
 	at_send_data((uint8_t *)message, message_len);
+	 vTaskDelay(pdMS_TO_TICKS(200));
 
 }
 
@@ -399,6 +410,7 @@ static void property_report_SetFan(uint8_t fan)
 	
 	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up05\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",fan);
 	at_send_data((uint8_t *)message, message_len);
+	 vTaskDelay(pdMS_TO_TICKS(200));
 
 }
 /********************************************************************************
@@ -420,6 +432,7 @@ static void property_report_SetTime(uint8_t time)
 	message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up05\\\"\\,\\\"params\\\":{\\\"find\\\":%d}}\"\r\n",
 								   time);
 	  at_send_data((uint8_t *)message, message_len);
+	   vTaskDelay(pdMS_TO_TICKS(200));
 }
 
 /********************************************************************************

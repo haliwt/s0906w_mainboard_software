@@ -311,7 +311,7 @@ void FillFrame(uint8_t *buf, uint8_t cmd, uint8_t *data, uint8_t dataLen)
        buf[5] = FRAME_END;
 	   buf[6] = bcc_check(buf, 6 );
 	}
-	else{
+	else if(buf[3]==0x0F){
 	      buf[4] = dataLen;
 	
 		   for (uint8_t i = 0; i < dataLen; i++) {
@@ -363,7 +363,7 @@ void TransmitData(uint8_t *buf, uint8_t size)
         HAL_UART_Transmit_IT(&huart1, buf, transferSize);
     }
     #else
-    	//HAL_UART_Transmit_DMA(&huart1, buf, transferSize);
+    usart1_dma_send(buf,transferSize);	//HAL_UART_Transmit_DMA(&huart1, buf, transferSize);
     #endif
 }
 
