@@ -70,13 +70,13 @@ void MX_GPIO_Init(void)
   LL_GPIO_ResetOutputPin(FAN_CCW_GPIO_Port, FAN_CCW_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(MCU_DIO_GPIO_Port, MCU_DIO_Pin);
+  LL_GPIO_ResetOutputPin(TM1639_DIO_GPIO_Port, TM1639_DIO_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(MCU_STB_GPIO_Port, MCU_STB_Pin);
+  LL_GPIO_ResetOutputPin(TM1639_STB_GPIO_Port, TM1639_STB_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(MCU_CLK_GPIO_Port, MCU_CLK_Pin);
+  LL_GPIO_ResetOutputPin(TM1639_CLK_GPIO_Port, TM1639_CLK_Pin);
 
   /**/
   LL_GPIO_ResetOutputPin(LED_TAPE_CTL_GPIO_Port, LED_TAPE_CTL_Pin);
@@ -151,28 +151,28 @@ void MX_GPIO_Init(void)
   LL_GPIO_Init(FAN_CCW_GPIO_Port, &GPIO_InitStruct);
 
   /**/
-  GPIO_InitStruct.Pin = MCU_DIO_Pin;
+  GPIO_InitStruct.Pin = TM1639_DIO_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(MCU_DIO_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(TM1639_DIO_GPIO_Port, &GPIO_InitStruct);
 
   /**/
-  GPIO_InitStruct.Pin = MCU_STB_Pin;
+  GPIO_InitStruct.Pin = TM1639_STB_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(MCU_STB_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(TM1639_STB_GPIO_Port, &GPIO_InitStruct);
 
   /**/
-  GPIO_InitStruct.Pin = MCU_CLK_Pin;
+  GPIO_InitStruct.Pin = TM1639_CLK_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(MCU_CLK_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(TM1639_CLK_GPIO_Port, &GPIO_InitStruct);
 
   /**/
   GPIO_InitStruct.Pin = LED_TAPE_CTL_Pin;

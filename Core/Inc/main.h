@@ -84,20 +84,25 @@ void Error_Handler(void);
 #define FAN_PWM_GPIO_Port GPIOA
 #define FAN_CCW_Pin LL_GPIO_PIN_7
 #define FAN_CCW_GPIO_Port GPIOA
+//BUZZER GPIO
 #define BUZZER_PWM_Pin LL_GPIO_PIN_1
 #define BUZZER_PWM_GPIO_Port GPIOB
-#define MCU_DIO_Pin LL_GPIO_PIN_10
-#define MCU_DIO_GPIO_Port GPIOB
-#define MCU_STB_Pin LL_GPIO_PIN_11
-#define MCU_STB_GPIO_Port GPIOB
-#define MCU_CLK_Pin LL_GPIO_PIN_12
-#define MCU_CLK_GPIO_Port GPIOB
-#define ULTRA_PWM_Pin LL_GPIO_PIN_8
-#define ULTRA_PWM_GPIO_Port GPIOA
-#define LED_TAPE_CTL_Pin LL_GPIO_PIN_11
-#define LED_TAPE_CTL_GPIO_Port GPIOA
+//TM1639 GPIO
+#define TM1639_DIO_Pin               LL_GPIO_PIN_15
+#define TM1639_DIO_GPIO_Port         GPIOA
+
+#define TM1639_STB_Pin               LL_GPIO_PIN_12
+#define TM1639_STB_GPIO_Port         GPIOA    
+
+#define TM1639_CLK_Pin               LL_GPIO_PIN_11
+#define TM1639_CLK_GPIO_Port         GPIOA  
+
+//FUNCTION GPIO
 #define PLASMA_Pin LL_GPIO_PIN_15
 #define PLASMA_GPIO_Port GPIOA
+
+#define ULTRA_PWM_Pin LL_GPIO_PIN_8
+#define ULTRA_PWM_GPIO_Port GPIOA
 //KEY GPIO 
 #define KEY_POWER_Pin LL_GPIO_PIN_0
 #define KEY_POWER_GPIO_Port GPIOD
@@ -127,6 +132,9 @@ void Error_Handler(void);
 #define LED_MOUSE_GPIO_Port GPIOB
 #define LED_TEMP_Pin LL_GPIO_PIN_8
 #define LED_TEMP_GPIO_Port GPIOB
+
+#define LED_TAPE_CTL_Pin LL_GPIO_PIN_11
+#define LED_TAPE_CTL_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 

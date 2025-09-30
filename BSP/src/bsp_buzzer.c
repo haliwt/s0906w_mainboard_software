@@ -64,15 +64,15 @@ void Buzzer_Ptc_Error_Sound(void)
 {
 
 	  buzzer_sound();
-	HAL_Delay(50);
+	 vTaskDelay(pdMS_TO_TICKS(50));//LL_mDelay() ;//HAL_Delay(50);
 	  buzzer_sound();
-	HAL_Delay(50);
+	 vTaskDelay(pdMS_TO_TICKS(50));//HAL_Delay(50);
 	  buzzer_sound();
-	HAL_Delay(50);
+	 vTaskDelay(pdMS_TO_TICKS(50));//HAL_Delay(50);
 	  buzzer_sound();
-	HAL_Delay(50);
+	 vTaskDelay(pdMS_TO_TICKS(50));//HAL_Delay(50);
 	  buzzer_sound();
-	HAL_Delay(50);
+	 vTaskDelay(pdMS_TO_TICKS(50));//HAL_Delay(50);
 
 
 }

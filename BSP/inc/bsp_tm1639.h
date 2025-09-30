@@ -10,18 +10,18 @@
 #include "main.h"
 
 // TM1639 引脚定义
-#define TM1639_STB_PIN                GPIO_PIN_12
-#define TM1639_DIO_PIN                GPIO_PIN_1
-#define TM1639_CLK_PIN                GPIO_PIN_11
+#define TM1639_STB_PIN                LL_GPIO_PIN_12
+#define TM1639_DIO_PIN                LL_GPIO_PIN_15
+#define TM1639_CLK_PIN                LL_GPIO_PIN_11
 #define TM1639_GPIO                   GPIOA
 
 // TM1639 引脚操作宏定�?
-#define TM1639_CLK_SetHigh()          do{MCU_CLK_GPIO_Port-> BSRR |=MCU_CLK_Pin ; }while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_CLK_PIN, GPIO_PIN_SET)
-#define TM1639_CLK_SetLow()           do{MCU_CLK_GPIO_Port-> BSRR |=(uint32_t)MCU_CLK_Pin <<16 ;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_CLK_PIN, GPIO_PIN_RESET)
-#define TM1639_DIO_SetHigh()          do{MCU_DIO_GPIO_Port-> BSRR |=MCU_DIO_Pin;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_DIO_PIN, GPIO_PIN_SET)
-#define TM1639_DIO_SetLow()           do{MCU_DIO_GPIO_Port-> BSRR |=(uint32_t)MCU_DIO_Pin<<16;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_DIO_PIN, GPIO_PIN_RESET)
-#define TM1639_STB_SetHigh()          do{MCU_STB_GPIO_Port-> BSRR |=MCU_STB_Pin;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_STB_PIN, GPIO_PIN_SET)
-#define TM1639_STB_SetLow()           do{MCU_STB_GPIO_Port-> BSRR |=(uint32_t)MCU_STB_Pin<<16;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_STB_PIN, GPIO_PIN_RESET)
+#define TM1639_CLK_SetHigh()          do{TM1639_CLK_GPIO_Port-> BSRR =TM1639_CLK_Pin ; }while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_CLK_PIN, GPIO_PIN_SET)
+#define TM1639_CLK_SetLow()           do{TM1639_CLK_GPIO_Port-> BSRR =(uint32_t)TM1639_CLK_Pin <<16 ;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_CLK_PIN, GPIO_PIN_RESET)
+#define TM1639_DIO_SetHigh()          do{TM1639_DIO_GPIO_Port-> BSRR =TM1639_DIO_Pin;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_DIO_PIN, GPIO_PIN_SET)
+#define TM1639_DIO_SetLow()           do{TM1639_DIO_GPIO_Port-> BSRR =(uint32_t)TM1639_DIO_Pin<<16;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_DIO_PIN, GPIO_PIN_RESET)
+#define TM1639_STB_SetHigh()          do{TM1639_STB_GPIO_Port-> BSRR =TM1639_STB_Pin;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_STB_PIN, GPIO_PIN_SET)
+#define TM1639_STB_SetLow()           do{TM1639_STB_GPIO_Port-> BSRR =(uint32_t)TM1639_STB_Pin<<16;}while(0)//HAL_GPIO_WritePin(TM1639_GPIO, TM1639_STB_PIN, GPIO_PIN_RESET)
 
 // TM1639 命令定义
 #define TM1639_CMD_DATA               0x40    // 数据命令
