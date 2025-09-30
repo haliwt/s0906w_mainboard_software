@@ -10,6 +10,8 @@
 #include "main.h"
 
 
+void tim17_isr_callback_handler(void);
+
 
 
 

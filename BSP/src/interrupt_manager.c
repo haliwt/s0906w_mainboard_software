@@ -38,12 +38,10 @@
 	*Return Ref:NO
 	*
 *******************************************************************************/
-void tim_17_isr_handler(void)
+void tim17_isr_callback_handler(void)
+
 {
    static  uint16_t tm0;
-
-
-  
        tm0++;
 	  
 	   g_pro.gTimer_led_wifi_bilnk_counter++;

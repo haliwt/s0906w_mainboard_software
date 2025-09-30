@@ -118,8 +118,8 @@ static void link_wifi_net_handler(void)
             case 1:
                // WIFI_IC_ENABLE();
               //  HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
-				    at_send_data((const uint8_t *)"AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"));
-
+				  at_send_data((uint8_t *)"AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"));
+                  //USART2_DMA_Send((const uint8_t *)"AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"));
                  randomName[0]=HAL_GetUIDw0();
 				 wifi_led_fast_blink_handler();
 
@@ -202,7 +202,7 @@ static void link_wifi_net_handler(void)
            
 			
           //  HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //Âä®Ê?ÅÊ≥®ÂÜ? 
-           at_send_data((const uint8_t *)"AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"));
+           at_send_data((uint8_t *)"AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"));
 	  		//osDelay(1000);//HAL_Delay(1000);
 	  		 wifi_led_fast_blink_handler();
         		 osDelay(100);
@@ -270,7 +270,7 @@ static void link_wifi_net_handler(void)
 
              g_wifi.soft_ap_config_success=0;
           //  HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//Âº?ÂßãËøûÊé?
-              at_send_data((const uint8_t *)"AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
+              at_send_data((uint8_t *)"AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
              wifi_led_fast_blink_handler();
         		 osDelay(200);
                  wifi_led_fast_blink_handler();
