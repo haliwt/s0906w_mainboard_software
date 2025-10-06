@@ -157,6 +157,8 @@ static void vTaskRunPro(void *pvParameters)
     
 	key_handler();
 
+  
+
 	power_onoff_handler(g_pro.gpower_on);
 
 	if(g_wifi.wifi_led_fast_blink_flag==0 ){
@@ -209,16 +211,20 @@ static void vTaskStart(void *pvParameters)
 	  else if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on){
 
 	       g_key.key_mode_flag = KEY_MODEL_ID;
+		   g_key.key_down_flag=0;
+	       g_key.key_up_flag=0;
 
 	  }
 	  else if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on){
 
-	  g_key.key_down_flag =KEY_DOWN_ID;
+	  		g_key.key_down_flag =KEY_DOWN_ID;
+			g_key.key_power_flag=0;
 
       }
 	  else if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on){
 
 	      g_key.key_up_flag = KEY_UP_ID;
+		  g_key.key_power_flag=0;
       }
 
 	 vTaskDelay(pdMS_TO_TICKS(10));

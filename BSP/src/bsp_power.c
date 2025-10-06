@@ -60,6 +60,12 @@ void power_onoff_handler(uint8_t data)
 			set_timer_timing_value_handler();
 
 			works_run_two_hours_state();
+
+			  if(g_key.key_mode_flag ==3 && g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+        			g_key.key_mode_flag ++;
+					mode_key_fun();
+       
+	            }
 	    }
 
         }
@@ -256,7 +262,7 @@ void power_on_run_handler(void)
 		           HUMIDITY_ICON_OFF();
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
     	 		   TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value); // 显示时间//WT.EDIT 2025.04.23
-    	 		   vTaskDelay(pdMS_TO_TICKS(1000));
+    	 		  
     	  }
 		  else{
 

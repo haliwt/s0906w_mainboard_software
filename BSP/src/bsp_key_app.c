@@ -83,12 +83,12 @@ void key_handler(void)
 		}
 
 		if(KEY_MODE_VALUE() == KEY_UP && mode_key_counter < 40){//60
-			g_key.key_mode_flag = KEY_NULL;
+			g_key.key_mode_flag ++;
 			mode_key_counter=0;
 			g_pro.gTimer_switch_set_timer_times = 0;
 			if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			buzzer_sound();
-	        mode_key_fun();
+	        //  mode_key_fun();
 		    }
 		}
 		else if(KEY_MODE_VALUE() == KEY_UP && mode_key_counter ==200){
