@@ -117,7 +117,7 @@ void EXTI0_1_IRQHandler(void)
   {
     LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_0);
     /* USER CODE BEGIN LL_EXTI_LINE_0_RISING */
-	ll_gpio_falling_callback(KEY_POWER_Pin);
+	//ll_gpio_falling_callback(KEY_POWER_Pin);
 
     /* USER CODE END LL_EXTI_LINE_0_RISING */
   }
@@ -125,7 +125,7 @@ void EXTI0_1_IRQHandler(void)
 
       LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_1);
 	  /* USER CODE BEGIN LL_EXTI_LINE_0_RISING */
-	  ll_gpio_falling_callback(KEY_MODE_Pin);
+	  //ll_gpio_falling_callback(KEY_MODE_Pin);
 
 
   }
@@ -150,7 +150,7 @@ void EXTI2_3_IRQHandler(void)
   if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_2) != RESET)
   {
     LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_2);
-	ll_gpio_falling_callback(KEY_UP_Pin);
+	//ll_gpio_falling_callback(KEY_UP_Pin);
     /* USER CODE BEGIN LL_EXTI_LINE_2_RISING */
 
     /* USER CODE END LL_EXTI_LINE_2_RISING */
@@ -158,7 +158,7 @@ void EXTI2_3_IRQHandler(void)
   else if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_3) != RESET)
   {
     LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_3);
-	ll_gpio_falling_callback(KEY_DOWN_Pin);
+	//ll_gpio_falling_callback(KEY_DOWN_Pin);
     /* USER CODE BEGIN LL_EXTI_LINE_3_RISING */
 
     /* USER CODE END LL_EXTI_LINE_3_RISING */

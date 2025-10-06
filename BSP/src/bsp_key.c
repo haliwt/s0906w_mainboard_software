@@ -126,6 +126,7 @@ static void adjust_temperature(int8_t delta)
     g_pro.g_manual_shutoff_dry_flag = 0;
     key_up_down_pressed_flag = 1;
     g_pro.key_set_temperature_flag = 1;
+	g_key.mode_key_switch_time_mode = 0;
 		
     TM1639_Display_Temperature(g_pro.gset_temperture_value);
     g_pro.gTimer_input_set_temp_times = 0;
@@ -519,7 +520,7 @@ void set_timer_timing_value_handler(void)
 
 			if(g_pro.gdisp_timer_hours_value>0){
 
-			g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;
+			g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;//WT.EDIT 2025.010.06//timer_time_mode;
 			g_pro.key_gtime_timer_define_flag = works_time_mode; //define UP and down key is set temperature value 
 			g_pro.key_add_dec_be_pressed_flag++;
 			g_pro.gTimer_timer_time_second=0;

@@ -241,21 +241,22 @@ void power_on_run_handler(void)
 
 	  if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 	  	
-      if(g_pro.key_set_temperature_flag==1){
+      if(g_pro.key_set_temperature_flag==1 && g_key.mode_key_switch_time_mode != timer_time_mode){
 
           //DHT11_Display_Data(DISPLAY_TEMP); 显示�?
           TM1639_Display_Temperature(g_pro.gset_temperture_value);
         
 
       }
-      else if(g_key.mode_key_switch_time_mode == timer_time_mode && (g_pro.key_set_temperature_flag!=1)){
+      else if(g_key.mode_key_switch_time_mode == timer_time_mode){
 
     	 if(g_pro.gTimer_switch_set_timer_times < 4){
     	           g_pro.gAI=0;
     	 		   LED_AI_OFF();
 		           HUMIDITY_ICON_OFF();
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
-    	 		   TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);//WT.EDIT 2025.04.23
+    	 		   TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value); // 显示时间//WT.EDIT 2025.04.23
+    	 		   vTaskDelay(pdMS_TO_TICKS(1000));
     	  }
 		  else{
 
@@ -268,7 +269,7 @@ void power_on_run_handler(void)
 			       g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;
 
 			  }
-			
+			 g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode; //WT.EDIT 2025.010.06
 		  }
       }
       else  if(g_pro.g_disp_smg_timer_or_temp_hours_item == works_time_mode && (g_pro.key_set_temperature_flag!=1)){

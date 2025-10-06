@@ -176,7 +176,7 @@ static void vTaskRunPro(void *pvParameters)
          wifi_led_fast_blink_handler();
 	}
 
-	vTaskDelay(30);
+	vTaskDelay(pdMS_TO_TICKS(20));
 
 	  
     }
@@ -201,6 +201,32 @@ static void vTaskStart(void *pvParameters)
     while(1)
     {
 
+	 if(KEY_POWER_VALUE()  ==KEY_DOWN ){
+
+	     g_key.key_power_flag = KEY_POWER_ID;
+
+      }
+	  else if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on){
+
+	       g_key.key_mode_flag = KEY_MODEL_ID;
+
+	  }
+	  else if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on){
+
+	  g_key.key_down_flag =KEY_DOWN_ID;
+
+      }
+	  else if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on){
+
+	      g_key.key_up_flag = KEY_UP_ID;
+      }
+
+	 vTaskDelay(pdMS_TO_TICKS(10));
+
+   }
+}
+	
+      #if 0
       xResult = xTaskNotifyWait(0x00000000,
 						           0xFFFFFFFF,
 						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue�? */
@@ -217,8 +243,10 @@ static void vTaskStart(void *pvParameters)
             else if((ulValue & MODE_BIT_1 ) != 0){   /* 接收到消息，�?测那个位被按�? */
             	 if(g_pro.gpower_on == power_on){
 				 	
-            	     g_key.key_mode_flag = KEY_MODEL_ID;
-
+            	   //  g_key.key_mode_flag = KEY_MODEL_ID;
+					 g_key.key_power_flag = 0;
+				     g_key.key_down_flag=0;
+					 g_key.key_up_flag =0;
             	 }
 
              }
@@ -226,6 +254,8 @@ static void vTaskStart(void *pvParameters)
             	  if(g_pro.gpower_on == power_on){
 				  	 
             	       g_key.key_down_flag =KEY_DOWN_ID;
+					   g_key.key_power_flag = 0;
+				       g_key.key_mode_flag =0;
             	             
             	  }
 
@@ -233,6 +263,8 @@ static void vTaskStart(void *pvParameters)
             else if((ulValue & UP_BIT_3 ) != 0){   /* 接收到消息，�?测那个位被按�? */
             	 if(g_pro.gpower_on == power_on){
             	      g_key.key_up_flag = KEY_UP_ID;
+					  g_key.key_power_flag = 0;
+				      g_key.key_mode_flag =0;
             	                 
             	 }
             }
@@ -240,7 +272,8 @@ static void vTaskStart(void *pvParameters)
           }
 
         }
-}
+	 #endif 
+
  /**********************************************************************************************************
 *	Function Name: AppTaskCreate
 *	功能说明: 创建应用任务
@@ -435,19 +468,19 @@ void ll_gpio_falling_callback(uint16_t gpio_pin)
 
    case KEY_MODE_Pin:
 
-       if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on){
-        xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
-               MODE_BIT_1,     /* 设置目标任务事件标志位bit0  */
-               eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志�? */
-               &xHigherPriorityTaskWoken);
+//       if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on){
+//        xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
+//               MODE_BIT_1,     /* 设置目标任务事件标志位bit0  */
+//               eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志�? */
+//               &xHigherPriorityTaskWoken);
 
-        /* 如果xHigherPriorityTaskWoken = pdTRUE，那么�??出中断后切到当前�?高优先级任务执行 */
-        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+//        /* 如果xHigherPriorityTaskWoken = pdTRUE，那么�??出中断后切到当前�?高优先级任务执行 */
+//        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 
 
-       }
+//       }
 
-      
+     g_key.key_mode_flag = KEY_MODEL_ID; 
 
    break;
 

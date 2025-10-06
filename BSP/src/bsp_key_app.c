@@ -6,7 +6,7 @@ uint8_t mode_key_counter;
 
 void key_handler(void)
 {
-	if(g_key.key_power_flag == KEY_POWER_ID){
+	if(g_key.key_power_flag == KEY_POWER_ID &&  g_key.key_down_flag !=KEY_DOWN_ID &&  g_key.key_up_flag !=KEY_UP_ID){
 
 		if(KEY_POWER_VALUE() ==KEY_DOWN && g_pro.gpower_on == power_on && power_on_key_counter  < 100 ){
 			power_on_key_counter ++ ;
@@ -68,7 +68,7 @@ void key_handler(void)
 		if(KEY_MODE_VALUE() == KEY_DOWN && mode_key_counter < 100){
 
 		    mode_key_counter++ ;
-            if(mode_key_counter > 59){
+            if(mode_key_counter > 39){ //59
 			mode_key_counter=200;
 		    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 				buzzer_sound();
@@ -82,7 +82,7 @@ void key_handler(void)
            }
 		}
 
-		if(KEY_MODE_VALUE() == KEY_UP && mode_key_counter < 60){
+		if(KEY_MODE_VALUE() == KEY_UP && mode_key_counter < 40){//60
 			g_key.key_mode_flag = KEY_NULL;
 			mode_key_counter=0;
 			g_pro.gTimer_switch_set_timer_times = 0;
