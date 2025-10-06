@@ -511,7 +511,7 @@ void set_timer_timing_value_handler(void)
 {
 
   
-   if(g_pro.key_gtime_timer_define_flag == input_set_timer_mode && g_key.key_mode_long_flag ==1 && g_pro.gTimer_switch_set_timer_times > 3 ){
+   if(g_pro.key_gtime_timer_define_flag == input_set_timer_mode && g_key.key_mode_long_flag ==1 && g_pro.gTimer_switch_set_timer_times > 2 ){
    	      g_pro.gTimer_switch_set_timer_times=0;
 		  g_key.key_mode_long_flag++;
 
