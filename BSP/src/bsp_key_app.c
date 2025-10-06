@@ -80,7 +80,10 @@ void key_handler(void)
 				g_pro.gTimer_switch_set_timer_times = 0;
 		        HUMIDITY_ICON_OFF(); //WT.EDIT 2025.04.23
 				TEMP_ICON_OFF();//WT.EDIT 2025.04.23
-				TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);//WT.EDIT 2025.04.23
+				if(g_pro.disp_59minutes_flag ==0)
+				  TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);//WT.EDIT 2025.04.23
+				else
+				  TM1639_Display_3_Digit(g_pro.disp_timer_minutes_value);//WT.EDIT 2025.10.06
 		    }
            }
 		}

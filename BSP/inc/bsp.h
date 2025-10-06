@@ -122,6 +122,7 @@ typedef struct _process{
    uint8_t works_two_hours_interval_flag;
    uint8_t g_manual_shutoff_dry_flag;
    uint8_t key_add_dec_be_pressed_flag;
+   uint8_t disp_59minutes_flag ;
 
  
 

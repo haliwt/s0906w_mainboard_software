@@ -434,7 +434,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				g_key.mode_key_switch_time_mode = timer_time_mode;
 				g_pro.gTimer_switch_set_timer_times = 0;
 			
-				g_pro.timer_powerOff_oneHour_flag=0;//only one hour don't 00H,that  "01H",flag
+
 
 				g_pro.gTimer_timer_time_second=0;
 				 g_pro.disp_timer_minutes_value=0;
