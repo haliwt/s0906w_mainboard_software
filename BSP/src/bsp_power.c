@@ -435,6 +435,7 @@ void power_off_run_handler(void)
 	  g_key.key_long_mode_flag = 0;
 	
 	  g_pro.key_gtime_timer_define_flag = works_time_mode;
+	  g_pro.led_bar =0;
 
 	  fan_run_one_minute = 1;
 	  g_pro.gTimer_fan_run_one_minute =0;

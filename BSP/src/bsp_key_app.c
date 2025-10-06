@@ -7,7 +7,7 @@ uint8_t complex_counter;
 void key_handler(void)
 {
 
-    static uint8_t led_bar;
+   
 
 	if(g_key.key_power_flag == KEY_POWER_ID &&  g_key.key_down_flag !=KEY_DOWN_ID &&  g_key.key_up_flag !=KEY_UP_ID){
 
@@ -110,11 +110,19 @@ void key_handler(void)
                  complex_counter =200;
 		       
                buzzer_sound();
-			   led_bar = led_bar ^ 0x01;
-			   if(led_bar ==1)
-		         LED_TAPE_CTL_OFF() ;
-			   else 
-			   	 LED_TAPE_CTL_ON();
+
+			   g_pro.led_bar = g_pro.led_bar ^ 0x01;
+			   if(g_pro.led_bar ==1){
+			   	  
+			      LED_TAPE_CTL_OFF() ;
+
+               }
+			   else {
+			   	 
+		         LED_TAPE_CTL_ON() ;
+
+			   	}
+			 
 		      }
 
 		}

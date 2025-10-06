@@ -150,8 +150,7 @@ static void adjust_timer(int8_t delta)
     if (g_pro.gdisp_timer_hours_value < MIN_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MIN_TIMER_HOURS;
     g_pro.g_disp_smg_timer_or_temp_hours_item = input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
     TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
-	//SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
-	//osDelay(5);
+	
 }
 
 
