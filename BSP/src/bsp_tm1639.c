@@ -19,8 +19,8 @@ static const uint8_t TM1639_Char_Table[] = {
     0x67, // H: 0111 0110 (b,c,e,f,g)
     0x36, // °: 0110 0011 (b,c,g)
     0x93, // C: 0011 1001 (a,d,e,f)
-    0x05,  // RH的H部分: 0101 0000 (e,g)
-    0x45   //n:0010 1010 (hgfe dcba= 0101 0100) =   //低位数字写在前面,
+    0x05,  // RH的H部分: 0101 0000 (hgfe,dcba= 0101 0000)
+    0x45   //n:(hgfe dcba= 0101 0100) =   //低位数字写在前面,大端写入,
 };
 
 #define TM1639_CHAR_H 					TM1639_Char_Table[0]
