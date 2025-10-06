@@ -58,6 +58,7 @@ typedef enum{
    KEY_MODEL_ID = 0x02,
    KEY_DOWN_ID = 0x04,
    KEY_UP_ID = 0x08,
+   KEY_COMPLEX_ID =0X10,
 
    KEY_DWON_RUN_ID= 0x14,
 
@@ -103,6 +104,7 @@ typedef struct __KEY_PROCESS{
 	uint8_t key_mode_flag;
 	uint8_t key_down_flag;
 	uint8_t key_up_flag;
+	
 	uint8_t  mode_key_switch_time_mode;
 	uint8_t key_mode_long_flag ;
 

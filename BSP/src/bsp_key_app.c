@@ -3,9 +3,12 @@
 
 uint8_t power_on_key_counter;
 uint8_t mode_key_counter;
-
+uint8_t complex_counter;
 void key_handler(void)
 {
+
+    static uint8_t led_bar;
+
 	if(g_key.key_power_flag == KEY_POWER_ID &&  g_key.key_down_flag !=KEY_DOWN_ID &&  g_key.key_up_flag !=KEY_UP_ID){
 
 		if(KEY_POWER_VALUE() ==KEY_DOWN && g_pro.gpower_on == power_on && power_on_key_counter  < 100 ){
@@ -97,16 +100,45 @@ void key_handler(void)
 			mode_key_counter=0;
 		}
 	}
-	else if(g_key.key_down_flag ==KEY_DOWN_ID && KEY_DOWN_VALUE() == KEY_UP ){// && DEC_KEY_VALUE()==KEY_UP){
-		g_key.key_down_flag = KEY_NULL;
-		g_key.mode_key_switch_time_mode= works_time_mode; //WT.EDIT 2025.04.30
-		if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
-		   buzzer_sound();
+	else if(g_key.key_down_flag ==KEY_DOWN_ID && g_key.key_down_flag !=5){// && DEC_KEY_VALUE()==KEY_UP){
 
-		    key_dwon_fun();
+	    complex_counter ++;
+		if(KEY_DOWN_VALUE()==KEY_DOWN && complex_counter < 100 ){
+
+		      if(complex_counter > 39){
+                 complex_counter =200;
+		       
+               buzzer_sound();
+			   led_bar = led_bar ^ 0x01;
+			   if(led_bar ==1)
+		         LED_TAPE_CTL_OFF() ;
+			   else 
+			   	 LED_TAPE_CTL_ON();
+		      }
+
+		}
+		
+		if(KEY_DOWN_VALUE()==KEY_UP && complex_counter <40){
+			g_key.key_down_flag = KEY_NULL;
+			complex_counter=0;
+			g_key.mode_key_switch_time_mode= works_time_mode; //WT.EDIT 2025.04.30
+			if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+			   buzzer_sound();
+
+			    key_dwon_fun();
+		}
+		}
+		else if(KEY_DOWN_VALUE()==KEY_UP && complex_counter ==200){
+				 complex_counter=0;
+
+                 g_key.key_down_flag ++;
+
 		}
 	}
-	else if(g_key.key_up_flag ==KEY_UP_ID && KEY_UP_VALUE() == KEY_UP ){ // && ADD_KEY_VALUE()==KEY_UP){
+	else if(g_key.key_up_flag ==KEY_UP_ID ){ // && ADD_KEY_VALUE()==KEY_UP){
+
+	    if(KEY_UP_VALUE()==KEY_UP){
+		complex_counter=0;
 		g_key.key_up_flag =KEY_NULL;
 		g_key.mode_key_switch_time_mode= works_time_mode; //WT.EDIT 2025.04.30
 		
@@ -115,7 +147,11 @@ void key_handler(void)
            key_up_fun();
 
 		}
+	   }
 	}
+	
+
+	
 
 
 
