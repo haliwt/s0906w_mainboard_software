@@ -10,7 +10,7 @@
 
 #include "main.h"
 
-#define PLASMA_OPEN()   do{PLASMA_GPIO_Port->BSRR = PLASMA_Pin;}while(0)
+ #define PLASMA_OPEN()   do{PLASMA_GPIO_Port->BSRR = PLASMA_Pin;}while(0)
 #define PLASMA_CLOSE()  do{PLASMA_GPIO_Port->BSRR = (uint32_t)PLASMA_Pin<<16;}while(0)
     
 

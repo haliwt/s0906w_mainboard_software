@@ -26,6 +26,7 @@ volatile uint8_t adc_conversion_complete = 0;
 uint16_t ptc_temp_voltage;
 uint16_t fan_detect_voltage = 1000;
 
+static uint8_t counter_error;
 
 
 /**********************************************************************
@@ -38,7 +39,7 @@ uint16_t fan_detect_voltage = 1000;
 **********************************************************************/
 void adc_detected_hundler(void)
 {
-    static uint8_t counter;
+    
  
         Fan_Full_Speed();
 	   //switch_flag = switch_flag ^ 0x01;
@@ -47,9 +48,9 @@ void adc_detected_hundler(void)
 	   		
 	   }
 
-	   if(fan_detect_voltage < 450){
-             counter ++ ;
-			  if(counter > 3){
+	   if(fan_detect_voltage < 400){
+             counter_error ++ ;
+			  if(counter_error > 4){
 			      g_pro.fan_warning=1;
 				  g_pro.ptc_on_off_flag = 1;
 			      g_pro.gDry =0;
@@ -59,14 +60,15 @@ void adc_detected_hundler(void)
 		}
 	    else{
 
-		  counter=0;
+		  counter_error=0;
 
 		}
 
 	 
     
 
-   if(g_pro.fan_warning==1 && fan_detect_voltage < 450){
+   if(g_pro.fan_warning==1 && fan_detect_voltage < 400){
+   	
       Judge_Fan_State();
 	  g_pro.gDry =0;
 	  DRY_CLOSE();
