@@ -215,12 +215,12 @@ static void vTaskStart(void *pvParameters)
 	  }
 	  else if(KEY_DOWN_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
 
-            if(g_pro.complex_counter !=200){
+        
 			g_key.key_down_flag =KEY_DOWN_ID;
 			g_key.key_power_flag=0;
 	         g_key.key_mode_flag=0;
 
-            }
+       
 
       }
 	  else if(KEY_UP_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){

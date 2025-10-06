@@ -3,7 +3,7 @@
 
 uint8_t power_on_key_counter;
 uint8_t mode_key_counter;
-//uint8_t complex_counter;
+uint8_t complex_counter;
 void key_handler(void)
 {
 
@@ -103,11 +103,11 @@ void key_handler(void)
 	else if(g_key.key_down_flag ==KEY_DOWN_ID && g_key.key_down_flag !=5){// && DEC_KEY_VALUE()==KEY_UP){
 
 	   
-		if(KEY_DOWN_VALUE()==KEY_DOWN && g_pro.complex_counter < 100 ){
-			  g_pro.complex_counter ++;
+		if(KEY_DOWN_VALUE()==KEY_DOWN && complex_counter < 100 ){
+			  complex_counter ++;
 
-		      if(g_pro.complex_counter > 49){
-                 g_pro.complex_counter =200;
+		      if(complex_counter > 49){
+                 complex_counter =200;
 		       
                buzzer_sound();
 			   led_bar = led_bar ^ 0x01;
@@ -119,9 +119,9 @@ void key_handler(void)
 
 		}
 		
-		if(KEY_DOWN_VALUE()==KEY_UP && g_pro.complex_counter <50){
+		if(KEY_DOWN_VALUE()==KEY_UP && complex_counter <50){
 			g_key.key_down_flag = KEY_NULL;
-			g_pro.complex_counter=0;
+			complex_counter=0;
 			g_key.mode_key_switch_time_mode= works_time_mode; //WT.EDIT 2025.04.30
 			if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			   buzzer_sound();
@@ -129,8 +129,8 @@ void key_handler(void)
 			    key_dwon_fun();
 		}
 		}
-		else if(KEY_DOWN_VALUE()==KEY_UP && g_pro.complex_counter ==200){
-				 g_pro.complex_counter=0;
+		else if(KEY_DOWN_VALUE()==KEY_UP && complex_counter ==200){
+				 complex_counter=0;
 
                  g_key.key_down_flag ++;
 
@@ -139,7 +139,6 @@ void key_handler(void)
 	else if(g_key.key_up_flag ==KEY_UP_ID ){ // && ADD_KEY_VALUE()==KEY_UP){
 
 	    if(KEY_UP_VALUE()==KEY_UP){
-		g_pro.complex_counter=0;
 		g_key.key_up_flag =KEY_NULL;
 		g_key.mode_key_switch_time_mode= works_time_mode; //WT.EDIT 2025.04.30
 		
