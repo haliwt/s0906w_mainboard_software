@@ -16,9 +16,9 @@ static const uint8_t TM1639_Number_Table[] = {
 
 // 字母和特殊字符显示码
 static const uint8_t TM1639_Char_Table[] = {
-    0x67, // H: 0111 0110 (b,c,e,f,g)
-    0x36, // °: 0110 0011 (b,c,g)
-    0x93, // C: 0011 1001 (a,d,e,f)
+    0x67, // H: 0111 0110 (hgfe,dcba = 0111 0110)
+    0x36, // °: 0110 0011 (hgfe,dcba= 0110  0011)
+    0x93, // C: 0011 1001 (hgfe,dcba = 0011 1001)
     0x05,  // RH的H部分: 0101 0000 (hgfe,dcba= 0101 0000)
     0x45   //n:(hgfe dcba= 0101 0100) =   //低位数字写在前面,大端写入,
 };
