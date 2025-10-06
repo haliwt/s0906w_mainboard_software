@@ -50,7 +50,7 @@ void adc_detected_hundler(void)
 
 	   if(fan_detect_voltage < 400){
              counter_error ++ ;
-			  if(counter_error > 4){
+			  if(counter_error > 5){
 			      g_pro.fan_warning=1;
 				  g_pro.ptc_on_off_flag = 1;
 			      g_pro.gDry =0;

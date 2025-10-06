@@ -19,13 +19,16 @@ static const uint8_t TM1639_Char_Table[] = {
     0x67, // H: 0111 0110 (b,c,e,f,g)
     0x36, // °: 0110 0011 (b,c,g)
     0x93, // C: 0011 1001 (a,d,e,f)
-    0x05  // RH的H部分: 0101 0000 (e,g)
+    0x05,  // RH的H部分: 0101 0000 (e,g)
+    0x45   //n:0010 1010 (hgfe dcba= 0101 0100) =   //低位数字写在前面,
 };
 
-#define TM1639_CHAR_H TM1639_Char_Table[0]
-#define TM1639_CHAR_DEGREE TM1639_Char_Table[1]
-#define TM1639_CHAR_C TM1639_Char_Table[2]
-#define TM1639_CHAR_RH TM1639_Char_Table[3]
+#define TM1639_CHAR_H 					TM1639_Char_Table[0]
+#define TM1639_CHAR_DEGREE 				TM1639_Char_Table[1]
+#define TM1639_CHAR_C 					TM1639_Char_Table[2]
+#define TM1639_CHAR_RH 					TM1639_Char_Table[3]
+
+#define TM1639_CHAR_N                   TM1639_Char_Table[4]
 
 #define TM1639_DOT 0x08 // 小数点段�?,from low position start
 
@@ -200,7 +203,7 @@ void TM1639_Display_3_Digit(uint8_t num)
     if(g_pro.disp_59minutes_flag ==0)
        TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_H);
 	else 
-	  TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,0x0);
+	  TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_N);
 }
 
 /**
