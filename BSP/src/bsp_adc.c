@@ -1,87 +1,102 @@
 #include "bsp_adc.h"
 #include "bsp.h"
 
-static uint16_t Get_Adc_Channel(uint32_t ch) ;
 
-static uint16_t Get_Adc_Average(uint32_t ch,uint8_t times);
 
 static void Judge_PTC_Temperature_Value(uint16_t adc_ptc);
 
-static void Judge_Fan_State(uint16_t adc_value);
+static void Judge_Fan_State(void);
+
+static void ADC_GetValues(void);
+
+static uint16_t compute_voltage(uint16_t raw_value) ;
+
+static uint8_t ADC_StartConversion(void);
+// ADC相关变量定义
+#define SAMPLE_COUNT 6
+
+#define ADC_BUFFER_SIZE 2
+volatile uint16_t adc_buffer[ADC_BUFFER_SIZE]; // DMA传输缓冲区
+
+uint16_t mean_fan_buf[SAMPLE_COUNT];
+
+
+volatile uint8_t adc_conversion_complete = 0;
 
 uint16_t ptc_temp_voltage;
+uint16_t fan_detect_voltage = 1000;
 
-/*****************************************************************
-*
-	*Function Name: static uint16_t Get_Adc(uint32_t ch)  
-	*Function ADC input channel be selected "which one channe"
-	*Input Ref: which one ? AC_Channel_?
-	*Return Ref: No
+
+
+/**********************************************************************
 	*
+	*Functin Name: void adc_detected_hundler(void)
+	*Function :
+	*Input Ref:  key of value
+	*Return Ref: NO
 	*
-*****************************************************************/
-static uint16_t Get_Adc_Channel(uint32_t ch)   
+**********************************************************************/
+void adc_detected_hundler(void)
 {
-//    ADC_ChannelConfTypeDef ADC1_ChanConf;
+    static uint8_t counter;
+ 
+        Fan_Full_Speed();
+	   //switch_flag = switch_flag ^ 0x01;
+	  if(ADC_StartConversion()){
+	   	  ADC_GetValues();
+	   		
+	   }
 
-//	ADC1_ChanConf.Channel=ch;                                   //Í¨µÀ
-//    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序�?
-//    ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //²ÉÑùÊ±¼ä               
+	   if(fan_detect_voltage < 450){
+             counter ++ ;
+			  if(counter > 3){
+			      g_pro.fan_warning=1;
+				  g_pro.ptc_on_off_flag = 1;
+			      g_pro.gDry =0;
+				  DRY_CLOSE();
 
+			  }
+		}
+	    else{
 
-//	HAL_ADC_ConfigChannel(&hadc1,&ADC1_ChanConf);        //Í¨µÀÅäÖÃ
-//	
-//    HAL_ADC_Start(&hadc1);                               //start ADC transmit
-//	
-//    HAL_ADC_PollForConversion(&hadc1,10);                //轮询转换
-// 
-//	return (uint16_t)HAL_ADC_GetValue(&hadc1);	        	//·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
-}
-/*****************************************************************
-*
-	*Function Name: static uint16_t Get_Adc(uint32_t ch)  
-	*Function ADC input channel be selected "which one channe"
-	*Input Ref: which one ? AC_Channel_?
-	*Return Ref: No
-	*
-	*
-*****************************************************************/
-static uint16_t Get_Adc_Average(uint32_t ch,uint8_t times)
-{
-	uint32_t temp_val=0;
-	uint8_t t;
-	for(t=0;t<times;t++)
-	{
-		temp_val+=Get_Adc_Channel(ch);
-		osDelay(5);//delay_ms(5);
-	}
-	return temp_val/times;
-} 
+		  counter=0;
 
+		}
 
+	 
+    
 
-void Get_PTC_Temperature_Voltage(uint32_t channel,uint8_t times)
-{
-    static uint8_t times_i;
-	uint16_t adcx;
+   if(g_pro.fan_warning==1 && fan_detect_voltage < 450){
+      Judge_Fan_State();
+	  g_pro.gDry =0;
+	  DRY_CLOSE();
+   	}
 	
-	adcx = Get_Adc_Average(channel,times);
 
-    ptc_temp_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
-
-    if(times_i < 2){
-	    times_i++;
-	    ptc_temp_voltage=2000;
-	
-	}
-	#ifdef DEBUG
-      printf("ptc= %d",gctl_t.ptc_temp_voltage);
-	#endif 
-
-	 Judge_PTC_Temperature_Value(ptc_temp_voltage);
-
-     
 }
+
+//void Get_PTC_Temperature_Voltage(uint32_t channel,uint8_t times)
+//{
+//    static uint8_t times_i;
+//	uint16_t adcx;
+//	
+//	//adcx = Get_Adc_Average(channel,times);
+
+//    ptc_temp_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
+
+//    if(times_i < 2){
+//	    times_i++;
+//	    ptc_temp_voltage=2000;
+//	
+//	}
+//	#ifdef DEBUG
+//      printf("ptc= %d",gctl_t.ptc_temp_voltage);
+//	#endif 
+
+//	 Judge_PTC_Temperature_Value(ptc_temp_voltage);
+
+//     
+//}
 
 
 /*****************************************************************
@@ -104,11 +119,11 @@ static void Judge_PTC_Temperature_Value(uint16_t adc_ptc)
 
          DRY_CLOSE();//Ptc_Off();
 		 LED_DRY_OFF();//LED_PTC_ICON_OFF();
-		HAL_Delay(50);
+		 vTaskDelay(pdMS_TO_TICKS(50));//HAL_Delay(50);
 		
       
 
-		Publish_Data_Warning(ptc_temp_warning,warning);
+		Publish_Data_Warning(ptc_temp_warning,1);
 		HAL_Delay(200);  
         
 		MqttData_Publish_SetPtc(0);
@@ -124,62 +139,120 @@ static void Judge_PTC_Temperature_Value(uint16_t adc_ptc)
 
 /*****************************************************************
 	*
-	*Function Name: void Get_Fan_Adc_Fun(uint8_t channel,uint8_t times)
-	*Function ADC input channel be selected "which one channe"
-	*Input Ref: which one ? AC_Channel_?, hexadecimal of average
+	*Function Name: static void Judge_Fan_State(void)
+	*Function:
+	*Input Ref:  
 	*Return Ref: No
 	*
 	*
 *****************************************************************/
-void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
+static void Judge_Fan_State(void)
 {
-	uint16_t adc_fan_hex;
-	
-
-	
-	adc_fan_hex = Get_Adc_Average(channel,times);
-
-    g_pro.fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
-	HAL_Delay(5);
-
-
-	Judge_Fan_State(g_pro.fan_detect_voltage);
-
-
-    
-}
-
-
-static void Judge_Fan_State(uint16_t adc_value)
-{
-
-  static uint8_t detect_error_times;
-   if(adc_value <420){ //500
-         detect_error_times++;
-	          
-		if(detect_error_times >0){
-			detect_error_times=0;
-		   g_pro.fan_warning = 1;
 
 		  Publish_Data_Warning(fan_warning,g_pro.fan_warning);
-	      osDelay(200);//HAL_Delay(200);
+	      //Delay(200);//HAL_Delay(200);
 
 		   MqttData_Publis_SetFan(0);
-	       osDelay(100);//HAL_Delay(100);
+	       //Delay(100);//HAL_Delay(100);
 
 		  Buzzer_Fan_Error_Sound();
 
 		  SendWifiData_To_Cmd(0x09,0x01);//Fan fault warning .
 		  osDelay(5);
 
-		}
-		detect_error_times++;
+}
+/*****************************************************************
+*
+	*Function Name: static uint8_t ADC_StartConversion(void)
+	*Function :LL DAM adc switch result 
+	*Input Ref: NO
+	*Return Ref: No
+	*
+	*
+*****************************************************************/
+static uint8_t ADC_StartConversion(void)
+{
+   if(LL_ADC_IsEnabled(ADC1)==0){
+      return 0;
+   }
 
-     }
+   if(LL_DMA_IsEnabledChannel(DMA1,LL_DMA_CHANNEL_5)){
+		 LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_5);
 
+
+   }
+   //配置DMA传输
+   LL_DMA_ConfigAddresses(DMA1,LL_DMA_CHANNEL_5,
+   						LL_ADC_DMA_GetRegAddr(ADC1,LL_ADC_DMA_REG_REGULAR_DATA),
+   						(uint32_t)adc_buffer,
+   						LL_DMA_DIRECTION_PERIPH_TO_MEMORY);
+
+
+	LL_DMA_SetDataLength(DMA1,LL_DMA_CHANNEL_5,ADC_BUFFER_SIZE);
+
+	
+	// 使能DMA通道
+	   LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_5);
+	   
+	   // 启动ADC转换
+	   LL_ADC_REG_StartConversion(ADC1);
+	   
+	   return 1;
+
+						
 
 
 }
 
+// 获取ADC转换结果
+static void ADC_GetValues(void)
+{
+     static uint8_t fan_counter,ptc_counter;
+	 uint8_t i;
+	
+	uint32_t sum =0;
+        
+   
+	   
+	   mean_fan_buf[fan_counter] = compute_voltage(adc_buffer[0]);//(adc_buffer[0] * 3300 )/4095;//compute_voltage(adc_buffer[0]) ;
+	   vTaskDelay(pdMS_TO_TICKS(10));
+	    fan_counter++;
+	    if(fan_counter >=6){
+
+            for (i = 1; i < SAMPLE_COUNT; i++) {
+                sum += mean_fan_buf[i];
+            }
+		   
+		  fan_detect_voltage = sum/5;
+		  fan_counter =0;
+	
+
+
+		}
+		
+        //fan_detect_voltage = (adc_buffer[0] * 3300 )/4095; // PA0 - FAN
+      // ptc_detect_voltage =  compute_voltage(adc_buffer[1]) ;
+       // ptc_detect_voltage = (adc_buffer[1] * 3300)/4095; // PA1 - PTC
+      //  adc_conversion_complete = 0;
+       // return 1;
+    //}
+    //return 0;
+}
+
+/*****************************************************************
+	*
+	*Function Name: 
+	*Function ADC input channel be selected "which one channe"
+	*Input Ref: which one ? AC_Channel_?, hexadecimal of average
+	*Return Ref: No
+	*
+*****************************************************************/
+static uint16_t compute_voltage(uint16_t raw_value) 
+{
+    uint64_t temp ;
+	const uint32_t multiplier = 3462835200U;
+   temp = (uint64_t)raw_value * multiplier;
+    return (uint16_t)(temp >> 32);  // ��λ��mV
+}
 
 

@@ -383,36 +383,14 @@ void power_on_run_handler(void)
          if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
 		 	g_pro.gTimer_display_adc_value=0;
 
-            switch_adc = switch_adc ^ 0x01;
-		    if(switch_adc==1){
-            //   Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,10);
-			}
-			else{
-				
-				if(g_pro.delay_run_adc_counter < 5){
-					g_pro.delay_run_adc_counter++;
-					g_pro.fan_detect_voltage= 0xFEE;
-				    SetLevel_Fan_PWMA(40);
-				}
-                else if(g_pro.works_two_hours_interval_flag==0 &&  g_pro.fan_warning ==0){
-					SetLevel_Fan_PWMA(40);
-	              //  Get_Fan_Adc_Fun(ADC_CHANNEL_0,10);
-
-		        }
-				else if(g_pro.works_two_hours_interval_flag==0 && g_pro.fan_warning ==1){
-
-                        Buzzer_Fan_Error_Sound();
-				
-				}
-
-            }
-
-			   if(g_disp.g_second_disp_flag == 1){                     
+              if(g_disp.g_second_disp_flag == 1){                     
 					 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
 					 osDelay(5);
 
-				}
-		   }
+			 }
+              adc_detected_hundler();
+			 
+		  }
 
         
 	  gl_run.process_on_step =1;

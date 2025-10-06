@@ -146,7 +146,8 @@ void MX_ADC1_Init(void)
   LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_0);
   LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_0, LL_ADC_SAMPLINGTIME_COMMON_1);
   /* USER CODE BEGIN ADC1_Init 2 */
-
+   
+  LL_ADC_Enable(ADC1);//WT.EDIT 2025.09.28
   /* USER CODE END ADC1_Init 2 */
 
 }

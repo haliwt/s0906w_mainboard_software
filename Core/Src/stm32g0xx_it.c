@@ -147,9 +147,9 @@ void EXTI2_3_IRQHandler(void)
   /* USER CODE BEGIN EXTI2_3_IRQn 0 */
 
   /* USER CODE END EXTI2_3_IRQn 0 */
-  if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_2) != RESET)
+  if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_2) != RESET)
   {
-    LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_2);
+    LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_2);
 	ll_gpio_falling_callback(KEY_UP_Pin);
     /* USER CODE BEGIN LL_EXTI_LINE_2_RISING */
 
@@ -157,7 +157,7 @@ void EXTI2_3_IRQHandler(void)
   }
   else if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_3) != RESET)
   {
-    LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_3);
+    LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_3);
 	ll_gpio_falling_callback(KEY_DOWN_Pin);
     /* USER CODE BEGIN LL_EXTI_LINE_3_RISING */
 

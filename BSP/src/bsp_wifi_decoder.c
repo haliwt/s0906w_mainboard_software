@@ -621,7 +621,7 @@ void Json_Parse_Command_Fun(void)
 		 g_pro.gDry = 0;
 		 LED_DRY_OFF();
 	     DRY_CLOSE();
-		 
+		 g_pro.ptc_on_off_flag=1;
 		 g_pro.g_manual_shutoff_dry_flag = 1;
 		  if(g_disp.g_second_disp_flag == 1){
 			 SendWifiData_To_Cmd(0x02,0x0);
