@@ -13,8 +13,9 @@ static void tim1_ultr_pwm_config(void)
 	LL_TIM_OC_SetCompareCH1(TIM1,20); //pwm duty = 20/40 =50%
 	LL_TIM_CC_EnableChannel(TIM1,LL_TIM_CHANNEL_CH1);
 	
-	LL_TIM_EnableAllOutputs(TIM1); // 等价于 TIM1->BDTR |= TIM_BDTR_MOE;
+	LL_TIM_EnableAllOutputs(TIM1); // 等价于 TIM1->BDTR |= TIM_BDTR_MOE;TIM1,TIM16,TIM17 must add "LL_TIM_EnableAllOutputs()"
 	LL_TIM_EnableCounter(TIM1);
+	//LL_TIM_EnableAllOutputs(TIM1); //TIM1,TIM16,TIM17 must add "LL_TIM_EnableAllOutputs()"
 
 }
 
