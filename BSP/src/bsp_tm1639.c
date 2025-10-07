@@ -2,7 +2,7 @@
 
 // 数码管段码表�?0-9的显示码
 static const uint8_t TM1639_Number_Table[] = {
-    0xF3, // 0: 0011 1111   （f,e,d,c,b,a�?--0x3F
+    0xF3, // 0: 0011 1111   （f,e,d,c,b,a�?--0x3F)(abcd efgh = 0b1111 0011)
     0x60, // 1: 0000 0110 --0x06--写数据式冲低位开始，向高位开始写
     0xB5, // 2: 0101 1011 --0x5B
     0xF4, // 3: 0100 1111 --0x4F
@@ -16,11 +16,11 @@ static const uint8_t TM1639_Number_Table[] = {
 
 // 字母和特殊字符显示码
 static const uint8_t TM1639_Char_Table[] = {
-    0x67, // H: 0111 0110 (hgfe,dcba = 0111 0110)
+    0x67, // H: 0111 0110 (hgfe,dcba = 0111 0110)--(abcd efgh =0110 0111)
     0x36, // °: 0110 0011 (hgfe,dcba= 0110  0011)
     0x93, // C: 0011 1001 (hgfe,dcba = 0011 1001)
     0x05,  // RH的H部分: 0101 0000 (hgfe,dcba= 0101 0000)
-    0x45   //n:(hgfe dcba= 0101 0100) =   //低位数字写在前面,大端写入,
+    0x45   //n:(hgfe dcba= 0101 0100) =  (abcd efgh = 0b0100 0101) //字节序列的排列
 };
 
 #define TM1639_CHAR_H 					TM1639_Char_Table[0]
