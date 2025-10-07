@@ -250,7 +250,8 @@ void USART1_IRQHandler(void)
   if(LL_USART_IsActiveFlag_RXNE(USART1)){
 
       data = LL_USART_ReceiveData8(USART1);
-	  usart1_isr_callback_handler(data);
+	  //usart1_isr_callback_handler(data);
+	  usart1_rx_callback_invoke(data);
 
   }
 
@@ -276,7 +277,8 @@ void USART2_IRQHandler(void)
   
 	   //LL_USART_ClearFlag_RXNE(USART2);
 	  data = LL_USART_ReceiveData8(USART2);
-	  usart2_isr_callback_handler(data);
+	  //usart2_isr_callback_handler(data);
+	  usart2_rx_callback_invoke(data);
   
 	}
 
