@@ -6,39 +6,61 @@
  */
 #include "bsp.h"
 
+#define MAX_TIMERS   20   // æ ¹æ®éœ€è¦è°ƒæ•´,å®šæ—¶å™¨
 
-#if 0
 
-//void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) 
-//{
-//    if (huart->Instance == USART1) { // ¼ì²éÊÇÄÄ¸öUART´¥·¢µÄ´íÎó
-//        // Çå³ı´íÎó±êÖ¾
-//        __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_OREF | UART_CLEAR_NEF | UART_CLEAR_PEF | UART_CLEAR_FEF);
-//        
-//        // ÖØĞÂÆô¶¯½ÓÊÕ
-//        UART_Start_Receive_IT(&huart1,inputBuf,1);
-//    }
-//	else if (huart->Instance == USART2) { // ¼ì²éÊÇÄÄ¸öUART´¥·¢µÄ´íÎó
-//        // Çå³ı´íÎó±êÖ¾
-//        __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_OREF | UART_CLEAR_NEF | UART_CLEAR_PEF | UART_CLEAR_FEF);
-//        
-//        // ÖØĞÂÆô¶¯½ÓÊÕ
-//       UART_Start_Receive_IT(&huart2,wifi_rx_inputBuf,1);
-//    }
-//}
+// é€šç”¨å®šæ—¶å™¨å›è°ƒå‡½æ•°ç±»å‹
+typedef void (*TimerCallback)(void);
 
-#endif 
+
+static TimerCallback tim_callbacks[MAX_TIMERS] = {0};
+
+static void tim17_isr_callback_handler(void);
+
+
+//static TimerCallback tim_callbacks[MAX_TIMERS] = {0};
+
+
+// æ³¨å†Œæ¥å£
+//void tim_register_callback(uint8_t tim_id, TimerCallback cb);
+
+// æ³¨å†Œå›è°ƒ
+void tim_register_callback(uint8_t tim_id, TimerCallback cb) 
+{
+    if (tim_id < MAX_TIMERS) {
+        tim_callbacks[tim_id] = cb;
+    }
+}
+
+// ISR è°ƒç”¨æ—¶è§¦å‘
+void tim_invoke_callback(uint8_t tim_id) 
+{
+    if (tim_id < MAX_TIMERS && tim_callbacks[tim_id]) {
+        tim_callbacks[tim_id]();
+    }
+}
+
+
+// // æ³¨å†Œå›è°ƒå‡½æ•°
+void callback_register_fun(void)
+{
+	 // æ³¨å†Œå›è°ƒå‡½æ•°
+    //tim_register_callback(16, tim16_handler);
+    tim_register_callback(17, tim17_isr_callback_handler);
+
+
+}
 
 
 /********************************************************************************
 	**
-	*Function Name:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-	*Function :UART callback function  for UART interrupt for receive data
-	*Input Ref: structure UART_HandleTypeDef pointer
+	*Function Name:
+	*Function : å›è°ƒå‡½æ•°å®ç°çš„é€»è¾‘
+	*Input Ref: 
 	*Return Ref:NO
 	*
 *******************************************************************************/
-void tim17_isr_callback_handler(void)
+static void tim17_isr_callback_handler(void)
 
 {
    static  uint16_t tm0;
@@ -62,6 +84,7 @@ void tim17_isr_callback_handler(void)
 		   g_pro.gTimer_send_dht11_disp++;
 		  g_pro.gTimer_set_temp_counter++;
 		  g_pro.gTimer_led_wifi_bilnk_counter++;
+		  g_pro.gTimer_key_long_counter++;
 		   
 		  
 

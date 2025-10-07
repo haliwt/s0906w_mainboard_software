@@ -104,6 +104,7 @@ typedef struct __KEY_PROCESS{
 	uint8_t key_mode_flag;
 	uint8_t key_down_flag;
 	uint8_t key_up_flag;
+	uint8_t power_on_key_counter;
 	
 	uint8_t  mode_key_switch_time_mode;
 	uint8_t key_mode_long_flag ;

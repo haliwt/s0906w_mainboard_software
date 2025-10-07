@@ -10,8 +10,12 @@
 #include "main.h"
 
 
-void tim17_isr_callback_handler(void);
+//void tim17_isr_callback_handler(void);
 
+// ISR 调用的触发函数
+void tim_invoke_callback(uint8_t tim_id);
+
+void callback_register_fun(void);
 
 
 

@@ -528,7 +528,7 @@ void set_timer_timing_value_handler(void)
 			g_pro.disp_timer_minutes_value=0;//gl_timer_minutes_value=0;
 			g_pro.gAI = 0;
 			LED_AI_OFF();
-			counter_hours_num = 0;
+			counter_hours_num = 0; //WT.EDIT 2025.10.07
 			g_pro.disp_59minutes_flag = 0;
             SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
 	        osDelay(5);

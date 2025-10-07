@@ -43,6 +43,8 @@ void power_onoff_handler(uint8_t data)
 
 	   case power_on :
 		   power_on_run_handler();
+
+	   
        
        if(gl_run.process_on_step !=0){ //logically rigorous
 
@@ -62,6 +64,7 @@ void power_onoff_handler(uint8_t data)
 					mode_key_fun();
        
 	            }
+			
 	    }
 
         }

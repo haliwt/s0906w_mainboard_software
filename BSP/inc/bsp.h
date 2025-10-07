@@ -130,7 +130,7 @@ typedef struct _process{
    uint8_t g_temperature_value;
  
 
-  
+   uint8_t key_long_power_pressed;
 
    uint8_t g_fan_switch_gears_flag;
    uint8_t key_set_temperature_flag;
@@ -181,6 +181,7 @@ typedef struct _process{
    uint8_t gTimer_send_dht11_disp;
    uint8_t gTimer_set_temp_counter;
    uint8_t gTimer_led_wifi_bilnk_counter;
+   uint8_t gTimer_key_long_counter;
    
 }process_t;
 

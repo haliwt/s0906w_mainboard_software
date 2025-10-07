@@ -159,6 +159,8 @@ static void vTaskRunPro(void *pvParameters)
 
     power_onoff_handler(g_pro.gpower_on);
 
+	
+
 	if(g_wifi.wifi_led_fast_blink_flag==0 ){
 		wifi_communication_tnecent_handler();//
 		getBeijingTime_cofirmLinkNetState_handler();
@@ -216,7 +218,7 @@ static void vTaskStart(void *pvParameters)
      }
 	 else if(KEY_POWER_VALUE()  ==KEY_DOWN){
 
-	     g_key.key_power_flag = KEY_POWER_ID;
+		 g_key.key_power_flag = KEY_POWER_ID;
 
      }
 	 else if(KEY_MODE_VALUE() == KEY_DOWN  &&g_pro.gpower_on == power_on){
@@ -224,6 +226,13 @@ static void vTaskStart(void *pvParameters)
 	       g_key.key_mode_flag = KEY_MODEL_ID;
 		   g_key.key_down_flag=0;
 	       g_key.key_up_flag=0;
+
+	  }
+	  else  if(g_pro.key_long_power_pressed ==1 && g_pro.gTimer_key_long_counter > 0){
+				  g_key.key_power_flag = 0;
+                  g_key.power_on_key_counter=0;
+			      g_pro.key_long_power_pressed =0;
+
 
 	  }
 	 
