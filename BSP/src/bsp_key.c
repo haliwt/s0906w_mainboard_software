@@ -565,19 +565,23 @@ void set_timer_timing_value_handler(void)
 
 		   if(g_pro.disp_timer_minutes_value< 0){
 			  g_pro.disp_timer_minutes_value =59;
+
+		      if(g_pro.gdisp_timer_hours_value >1){
+			        counter_hours_num ++;
+					if(counter_hours_num > 1){
+						counter_hours_num=0;
+						g_pro.gdisp_timer_hours_value--;
+			  
+					}
+
+
+			  }
+			  
 			  if(g_pro.gdisp_timer_hours_value==1 || g_pro.disp_59minutes_flag ==1){ //WT.EDIT 2025.10.06
 			     g_pro.gdisp_timer_hours_value--;
                  g_pro.disp_59minutes_flag = 1;
               }
-			  else{
-			  	counter_hours_num ++;
-				if(counter_hours_num > 0){
-				   counter_hours_num=0;
-			  	  g_pro.gdisp_timer_hours_value--;
-
-				}
-
-			  }
+			 
 		   
 			
 			  if(g_pro.gdisp_timer_hours_value < 0){

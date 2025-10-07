@@ -71,7 +71,7 @@ void key_handler(void)
 		if(KEY_MODE_VALUE() == KEY_DOWN && mode_key_counter < 100){
 
 		    mode_key_counter++ ;
-            if(mode_key_counter > 49){ //59
+            if(mode_key_counter > 59){ //59
 			mode_key_counter=200;
 		    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 				buzzer_sound();
