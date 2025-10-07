@@ -201,36 +201,33 @@ static void vTaskStart(void *pvParameters)
     while(1)
     {
 
-	 if(KEY_POWER_VALUE()  ==KEY_DOWN ){
+     if(KEY_UP_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
+
+	      g_key.key_up_flag = KEY_UP_ID;
+		  g_key.key_power_flag=0;
+	       g_key.key_mode_flag=0;
+     }
+	 else if(KEY_DOWN_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
+
+            g_key.key_down_flag =KEY_DOWN_ID;
+			g_key.key_power_flag=0;
+	        g_key.key_mode_flag=0;
+
+     }
+	 else if(KEY_POWER_VALUE()  ==KEY_DOWN){
 
 	     g_key.key_power_flag = KEY_POWER_ID;
 
-      }
-	  else if(KEY_MODE_VALUE() == KEY_DOWN  &&g_pro.gpower_on == power_on){
+     }
+	 else if(KEY_MODE_VALUE() == KEY_DOWN  &&g_pro.gpower_on == power_on){
 
 	       g_key.key_mode_flag = KEY_MODEL_ID;
 		   g_key.key_down_flag=0;
 	       g_key.key_up_flag=0;
 
 	  }
-	  else if(KEY_DOWN_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
-
-        
-			g_key.key_down_flag =KEY_DOWN_ID;
-			g_key.key_power_flag=0;
-	         g_key.key_mode_flag=0;
-
-       
-
-      }
-	  else if(KEY_UP_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
-
-	      g_key.key_up_flag = KEY_UP_ID;
-		  g_key.key_power_flag=0;
-	       g_key.key_mode_flag=0;
-      }
 	 
-
+	 
 	 vTaskDelay(pdMS_TO_TICKS(10));
 
    }

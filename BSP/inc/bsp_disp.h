@@ -10,6 +10,15 @@
 #include "main.h"
 
 
+typedef enum {
+    DISPLAY_TEMP = 0,
+    DISPLAY_HUM = 1,
+	DISPLAY_TIME = 2
+} DisplayMode;
+
+
+
+void display_digital_3_numbers(void);
 
 
 

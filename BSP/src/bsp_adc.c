@@ -39,7 +39,7 @@ static uint8_t counter_error;
 **********************************************************************/
 void adc_detected_hundler(void)
 {
-    
+     static uint8_t again_counter;
  
         Fan_Full_Speed();
 	   //switch_flag = switch_flag ^ 0x01;
@@ -61,6 +61,7 @@ void adc_detected_hundler(void)
 	    else{
 
 		  counter_error=0;
+		  again_counter=0;
 
 		}
 
@@ -68,10 +69,13 @@ void adc_detected_hundler(void)
     
 
    if(g_pro.fan_warning==1 && fan_detect_voltage < 400){
-   	
-      Judge_Fan_State();
-	  g_pro.gDry =0;
-	  DRY_CLOSE();
+   	  again_counter ++;
+
+      if(again_counter > 2){
+	      Judge_Fan_State();
+		  g_pro.gDry =0;
+		  DRY_CLOSE();
+      	}
    	}
 	
 
