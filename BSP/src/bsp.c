@@ -30,7 +30,7 @@ void bsp_init(void)
 	 g_pro.gDry = 1;
 	 callback_register_fun();
 	 callback_register_usart1_rx();
-	 callback_register_usat2_rx();
+	 callback_register_usart2_rx();
 	 
 
 }

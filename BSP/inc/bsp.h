@@ -47,6 +47,7 @@
 #include "bsp_subscribe.h"
 #include "bsp_mqtt.h"
 #include "bsp_wifi_decoder.h"
+#include "bsp_dma_usart2.h"
 #include "bsp_connect_wifi.h"
 
 
@@ -182,6 +183,7 @@ typedef struct _process{
    uint8_t gTimer_set_temp_counter;
    uint8_t gTimer_led_wifi_bilnk_counter;
    uint8_t gTimer_key_long_counter;
+   uint8_t  gTimer_to_disp_counter;
    
 }process_t;
 

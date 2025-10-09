@@ -112,7 +112,7 @@ static void vTaskDecoderPro(void *pvParameters)
 
 		if((ulValue & DECODER_BIT_9) != 0){
   
-			// usart1_rx_decoder(); 
+			usart1_rx_decoder(); 
 				
 		 }
 	 }
@@ -182,7 +182,14 @@ static void vTaskStart(void *pvParameters)
     while(1)
     {
 
-     if(KEY_UP_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
+	 if(KEY_MODE_VALUE() == KEY_DOWN  &&g_pro.gpower_on == power_on){
+
+	       g_key.key_mode_flag = KEY_MODEL_ID;
+		   g_key.key_down_flag=0;
+	       g_key.key_up_flag=0;
+
+	 }
+	 else if(KEY_UP_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
 
 	      g_key.key_up_flag = KEY_UP_ID;
 		  g_key.key_power_flag=0;
@@ -200,14 +207,7 @@ static void vTaskStart(void *pvParameters)
 		 g_key.key_power_flag = KEY_POWER_ID;
 
      }
-	 else if(KEY_MODE_VALUE() == KEY_DOWN  &&g_pro.gpower_on == power_on){
-
-	       g_key.key_mode_flag = KEY_MODEL_ID;
-		   g_key.key_down_flag=0;
-	       g_key.key_up_flag=0;
-
-	  }
-	  else  if(g_pro.key_long_power_pressed ==1 && g_pro.gTimer_key_long_counter > 0){
+	 else  if(g_pro.key_long_power_pressed ==1 && g_pro.gTimer_key_long_counter > 0){
 				  g_key.key_power_flag = 0;
                   g_key.power_on_key_counter=0;
 			      g_pro.key_long_power_pressed =0;

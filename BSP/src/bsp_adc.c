@@ -26,7 +26,7 @@ volatile uint8_t adc_conversion_complete = 0;
 uint16_t ptc_temp_voltage;
 uint16_t fan_detect_voltage = 1000;
 
-static uint8_t counter_error;
+uint8_t counter_error;
 
 
 /**********************************************************************
@@ -39,14 +39,16 @@ static uint8_t counter_error;
 **********************************************************************/
 void adc_detected_hundler(void)
 {
-     static uint8_t again_counter;
+    
+
+   if(g_pro.fan_warning==0){
  
         Fan_Full_Speed();
 	   //switch_flag = switch_flag ^ 0x01;
 	  if(ADC_StartConversion()){
 	   	  ADC_GetValues();
 	   		
-	   }
+	  }
 
 	   if(fan_detect_voltage < 400){
              counter_error ++ ;
@@ -61,22 +63,18 @@ void adc_detected_hundler(void)
 	    else{
 
 		  counter_error=0;
-		  again_counter=0;
+		 
 
 		}
 
-	 
-    
-
-   if(g_pro.fan_warning==1 && fan_detect_voltage < 400){
-   	  again_counter ++;
-
-      if(again_counter > 3){
-	      Judge_Fan_State();
+	 }
+	 else if(g_pro.fan_warning==1){
+   	  
+         Judge_Fan_State();
 		  g_pro.gDry =0;
 		  DRY_CLOSE();
-      	}
-   	}
+      	
+   	 }
 	
 
 }
@@ -220,29 +218,25 @@ static void ADC_GetValues(void)
         
    
 	   
-	   mean_fan_buf[fan_counter] = compute_voltage(adc_buffer[0]);//(adc_buffer[0] * 3300 )/4095;//compute_voltage(adc_buffer[0]) ;
-	   vTaskDelay(pdMS_TO_TICKS(10));
-	    fan_counter++;
-	    if(fan_counter >=6){
+	   //mean_fan_buf[fan_counter] = compute_voltage(adc_buffer[0]);//(adc_buffer[0] * 3300 )/4095;//compute_voltage(adc_buffer[0]) ;
+	  // mean_fan_buf[fan_counter]
+	   fan_detect_voltage= (adc_buffer[0] * 3300 )/4095;
+       vTaskDelay(pdMS_TO_TICKS(10));
+//	    fan_counter++;
+//	    if(fan_counter >=6){
 
-            for (i = 1; i < SAMPLE_COUNT; i++) {
-                sum += mean_fan_buf[i];
-            }
+//            for (i = 1; i < SAMPLE_COUNT; i++) {
+//                sum += mean_fan_buf[i];
+//            }
 		   
-		  fan_detect_voltage = sum/5;
-		  fan_counter =0;
+//		  fan_detect_voltage = sum/5;
+//		  fan_counter =0;
 	
 
 
-		}
+//		}
 		
-        //fan_detect_voltage = (adc_buffer[0] * 3300 )/4095; // PA0 - FAN
-      // ptc_detect_voltage =  compute_voltage(adc_buffer[1]) ;
-       // ptc_detect_voltage = (adc_buffer[1] * 3300)/4095; // PA1 - PTC
-      //  adc_conversion_complete = 0;
-       // return 1;
-    //}
-    //return 0;
+  
 }
 
 /*****************************************************************

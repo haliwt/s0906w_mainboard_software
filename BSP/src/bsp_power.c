@@ -72,7 +72,7 @@ void power_onoff_handler(uint8_t data)
         break;
 
 	  case power_off:
-  
+         gl_run.process_on_step =0;
          if(power_on_flag==0){
              power_on_flag ++;
 			 buzzer_sound();
@@ -134,7 +134,6 @@ void power_on_init_ref(void)
 void power_on_run_handler(void)
 {
 
-  
    static uint8_t temp_second_displboard,switch_dht11;
 	switch(gl_run.process_on_step){
 
@@ -230,7 +229,7 @@ void power_on_run_handler(void)
 		      send_wifi_power_on_state++;
 		      g_pro.gset_temperture_value = 40;
 			   MqttData_Publish_Update_Data();
-			   osDelay(100);//HAL_Delay(200);
+			  // osDelay(100);//HAL_Delay(200);
 
 
 		  }
@@ -291,18 +290,23 @@ void power_on_run_handler(void)
 	    
          if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
 		 	g_pro.gTimer_display_adc_value=0;
-
-              if(g_disp.g_second_disp_flag == 1){                     
-					 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-					 osDelay(5);
-
-			 }
               adc_detected_hundler();
 			 
 		  }
 
-        
-	  gl_run.process_on_step =1;
+      gl_run.process_on_step =5;
+
+	 break;
+
+	 case 5:
+      
+	    if(g_disp.g_second_disp_flag == 1 &&  g_pro.gTimer_to_disp_counter > 2){    
+			 g_pro.gTimer_to_disp_counter=0;
+			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
+			 osDelay(5);
+
+		}
+	     gl_run.process_on_step =1;
 
 	 break;
 

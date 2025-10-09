@@ -14,7 +14,7 @@
 #define FAN_PWM_90      36
 
 #define FAN_PWM_80      32
-static void tim16_stop_fan_pmw_config(void)
+static void tim16_stop_fan_pmw_config(void);
 
 
 /********************************************************

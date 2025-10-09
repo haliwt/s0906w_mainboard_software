@@ -13,7 +13,7 @@ static Usart1RxCallback  usart1_rx_cb = NULL;
 // 注册回调函数
 void usart1_register_rx_callback(Usart1RxCallback cb)
 {
-   usart2_rx_cb = cb;
+   usart1_rx_cb = cb;
 
 }
 
@@ -108,8 +108,8 @@ static void usart1_isr_callback_handler(uint8_t data)
 
                 gl_tMsg.bcc_check_code=inputBuf[0];
 
-                 // vtask_isq_handler();
-                 usart1_rx_decoder();
+                  vtask_isq_handler();
+                 //usart1_rx_decoder();
 
               }
 

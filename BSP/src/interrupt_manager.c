@@ -85,6 +85,7 @@ static void tim17_isr_callback_handler(void)
 		  g_pro.gTimer_set_temp_counter++;
 		  g_pro.gTimer_led_wifi_bilnk_counter++;
 		  g_pro.gTimer_key_long_counter++;
+		  g_pro.gTimer_to_disp_counter++;
 		   
 		  
 

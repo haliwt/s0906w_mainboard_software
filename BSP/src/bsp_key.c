@@ -512,7 +512,7 @@ void sendDisplayCommand(uint8_t command,uint8_t data)
 void set_timer_timing_value_handler(void)
 {
    
-   static uint8_t counter_hours_num;
+  
    if(g_pro.key_gtime_timer_define_flag == input_set_timer_mode && g_key.key_mode_long_flag ==1 && g_pro.gTimer_switch_set_timer_times > 2 ){
    	      g_pro.gTimer_switch_set_timer_times=0;
 		  g_key.key_mode_long_flag++;
@@ -525,10 +525,13 @@ void set_timer_timing_value_handler(void)
 			g_pro.key_gtime_timer_define_flag = works_time_mode; //define UP and down key is set temperature value 
 			g_pro.key_add_dec_be_pressed_flag=TIMER_TIME;
 			g_pro.gTimer_timer_time_second=0;
-			g_pro.disp_timer_minutes_value=0;//gl_timer_minutes_value=0;
+			if(g_pro.gdisp_timer_hours_value > 1)
+			   g_pro.disp_timer_minutes_value=60;//60 minutes
+			else
+			   g_pro.disp_timer_minutes_value=0;//60 minutes
 			g_pro.gAI = 0;
 			LED_AI_OFF();
-			counter_hours_num = 0; //WT.EDIT 2025.10.07
+		
 			g_pro.disp_59minutes_flag = 0;
             SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
 	        osDelay(5);
@@ -566,25 +569,24 @@ void set_timer_timing_value_handler(void)
 		   if(g_pro.disp_timer_minutes_value< 0){
 			  g_pro.disp_timer_minutes_value =59;
 
-		      if(g_pro.gdisp_timer_hours_value >1){
-			        counter_hours_num ++;
-					if(counter_hours_num > 1){
-						counter_hours_num=0;
-						g_pro.gdisp_timer_hours_value--;
-			  
-					}
-
-
-			  }
-			  
+		      
+                    
 			  if(g_pro.gdisp_timer_hours_value==1 || g_pro.disp_59minutes_flag ==1){ //WT.EDIT 2025.10.06
 			     g_pro.gdisp_timer_hours_value--;
                  g_pro.disp_59minutes_flag = 1;
               }
+			  else{
+
+			      g_pro.gdisp_timer_hours_value--;
+				  if(g_pro.gdisp_timer_hours_value==1 || g_pro.disp_59minutes_flag ==1){ //WT.EDIT 2025.10.06
+                      g_pro.gdisp_timer_hours_value--;
+				   g_pro.disp_59minutes_flag = 1;
+                 }
+
+             }
 			 
-		   
 			
-			  if(g_pro.gdisp_timer_hours_value < 0){
+			 if(g_pro.gdisp_timer_hours_value < 0){
             	
                    buzzer_sound();
 			       g_pro.gpower_on = power_off;
