@@ -106,7 +106,7 @@ typedef struct __KEY_PROCESS{
 	uint8_t key_up_flag;
 	uint8_t power_on_key_counter;
 	
-	uint8_t  mode_key_switch_time_mode;
+	//uint8_t  mode_key_switch_time_mode;
 	uint8_t key_mode_long_flag ;
 
 	uint8_t key_long_power_flag;
@@ -132,7 +132,7 @@ void set_temperature_value_handler(void);
 void set_timer_timing_value_handler(void);
 
 void sendDisplayCommand(uint8_t command,uint8_t data) ;
-void mode_key_fun(void);
+void mode_short_key_fun(void);
 
 void compare_temperature_value_hanlder(void);
 

@@ -237,7 +237,8 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
         	LED_HUM_ICON_OFF();
            
             TM1639_Display_Temperature(dht11_data.temperature);
-		     copy_temp_value = dht11_data.temperature;
+			g_pro.current_temperature = dht11_data.temperature;
+		    copy_temp_value = dht11_data.temperature;
 				
         
     }
@@ -270,6 +271,7 @@ uint8_t read_dht11_temperature_value(void)
 	}
 	else if(error_flag ==0){
 		 copy_dht11_value=dht11_data.temperature;
+		 g_pro.current_temperature = dht11_data.temperature;
 	    return dht11_data.temperature;
 
 	}

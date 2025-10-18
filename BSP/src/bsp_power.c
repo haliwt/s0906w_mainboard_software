@@ -42,11 +42,11 @@ void power_onoff_handler(uint8_t data)
    switch(data){	
 
 	   case power_on :
-		   power_on_run_handler();
+
+          power_on_run_handler();
 
 	   
-       
-       if(gl_run.process_on_step !=0){ //logically rigorous
+        if(gl_run.process_on_step !=0){ //logically rigorous
 
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			wifi_led_fast_blink_handler();
@@ -61,7 +61,8 @@ void power_onoff_handler(uint8_t data)
 
 			  if(g_key.key_mode_flag ==3 && g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
         			g_key.key_mode_flag ++;
-					mode_key_fun();
+					
+					mode_short_key_fun();
        
 	            }
 			
@@ -102,8 +103,8 @@ void power_on_init_ref(void)
 		   g_pro.gdisp_hours_value =0;
 		   g_pro.gdisp_timer_hours_value =0; //设置定时时间�??
 
-		   g_pro.key_gtime_timer_define_flag=works_time_mode; //
-		   g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;
+		   g_pro.key_gtime_timer_define_state=temperature_mode; //
+		  // g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode;
 		
 		 
 		   // function led is turn on 
@@ -340,8 +341,8 @@ void power_off_run_handler(void)
 	  g_key.key_long_power_flag  = 0;
 	  g_key.key_long_mode_flag = 0;
 	
-	  g_pro.key_gtime_timer_define_flag = works_time_mode;
-	  g_key.mode_key_switch_time_mode = input_normal_null; //WT.EDIT 2025.10.07
+	  g_pro.key_gtime_timer_define_state = temperature_mode;
+	
 	  g_pro.led_bar =0;
 
 	  fan_run_one_minute = 1;

@@ -17,7 +17,7 @@
 #define CHECK_TIME_THRESHOLD_3S  150  // 3�????
 #define TEMPERATURE_HIGH_THRESHOLD  39  // 高温阈�??
 #define TEMPERATURE_LOW_THRESHOLD   38  // 低温阈�??
-#define TEMPERATURE_DIFF_THRESHOLD  1   // 温度差阈�????
+#define TEMPERATURE_DIFF_THRESHOLD  3   // 温度差阈�????
 
 
 
@@ -25,7 +25,7 @@ KEY_PROCESS_TYPEDEF  g_key;
 
 //uint8_t gl_set_temperture_value;
 
-uint8_t  key_set_temperature_flag;
+//uint8_t  key_set_temperature_flag;
 
 int8_t  gl_timer_minutes_value;
 uint8_t define_timer_mode;
@@ -126,7 +126,8 @@ static void adjust_temperature(int8_t delta)
     g_pro.g_manual_shutoff_dry_flag = 0;
     key_up_down_pressed_flag = 1;
     g_pro.key_set_temperature_flag = 1;
-	g_key.mode_key_switch_time_mode = 0;
+	g_pro.set_temp_first_closeptc=0; //WT.EDIT 2025.10.11
+
 		
     TM1639_Display_Temperature(g_pro.gset_temperture_value);
     g_pro.gTimer_input_set_temp_times = 0;
@@ -143,15 +144,14 @@ static void adjust_temperature(int8_t delta)
  */
 static void adjust_timer(int8_t delta) 
 {
-    g_pro.gTimer_switch_set_timer_times = 0;
+
+	g_pro.gTimer_switch_set_timer_times = 0;
     g_pro.key_add_dec_be_pressed_flag = 1;
 	g_pro.disp_59minutes_flag =0;  //WT.EDIT 2025.10.06
     g_pro.gdisp_timer_hours_value += delta;
     if (g_pro.gdisp_timer_hours_value > MAX_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MAX_TIMER_HOURS;
     if (g_pro.gdisp_timer_hours_value < MIN_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MIN_TIMER_HOURS;
-    g_pro.g_disp_smg_timer_or_temp_hours_item = input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
-
-	TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+    TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 	
 }
 
@@ -164,12 +164,14 @@ static void adjust_timer(int8_t delta)
  */
 void key_dwon_fun(void)
 {
-    switch (g_pro.key_gtime_timer_define_flag) {
-        case works_time_mode:
+    switch (g_pro.key_gtime_timer_define_state) {
+        case temperature_mode:
             adjust_temperature(-1);
             break;
-        case input_set_timer_mode: //WT.EDIT 2025.04.23//timer_time_mode:
-            adjust_timer(-1);
+        case timer_time_mode: //WT.EDIT 2025.04.23//timer_time_mode:
+            if(g_key.key_mode_long_flag ==1){
+               adjust_timer(-1);
+            }
             break;
         default:
             break;
@@ -182,12 +184,14 @@ void key_dwon_fun(void)
  */
  void key_up_fun(void)
 {
-	 switch (g_pro.key_gtime_timer_define_flag) {
-        case works_time_mode:
+	 switch (g_pro.key_gtime_timer_define_state) {
+        case temperature_mode:
             adjust_temperature(1);
             break;
-        case input_set_timer_mode: //WT.EDIT 2025.04.23//:
-            adjust_timer(1);
+        case timer_time_mode: //WT.EDIT 2025.04.23//:
+            if(g_key.key_mode_long_flag ==1){
+                adjust_timer(1);
+            }
             break;
         default:
             break;
@@ -317,19 +321,22 @@ uint8_t readTemperature(void)
 ******************************************************************************/
 static void handleTemperatureControl(void) 
 {
-	//uint8_t current_temperature;
-	//static uint8_t check_time = 0;
-   
+
+    static uint8_t closeptc_counter;
     if( g_pro.gTimer_set_temp_counter >= CHECK_TIME_THRESHOLD_4S) { // 4�????
           g_pro.gTimer_set_temp_counter =0;
 
 
 
-        if ( g_pro.gset_temperture_value < g_pro.current_temperature){
+        if ( g_pro.gset_temperture_value <= g_pro.current_temperature){// set_36 << current_40
             g_pro.gDry = DRY_STATE_OFF;
 		    DRY_CLOSE();//setDryState(g_pro.gDry);
 		    LED_DRY_OFF();
-	
+			
+			if(closeptc_counter==1){
+			  closeptc_counter++; 
+	          g_pro.set_temp_first_closeptc=1;
+			}
 		    if(g_disp.g_second_disp_flag == 1){
 				sendDisplayCommand(0x02,0);
 				osDelay(5);
@@ -341,7 +348,23 @@ static void handleTemperatureControl(void)
 		   	}
 			
         }
-        else if ((g_pro.gset_temperture_value - TEMPERATURE_DIFF_THRESHOLD) > g_pro.current_temperature ) {
+        else{
+
+           if(g_pro.set_temp_first_closeptc==0 && g_pro.works_two_hours_interval_flag == 0 && g_pro.g_manual_shutoff_dry_flag ==0 ){
+			     g_pro.gDry = DRY_STATE_ON;
+				 LED_DRY_ON();
+                 closeptc_counter=1;
+				 if(g_disp.g_second_disp_flag == 1){
+				   sendDisplayCommand(0x02,0x01); // 打开干燥功能
+				   osDelay(5);
+				 }
+				 if (g_wifi.gwifi_link_net_state_flag == wifi_link_success) {
+					MqttData_Publish_SetPtc(0x01);
+					 osDelay(50);
+				 }
+
+           	}
+			else if ((g_pro.gset_temperture_value - TEMPERATURE_DIFF_THRESHOLD) >= g_pro.current_temperature && g_pro.set_temp_first_closeptc==1){
 				
             	if(g_pro.g_manual_shutoff_dry_flag ==0){
 					g_pro.gDry = DRY_STATE_ON;
@@ -363,6 +386,7 @@ static void handleTemperatureControl(void)
             }
 			
         }
+    }
 	 g_disp.g_set_temp_value_flag =0;
 }
 /******************************************************************************
@@ -398,7 +422,7 @@ static void handleDefaultTemperatureControl(void)
         } 
 		else{
 
-		      if(default_first_close_dry==0 && g_pro.current_temperature <=39){
+		      if(default_first_close_dry==0 && g_pro.current_temperature <39){
 
 			  if(g_pro.g_manual_shutoff_dry_flag ==0){
 
@@ -455,7 +479,7 @@ static void handleDefaultTemperatureControl(void)
 /******************************************************************************
 	*
 	*Function Name:void set_timer_timing_value_handler(void)
-	*Funcion: // 设置干燥状�??
+	*Funcion: set temperature value 
 	*Input Ref: state: 0-off,1-on
 	*Return Ref:NO
 	*
@@ -513,16 +537,15 @@ void set_timer_timing_value_handler(void)
 {
    
   
-   if(g_pro.key_gtime_timer_define_flag == input_set_timer_mode && g_key.key_mode_long_flag ==1 && g_pro.gTimer_switch_set_timer_times > 2 ){
+   if(g_key.key_mode_long_flag ==1 && g_pro.gTimer_switch_set_timer_times > 2 ){
+
    	      g_pro.gTimer_switch_set_timer_times=0;
 		  g_key.key_mode_long_flag++;
 
           if(g_pro.key_add_dec_be_pressed_flag==1){
 
 			if(g_pro.gdisp_timer_hours_value>0){
-
-			g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;//WT.EDIT 2025.010.06//timer_time_mode;
-			g_pro.key_gtime_timer_define_flag = works_time_mode; //define UP and down key is set temperature value 
+			g_pro.key_gtime_timer_define_state = temperature_mode; //define UP and down key is set temperature value 
 			g_pro.key_add_dec_be_pressed_flag=TIMER_TIME;
 			g_pro.gTimer_timer_time_second=0;
 			if(g_pro.gdisp_timer_hours_value > 1)
@@ -545,14 +568,13 @@ void set_timer_timing_value_handler(void)
 
 				g_pro.key_add_dec_be_pressed_flag=0;
 
-				g_pro.g_disp_smg_timer_or_temp_hours_item = works_time_mode;
-				g_pro.key_gtime_timer_define_flag = works_time_mode;
+				g_pro.key_gtime_timer_define_state = temperature_mode;
 				SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
 	            osDelay(5);
 			}
 		}
 		else{ //times is done ,exit this process
-		   
+		   g_pro.key_gtime_timer_define_state = temperature_mode; //WT.EDIT 2025.10.17
 		 
         }
    	}
@@ -609,10 +631,11 @@ uint8_t read_key_up_down_mode(void)
 }
 
 
-void mode_key_fun(void)
+void mode_short_key_fun(void)
 {
 
-     g_key.mode_key_switch_time_mode = timer_time_mode;
+     g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
+     g_pro.key_gtime_timer_define_state = timer_time_mode; //WT.EDIT 2025.10.17
      set_timer_mode();
 		
   

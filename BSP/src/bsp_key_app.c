@@ -7,9 +7,7 @@ uint8_t complex_counter;
 void key_handler(void)
 {
 
-   
-
-	if(g_key.key_power_flag == KEY_POWER_ID &&  g_key.key_down_flag !=KEY_DOWN_ID &&  g_key.key_up_flag !=KEY_UP_ID){
+   if(g_key.key_power_flag == KEY_POWER_ID &&  g_key.key_down_flag !=KEY_DOWN_ID &&  g_key.key_up_flag !=KEY_UP_ID){
 
 		if(KEY_POWER_VALUE() ==KEY_DOWN && g_pro.gpower_on == power_on && g_key.power_on_key_counter  < 100 ){
 			g_key.power_on_key_counter ++ ;
@@ -21,7 +19,9 @@ void key_handler(void)
 			g_wifi.wifi_led_fast_blink_flag=1;   // led blink flag .
 			g_wifi.link_net_step = 0; //WT.EDIT 2025.05.12
 			g_pro.first_connect_wifi_flag=0;
+		    g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
 			buzzer_sound();
+			
 			 g_pro.key_long_power_pressed = 1;
 			 g_pro.gTimer_key_long_counter=0;
 		  
@@ -84,9 +84,10 @@ void key_handler(void)
 			mode_key_counter=200;
 		    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 				buzzer_sound();
-				g_pro.key_gtime_timer_define_flag = input_set_timer_mode;
+				g_pro.key_gtime_timer_define_state = timer_time_mode;//WT.EIDT 2025.10.17//input_set_timer_mode; //
 			    g_key.key_mode_long_flag =1;
-				g_pro.gTimer_switch_set_timer_times = 0;
+				g_pro.gTimer_switch_set_timer_times = 0;//g-global
+				g_pro.key_set_temperature_flag = 0; //WT.EDIT 2025.10.17
 		        HUMIDITY_ICON_OFF(); //WT.EDIT 2025.04.23
 				TEMP_ICON_OFF();//WT.EDIT 2025.04.23
 				if(g_pro.disp_59minutes_flag ==0)
@@ -101,9 +102,10 @@ void key_handler(void)
 			g_key.key_mode_flag ++;
 			mode_key_counter=0;
 			g_pro.gTimer_switch_set_timer_times = 0;
+			
 			if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			buzzer_sound();
-	        //  mode_key_fun();
+	        //  mode_short_key_fun();
 		    }
 		}
 		else if(KEY_MODE_VALUE() == KEY_UP && mode_key_counter ==200){
@@ -141,8 +143,7 @@ void key_handler(void)
 		
 		if(KEY_DOWN_VALUE()==KEY_UP && complex_counter <50){
 			g_key.key_down_flag = KEY_NULL;
-			complex_counter=0;
-			g_key.mode_key_switch_time_mode= works_time_mode; //WT.EDIT 2025.04.30
+			complex_counter=0; 
 			if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			   buzzer_sound();
 
@@ -160,7 +161,7 @@ void key_handler(void)
 
 	    if(KEY_UP_VALUE()==KEY_UP){
 		g_key.key_up_flag =KEY_NULL;
-		g_key.mode_key_switch_time_mode= works_time_mode; //WT.EDIT 2025.04.30
+		//key.mode_key_switch_time_mode= temperature_mode; //WT.EDIT 2025.04.30
 		
 		if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		   buzzer_sound();

@@ -96,17 +96,16 @@ typedef enum{
 }wifi_state;
 
 typedef enum{
-	works_time_mode,
+	temperature_mode,
 	timer_time_mode=1,
 	beijing_time_mode=2,
 	disp_timer_mode=3,
 	disp_temp_hum_mode=4,
-	input_set_timer_mode=5, //WT.EDIT 2025.04.23
-	input_set_temperature_mode=6, //WT.EDIT 2025.04.23
-	input_set_null=7,
-	input_set_timer_mode_null=8,
-	input_set_normal_time_mode=9,
-	input_normal_null=10
+	input_set_temperature_mode=5, //WT.EDIT 2025.04.23
+	input_set_null=6,
+	input_set_timer_mode_null=7,
+	input_set_normal_time_mode=8,
+	input_normal_null=9
 	
 }time_state;
 
@@ -129,6 +128,7 @@ typedef struct _process{
 
    uint8_t g_humidity_value;
    uint8_t g_temperature_value;
+   uint8_t set_temp_first_closeptc;
  
 
    uint8_t key_long_power_pressed;
@@ -141,8 +141,7 @@ typedef struct _process{
    uint8_t gset_temperture_value;
    uint8_t temperature_init_value;
 
-   uint8_t key_gtime_timer_define_flag;
-   uint8_t g_disp_smg_timer_or_temp_hours_item;
+   uint8_t key_gtime_timer_define_state;
    uint8_t gdisp_hours_value;
    uint8_t gdisp_minutes_value;
    
