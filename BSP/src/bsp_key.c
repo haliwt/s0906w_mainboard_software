@@ -41,7 +41,7 @@ static void setDryState(uint8_t state);
 static void publishMqttData(DryState state, uint8_t temperature);
 
 static void set_timer_mode(void);
-static void set_normal_mode(void);
+//static void set_normal_mode(void);
 
 
 uint8_t readTemperature(void);
@@ -57,6 +57,8 @@ void key_referen_init(void)
   define_timer_mode=0;
   key_up_down_pressed_flag=0;
   g_pro.key_add_dec_be_pressed_flag=0;
+  g_pro.set_timing_value_success=WORKS_TIME; //WT.EDIT 2025.10.18
+ 
   
 }
 
@@ -114,7 +116,7 @@ static void adjust_temperature(int8_t delta)
 {
 
    //static uint8_t temperature_init_value ;
-	if (g_pro.temperature_init_value == 0 && g_pro.set_temperature_value_success !=1) {
+	if (g_pro.temperature_init_value == 0) {
         g_pro.temperature_init_value++;
         g_pro.gset_temperture_value = (delta > 0) ? 40 : 20;
     } else {
@@ -223,7 +225,7 @@ void set_temperature_value_handler(void)
         g_wifi.g_wifi_set_temp_flag=0;
 		send_data_flag=1;
 		g_pro.g_manual_shutoff_dry_flag =0;
-		g_pro.set_temperature_value_success=1;
+		
 		if (g_pro.current_temperature > g_pro.gset_temperture_value){
 
 			g_pro.gDry= DRY_STATE_OFF;
@@ -543,17 +545,19 @@ void set_timer_timing_value_handler(void)
 		  g_key.key_mode_long_flag++;
 
           if(g_pro.key_add_dec_be_pressed_flag==1){
-
+		  	
+            g_pro.key_add_dec_be_pressed_flag ++ ;
 			if(g_pro.gdisp_timer_hours_value>0){
+			g_pro.gAI = 0;
+			LED_AI_OFF();
 			g_pro.key_gtime_timer_define_state = temperature_mode; //define UP and down key is set temperature value 
-			g_pro.key_add_dec_be_pressed_flag=TIMER_TIME;
+			g_pro.set_timing_value_success=TIMER_TIME;
 			g_pro.gTimer_timer_time_second=0;
 			if(g_pro.gdisp_timer_hours_value > 1)
 			   g_pro.disp_timer_minutes_value=60;//60 minutes
 			else
 			   g_pro.disp_timer_minutes_value=0;//60 minutes
-			g_pro.gAI = 0;
-			LED_AI_OFF();
+			
 		
 			g_pro.disp_59minutes_flag = 0;
             SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
@@ -566,7 +570,7 @@ void set_timer_timing_value_handler(void)
 				LED_AI_ON();
 				g_pro.gdisp_timer_hours_value=0;
 
-				g_pro.key_add_dec_be_pressed_flag=0;
+				g_pro.set_timing_value_success = WORKS_TIME; //WT.EDIT 2025.10.18
 
 				g_pro.key_gtime_timer_define_state = temperature_mode;
 				SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
@@ -575,10 +579,11 @@ void set_timer_timing_value_handler(void)
 		}
 		else{ //times is done ,exit this process
 		   g_pro.key_gtime_timer_define_state = temperature_mode; //WT.EDIT 2025.10.17
+		   
 		 
         }
    	}
-    else if(g_pro.key_add_dec_be_pressed_flag==TIMER_TIME){ //has been set up timer timing value .
+    else if(g_pro.set_timing_value_success==TIMER_TIME){ //has been set up timer timing value .
 
        if(g_pro.gTimer_timer_time_second > 59){
 	       g_pro.gTimer_timer_time_second=0;
@@ -643,18 +648,18 @@ void mode_short_key_fun(void)
 }
 
 // 提取的辅助函�????
-static void set_normal_mode(void)
-{
-    uint8_t error_dht11_flag;
-	g_pro.gAI = 1;
-    LED_AI_ON();
-    HUMIDITY_ICON_OFF();
-    TEMP_ICON_ON();
+//static void set_normal_mode(void)
+//{
+//    uint8_t error_dht11_flag;
+//	g_pro.gAI = 1;
+//    LED_AI_ON();
+//    HUMIDITY_ICON_OFF();
+//    TEMP_ICON_ON();
 	
-    error_dht11_flag=DHT11_Display_Data(0); // 显示温度
-    if(error_dht11_flag == 0)DHT11_Display_Data(0);
+//    error_dht11_flag=DHT11_Display_Data(0); // 显示温度
+//    if(error_dht11_flag == 0)DHT11_Display_Data(0);
     
-}
+//}
 
 static void set_timer_mode(void)
 {

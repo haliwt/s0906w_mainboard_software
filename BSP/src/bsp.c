@@ -12,7 +12,7 @@ process_t g_pro;
  uint16_t mainboard_time;
 
  static void mainboard_special_fun(void);
-
+uint8_t counter_flag ;
 /******************************************************************************
 	*
 	*Function Name:void bsp_init(void)
@@ -31,6 +31,11 @@ void bsp_init(void)
 	 callback_register_fun();
 	 callback_register_usart1_rx();
 	 callback_register_usart2_rx();
+#if(Enable_EventRecorder == 1) 
+	/* ³õÊ¼»¯EventRecorder²¢¿ªÆô */
+	EventRecorderInitialize(EventRecordAll, 1U);
+	EventRecorderStart();
+#endif
 	 
 
 }
@@ -47,21 +52,34 @@ void mainboard_fun_handler(void)
 {
    //static uint16_t mainboard_time;
 
-   mainboard_time ++ ;
+   
 
-   if(mainboard_time > 100){// 2s  //300 ~= 6s, 50 ~=1s
-      mainboard_time=0;
+   if(g_pro.gTimer_mainboard_fun_counter > 4){// 2s  //300 ~= 6s, 50 ~=1s
+       g_pro.gTimer_mainboard_fun_counter=0;
+
+   if(g_key.key_mode_long_flag ==2){
+
+      g_key.key_mode_long_flag++;
 
 
-   if(g_pro.gAI == 1){
-  
+   }
+   else{
+
+   if(g_pro.set_timing_value_success ==TIMER_TIME){
+	  g_pro.gAI = 0;
+    //  printf("ai= %d\r\n",g_pro.set_temperature_value_success);
+      LED_AI_OFF();
+      counter_flag ++;
+
+   }
+   else{
+	  // printf("ai= %d\r\n",g_pro.set_temperature_value_success);
+	   g_pro.gAI = 1;
        LED_AI_ON();
-   	
-   	}
-    else{
-       LED_AI_OFF();
 
 	}
+   }
+   	
 
 	if(g_pro.gDry == 1 && read_wifi_dry_value()==0){
 		DRY_OPEN();

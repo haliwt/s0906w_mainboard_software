@@ -69,8 +69,10 @@
 
 
 #define  USE_FreeRTOS      1
+
+#define Enable_EventRecorder          1
   
-#define  TEST_UNIT        0
+#define  TEST_UNIT        0 //Enable_EventRecorder
 
 
 #if USE_FreeRTOS == 1
@@ -83,6 +85,11 @@
 	#define ENABLE_INT()	__set_PRIMASK(0)	/* ʹ��ȫ���ж� */
 	#define DISABLE_INT()	__set_PRIMASK(1)	/* ��ֹȫ���ж� */
 #endif
+
+#if Enable_EventRecorder == 1
+	#include "EventRecorder.h"
+#endif
+
 
 
 typedef enum{
@@ -122,6 +129,7 @@ typedef struct _process{
    uint8_t works_two_hours_interval_flag;
    uint8_t g_manual_shutoff_dry_flag;
    uint8_t key_add_dec_be_pressed_flag;
+   uint8_t set_timing_value_success;
    uint8_t disp_59minutes_flag ;
 
  
@@ -183,6 +191,7 @@ typedef struct _process{
    uint8_t gTimer_led_wifi_bilnk_counter;
    uint8_t gTimer_key_long_counter;
    uint8_t  gTimer_to_disp_counter;
+   uint8_t gTimer_mainboard_fun_counter;
    
 }process_t;
 

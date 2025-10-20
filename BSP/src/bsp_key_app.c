@@ -88,6 +88,7 @@ void key_handler(void)
 			    g_key.key_mode_long_flag =1;
 				g_pro.gTimer_switch_set_timer_times = 0;//g-global
 				g_pro.key_set_temperature_flag = 0; //WT.EDIT 2025.10.17
+				g_pro.gAI =0;//WT.EDIT 2025.10.18
 		        HUMIDITY_ICON_OFF(); //WT.EDIT 2025.04.23
 				TEMP_ICON_OFF();//WT.EDIT 2025.04.23
 				if(g_pro.disp_59minutes_flag ==0)

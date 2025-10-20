@@ -204,6 +204,7 @@ void power_on_run_handler(void)
 	   g_pro.delay_run_adc_counter=0;
 	   g_pro.set_temperature_value_success=0;
 	   g_pro.disp_59minutes_flag =0;
+	   g_pro.set_timing_value_success=WORKS_TIME; //WT.EDIT 2025.10.18
 	   
 	   temp_second_displboard=0;
 
