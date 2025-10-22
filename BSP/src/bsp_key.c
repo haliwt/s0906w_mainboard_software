@@ -23,13 +23,9 @@
 
 KEY_PROCESS_TYPEDEF  g_key;
 
-//uint8_t gl_set_temperture_value;
-
-//uint8_t  key_set_temperature_flag;
-
 int8_t  gl_timer_minutes_value;
 uint8_t define_timer_mode;
-uint8_t key_up_down_pressed_flag;
+
 
 
 
@@ -52,12 +48,12 @@ uint8_t timer_power_off_flag;
 
 void key_referen_init(void)
 {
-  g_pro.key_set_temperature_flag=0;
+  g_pro.set_temperature_success_flag=0;
   gl_timer_minutes_value =0;
   define_timer_mode=0;
-  key_up_down_pressed_flag=0;
+  g_pro.key_set_temperature_flag=0;
   g_pro.key_add_dec_be_pressed_flag=0;
-  g_pro.set_timing_value_success=WORKS_TIME; //WT.EDIT 2025.10.18
+  g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
  
   
 }
@@ -126,8 +122,9 @@ static void adjust_temperature(int8_t delta)
     }
 	g_pro.gTimer_input_set_temp_timer=0;
     g_pro.g_manual_shutoff_dry_flag = 0;
-    key_up_down_pressed_flag = 1;
-    g_pro.key_set_temperature_flag = 1;
+ 
+	g_pro.key_set_temperature_flag=1;
+
 	g_pro.set_temp_first_closeptc=0; //WT.EDIT 2025.10.11
 
 		
@@ -212,18 +209,23 @@ void key_dwon_fun(void)
 ******************************************************************************/
 void set_temperature_value_handler(void)
 {
-   static uint8_t send_data_flag;
+ //  static uint8_t send_data_flag;
+    //the second display board 
+   #if 0
    if(g_pro.g_dispboard_set_temp_flag ==1 && g_pro.gTimer_input_set_temp_timer >2){
        g_pro.g_dispboard_set_temp_flag++;
-       g_pro.key_set_temperature_flag ++;
+       g_pro.set_temperature_success_flag =1;
 
 
    }
-   else if((g_pro.key_set_temperature_flag==1 || g_wifi.g_wifi_set_temp_flag==1) && g_pro.gTimer_input_set_temp_timer >2)
+   #endif 
+   
+   if((g_pro.key_set_temperature_flag==1 || g_wifi.g_wifi_set_temp_flag==1) && g_pro.gTimer_input_set_temp_timer >2)
    {
-        g_pro.key_set_temperature_flag=2;
+        g_pro.key_set_temperature_flag++;
         g_wifi.g_wifi_set_temp_flag=0;
-		send_data_flag=1;
+		g_pro.set_temperature_success_flag=1;
+	
 		g_pro.g_manual_shutoff_dry_flag =0;
 		
 		if (g_pro.current_temperature > g_pro.gset_temperture_value){
@@ -272,28 +274,34 @@ void set_temperature_value_handler(void)
         }
 
 	   
-		key_up_down_pressed_flag=0;
+	
 		
     }
-    else if(g_pro.key_set_temperature_flag !=1){
+    else if(g_pro.key_set_temperature_flag!=1){
 
-        if(g_pro.set_temperature_value_success==1  && read_wifi_temperature_value()==0){
+        if(g_pro.set_temperature_success_flag==1  && read_wifi_temperature_value()==0){
 		
 		       handleTemperatureControl();
 
 			
          }
-		else if(g_pro.set_temperature_value_success==0){ //don't set temperature value 
+		else if(g_pro.set_temperature_success_flag==0){ //don't set temperature value 
 				handleDefaultTemperatureControl();
 		 
-			}
+		}
     }
                 
   }
-
+/*
+* @brief:
+* @note:
+* @param:
+*
+*
+*/
 void compare_temperature_value_hanlder(void)
 {
-	if(g_pro.set_temperature_value_success==1 ){
+	if(g_pro.set_temperature_success_flag==1 ){
 
 			  handleTemperatureControl();
 
@@ -551,7 +559,7 @@ void set_timer_timing_value_handler(void)
 			g_pro.gAI = 0;
 			LED_AI_OFF();
 			g_pro.key_gtime_timer_define_state = temperature_mode; //define UP and down key is set temperature value 
-			g_pro.set_timing_value_success=TIMER_TIME;
+			g_pro.set_timing_or_timer_time_flag=TIMER_TIME;
 			g_pro.gTimer_timer_time_second=0;
 			if(g_pro.gdisp_timer_hours_value > 1)
 			   g_pro.disp_timer_minutes_value=60;//60 minutes
@@ -570,7 +578,7 @@ void set_timer_timing_value_handler(void)
 				LED_AI_ON();
 				g_pro.gdisp_timer_hours_value=0;
 
-				g_pro.set_timing_value_success = WORKS_TIME; //WT.EDIT 2025.10.18
+				g_pro.set_timing_or_timer_time_flag = WORKS_TIME; //WT.EDIT 2025.10.18
 
 				g_pro.key_gtime_timer_define_state = temperature_mode;
 				SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
@@ -583,7 +591,7 @@ void set_timer_timing_value_handler(void)
 		 
         }
    	}
-    else if(g_pro.set_timing_value_success==TIMER_TIME){ //has been set up timer timing value .
+    else if(g_pro.set_timing_or_timer_time_flag==TIMER_TIME){ //has been set up timer timing value .
 
        if(g_pro.gTimer_timer_time_second > 59){
 	       g_pro.gTimer_timer_time_second=0;
@@ -630,10 +638,6 @@ void set_timer_timing_value_handler(void)
 }
 
 
-uint8_t read_key_up_down_mode(void)
-{
-       return key_up_down_pressed_flag;
-}
 
 
 void mode_short_key_fun(void)

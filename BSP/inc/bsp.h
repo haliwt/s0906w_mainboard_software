@@ -74,6 +74,8 @@
   
 #define  TEST_UNIT        0 //Enable_EventRecorder
 
+#define DEBUG_ENABLE        Enable_EventRecorder 
+
 
 #if USE_FreeRTOS == 1
 	//#include "FreeRTOS.h"
@@ -129,7 +131,7 @@ typedef struct _process{
    uint8_t works_two_hours_interval_flag;
    uint8_t g_manual_shutoff_dry_flag;
    uint8_t key_add_dec_be_pressed_flag;
-   uint8_t set_timing_value_success;
+   uint8_t set_timing_or_timer_time_flag;
    uint8_t disp_59minutes_flag ;
 
  
@@ -142,6 +144,7 @@ typedef struct _process{
    uint8_t key_long_power_pressed;
 
    uint8_t g_fan_switch_gears_flag;
+   uint8_t set_temperature_success_flag;
    uint8_t key_set_temperature_flag;
    
 
@@ -162,7 +165,7 @@ typedef struct _process{
    uint8_t DMA_txComplete;
    uint8_t timer_powerOff_oneHour_flag;
    uint8_t current_temperature;
-   uint8_t set_temperature_value_success;
+   
    uint8_t g_dispboard_set_temp_flag ;
 
    int8_t gdisp_timer_hours_value;

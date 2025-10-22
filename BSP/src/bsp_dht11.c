@@ -275,7 +275,7 @@ uint8_t read_dht11_temperature_value(void)
 	    return dht11_data.temperature;
 
 	}
-	
+	return 0;
 }
 
 

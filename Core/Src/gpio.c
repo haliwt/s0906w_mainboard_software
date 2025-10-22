@@ -42,7 +42,7 @@
 void MX_GPIO_Init(void)
 {
 
-  LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
+//  LL_EXTI_InitTypeDef EXTI_InitStruct = {0};
   LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
@@ -52,7 +52,7 @@ void MX_GPIO_Init(void)
   LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOD);
 
   /**/
-  LL_GPIO_ResetOutputPin(LED_HUM_SYMBOL_GPIO_Port, LED_HUM_SYMBOL_Pin);
+  LL_GPIO_SetOutputPin(LED_HUM_SYMBOL_GPIO_Port, LED_HUM_SYMBOL_Pin);
 
   /**/
   LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
@@ -85,22 +85,22 @@ void MX_GPIO_Init(void)
   LL_GPIO_ResetOutputPin(PLASMA_GPIO_Port, PLASMA_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(LED_WIFI_GPIO_Port, LED_WIFI_Pin);
+  LL_GPIO_SetOutputPin(LED_WIFI_GPIO_Port, LED_WIFI_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(LED_AI_GPIO_Port, LED_AI_Pin);
+  LL_GPIO_SetOutputPin(LED_AI_GPIO_Port, LED_AI_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(LED_DRY_GPIO_Port, LED_DRY_Pin);
+  LL_GPIO_SetOutputPin(LED_DRY_GPIO_Port, LED_DRY_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(LED_PLASMA_GPIO_Port, LED_PLASMA_Pin);
+  LL_GPIO_SetOutputPin(LED_PLASMA_GPIO_Port, LED_PLASMA_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(LED_MOUSE_GPIO_Port, LED_MOUSE_Pin);
+  LL_GPIO_SetOutputPin(LED_MOUSE_GPIO_Port, LED_MOUSE_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(LED_TEMP_GPIO_Port, LED_TEMP_Pin);
+  LL_GPIO_SetOutputPin(LED_TEMP_GPIO_Port, LED_TEMP_Pin);
 
   /**/
   GPIO_InitStruct.Pin = LED_HUM_SYMBOL_Pin;

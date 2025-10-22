@@ -19,7 +19,7 @@ void key_handler(void)
 			g_wifi.wifi_led_fast_blink_flag=1;   // led blink flag .
 			g_wifi.link_net_step = 0; //WT.EDIT 2025.05.12
 			g_pro.first_connect_wifi_flag=0;
-		    g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
+		    g_pro.set_temperature_success_flag=0;//WT.EDIT 2025.10.17
 			buzzer_sound();
 			
 			 g_pro.key_long_power_pressed = 1;
@@ -87,7 +87,7 @@ void key_handler(void)
 				g_pro.key_gtime_timer_define_state = timer_time_mode;//WT.EIDT 2025.10.17//input_set_timer_mode; //
 			    g_key.key_mode_long_flag =1;
 				g_pro.gTimer_switch_set_timer_times = 0;//g-global
-				g_pro.key_set_temperature_flag = 0; //WT.EDIT 2025.10.17
+		
 				g_pro.gAI =0;//WT.EDIT 2025.10.18
 		        HUMIDITY_ICON_OFF(); //WT.EDIT 2025.04.23
 				TEMP_ICON_OFF();//WT.EDIT 2025.04.23

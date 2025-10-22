@@ -65,15 +65,15 @@ void mainboard_fun_handler(void)
    }
    else{
 
-   if(g_pro.set_timing_value_success ==TIMER_TIME){
+   if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
 	  g_pro.gAI = 0;
-    //  printf("ai= %d\r\n",g_pro.set_temperature_value_success);
+  
       LED_AI_OFF();
       counter_flag ++;
 
    }
    else{
-	  // printf("ai= %d\r\n",g_pro.set_temperature_value_success);
+	
 	   g_pro.gAI = 1;
        LED_AI_ON();
 
@@ -84,14 +84,18 @@ void mainboard_fun_handler(void)
 	if(g_pro.gDry == 1 && read_wifi_dry_value()==0){
 		DRY_OPEN();
 		LED_DRY_ON();
+	    if(g_disp.g_second_disp_flag == 1){
 	    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
 	    osDelay(5);
+	    }
 	}
 	else{
 		LED_DRY_OFF();
 		DRY_CLOSE();
+	    if(g_disp.g_second_disp_flag == 1){
 	    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
 	    osDelay(5);
+	    }
 
 	}
 

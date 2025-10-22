@@ -8,6 +8,7 @@
   *
   * S0906W version: 01 . data:2025.06.18
   *                 02.  data.2025.09.27
+  *  modidyf 03. data.2025.10.22,
   *
   *
   * 
@@ -105,9 +106,7 @@ int main(void)
 	// ʹ��USART�����ж�
  
     bsp_init();
-   // HAL_TIM_Base_Start_IT(&htim17);
-	//UART_Start_Receive_IT(&huart1,inputBuf,1);
-  //  UART_Start_Receive_IT(&huart2,wifi_rx_inputBuf,1);
+
    freeRTOS_Handler();
   /* USER CODE END 2 */
 

@@ -52,7 +52,11 @@ void adc_detected_hundler(void)
 
 	   if(fan_detect_voltage < 400){
              counter_error ++ ;
-			  if(counter_error > 6){
+			 #if DEBUG_ENABLE
+			   printf("error_counter = %d\r\n",counter_error);
+
+			 #endif 
+			  if(counter_error > 7){
 			      g_pro.fan_warning=1;
 				  g_pro.ptc_on_off_flag = 1;
 			      g_pro.gDry =0;
@@ -222,6 +226,9 @@ static void ADC_GetValues(void)
 	  // mean_fan_buf[fan_counter]
 	   fan_detect_voltage= (adc_buffer[0] * 3300 )/4095;
        vTaskDelay(pdMS_TO_TICKS(10));
+	   #if DEBUG_ENABLE
+          printf("fan_voltale = %d \r\n",fan_detect_voltage);
+	   #endif 
 //	    fan_counter++;
 //	    if(fan_counter >=6){
 

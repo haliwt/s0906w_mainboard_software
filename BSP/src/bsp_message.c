@@ -376,10 +376,10 @@ void receive_data_from_displayboard(uint8_t *pdata)
 			   if(g_pro.gpower_on == power_on){ 
 
 			    g_pro.g_dispboard_set_temp_flag = 1;
-				g_pro.key_set_temperature_flag=1;
+		
                 g_pro.g_manual_shutoff_dry_flag =0;
                
-				g_pro.set_temperature_value_success = 1;
+				g_pro.key_set_temperature_flag = 1;
 				g_pro.gTimer_input_set_temp_timer=0;
 				
 			    if(pdata[5] < 41 && pdata[5]> 19){
@@ -437,7 +437,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 			     g_pro.gTimer_timer_time_second=0;
 				 g_pro.disp_timer_minutes_value=0;
 				 //g_pro.key_add_dec_be_pressed_flag=TIMER_TIME;
-				  g_pro.set_timing_value_success = TIMER_TIME;//WT.EDIT 2025.10.18
+				  g_pro.set_timing_or_timer_time_flag = TIMER_TIME;//WT.EDIT 2025.10.18
 			  
 			    //g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;//input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
                 if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){

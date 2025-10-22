@@ -85,11 +85,12 @@ void freeRTOS_Handler(void)
 }
 
 /**********************************************************************************************************
-*	�?1�?7 �?1�?7 �?1�?7: vTaskTaskUserIF
-*	功能说明: 接口消息处理�?1�?7
-*	�?1�?7    �?1�?7: pvParameters 是在创建该任务时传��的形参
-*	�?1�?7 �?1�?7 �?1�?7: �?1�?7
-*   �?1�?7 �?1�?7 �?1�?7: 1  (数��越小优先级越低，这个跟uCOS相反)
+*	Function Name: static void vTaskDecoderPro(void *pvParameters)
+*	Function:
+*	Input Ref: pvParameters 是在创建该任务时传的形参
+*	Return Ref:
+*   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
+
 **********************************************************************************************************/
 static void vTaskDecoderPro(void *pvParameters)
 {
@@ -122,15 +123,15 @@ static void vTaskDecoderPro(void *pvParameters)
 /**********************************************************************************************************
 *	Function Name: static void vTaskRunPro(void *pvParameters)
 *	Function:
-*	Input Ref: pvParameters 是在创建该任务时传��的形参
+*	Input Ref: pvParameters 是在创建该任务时传的形参
 *	Return Ref:
-*   priority: 1  (数�?�越小优先级越低，这个跟uCOS相反)
+*   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
 **********************************************************************************************************/
 static void vTaskRunPro(void *pvParameters)
 {
 
- uint8_t tx_buffer[20];
- uint8_t tx_len;
+// uint8_t tx_buffer[20];
+// uint8_t tx_len;
 
   while(1){
     
@@ -174,9 +175,9 @@ static void vTaskRunPro(void *pvParameters)
 **********************************************************************************************************/
 static void vTaskStart(void *pvParameters)
 {
-	BaseType_t xResult;
+	//BaseType_t xResult;
     //const TickType_t xMaxBlockTime = pdMS_TO_TICKS(2000); /* 设置�?大等待时间为30ms */
-	uint32_t ulValue;
+//uint32_t ulValue;
    
 
     while(1)

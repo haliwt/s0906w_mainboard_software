@@ -125,7 +125,7 @@ void sys_write_gpio_pin_value(GPIO_TypeDef *p_gpiox, uint16_t pinx, uint8_t stat
 void key_dwon_fun(void);
 void key_up_fun(void);
 
-uint8_t read_key_up_down_mode(void);
+
 
 void set_temperature_value_handler(void);
 

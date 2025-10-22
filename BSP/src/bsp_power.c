@@ -76,6 +76,7 @@ void power_onoff_handler(uint8_t data)
          gl_run.process_on_step =0;
          if(power_on_flag==0){
              power_on_flag ++;
+			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
 			 buzzer_sound();
 		 }
          power_off_run_handler();
@@ -190,7 +191,7 @@ void power_on_run_handler(void)
 	   gl_run.process_off_step=0;
 	   
 	   g_wifi.wifi_led_fast_blink_flag=0;
-	   g_pro.key_set_temperature_flag=0;
+	   g_pro.set_temperature_success_flag=0;
 	   g_pro.temperature_init_value=0;
 	   
 	    g_pro.g_manual_shutoff_dry_flag = 0;
@@ -202,9 +203,9 @@ void power_on_run_handler(void)
 	   g_pro.ptc_warning =0;
 	   g_pro.gTimer_display_adc_value=0;
 	   g_pro.delay_run_adc_counter=0;
-	   g_pro.set_temperature_value_success=0;
+
 	   g_pro.disp_59minutes_flag =0;
-	   g_pro.set_timing_value_success=WORKS_TIME; //WT.EDIT 2025.10.18
+	   g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
 	   
 	   temp_second_displboard=0;
 
@@ -359,11 +360,11 @@ void power_off_run_handler(void)
 	 
 	   g_pro.g_fan_switch_gears_flag++;
       
-	   g_pro.key_set_temperature_flag=0;
+	   g_pro.set_temperature_success_flag=0;
 	   g_wifi.app_timer_power_on_flag =0;
 	   g_pro.fan_warning =0 ;
 	   g_pro.ptc_warning =0;
-	   g_pro.set_temperature_value_success=0;
+	 
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
 	   g_pro.disp_59minutes_flag =0;
         gl_run.process_off_step = 1;
