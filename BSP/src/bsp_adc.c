@@ -3,7 +3,7 @@
 
 
 
-static void Judge_PTC_Temperature_Value(uint16_t adc_ptc);
+//static void Judge_PTC_Temperature_Value(uint16_t adc_ptc);
 
 static void Judge_Fan_State(void);
 
@@ -116,34 +116,34 @@ void adc_detected_hundler(void)
 	*
 	*
 *****************************************************************/
-static void Judge_PTC_Temperature_Value(uint16_t adc_ptc)
-{
-  
- #if HAINAN
-  if(adc_ptc < 215 || adc_ptc == 215){  //115 degree 
-         g_pro.ptc_warning =1;
+////static void Judge_PTC_Temperature_Value(uint16_t adc_ptc)
+//{
+//  
+// #if HAINAN
+//  if(adc_ptc < 215 || adc_ptc == 215){  //115 degree 
+//         g_pro.ptc_warning =1;
 
-		 g_pro.gDry=0 ;
+//		 g_pro.gDry=0 ;
 
-         DRY_CLOSE();//Ptc_Off();
-		 LED_DRY_OFF();//LED_PTC_ICON_OFF();
-		 vTaskDelay(pdMS_TO_TICKS(50));//HAL_Delay(50);
-		
-      
+//         DRY_CLOSE();//Ptc_Off();
+//		 LED_DRY_OFF();//LED_PTC_ICON_OFF();
+//		 vTaskDelay(pdMS_TO_TICKS(50));//HAL_Delay(50);
+//		
+//      
 
-		Publish_Data_Warning(ptc_temp_warning,1);
-		HAL_Delay(200);  
-        
-		MqttData_Publish_SetPtc(0);
-		HAL_Delay(100);  
-		
-		Buzzer_Ptc_Error_Sound();
-		
-			  
-				
-	   	}
-  #endif 
-}
+//		Publish_Data_Warning(ptc_temp_warning,1);
+//		HAL_Delay(200);  
+//        
+//		MqttData_Publish_SetPtc(0);
+//		HAL_Delay(100);  
+//		
+//		Buzzer_Ptc_Error_Sound();
+//		
+//			  
+//				
+//	   	}
+//  #endif 
+//}
 
 /*****************************************************************
 	*
@@ -215,10 +215,10 @@ static uint8_t ADC_StartConversion(void)
 // 获取ADC转换结果
 static void ADC_GetValues(void)
 {
-     static uint8_t fan_counter,ptc_counter;
-	 uint8_t i;
+  //   static uint8_t ptc_counter;
+	// uint8_t i;
 	
-	uint32_t sum =0;
+//	uint32_t sum =0;
         
    
 	   

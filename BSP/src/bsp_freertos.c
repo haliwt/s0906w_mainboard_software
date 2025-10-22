@@ -51,18 +51,6 @@ static TaskHandle_t xHandleTaskRunPro = NULL;
 static TaskHandle_t xHandleTaskDecoderPro= NULL;
 static TaskHandle_t xHandleTaskStart = NULL;
 
-//static QueueHandle_t xQueue1 = NULL;
-//static QueueHandle_t xQueue2 = NULL;
-//static QueueHandle_t xQueue3 = NULL;
-
-
-
-///#define QUEUE_LENGTH            1                   /* 队列支持的消息个�? */
-///#define QUEUE_ITEM_SIZE         sizeof(uint32_t)    /* 队列中每条消息的大小 */
-//#define SEMAPHORE_BINARY_LENGTH 1                   /* 二�?�信号量的有效长�? */
-//#define QUEUESET_LENGTH         ((2 * QUEUE_LENGTH) + SEMAPHORE_BINARY_LENGTH)  /* 队列集支持的消息个数 */
-
-
 
 
 uint8_t ucKeyCode;
@@ -222,55 +210,7 @@ static void vTaskStart(void *pvParameters)
    }
 }
 	
-      #if 0
-      xResult = xTaskNotifyWait(0x00000000,
-						           0xFFFFFFFF,
-						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue�? */
-								  portMAX_DELAY);  /* portMAX_DELAY  �?大允许延迟时�? */
-        if( xResult == pdPASS ){
-
-            /* 接收到消息，�?测那个位被按�? */
-            if((ulValue & POWER_BIT_0 ) != 0)
-            {
-           		
-                  g_key.key_power_flag = KEY_POWER_ID;
-
-            }
-            else if((ulValue & MODE_BIT_1 ) != 0){   /* 接收到消息，�?测那个位被按�? */
-            	 if(g_pro.gpower_on == power_on){
-				 	
-            	   //  g_key.key_mode_flag = KEY_MODEL_ID;
-					 g_key.key_power_flag = 0;
-				     g_key.key_down_flag=0;
-					 g_key.key_up_flag =0;
-            	 }
-
-             }
-            else if((ulValue & DOWN_BIT_2 ) != 0){
-            	  if(g_pro.gpower_on == power_on){
-				  	 
-            	       g_key.key_down_flag =KEY_DOWN_ID;
-					   g_key.key_power_flag = 0;
-				       g_key.key_mode_flag =0;
-            	             
-            	  }
-
-            }
-            else if((ulValue & UP_BIT_3 ) != 0){   /* 接收到消息，�?测那个位被按�? */
-            	 if(g_pro.gpower_on == power_on){
-            	      g_key.key_up_flag = KEY_UP_ID;
-					  g_key.key_power_flag = 0;
-				      g_key.key_mode_flag =0;
-            	                 
-            	 }
-            }
-            
-          }
-
-        }
-	 #endif 
-
- /**********************************************************************************************************
+/**********************************************************************************************************
 *	Function Name: AppTaskCreate
 *	功能说明: 创建应用任务
 *	Input Ref:
@@ -283,7 +223,7 @@ void AppTaskCreate (void)
                  "vTaskDecoderPro",  		/* 任务�?1�?7    */
                  128,         		/* stack大小，单位word，也就是4字节 */
                  NULL,        		/* 任务参数  */
-                 2,           		/* 任务优先�?1�?7 数��越小优先级越低，这个跟uCOS相反 */
+                 3,           		/* 任务优先�?1�?7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskDecoderPro); /* 任务句柄  */
 
   xTaskCreate( vTaskRunPro,    		/* 任务函数  */
@@ -297,7 +237,7 @@ void AppTaskCreate (void)
                  "vTaskStart",   		/* 任务�?1�?7    */
                  128,            		/* 任务栈大小，单位word，也就是4字节 */
                  NULL,           		/* 任务参数  */
-                 3,              		/* 任务优先�?1�?7 数��越小优先级越低，这个跟uCOS相反 */
+                 2,              		/* 任务优先�?1�?7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskStart );   /* 任务句柄  */
 }
 /********************************************************************************
