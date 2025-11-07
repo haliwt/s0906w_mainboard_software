@@ -1,5 +1,18 @@
 #include "bsp.h"
 
+
+static void delay_us(uint32_t us)
+{
+    // 每个 us 需要大约 16 次循环（64 cycles / 4 cycles per loop）
+    uint32_t cycles = us * 16;//  
+
+    while(cycles--)
+    {
+        __NOP();
+    }
+}
+
+
 // 数码管段码表�?0-9的显示码
 static const uint8_t TM1639_Number_Table[] = {
     0xF3, // 0: 0011 1111   （f,e,d,c,b,a�?--0x3F)(abcd efgh = 0b1111 0011)
@@ -52,7 +65,7 @@ static void TM1639_Write_Byte(uint8_t byte)
             
        // delay_us(2);//is big error .DATA.2025.06.13
         TM1639_CLK_SetHigh();
-       // delay_us(2);//is big error .DATA.2025.06.13
+        delay_us(4);//is big error .DATA.2025.06.13
         byte >>= 1;
     }
 }
@@ -65,11 +78,11 @@ static void TM1639_Write_Byte(uint8_t byte)
 static void TM1639_Start(void)
 {
     TM1639_STB_SetHigh();
-    delay_us(2);
+    delay_us(8);//2
     TM1639_CLK_SetHigh();
-    delay_us(2);
+    delay_us(8);//2
     TM1639_STB_SetLow();
-    delay_us(2);
+    delay_us(8);//2
 }
 
 /**
@@ -80,11 +93,11 @@ static void TM1639_Start(void)
 static void TM1639_Stop(void)
 {
     TM1639_CLK_SetLow();
-    delay_us(2);
+    delay_us(8);//2
     TM1639_DIO_SetLow();
-    delay_us(2);
+    delay_us(8);//
     TM1639_STB_SetHigh();
-    delay_us(2);
+    delay_us(8);//
 }
 
 /**

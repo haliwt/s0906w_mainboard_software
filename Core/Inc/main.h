@@ -40,6 +40,7 @@ extern "C" {
 #include "stm32g0xx_ll_pwr.h"
 #include "stm32g0xx_ll_tim.h"
 #include "stm32g0xx_ll_usart.h"
+#include "stm32g0xx_ll_iwdg.h"
 #include "stm32g0xx_ll_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/

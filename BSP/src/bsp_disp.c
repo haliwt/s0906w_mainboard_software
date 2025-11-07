@@ -45,8 +45,8 @@ void display_digital_3_numbers(void)
     	 		   else 
 				   	 TM1639_Display_3_Digit(g_pro.disp_timer_minutes_value);
     	 		  
-    	  }
-		  else{
+    	 }
+		 else{
 
 			 g_pro.key_gtime_timer_define_state = temperature_mode;// g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode; //WT.EDIT 2025.010.06
              //at once display "temperature_mode" //WT.EDIT 2025.10.17
@@ -71,13 +71,27 @@ void display_digital_3_numbers(void)
        break;
 
 	   case temperature_mode :
-                   
-          if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD) {
+
+	      if(g_key.key_mode_long_flag ==2){ //WT.EDIT 2025.11.07
+
+                  g_key.key_mode_long_flag++;
+				  if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
+			         
+				     LED_AI_OFF(); 
+				  }
+				  else{
+				     LED_AI_ON(); 
+
+				  }
+
+          }
+                  
+          if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD && g_key.key_mode_long_flag !=1){
 			  g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
 
-			  disp_temp_hum = (disp_temp_hum % 2) + 1;
+			  disp_temp_hum = disp_temp_hum ^ 0x01;
 
-				if(disp_temp_hum==1){
+			    if(disp_temp_hum==1){
 				
 					LED_TEMP_ICON_ON();
 					LED_HUM_ICON_OFF();
@@ -104,49 +118,6 @@ void display_digital_3_numbers(void)
   
 }
 
-	 #if 0
-     else if((g_pro.g_disp_smg_timer_or_temp_hours_item == timer_time_mode && (g_pro.set_temperature_success_flag!=1)) && read_wifi_temperature_value()==0){
-             
-	    // 如果计时器超过阈值，切换显示模式
-
-		  if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD) {
-			g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
 	
-			disp_temp_hum++;
-			if (disp_temp_hum > 3) {
-				disp_temp_hum = 1; // 循环显示状�??
-			}
-	
-			// 根据状�?�调用显示函�??
-			switch (disp_temp_hum) {
-				case 1:
-					LED_TEMP_ICON_ON();
-					LED_HUM_ICON_OFF();
-
-					read_error_flag =DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
-					if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
-					break;
-				case 2:
-                    LED_TEMP_ICON_OFF();
-					LED_HUM_ICON_ON();
-				    read_error_flag =DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
-					if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
-					break;
-				case 3:
-					LED_AI_OFF();
-					LED_TEMP_ICON_OFF();
-					LED_HUM_ICON_OFF();
-					TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value); // 显示时间
-					break;
-			}
-		}
-	}
-  
-	 }
-
-
-}
-
-#endif 
 
 

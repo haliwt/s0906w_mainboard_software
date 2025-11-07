@@ -45,40 +45,20 @@ void delay_init(uint16_t sysclk)
  */
 void delay_us(uint32_t nus)
 {
-    uint32_t ticks;
-    uint32_t told, tnow, tcnt = 0;
-    uint32_t reload = SysTick->LOAD;        /* LOAD的值 */
-    ticks = nus * g_fac_us;                 /* 需要的节拍数 */
-    
-#if SYS_SUPPORT_OS                          /* 如果需要支持OS */
-    delay_osschedlock();                    /* 锁定 OS 的任务调度器 */
-#endif
+    uint32_t ticks = nus * (SystemCoreClock / 1000000); // 计算需要的tick数
+    uint32_t start = SysTick->VAL;                     // 当前计数值
+    uint32_t reload = SysTick->LOAD + 1;               // 重装值
 
-    told = SysTick->VAL;                    /* 刚进入时的计数器值 */
-    while (1)
+    uint32_t elapsed = 0;
+    while (elapsed < ticks)
     {
-        tnow = SysTick->VAL;
-        if (tnow != told)
-        {
-            if (tnow < told)
-            {
-                tcnt += told - tnow;        /* 这里注意一下SYSTICK是一个递减的计数器就可以了 */
-            }
-            else
-            {
-                tcnt += reload - tnow + told;
-            }
-            told = tnow;
-            if (tcnt >= ticks) 
-            {
-                break;                      /* 时间超过/等于要延迟的时间,则退出 */
-            }
-        }
+        uint32_t now = SysTick->VAL;
+        if (now <= start)
+            elapsed += start - now;
+        else
+            elapsed += start + (reload - now);
+        start = now;
     }
-
-#if SYS_SUPPORT_OS                          /* 如果需要支持OS */
-    delay_osschedunlock();                  /* 恢复 OS 的任务调度器 */
-#endif 
 
 }
 

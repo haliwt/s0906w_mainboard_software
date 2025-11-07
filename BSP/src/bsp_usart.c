@@ -108,7 +108,7 @@ static void usart1_isr_callback_handler(uint8_t data)
 
                 gl_tMsg.bcc_check_code=inputBuf[0];
 
-                  vtask_isq_handler();
+                 vtask_isq_handler();
                  //usart1_rx_decoder();
 
               }

@@ -41,7 +41,7 @@ void tim_invoke_callback(uint8_t tim_id)
 }
 
 
-// // 注册回调函数
+// 注册回调函数
 void callback_register_fun(void)
 {
 	 // 注册回调函数

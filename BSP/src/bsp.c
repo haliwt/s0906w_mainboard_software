@@ -50,20 +50,16 @@ void bsp_init(void)
 ******************************************************************************/
 void mainboard_fun_handler(void)
 {
-   //static uint16_t mainboard_time;
-
-   
-
-   if(g_pro.gTimer_mainboard_fun_counter > 4){// 2s  //300 ~= 6s, 50 ~=1s
+ 
+  if(g_pro.gTimer_mainboard_fun_counter > 4){// 2s  //300 ~= 6s, 50 ~=1s
        g_pro.gTimer_mainboard_fun_counter=0;
 
    if(g_key.key_mode_long_flag ==2){
 
       g_key.key_mode_long_flag++;
 
-
-   }
-   else{
+  }
+  
 
    if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
 	  g_pro.gAI = 0;
@@ -78,7 +74,7 @@ void mainboard_fun_handler(void)
        LED_AI_ON();
 
 	}
-   }
+   
    	
 
 	if(g_pro.gDry == 1 && read_wifi_dry_value()==0){
@@ -278,7 +274,6 @@ void works_run_two_hours_state(void)
     break;
 
     case 0:
-
 	    mainboard_fun_handler();
 	
         

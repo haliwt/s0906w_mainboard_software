@@ -37,6 +37,7 @@
 #include "bsp_led_tape.h"
 #include "bsp_adc.h"
 #include "bsp_iap.h"
+#include "bsp_wwdg.h"
 
 #include "interrupt_manager.h"
 
@@ -48,6 +49,7 @@
 #include "bsp_mqtt.h"
 #include "bsp_wifi_decoder.h"
 #include "bsp_dma_usart2.h"
+
 #include "bsp_connect_wifi.h"
 
 
@@ -61,6 +63,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "wwdg.h"
 
 //freeRtos
 #include "FreeRTOS.h"

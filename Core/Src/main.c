@@ -9,7 +9,7 @@
   * S0906W version: 01 . data:2025.06.18
   *                 02.  data.2025.09.27
   *  modidyf 03. data.2025.10.22,
-  *
+  *  modify  04. data.2025.11.07
   *
   * 
   * 
@@ -25,6 +25,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "wwdg.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -95,6 +96,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
+  //MX_IWDG_Init();
   MX_ADC1_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
@@ -104,7 +106,7 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 	// ʹ��USART�����ж�
- 
+
     bsp_init();
 
    freeRTOS_Handler();

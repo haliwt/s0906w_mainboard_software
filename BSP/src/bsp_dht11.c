@@ -4,6 +4,17 @@
 DHT11_Data_TypeDef dht11_data;
 DHT11_Status status;
 
+static void delay_us(uint32_t us)
+{
+    // ?? us ???? 16 ???(64 cycles / 4 cycles per loop)
+    uint32_t cycles = us * 16;  //16
+
+    while(cycles--)
+    {
+        __NOP();
+    }
+}
+
 
 /**
  * @brief       复位DHT11
@@ -32,7 +43,7 @@ uint8_t dht11_check(void)
     while (DHT11_DQ_IN && retry < 100)  /* DHT11会拉�??83us */
     {
         retry++;
-        delay_us(1);
+        delay_us(4);
     }
 
     if (retry >= 100)
@@ -46,7 +57,7 @@ uint8_t dht11_check(void)
         while (!DHT11_DQ_IN && retry < 100) /* DHT11拉低后会再次拉高87us */
         {
             retry++;
-            delay_us(1);
+            delay_us(4);
         }
         if (retry >= 100) rval = 1;
     }
@@ -66,7 +77,7 @@ uint8_t dht11_read_bit(void)
     while (DHT11_DQ_IN && retry < 100)  /* 等待变为低电�?? */
     {
         retry++;
-        delay_us(1);
+        delay_us(2);
     }
 
     retry = 0;
@@ -74,10 +85,10 @@ uint8_t dht11_read_bit(void)
     while (!DHT11_DQ_IN && retry < 100) /* 等待变高电平 */
     {
         retry++;
-        delay_us(1);
+        delay_us(2);
     }
 
-    delay_us(40);       /* 等待40us */
+    delay_us(40);//       /* 等待40us */
 
     if (DHT11_DQ_IN)    /* 根据引脚状�?�返�?? bit */
     {

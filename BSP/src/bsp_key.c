@@ -31,7 +31,7 @@ uint8_t define_timer_mode;
 
 static void adjust_temperature(int8_t delta) ;
 static void adjust_timer(int8_t delta) ;
-static void handleTemperatureControl(void) ;
+static void handleSetTemperatureControl(void) ;
 static void handleDefaultTemperatureControl(void);
 static void setDryState(uint8_t state);
 static void publishMqttData(DryState state, uint8_t temperature);
@@ -126,7 +126,7 @@ static void adjust_temperature(int8_t delta)
 	g_pro.key_set_temperature_flag=1;
 
 	g_pro.set_temp_first_closeptc=0; //WT.EDIT 2025.10.11
-
+    g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
 		
     TM1639_Display_Temperature(g_pro.gset_temperture_value);
     g_pro.gTimer_input_set_temp_times = 0;
@@ -143,7 +143,7 @@ static void adjust_temperature(int8_t delta)
  */
 static void adjust_timer(int8_t delta) 
 {
-
+    g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
 	g_pro.gTimer_switch_set_timer_times = 0;
     g_pro.key_add_dec_be_pressed_flag = 1;
 	g_pro.disp_59minutes_flag =0;  //WT.EDIT 2025.10.06
@@ -209,17 +209,7 @@ void key_dwon_fun(void)
 ******************************************************************************/
 void set_temperature_value_handler(void)
 {
- //  static uint8_t send_data_flag;
-    //the second display board 
-   #if 0
-   if(g_pro.g_dispboard_set_temp_flag ==1 && g_pro.gTimer_input_set_temp_timer >2){
-       g_pro.g_dispboard_set_temp_flag++;
-       g_pro.set_temperature_success_flag =1;
 
-
-   }
-   #endif 
-   
    if((g_pro.key_set_temperature_flag==1 || g_wifi.g_wifi_set_temp_flag==1) && g_pro.gTimer_input_set_temp_timer >2)
    {
         g_pro.key_set_temperature_flag++;
@@ -281,7 +271,7 @@ void set_temperature_value_handler(void)
 
         if(g_pro.set_temperature_success_flag==1  && read_wifi_temperature_value()==0){
 		
-		       handleTemperatureControl();
+		       handleSetTemperatureControl();
 
 			
          }
@@ -296,14 +286,14 @@ void set_temperature_value_handler(void)
 * @brief:
 * @note:
 * @param:
-*
+* @retrval:
 *
 */
 void compare_temperature_value_hanlder(void)
 {
 	if(g_pro.set_temperature_success_flag==1 ){
 
-			  handleTemperatureControl();
+			  handleSetTemperatureControl();
 
 
 	   }
@@ -323,13 +313,13 @@ uint8_t readTemperature(void)
 
 /******************************************************************************
 	*
-	*Function Name:static void handleTemperatureControl(void) 
+	*Function Name:static void handleSetTemperatureControl(void) 
 	*Funcion: // 处理温度控制逻辑
 	*Input Ref: NO
 	*Return Ref:NO
 	*
 ******************************************************************************/
-static void handleTemperatureControl(void) 
+static void handleSetTemperatureControl(void) 
 {
 
     static uint8_t closeptc_counter;
@@ -488,7 +478,7 @@ static void handleDefaultTemperatureControl(void)
 
 /******************************************************************************
 	*
-	*Function Name:void set_timer_timing_value_handler(void)
+	*Function Name:static void setDryState(uint8_t state)
 	*Funcion: set temperature value 
 	*Input Ref: state: 0-off,1-on
 	*Return Ref:NO
@@ -521,7 +511,7 @@ void publishMqttData(DryState state, uint8_t temperature)
 
 /******************************************************************************
 	*
-	*Function Name:void set_timer_timing_value_handler(void)
+	*Function Name:void sendDisplayCommand(uint8_t command,uint8_t data) 
 	*Funcion: // 发�?�显示命�????
 	*Input Ref: NO
 	*Return Ref:NO
@@ -547,11 +537,12 @@ void set_timer_timing_value_handler(void)
 {
    
   
-   if(g_key.key_mode_long_flag ==1 && g_pro.gTimer_switch_set_timer_times > 2 ){
+   if(g_key.key_mode_long_flag ==1 && g_pro.gTimer_switch_set_timer_times > 3 ){ // 2
 
    	      g_pro.gTimer_switch_set_timer_times=0;
 		  g_key.key_mode_long_flag++;
 
+		  	
           if(g_pro.key_add_dec_be_pressed_flag==1){
 		  	
             g_pro.key_add_dec_be_pressed_flag ++ ;
@@ -587,7 +578,13 @@ void set_timer_timing_value_handler(void)
 		}
 		else{ //times is done ,exit this process
 		   g_pro.key_gtime_timer_define_state = temperature_mode; //WT.EDIT 2025.10.17
-		   
+		   if(g_pro.set_timing_or_timer_time_flag==TIMER_TIME){ //WT.EDIT 2025.11.07 
+               LED_AI_OFF();
+		   }
+		   else{
+               LED_AI_ON();
+           }
+		  g_pro.gTimer_mainboard_fun_counter=10; //WT.EDIT 2025.11.07
 		 
         }
    	}

@@ -45,7 +45,11 @@ void power_onoff_handler(uint8_t data)
 
           power_on_run_handler();
 
-	   
+	    if(gl_run.process_on_step > 5)gl_run.process_on_step=1;
+		if(g_pro.fan_warning > 1 || g_pro.ptc_warning >1){
+           if(g_pro.fan_warning > 1) g_pro.fan_warning =0;
+		   if(g_pro.ptc_warning >1)  g_pro.ptc_warning =0;
+		}
         if(gl_run.process_on_step !=0){ //logically rigorous
 
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
@@ -54,7 +58,7 @@ void power_onoff_handler(uint8_t data)
 	        
 			link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
 			
-			set_temperature_value_handler();
+			set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
 			set_timer_timing_value_handler();
 
 			works_run_two_hours_state();
