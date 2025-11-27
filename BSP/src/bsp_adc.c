@@ -53,7 +53,7 @@ void adc_detected_hundler(void)
 
 	  if(detectted_has_adc_flag==1){//WT.EDIT 2025.11.24
 	  	 detectted_has_adc_flag++;
-	   if(fan_detect_voltage < 400){
+	   if(fan_detect_voltage < 350){
              counter_error ++ ;
 			 #if DEBUG_ENABLE
 			   printf("error_counter = %d\r\n",counter_error);

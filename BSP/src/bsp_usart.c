@@ -3,7 +3,7 @@
 
 
 
-static void usart1_isr_callback_handler(uint8_t data);
+
 
 
 typedef void (*Usart1RxCallback)(uint8_t data);
@@ -64,7 +64,7 @@ uint8_t rx_end_flag;
 	*Return Ref:NO
 	*
 *******************************************************************************/
-static void usart1_isr_callback_handler(uint8_t data)
+void usart1_isr_callback_handler(uint8_t data)
 {
     static volatile uint8_t state ;
     switch(state)

@@ -73,7 +73,7 @@
 
 #define  USE_FreeRTOS      1
 
-#define Enable_EventRecorder          0
+#define Enable_EventRecorder          1
   
 #define  TEST_UNIT        0 //Enable_EventRecorder
 
