@@ -43,6 +43,8 @@ extern "C" {
 #include "stm32g0xx_ll_iwdg.h"
 #include "stm32g0xx_ll_gpio.h"
 
+
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 

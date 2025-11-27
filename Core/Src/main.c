@@ -108,7 +108,7 @@ int main(void)
 	// ʹ��USART�����ж�
 
     bsp_init();
-
+   UART_Start_Receive_IT(&huart1,inputBuf,1);
    freeRTOS_Handler();
   /* USER CODE END 2 */
 

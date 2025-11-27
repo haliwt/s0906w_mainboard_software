@@ -27,6 +27,14 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
+extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart1_tx;
+extern UART_HandleTypeDef huart1;
+
+
+
+extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE END TD */
 
@@ -37,6 +45,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+extern UART_HandleTypeDef huart1;
 
 /* USER CODE END PM */
 
@@ -269,21 +278,21 @@ void USART1_IRQHandler(void)
 {
   volatile uint8_t data;
   /* USER CODE BEGIN USART1_IRQn 0 */
-  if(LL_USART_IsActiveFlag_RXNE(USART1)){
+//  if(LL_USART_IsActiveFlag_RXNE(USART1)){
 
-      data = LL_USART_ReceiveData8(USART1);
-	  //usart1_isr_callback_handler(data);
-	  usart1_rx_callback_invoke(data);
+//      data = LL_USART_ReceiveData8(USART1);
+//	  usart1_isr_callback_handler(data);
+//	 // usart1_rx_callback_invoke(data);
 
-  }
+//  }
 
   /* USER CODE END USART1_IRQn 0 */
-  if(LL_USART_IsActiveFlag_ORE(USART1)){
+//  if(LL_USART_IsActiveFlag_ORE(USART1)){
 
-       LL_USART_ClearFlag_ORE(USART1);
-   }
+//       LL_USART_ClearFlag_ORE(USART1);
+//   }
   /* USER CODE BEGIN USART1_IRQn 1 */
-
+    HAL_UART_IRQHandler(&huart1);
   /* USER CODE END USART1_IRQn 1 */
 }
 

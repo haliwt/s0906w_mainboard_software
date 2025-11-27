@@ -20,6 +20,6 @@ void ll_gpio_falling_callback(uint16_t gpio_pin);
 
 void vtask_isq_handler(void);
 
-void usart1_isr_callback_handler(uint8_t data);
+//void usart1_isr_callback_handler(uint8_t data);
 
 #endif /* BSP_INC_BSP_FREERTOS_H_ */
