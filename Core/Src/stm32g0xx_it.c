@@ -155,14 +155,14 @@ void EXTI2_3_IRQHandler(void)
 
     /* USER CODE END LL_EXTI_LINE_2_RISING */
   }
-  else if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_3) != RESET)
-  {
-    LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_3);
+  //else if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_3) != RESET)
+  //{
+   // LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_3);
 	//ll_gpio_falling_callback(KEY_DOWN_Pin);
     /* USER CODE BEGIN LL_EXTI_LINE_3_RISING */
 
     /* USER CODE END LL_EXTI_LINE_3_RISING */
-  }
+  //}
   /* USER CODE BEGIN EXTI2_3_IRQn 1 */
 
   /* USER CODE END EXTI2_3_IRQn 1 */

@@ -240,6 +240,7 @@ void power_on_run_handler(void)
 
 
 		  }
+	
 		  gl_run.process_on_step =2; 
       }
 	  else{
@@ -250,14 +251,14 @@ void power_on_run_handler(void)
 
 
 	case 2: //DISPAY 3 digital numbers . process .
-
+    
 	  display_digital_3_numbers();
 	  gl_run.process_on_step =3; 
 
 	 break;
 
 	 case 3: //WIFI link process
-	 
+	  
          if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
 		if(g_wifi.gTimer_update_dht11_data > 20 && g_wifi.gwifi_link_net_state_flag ==wifi_link_success){
@@ -294,7 +295,7 @@ void power_on_run_handler(void)
 	 break;
 
 	 case 4: // wifi function
-	    
+	  
          if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
 		 	g_pro.gTimer_display_adc_value=0;
               adc_detected_hundler();
@@ -306,7 +307,7 @@ void power_on_run_handler(void)
 	 break;
 
 	 case 5:
-      
+     
 	    if(g_disp.g_second_disp_flag == 1 &&  g_pro.gTimer_to_disp_counter > 2){    
 			 g_pro.gTimer_to_disp_counter=0;
 			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);

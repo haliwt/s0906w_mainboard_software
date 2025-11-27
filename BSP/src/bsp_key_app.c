@@ -133,6 +133,8 @@ static void handle_mode_key(void)
 }
 
 /* ---------------- Down Key ---------------- */
+
+
 static void handle_down_key(void)
 {
     if (KEY_DOWN_VALUE() == KEY_DOWN && complex_counter < 100) {

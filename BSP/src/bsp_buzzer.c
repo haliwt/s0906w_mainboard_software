@@ -9,7 +9,7 @@
 
 static void tim3_buzzer_sound_config(void)
 {
-    LL_TIM_DisableCounter(TIM3);
+   LL_TIM_DisableCounter(TIM3);
    LL_TIM_GenerateEvent_UPDATE(TIM3);
    LL_TIM_SetAutoReload(TIM3, 249); //1/(249+1) =0.004MHZ = 4KHZ buzzer sound 
    LL_TIM_OC_SetCompareCH4(TIM3, 125);

@@ -167,7 +167,7 @@ static void vTaskStart(void *pvParameters)
 {
 	
  while(1)
-    {
+  {
 
 	 if(KEY_MODE_VALUE() == KEY_DOWN  &&g_pro.gpower_on == power_on){
 
@@ -189,7 +189,7 @@ static void vTaskStart(void *pvParameters)
 	        g_key.key_mode_flag=0;
 
      }
-	 else if(KEY_POWER_VALUE()  ==KEY_DOWN){
+     else if(KEY_POWER_VALUE()  ==KEY_DOWN){
 
 		 g_key.key_power_flag = KEY_POWER_ID;
 
@@ -262,4 +262,4 @@ void vtask_isq_handler(void)
 
 
 }
-
+

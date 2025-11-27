@@ -26,7 +26,7 @@ volatile uint8_t adc_conversion_complete = 0;
 uint16_t ptc_temp_voltage;
 uint16_t fan_detect_voltage = 1000;
 
-uint8_t counter_error;
+
 
 
 /**********************************************************************
@@ -40,23 +40,26 @@ uint8_t counter_error;
 void adc_detected_hundler(void)
 {
     
-
+   static uint8_t detectted_has_adc_flag ,counter_error;
    if(g_pro.fan_warning==0){
  
         Fan_Full_Speed();
 	   //switch_flag = switch_flag ^ 0x01;
 	  if(ADC_StartConversion()){
 	   	  ADC_GetValues();
-	   		
+		  detectted_has_adc_flag=1 ;
+	   	  	
 	  }
 
+	  if(detectted_has_adc_flag==1){//WT.EDIT 2025.11.24
+	  	 detectted_has_adc_flag++;
 	   if(fan_detect_voltage < 400){
              counter_error ++ ;
 			 #if DEBUG_ENABLE
 			   printf("error_counter = %d\r\n",counter_error);
 
 			 #endif 
-			  if(counter_error > 7){
+			  if(counter_error > 9){
 			      g_pro.fan_warning=1;
 				  g_pro.ptc_on_off_flag = 1;
 			      g_pro.gDry =0;
@@ -70,6 +73,7 @@ void adc_detected_hundler(void)
 		 
 
 		}
+	  }
 
 	 }
 	 else if(g_pro.fan_warning==1){
