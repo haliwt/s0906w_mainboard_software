@@ -32,7 +32,7 @@ void usart1_rx_callback_invoke(uint8_t data)
 void callback_register_usart1_rx(void)
 {
 
-  //  usart1_register_rx_callback(usart1_isr_callback_handler);
+    usart1_register_rx_callback(usart1_isr_callback_handler);
 
 }
 
@@ -64,7 +64,6 @@ uint8_t rx_end_flag;
 	*Return Ref:NO
 	*
 *******************************************************************************/
-#if 0
 void usart1_isr_callback_handler(uint8_t data)
 {
     static volatile uint8_t state ;
@@ -126,7 +125,7 @@ void usart1_isr_callback_handler(uint8_t data)
 
 		  }
 }
-#endif 
+
 
 void usart1_rx_decoder(void)
 {
@@ -146,90 +145,4 @@ void usart1_rx_decoder(void)
 }
 
 
-/********************************************************************************
-	**
-	*Function Name:void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-	*Function :UART callback function  for UART interrupt for receive data
-	*Input Ref: structure UART_HandleTypeDef pointer
-	*Return Ref:NO
-	*
-*******************************************************************************/
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-     static uint8_t state,rx_end_flag ;
-     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-
-    if(huart->Instance == USART1) // mainBoard receive data from display board send data USART1
-	{
-
-       DISABLE_INT();
-       switch(state)
-		{
-		case 0:  //#0
-			if(inputBuf[0] == 0xA5){  // 0xA5 -- second display board ID
-               gl_tMsg.rx_data_counter=0;
-			   gl_tMsg.ulid=0;
-               gl_tMsg.usData[gl_tMsg.rx_data_counter] = inputBuf[0];
-				state=1; //=1
-
-             }
-			else if(inputBuf[0]== 0xFE){//IAP boodloader flag
-        
-	          gl_tMsg.ucMessageID = 0xFE;
-			}
-            else
-                state=0;
-		break;
-
-
-		case 1: //#1
-
-            if(gl_tMsg.disp_rx_cmd_done_flag ==0){
-              /* 初始化结构体指针 */
-               gl_tMsg.rx_data_counter++;
-
-	          gl_tMsg.usData[gl_tMsg.rx_data_counter] = inputBuf[0];
-
-
-              if(rx_end_flag == 1){
-
-                state = 0;
-
-                gl_tMsg.ulid = gl_tMsg.rx_data_counter;
-                rx_end_flag=0;
-
-                gl_tMsg.rx_data_counter =0;
-
-                gl_tMsg.disp_rx_cmd_done_flag = 1 ;
-
-                gl_tMsg.bcc_check_code=inputBuf[0];
-
-                #if 1
-               vtask_isq_handler();
-				#endif 
-
-              }
-
-              }
-
-              if(gl_tMsg.usData[gl_tMsg.rx_data_counter] ==0xFE && rx_end_flag == 0 &&   gl_tMsg.rx_data_counter > 4){
-
-                     rx_end_flag = 1 ;
-
-              }
-
-        break;
-
-
-
-		}
-
-         ENABLE_INT();//WT.EDIT 2025.05.18
-    __HAL_UART_CLEAR_OREFLAG(&huart1);
-	HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
-
- }
-
-}
 
