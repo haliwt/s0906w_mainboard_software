@@ -293,6 +293,7 @@ void USART1_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
+   //RX WIFI DATA baurd rate is 115200bps
   volatile uint8_t data;
   
 	if(LL_USART_IsActiveFlag_RXNE(USART2)){

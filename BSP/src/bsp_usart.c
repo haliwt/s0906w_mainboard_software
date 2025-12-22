@@ -59,7 +59,7 @@ uint8_t rx_end_flag;
 /********************************************************************************
 	**
 	*Function Name:void usart1_isr_callback_handler(void)
-	*Function :  this is receive data from mainboard.
+	*Function :  receive the second display board data outside
 	*Input Ref:NO
 	*Return Ref:NO
 	*

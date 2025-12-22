@@ -33,9 +33,28 @@ uint8_t inputBuf[1];
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
+#if 0
 static void vTaskRunPro(void *pvParameters);
 static void vTaskDecoderPro(void *pvParameters);
 static void vTaskStart(void *pvParameters);
+#else 
+/*------------------ 静态任务内存定义 ------------------*/
+
+/* vTaskDecoderPro 任务 */
+static StaticTask_t xTaskDecoderProTCB;
+static StackType_t xTaskDecoderProStack[128];
+
+
+/* vTaskMsgPro 任务 */
+static StaticTask_t xTaskRunProTCB;
+static StackType_t xTaskRunProStack[128];
+
+/* vTaskStart 任务 */
+static StaticTask_t xTaskStartTCB;
+static StackType_t xTaskStartStack[128];
+
+
+#endif 
 static void AppTaskCreate (void);
 
 
@@ -50,6 +69,22 @@ static void AppTaskCreate (void);
 static TaskHandle_t xHandleTaskRunPro = NULL;
 static TaskHandle_t xHandleTaskDecoderPro= NULL;
 static TaskHandle_t xHandleTaskStart = NULL;
+
+
+/* 定义静态内存块 */
+static StaticTask_t xIdleTaskTCB;
+static StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
+
+
+/* 内核会自动调用这个回调函数来获取 Idle 任务的内存 */
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer,
+                                    StackType_t **ppxIdleTaskStackBuffer,
+                                    uint32_t *pulIdleTaskStackSize )
+{
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+    *ppxIdleTaskStackBuffer = uxIdleTaskStack;
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+}
 
 
 
@@ -83,13 +118,15 @@ void freeRTOS_Handler(void)
 #if 1
 static void vTaskDecoderPro(void *pvParameters)
 {
-    BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(2000); /* 设置�?大等待时间为30ms */
-	uint32_t ulValue;
+   // BaseType_t xResult;
+	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(1000); /* 设置�?大等待时间为30ms */
+	//uint32_t ulValue;
 
 
     while(1)
     {
+
+	#if 0
 
 	xResult = xTaskNotifyWait(0x00000000,
 						0xFFFFFFFF,     /* Reset the notification value to 0 on */
@@ -106,6 +143,25 @@ static void vTaskDecoderPro(void *pvParameters)
 				
 		 }
 	 }
+	#else
+
+	/* * 第一个参数 pdTRUE: 退出时将通知值清零（类似于二进制信号量）
+         * 第二个参数 portMAX_DELAY: 任务完全阻塞直到收到中断通知
+         */
+        uint32_t ulCount = ulTaskNotifyTake(pdTRUE, xMaxBlockTime);
+
+        if(ulCount > 0)
+        {
+            /* * 只要缓冲区不为空，就持续解析。
+             * 这样即使中断发送通知太快，任务也能在一次唤醒中处理完所有积压数据。
+             */
+            
+             usart1_rx_decoder(); 
+            
+        }
+
+
+	#endif 
    }
 }
 #endif 
@@ -219,6 +275,7 @@ static void vTaskStart(void *pvParameters)
 void AppTaskCreate (void)
 {
 
+ #if 0
   xTaskCreate( vTaskDecoderPro,    		/* 任务函数  */
                  "vTaskDecoderPro",  		/* 任务�?1�?7    */
                  128,         		/* stack大小，单位word，也就是4字节 */
@@ -239,6 +296,43 @@ void AppTaskCreate (void)
                  NULL,           		/* 任务参数  */
                  2,              		/* 任务优先�?1�?7 数��越小优先级越低，这个跟uCOS相反 */
                  &xHandleTaskStart );   /* 任务句柄  */
+
+ #else
+
+ /*------------------ 静态任务创建 ------------------*/
+	
+  xHandleTaskDecoderPro = xTaskCreateStatic(
+			vTaskDecoderPro,			/* 任务函数 */
+			"vTaskDecoderPro",			/* 任务名 */
+			128,					/* 栈大小（word） */
+			NULL,					/* 参数 */
+			3,						/* 优先级 */
+			xTaskDecoderProStack,		/* 栈数组 */
+			&xTaskDecoderProTCB 		/* TCB */
+	);
+
+	xHandleTaskRunPro = xTaskCreateStatic(
+			vTaskRunPro,			/* 任务函数 */
+			"vTaskRunPro",			/* 任务名 */
+			256,					/* 栈大小（word） */
+			NULL,					/* 参数 */
+			2,						/* 优先级 */
+			xTaskRunProStack,		/* 栈数组 */
+			&xTaskRunProTCB 		/* TCB */
+	);
+	
+	xHandleTaskStart = xTaskCreateStatic(
+			vTaskStart, 			/* 任务函数 */
+			"vTaskStart",			/* 任务名 */
+			128,					/* 栈大小（word） */
+			NULL,					/* 参数 */
+			1,						/* 优先级 */
+			xTaskStartStack,		/* 栈数组 */
+			&xTaskStartTCB			/* TCB */
+	);
+
+
+ #endif 
 }
 /********************************************************************************
 	**
@@ -250,6 +344,8 @@ void AppTaskCreate (void)
 *******************************************************************************/
 void vtask_isq_handler(void)
 {
+    #if 0
+
 	 BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
 	 xTaskNotifyFromISR(xHandleTaskDecoderPro,  /* 目标任务 */
@@ -260,6 +356,17 @@ void vtask_isq_handler(void)
                 /* 如果xHigherPriorityTaskWoken = pdTRUE，那么�??出中断后切到当前�?高优先级任务执行 */
                 portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 
+   #else
 
+
+
+      BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+        // 此时通知任务：数据收齐了，快来处理
+        vTaskNotifyGiveFromISR(xHandleTaskDecoderPro, &xHigherPriorityTaskWoken);
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
+
+
+   #endif 
 }
 

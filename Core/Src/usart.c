@@ -30,7 +30,7 @@ void MX_USART1_UART_Init(void)
 {
 
   /* USER CODE BEGIN USART1_Init 0 */
-   //The second display board 
+   //The second display board baud rate = 9600bps 
   /* USER CODE END USART1_Init 0 */
 
   LL_USART_InitTypeDef USART_InitStruct = {0};
@@ -107,7 +107,7 @@ void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   USART_InitStruct.PrescalerValue = LL_USART_PRESCALER_DIV1;
-  USART_InitStruct.BaudRate = 115200;
+  USART_InitStruct.BaudRate = 9600;
   USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
   USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
   USART_InitStruct.Parity = LL_USART_PARITY_NONE;
