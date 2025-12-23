@@ -64,10 +64,10 @@ void MX_GPIO_Init(void)
   LL_GPIO_ResetOutputPin(TEMP_SENSOR_GPIO_Port, TEMP_SENSOR_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(FAN_COM_GPIO_Port, FAN_COM_Pin);
+  LL_GPIO_ResetOutputPin(FAN_RUN_GPIO_Port, FAN_RUN_Pin);
 
   /**/
-  LL_GPIO_ResetOutputPin(FAN_CCW_GPIO_Port, FAN_CCW_Pin);
+  //LL_GPIO_ResetOutputPin(FAN_CCW_GPIO_Port, FAN_CCW_Pin);
 
   /**/
   LL_GPIO_ResetOutputPin(TM1639_DIO_GPIO_Port, TM1639_DIO_Pin);
@@ -135,20 +135,20 @@ void MX_GPIO_Init(void)
   LL_GPIO_Init(TEMP_SENSOR_GPIO_Port, &GPIO_InitStruct);
 
   /**/
-  GPIO_InitStruct.Pin = FAN_COM_Pin;
+  GPIO_InitStruct.Pin = FAN_RUN_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(FAN_COM_GPIO_Port, &GPIO_InitStruct);
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
+  LL_GPIO_Init(FAN_RUN_GPIO_Port, &GPIO_InitStruct);
 
   /**/
-  GPIO_InitStruct.Pin = FAN_CCW_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(FAN_CCW_GPIO_Port, &GPIO_InitStruct);
+//  GPIO_InitStruct.Pin = FAN_CCW_Pin;
+//  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+//  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+//  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+//  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+//  LL_GPIO_Init(FAN_CCW_GPIO_Port, &GPIO_InitStruct);
 
   /**/
   GPIO_InitStruct.Pin = TM1639_DIO_Pin;

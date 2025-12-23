@@ -16,9 +16,13 @@ void usart1_register_rx_callback(Usart1RxCallback cb)
    usart1_rx_cb = cb;
 
 }
-
-// 提供一个接口给中断调用
-void usart1_rx_callback_invoke(uint8_t data)
+/**
+*@brief // 提供一个接口给中断调用
+*@note
+*@param
+*@interval
+**/
+void usart1_rx_displayboard_callbck_invoke(uint8_t data)
 {
     if (usart1_rx_cb != NULL)
     {
@@ -26,9 +30,12 @@ void usart1_rx_callback_invoke(uint8_t data)
     }
 }
 
-
-//注册一个实现函数
-
+/**
+*@brief  //注册一个实现函数
+*@note
+*@param
+*@interval
+**/
 void callback_register_usart1_rx(void)
 {
 
@@ -36,8 +43,12 @@ void callback_register_usart1_rx(void)
 
 }
 
-
-
+/**
+*@brief  
+*@note
+*@param
+*@interval
+**/
 typedef struct Msg
 {
 

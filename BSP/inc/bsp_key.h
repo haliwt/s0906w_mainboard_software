@@ -86,11 +86,11 @@ typedef enum{
 
 #else
 
-#define KEY_POWER_VALUE()          LL_GPIO_IsInputPinSet(GPIOD, KEY_POWER_Pin)//sys_read_gpio_pin_value(GPIOD, KEY_POWER_Pin) //GPIO_1 按键按下，返回�??: 1
-#define KEY_MODE_VALUE()           LL_GPIO_IsInputPinSet(GPIOD, KEY_MODE_Pin)//sys_read_gpio_pin_value(GPIOD, KEY_MODE_Pin)
+#define KEY_POWER_VALUE()          LL_GPIO_IsInputPinSet(GPIOB, KEY_POWER_Pin)//sys_read_gpio_pin_value(GPIOD, KEY_POWER_Pin) //GPIO_1 按键按下，返回�??: 1
+#define KEY_MODE_VALUE()           LL_GPIO_IsInputPinSet(GPIOB, KEY_MODE_Pin)//sys_read_gpio_pin_value(GPIOD, KEY_MODE_Pin)
 
-#define KEY_DOWN_VALUE()           LL_GPIO_IsInputPinSet(GPIOD, KEY_DOWN_Pin)//sys_read_gpio_pin_value(GPIOD, KEY_DOWN_Pin)
-#define KEY_UP_VALUE()             LL_GPIO_IsInputPinSet(GPIOD, KEY_UP_Pin)//sys_read_gpio_pin_value(GPIOD, KEY_UP_Pin)
+#define KEY_DOWN_VALUE()           LL_GPIO_IsInputPinSet(GPIOB, KEY_DOWN_Pin)//sys_read_gpio_pin_value(GPIOD, KEY_DOWN_Pin)
+#define KEY_UP_VALUE()             LL_GPIO_IsInputPinSet(GPIOB, KEY_UP_Pin)//sys_read_gpio_pin_value(GPIOD, KEY_UP_Pin)
 
 
 

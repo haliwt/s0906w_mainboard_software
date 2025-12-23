@@ -151,13 +151,13 @@ void power_on_run_handler(void)
 	      
 	   	  g_wifi.gwifi_link_net_state_flag=wifi_link_success;
           MqttData_Publish_SetOpen(1);  
-		   osDelay(50);//HAL_Delay(350);
+		  vTaskDelay(100);
 		}
         else{
 		   
 		   	 if(g_wifi.gwifi_link_net_state_flag == wifi_link_success && g_wifi.gwifi_normal_power_on_flag == 0){
 		       MqttData_Publish_SetOpen(1);  
-		       osDelay(100);//HAL_Delay(200);
+		       vTaskDelay(100);
 		    }
         }
 		updateDht11_toDisplayBoard_value();
@@ -175,7 +175,7 @@ void power_on_run_handler(void)
 		
 		  
 		  updateDht11_toDisplayBoard_value();
-	      osDelay(5);
+	      vTaskDelay(100);
 		   	
 	        send_wifi_power_on_state = 1;
 		
@@ -236,7 +236,7 @@ void power_on_run_handler(void)
 		      send_wifi_power_on_state++;
 		      g_pro.gset_temperture_value = 40;
 			   MqttData_Publish_Update_Data();
-			  // osDelay(100);//HAL_Delay(200);
+			   vTaskDelay(200);
 
 
 		  }
@@ -270,11 +270,11 @@ void power_on_run_handler(void)
 				   if(switch_dht11==1){
 		         	   Subscriber_Data_FromCloud_Handler();
 				
-	                  osDelay(50);
+	                   vTaskDelay(50);
 				   	}
 				    else{
 					Update_Dht11_Totencent_Value()	;
-					osDelay(50);
+					 vTaskDelay(200);
 
 
 					}
@@ -311,7 +311,7 @@ void power_on_run_handler(void)
 	    if(g_disp.g_second_disp_flag == 1 &&  g_pro.gTimer_to_disp_counter > 2){    
 			 g_pro.gTimer_to_disp_counter=0;
 			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-			 osDelay(5);
+			 vTaskDelay(100);
 
 		}
 	     gl_run.process_on_step =1;
@@ -337,7 +337,7 @@ void power_on_run_handler(void)
 void power_off_run_handler(void)
 {
 
-   static uint8_t fan_run_one_minute,fan_flag,wifi_first_connect;
+   static uint8_t fan_flag,wifi_first_connect;
    switch(gl_run.process_off_step){
 
    case 0:
@@ -352,14 +352,14 @@ void power_off_run_handler(void)
 	
 	  g_pro.led_bar =0;
 
-	  fan_run_one_minute = 1;
+	  g_pro.fan_run_one_minute = 1;
 	  g_pro.gTimer_fan_run_one_minute =0;
 
 	  if(g_wifi.gwifi_link_net_state_flag == wifi_link_success){
             MqttData_Publish_SetOpen(0);  
-			osDelay(50);
+			vTaskDelay(100);//osDelay(50);
 	        MqttData_Publish_PowerOff_Ref() ;//
-	        osDelay(100);
+	        vTaskDelay(100);//osDelay(100);
            
 	  }
 	 
@@ -380,23 +380,24 @@ void power_off_run_handler(void)
 
      if(fan_flag == 0){
 	 	fan_flag++;
-	  fan_run_one_minute =2;
+	    g_pro.fan_run_one_minute =2;
      }
-
-	 if(fan_run_one_minute ==1){
-
-	     if(g_pro.gTimer_fan_run_one_minute  < 61){
-
-              Fan_Full_Speed();
-		 }
-		 else{
-
-		    fan_run_one_minute++;
-			FAN_Stop();
-
-		 }
-
-	 }
+	
+	 if(g_pro.fan_run_one_minute ==1){
+	 
+		   if(g_pro.gTimer_fan_run_one_minute  < 61){
+	 
+				Fan_Full_Speed();
+		   }
+		   else{
+	 
+			  g_pro.fan_run_one_minute++;
+			  FAN_Stop();
+	 
+		   }
+	 
+	   }
+	
 
      mainboard_close_all_fun();
 	

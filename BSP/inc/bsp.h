@@ -136,6 +136,7 @@ typedef struct _process{
    uint8_t key_add_dec_be_pressed_flag;
    uint8_t set_timing_or_timer_time_flag;
    uint8_t disp_59minutes_flag ;
+   uint8_t fan_run_one_minute;
 
  
 

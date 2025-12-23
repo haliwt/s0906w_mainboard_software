@@ -273,7 +273,7 @@ void USART1_IRQHandler(void)
 
       data = LL_USART_ReceiveData8(USART1);
 	  //usart1_isr_callback_handler(data);
-	  usart1_rx_callback_invoke(data);
+	  usart1_rx_displayboard_callbck_invoke(data);
 
   }
 

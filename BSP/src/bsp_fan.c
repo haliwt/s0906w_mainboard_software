@@ -55,8 +55,8 @@ static void tim16_stop_fan_pmw_config(void)
 
 void FAN_Stop(void)
 {
-   FAN_COM_SetLow(); //brake
-   FAN_CCW_SetLow();//SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
+  
+   FAN_RUN_SetLow();//SetLevel_Fan_PWMA(0);//SetLevel_Fan_PWMA(16);
   // SetLevel_Fan_PWMA(0);
   tim16_stop_fan_pmw_config();
 }
@@ -66,8 +66,8 @@ void FAN_Stop(void)
 void Fan_One_Speed(void)
 {
    static uint8_t one_speed=0xff;
-	 FAN_COM_SetLow();
-     FAN_CCW_SetHigh();
+	
+     FAN_RUN_SetHigh();
      if(one_speed != g_pro.g_fan_switch_gears_flag){
         g_pro.g_fan_switch_gears_flag++;
         one_speed = g_pro.g_fan_switch_gears_flag ;  //one_speed =2,5,8
@@ -81,8 +81,8 @@ void Fan_One_Speed(void)
 void Fan_Two_Speed(void)
 {
      static uint8_t two_speed=0xff;
-      FAN_COM_SetLow();
-     FAN_CCW_SetHigh();
+     
+     FAN_RUN_SetHigh();
       if(two_speed != g_pro.g_fan_switch_gears_flag){
          g_pro.g_fan_switch_gears_flag++;
          two_speed = g_pro.g_fan_switch_gears_flag;  //two_speed = 3;6,9
@@ -94,8 +94,7 @@ void Fan_Two_Speed(void)
  void Fan_Full_Speed(void)
 {
    static uint8_t full_speed = 0xff;
-     FAN_COM_SetLow();
-     FAN_CCW_SetHigh();
+     FAN_RUN_SetHigh();
     if(full_speed != g_pro.g_fan_switch_gears_flag){
         g_pro.g_fan_switch_gears_flag++;
          full_speed = g_pro.g_fan_switch_gears_flag;  //full_speed =1,4,7,10
@@ -127,6 +126,40 @@ void Fan_RunSpeed_Fun(void)
 
 }
 
+/**
+*@brief
+*@note
+*@param
+*@retval
+*/
+void power_onoff_run_fan_handler(void)
+{
+   if(g_pro.gpower_on==power_on){
+
+       Fan_RunSpeed_Fun();
+
+
+   }
+   else{
+  
+
+      if(g_pro.fan_run_one_minute ==1){
+
+	     if(g_pro.gTimer_fan_run_one_minute  < 61){
+
+              Fan_Full_Speed();
+		 }
+		 else{
+
+		    g_pro.fan_run_one_minute++;
+			FAN_Stop();
+
+		 }
+
+	 }
+
+   }
+}
 
 
 

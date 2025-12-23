@@ -8,7 +8,7 @@ void usart1_rx_decoder(void);
 
 
 
-void usart1_rx_callback_invoke(uint8_t data);
+void usart1_rx_displayboard_callbck_invoke(uint8_t data);
 
 
 void callback_register_usart1_rx(void);

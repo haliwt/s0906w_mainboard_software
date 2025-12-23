@@ -203,6 +203,7 @@ static void vTaskRunPro(void *pvParameters)
          wifi_led_fast_blink_handler();
 	}
 	//IWDG_Refresh();
+	//power_onoff_run_fan_handler();
 
 	vTaskDelay(pdMS_TO_TICKS(20));
 
@@ -257,6 +258,11 @@ static void vTaskStart(void *pvParameters)
 
 
      }
+//	 else{
+
+//        power_onoff_run_fan_handler();
+
+//	 }
 	
 	
 	 
