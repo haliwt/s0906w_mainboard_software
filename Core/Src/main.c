@@ -96,7 +96,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  //MX_IWDG_Init();
+  MX_IWDG_Init();
   MX_ADC1_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
@@ -107,8 +107,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	// ʹ��USART�����ж�
 
-    bsp_init();
- LL_USART_EnableIT_RXNE(USART1); //WT.EDIT 2025.09.28
+   bsp_init();
+   LL_USART_EnableIT_RXNE(USART1); //WT.EDIT 2025.09.28
    freeRTOS_Handler();
   /* USER CODE END 2 */
 

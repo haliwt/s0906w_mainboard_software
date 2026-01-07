@@ -337,7 +337,7 @@ void power_on_run_handler(void)
 void power_off_run_handler(void)
 {
 
-   static uint8_t fan_flag,wifi_first_connect;
+   static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute;
    switch(gl_run.process_off_step){
 
    case 0:
@@ -352,7 +352,7 @@ void power_off_run_handler(void)
 	
 	  g_pro.led_bar =0;
 
-	  g_pro.fan_run_one_minute = 1;
+	  fan_run_one_minute = 1;
 	  g_pro.gTimer_fan_run_one_minute =0;
 
 	  if(g_wifi.gwifi_link_net_state_flag == wifi_link_success){
@@ -380,18 +380,18 @@ void power_off_run_handler(void)
 
      if(fan_flag == 0){
 	 	fan_flag++;
-	    g_pro.fan_run_one_minute =2;
+	    fan_run_one_minute =2;
      }
 	
-	 if(g_pro.fan_run_one_minute ==1){
+	 if(fan_run_one_minute ==1){
 	 
-		   if(g_pro.gTimer_fan_run_one_minute  < 61){
+		   if(gTimer_fan_run_one_minute  < 61){
 	 
 				Fan_Full_Speed();
 		   }
 		   else{
 	 
-			  g_pro.fan_run_one_minute++;
+			  fan_run_one_minute++;
 			  FAN_Stop();
 	 
 		   }

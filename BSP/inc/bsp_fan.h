@@ -32,6 +32,6 @@ void SetLevel_Fan_PWMA(uint8_t levelval);
 //void fan_run_handler(void);
 
 
-void power_onoff_run_fan_handler(void);
+
 
 #endif /* BSP_INC_BSP_FAN_H_ */

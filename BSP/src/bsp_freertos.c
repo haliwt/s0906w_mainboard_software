@@ -175,9 +175,6 @@ static void vTaskDecoderPro(void *pvParameters)
 static void vTaskRunPro(void *pvParameters)
 {
 
-// uint8_t tx_buffer[20];
-// uint8_t tx_len;
-
   while(1){
     
 	key_handler();
@@ -202,8 +199,8 @@ static void vTaskRunPro(void *pvParameters)
 	else{
          wifi_led_fast_blink_handler();
 	}
-	//IWDG_Refresh();
-	//power_onoff_run_fan_handler();
+	
+    LL_IWDG_ReloadCounter(IWDG);
 
 	vTaskDelay(pdMS_TO_TICKS(20));
 
@@ -258,15 +255,9 @@ static void vTaskStart(void *pvParameters)
 
 
      }
-//	 else{
 
-//        power_onoff_run_fan_handler();
-
-//	 }
 	
 	
-	 
-	 //IWDG_Refresh();
 	 vTaskDelay(pdMS_TO_TICKS(20));
 
    }

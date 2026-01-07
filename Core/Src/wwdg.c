@@ -76,21 +76,21 @@ void MX_IWDG_Init(void)
   //LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_4);
   //LL_IWDG_SetReloadCounter(IWDG, 4095);
 
-  // 设置分频与重载（约 10s）
+  // 设置分频与重载（约 5s）
   //T = ((Reload+1)*Prescaler)/Flsi; //Flsi = 32KHZ .
-   LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_128); //Prescaler = 64
-   LL_IWDG_SetReloadCounter(IWDG, 2499);//Reload = 2449,
+   LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_128); //Prescaler = 128
+   LL_IWDG_SetReloadCounter(IWDG, 1249);// T =((Reload+1)*Prescaler)/32000=5s
 	
   while (LL_IWDG_IsReady(IWDG) != 1)
   {
   }
-
+  /* 立即喂狗一次，加载新参数 */
   LL_IWDG_ReloadCounter(IWDG);
   /* USER CODE BEGIN IWDG_Init 2 */
    // 启动 IWDG
     LL_IWDG_Enable(IWDG);
 
-    // 立即喂一次，加载新参数
+    /* 再喂一次，确保参数生效 */
     LL_IWDG_ReloadCounter(IWDG);
 
   /* USER CODE END IWDG_Init 2 */

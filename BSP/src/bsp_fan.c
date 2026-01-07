@@ -132,34 +132,7 @@ void Fan_RunSpeed_Fun(void)
 *@param
 *@retval
 */
-void power_onoff_run_fan_handler(void)
-{
-   if(g_pro.gpower_on==power_on){
 
-       Fan_RunSpeed_Fun();
-
-
-   }
-   else{
-  
-
-      if(g_pro.fan_run_one_minute ==1){
-
-	     if(g_pro.gTimer_fan_run_one_minute  < 61){
-
-              Fan_Full_Speed();
-		 }
-		 else{
-
-		    g_pro.fan_run_one_minute++;
-			FAN_Stop();
-
-		 }
-
-	 }
-
-   }
-}
 
 
 
