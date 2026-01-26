@@ -47,11 +47,11 @@ static StackType_t xTaskDecoderProStack[128];
 
 /* vTaskMsgPro 任务 */
 static StaticTask_t xTaskRunProTCB;
-static StackType_t xTaskRunProStack[128];
+static StackType_t xTaskRunProStack[512];
 
 /* vTaskStart 任务 */
 static StaticTask_t xTaskStartTCB;
-static StackType_t xTaskStartStack[128];
+static StackType_t xTaskStartStack[256];
 
 
 #endif 
@@ -202,7 +202,7 @@ static void vTaskRunPro(void *pvParameters)
 	
     LL_IWDG_ReloadCounter(IWDG);
 
-	vTaskDelay(pdMS_TO_TICKS(20));
+	vTaskDelay(pdMS_TO_TICKS(30));
 
 	  
     }
@@ -223,7 +223,7 @@ static void vTaskStart(void *pvParameters)
  while(1)
   {
 
-	 if(KEY_MODE_VALUE() == KEY_DOWN  &&g_pro.gpower_on == power_on){
+	 if(KEY_MODE_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
 
 	       key_mode_long_fun();
 		   if(g_key.mode_key_long_counter == COUNTER_LOCK) g_key.key_mode_flag = 11;
@@ -316,9 +316,9 @@ void AppTaskCreate (void)
 	xHandleTaskRunPro = xTaskCreateStatic(
 			vTaskRunPro,			/* 任务函数 */
 			"vTaskRunPro",			/* 任务名 */
-			256,					/* 栈大小（word） */
+			512,					/* 栈大小（word） */
 			NULL,					/* 参数 */
-			2,						/* 优先级 */
+			1,						/* 优先级 */
 			xTaskRunProStack,		/* 栈数组 */
 			&xTaskRunProTCB 		/* TCB */
 	);
@@ -326,9 +326,9 @@ void AppTaskCreate (void)
 	xHandleTaskStart = xTaskCreateStatic(
 			vTaskStart, 			/* 任务函数 */
 			"vTaskStart",			/* 任务名 */
-			128,					/* 栈大小（word） */
+			256,					/* 栈大小（word） */
 			NULL,					/* 参数 */
-			1,						/* 优先级 */
+			2,						/* 优先级 */
 			xTaskStartStack,		/* 栈数组 */
 			&xTaskStartTCB			/* TCB */
 	);

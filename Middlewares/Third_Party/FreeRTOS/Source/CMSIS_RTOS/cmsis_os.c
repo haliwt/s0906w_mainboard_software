@@ -596,7 +596,7 @@ osEvent osSignalWait (int32_t signals, uint32_t millisec)
 */
 osMutexId osMutexCreate (const osMutexDef_t *mutex_def)
 {
-#if ( configUSE_MUTEXES == 1)
+#if (configUSE_MUTEXES == 1)
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
