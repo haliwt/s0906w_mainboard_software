@@ -177,7 +177,7 @@ static void vTaskRunPro(void *pvParameters)
 
   while(1){
     
-	key_handler();
+	//key_handler();
 
     power_onoff_handler(g_pro.gpower_on);
     
@@ -200,9 +200,9 @@ static void vTaskRunPro(void *pvParameters)
          wifi_led_fast_blink_handler();
 	}
 	
-    LL_IWDG_ReloadCounter(IWDG);
+   // LL_IWDG_ReloadCounter(IWDG);
 
-	vTaskDelay(pdMS_TO_TICKS(30));
+	vTaskDelay(pdMS_TO_TICKS(100));
 
 	  
     }
@@ -261,7 +261,7 @@ static void vTaskStart(void *pvParameters)
      }
 
 
-	
+	key_handler();
 	
 	 vTaskDelay(pdMS_TO_TICKS(20));
 

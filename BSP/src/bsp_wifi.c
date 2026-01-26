@@ -29,12 +29,12 @@ static void send_connect_wifi_init(void);
 void link_wifi_to_tencent_handler(uint8_t data)
 {
     if(data == 1){//if(gpro_t.wifi_led_fast_blink_flag==1){
-        if(g_wifi.gTimer_wifi_led_fast_blink  > 119 && g_wifi.gwifi_link_net_state_flag==0){
+        if(g_wifi.gTimer_wifi_led_fast_blink  > 119 && g_wifi.gwifi_link_net_success==0){
 
            g_wifi.gTimer_wifi_led_fast_blink =0;//
            g_wifi.wifi_led_fast_blink_flag=0;
            
-           if(g_wifi.gwifi_link_net_state_flag==0){
+           if(g_wifi.gwifi_link_net_success==0){
 
               g_wifi.wifi_get_beijing_step = 10; //auto connect wifi net.
               g_wifi.gTimer_auto_detected_net_state_times = 120;
@@ -291,12 +291,12 @@ static void link_wifi_net_handler(void)
             break;
 
             case 6:
-			//if(g_wifi.gwifi_link_net_state_flag==0)wifi_led_fast_blink_handler();
+			//if(g_wifi.gwifi_link_net_success==0)wifi_led_fast_blink_handler();
 				
 
             if( g_wifi.gTimer_link_net_timer_time  > 6){
 
-             if(g_wifi.gwifi_link_net_state_flag==1){
+             if(g_wifi.gwifi_link_net_success==1){
 			
 			  g_pro.first_connect_wifi_flag =1 ;
 			  g_wifi.get_rx_beijing_time_enable=0;

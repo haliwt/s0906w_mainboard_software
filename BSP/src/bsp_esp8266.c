@@ -12,6 +12,7 @@
 
 #define  DELAY_TIME_MS   1000
 
+ uint8_t dma_tx_done;
 
  uint8_t *sub_buf;
 
@@ -45,7 +46,16 @@ uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 		return 0;
 	}
 	#else
-	 USART2_DMA_Send(pdata,len);
+	 if (pdata == NULL || len == 0)
+        return 0;
+
+    dma_tx_done = 0;
+    USART2_DMA_Send((uint8_t *)pdata, len);
+
+    // 等待 DMA 发送完成（可加超时机制）
+    uint32_t timeout = 100000;
+    while (!dma_tx_done && --timeout);
+    return (timeout == 0) ? 0 : len;
 
 	#endif
 	

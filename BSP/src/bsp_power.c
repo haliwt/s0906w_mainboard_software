@@ -149,13 +149,13 @@ void power_on_run_handler(void)
 
 	   if(g_wifi.app_timer_power_on_flag ==1){
 	      
-	   	  g_wifi.gwifi_link_net_state_flag=wifi_link_success;
+	   	  g_wifi.gwifi_link_net_success=wifi_link_success;
           MqttData_Publish_SetOpen(1);  
 		  vTaskDelay(100);
 		}
         else{
 		   
-		   	 if(g_wifi.gwifi_link_net_state_flag == wifi_link_success && g_wifi.gwifi_normal_power_on_flag == 0){
+		   	 if(g_wifi.gwifi_link_net_success == wifi_link_success && g_wifi.gwifi_normal_power_on_flag == 0){
 		       MqttData_Publish_SetOpen(1);  
 		       vTaskDelay(100);
 		    }
@@ -164,12 +164,12 @@ void power_on_run_handler(void)
 			 
 		   
 		   
-      if(g_wifi.gwifi_link_net_state_flag == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_state_flag == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
+      if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	      
 		   power_on_init_ref();
 
        }
-	   else if(g_wifi.gwifi_link_net_state_flag == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
+	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
 		  
 		   power_on_init_ref();
 		
@@ -261,10 +261,10 @@ void power_on_run_handler(void)
 	  
          if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
-		if(g_wifi.gTimer_update_dht11_data > 20 && g_wifi.gwifi_link_net_state_flag ==wifi_link_success){
+		if(g_wifi.gTimer_update_dht11_data > 20 && g_wifi.gwifi_link_net_success ==wifi_link_success){
 			   g_wifi.gTimer_update_dht11_data=0;
 
-			   if(g_wifi.gwifi_link_net_state_flag ==1){
+			   if(g_wifi.gwifi_link_net_success ==1){
 
 			       switch_dht11 = switch_dht11 ^0x01;
 				   if(switch_dht11==1){
@@ -355,7 +355,7 @@ void power_off_run_handler(void)
 	  fan_run_one_minute = 1;
 	  g_pro.gTimer_fan_run_one_minute =0;
 
-	  if(g_wifi.gwifi_link_net_state_flag == wifi_link_success){
+	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
             MqttData_Publish_SetOpen(0);  
 			vTaskDelay(100);//osDelay(50);
 	        MqttData_Publish_PowerOff_Ref() ;//
@@ -405,7 +405,7 @@ void power_off_run_handler(void)
      LED_Power_Breathing();
 	 wifi_first_connect++;
 
-	 if(g_wifi.gwifi_link_net_state_flag == wifi_link_success && wifi_first_connect > 250){
+	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){
 	 	    wifi_first_connect=0;
             MqttData_Publish_SetOpen(0);  
 			osDelay(100);

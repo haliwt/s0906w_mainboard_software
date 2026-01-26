@@ -29,7 +29,7 @@ typedef enum{
 
 typedef struct _wifi_state_ref{
 
-  uint8_t gwifi_link_net_state_flag;
+  uint8_t gwifi_link_net_success;
 
   uint8_t wifi_led_fast_blink_flag;
 

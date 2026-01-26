@@ -48,7 +48,7 @@ static WifiResponseType identify_response(const char *rx_data) {
 
 // 处理MQTT连接失败
 static void handle_mqtt_failure(void) {
-    g_wifi.gwifi_link_net_state_flag = 0;
+    g_wifi.gwifi_link_net_success = 0;
     g_wifi.wifi_led_fast_blink_flag = 0;
     g_wifi.linking_tencent_cloud_doing = 0;
     g_wifi.get_rx_beijing_time_enable = 0;
@@ -56,7 +56,7 @@ static void handle_mqtt_failure(void) {
 
 // 处理MQTT连接成功
 static void handle_mqtt_success(void) {
-    g_wifi.gwifi_link_net_state_flag = 1;
+    g_wifi.gwifi_link_net_success = 1;
     g_wifi.linking_tencent_cloud_doing = 0;
     g_wifi.auto_link_cloud_flag = 0xFF;
 }
@@ -82,7 +82,7 @@ void wifi_parse_handler(void)
             break;
             
         case WIFI_RESP_CONNECT_FAILED:
-            g_wifi.gwifi_link_net_state_flag = 0;
+            g_wifi.gwifi_link_net_success = 0;
             g_wifi.get_rx_beijing_time_enable = 0;
             g_wifi.linking_tencent_cloud_doing = 1;
             break;
@@ -96,13 +96,13 @@ void wifi_parse_handler(void)
             break;
             
         case MQTT_RESP_DISCONNECT:
-            g_wifi.gwifi_link_net_state_flag = 0;
+            g_wifi.gwifi_link_net_success = 0;
             g_wifi.get_rx_beijing_time_enable = 0;
             g_wifi.linking_tencent_cloud_doing = 1;
             break;
             
         case ERROR_RESP_208:
-            g_wifi.gwifi_link_net_state_flag = 0;
+            g_wifi.gwifi_link_net_success = 0;
             g_wifi.linking_tencent_cloud_doing = 0;
             g_wifi.wifi_led_fast_blink_flag = 0;
             break;

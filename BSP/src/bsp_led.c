@@ -129,7 +129,7 @@ void wifi_led_fast_blink_handler(void)
 
      
 
-   if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_state_flag==0){
+   if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0){
 
        
 	   if( g_pro.gTimer_led_wifi_bilnk_counter > 99){
@@ -143,11 +143,11 @@ void wifi_led_fast_blink_handler(void)
 	   
 
 	 }
-	 else if(g_wifi.gwifi_link_net_state_flag==1){
+	 else if(g_wifi.gwifi_link_net_success==1){
 
        		LED_WIFI_ON();
 	}
-	else if(g_wifi.gwifi_link_net_state_flag ==0){
+	else if(g_wifi.gwifi_link_net_success ==0){
 
              wifi_led_slowly_blink();
      }

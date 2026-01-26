@@ -44,6 +44,8 @@ typedef enum _esp8266_para{
 
 extern uint32_t randomName[1];
 
+extern uint8_t dma_tx_done ;
+
 
 
 void InitWifiModule_Hardware(void);

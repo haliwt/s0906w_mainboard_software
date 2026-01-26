@@ -213,6 +213,7 @@ void DMA1_Ch4_5_DMAMUX1_OVR_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Ch4_5_DMAMUX1_OVR_IRQn 0 */
   if(LL_DMA_IsActiveFlag_TC4(DMA1) != RESET) {
 		 LL_DMA_ClearFlag_TC4(DMA1);
+		 dma_tx_done=1;
 		 
 	 }
 	 

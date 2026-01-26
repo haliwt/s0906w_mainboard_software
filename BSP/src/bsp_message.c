@@ -111,7 +111,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  g_pro.gTimer_set_temp_counter=1;
 		 //compare_temperature_value_hanlder();
     
-         if(g_wifi.gwifi_link_net_state_flag==wifi_link_success){
+         if(g_wifi.gwifi_link_net_success==wifi_link_success){
               MqttData_Publish_SetPtc(0x01);
 	  	      osDelay(50);//HAL_Delay(350);
           }
@@ -130,7 +130,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   osDelay(5);
 		  }
             
-         if(g_wifi.gwifi_link_net_state_flag==wifi_link_success){
+         if(g_wifi.gwifi_link_net_success==wifi_link_success){
               MqttData_Publish_SetPtc(0x0);
 	  	      osDelay(50);//HAL_Delay(350);
           }
@@ -157,7 +157,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
      	 }
 
 	 	 
-         if(g_wifi.gwifi_link_net_state_flag==1){
+         if(g_wifi.gwifi_link_net_success==1){
               MqttData_Publish_SetPtc(0x01);
 	  	      osDelay(50);//HAL_Delay(350);
           }
@@ -175,7 +175,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  
 		
             
-         if(g_wifi.gwifi_link_net_state_flag==1){
+         if(g_wifi.gwifi_link_net_success==1){
               MqttData_Publish_SetPtc(0x0);
 	  	      osDelay(50);//HAL_Delay(350);
           }
@@ -198,7 +198,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		    if(g_pro.works_two_hours_interval_flag==0){
                 PLASMA_OPEN();
 		   }
-		if(g_wifi.gwifi_link_net_state_flag==1){
+		if(g_wifi.gwifi_link_net_success==1){
            MqttData_Publish_SetPlasma(1);
 		       osDelay(50);//HAL_Delay(350);
           }
@@ -212,7 +212,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		    LED_PLASMA_OFF();
 		     PLASMA_CLOSE();
 		   
-		    if(g_wifi.gwifi_link_net_state_flag==1){
+		    if(g_wifi.gwifi_link_net_success==1){
               MqttData_Publish_SetPlasma(0);
 		       osDelay(50);//HAL_Delay(350);
             }
@@ -234,7 +234,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		    if(g_pro.works_two_hours_interval_flag==0){
                 mouse_open();
 		   }
-		if(g_wifi.gwifi_link_net_state_flag==1){
+		if(g_wifi.gwifi_link_net_success==1){
            MqttData_Publish_SetUltrasonic(1);
 		       osDelay(50);//HAL_Delay(350);
           }
@@ -247,7 +247,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 					g_pro.gMouse = 0;
 					LED_MOUSE_OFF();
 					mouse_close();
-          if(g_wifi.gwifi_link_net_state_flag==1){
+          if(g_wifi.gwifi_link_net_success==1){
 				MqttData_Publish_SetUltrasonic(0);
 			    osDelay(50);//HAL_Delay(350);
 			}
@@ -269,7 +269,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  
         
 	      g_wifi.gTimer_wifi_led_fast_blink = 0; //look for wifi information 120s,timer.
-	      g_wifi.gwifi_link_net_state_flag=0 ; //clear wifi link net flag .repeat be detected wifi state.
+	      g_wifi.gwifi_link_net_success=0 ; //clear wifi link net flag .repeat be detected wifi state.
 		  g_wifi.wifi_led_fast_blink_flag=1;   // led blink flag .
           g_wifi.link_net_step = 0; //WT.EIDT 2025.05.1;
           g_pro.first_connect_wifi_flag=0;
@@ -566,7 +566,7 @@ static void copy_receive_data(uint8_t cmd,uint8_t type,uint8_t mycmd)
 			buzzer_sound();
            // g_key.key_long_power_flag =  KEY_LONG_POWER; //wifi led blink fast .
 			g_wifi.gTimer_wifi_led_fast_blink = 0; //time start 120s ->look for wifi information 120s,timer.
-			g_wifi.gwifi_link_net_state_flag=0 ; //clear wifi link net flag .repeat be detected wifi state.
+			g_wifi.gwifi_link_net_success=0 ; //clear wifi link net flag .repeat be detected wifi state.
 			g_wifi.wifi_led_fast_blink_flag=1;   // led blink flag .
 
 		}

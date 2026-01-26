@@ -199,7 +199,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
      
       case 11:
-		 g_wifi.gwifi_link_net_state_flag= 0;//net_t.wifi_link_net_success =0; //wifi_t.esp8266_login_cloud_success =0;
+		 g_wifi.gwifi_link_net_success= 0;//net_t.wifi_link_net_success =0; //wifi_t.esp8266_login_cloud_success =0;
          g_wifi.get_beijing_time_success = 0;
          gl_msg.rx_data_state =0;
          gl_msg.rx_counter=0;
@@ -242,7 +242,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 	  case 15:
 		if(wifi_rx_inputBuf[0]== '0'){   //hex :4B - "K" -fixed
-            g_wifi.gwifi_link_net_state_flag = 0;//wifi_t.esp8266_login_cloud_success =0;
+            g_wifi.gwifi_link_net_success = 0;//wifi_t.esp8266_login_cloud_success =0;
             g_wifi.get_beijing_time_success = 0;
             gl_msg.rx_data_state =0;
             gl_msg.rx_counter=0;
@@ -250,7 +250,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
         else if(wifi_rx_inputBuf[0]== '1'){
 
             //net_t.wifi_link_net_success = 1;//net_t.esp8266_login_cloud_success =1;
-             g_wifi.gwifi_link_net_state_flag = 1;
+             g_wifi.gwifi_link_net_success = 1;
              gl_msg.rx_data_state =0;
              gl_msg.rx_counter=0;
         }
@@ -290,7 +290,7 @@ void Wifi_Rx_InputInfo_Handler(void)
   }
   else if(strstr((const char*)g_wifi.wifi_rx_data_array,"+TCMQTTCONN:OK")){
     //net_t.wifi_link_net_success=1;
-    g_wifi.gwifi_link_net_state_flag=1;
+    g_wifi.gwifi_link_net_success=1;
     g_wifi.linking_tencent_cloud_doing=0;
     g_wifi.auto_link_cloud_flag=0xff;
     g_wifi.soft_ap_config_flag=0;
@@ -301,9 +301,11 @@ void Wifi_Rx_InputInfo_Handler(void)
 
     g_wifi.linking_tencent_cloud_doing=0; //release this flag. usart
     //net_t.wifi_link_net_success=0;
-     g_wifi.gwifi_link_net_state_flag=0;
+     g_wifi.gwifi_link_net_success=0;
   
       g_wifi.wifi_led_fast_blink_flag=0; 
+	  g_wifi.gTimer_auto_detected_net_state_times=0;
+      g_wifi.get_rx_beijing_time_enable=0;
 
    
   }
@@ -317,7 +319,7 @@ void Wifi_Rx_InputInfo_Handler(void)
 
     //  wifi_t.esp8266_login_cloud_success =0;
    // net_t.wifi_link_net_success=0;
-    g_wifi.gwifi_link_net_state_flag=0;
+    g_wifi.gwifi_link_net_success=0;
     g_wifi.wifi_led_fast_blink_flag=0;   //WT.EDIT .2024.07.31
 
     //wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
@@ -327,7 +329,7 @@ void Wifi_Rx_InputInfo_Handler(void)
   }
   else if(strstr((const char*)g_wifi.wifi_rx_data_array,"+TCMQTTCONN:OK")){
     //net_t.wifi_link_net_success=1;
-     g_wifi.gwifi_link_net_state_flag=1;
+     g_wifi.gwifi_link_net_success=1;
     g_wifi.linking_tencent_cloud_doing=0;
     g_wifi.auto_link_cloud_flag=0xff;
 
@@ -337,7 +339,7 @@ void Wifi_Rx_InputInfo_Handler(void)
 
 
    // net_t.wifi_link_net_success=0;//wifi_t.esp8266_login_cloud_success =0;
-    g_wifi.gwifi_link_net_state_flag=0;
+    g_wifi.gwifi_link_net_success=0;
     g_wifi.linking_tencent_cloud_doing=1;//wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
     g_wifi.get_rx_beijing_time_enable=0;
 
@@ -345,7 +347,7 @@ void Wifi_Rx_InputInfo_Handler(void)
   else if(strstr((char*)g_wifi.wifi_rx_data_array,"+TCMQTTCONN:FAIL,202")){
 
     //net_t.wifi_link_net_success=0; //wifi_t.esp8266_login_cloud_success =0;
-    g_wifi.gwifi_link_net_state_flag=0;
+    g_wifi.gwifi_link_net_success=0;
     g_wifi.wifi_led_fast_blink_flag=0;   //WT.EDIT .2024.07.31
 
     g_wifi.linking_tencent_cloud_doing=1;//wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
@@ -355,14 +357,14 @@ void Wifi_Rx_InputInfo_Handler(void)
   else if(strstr((char*)g_wifi.wifi_rx_data_array,"+TCMQTTDISCON")){
 
    // net_t.wifi_link_net_success=0;//wifi_t.esp8266_login_cloud_success =0;
-    g_wifi.gwifi_link_net_state_flag=0;
+    g_wifi.gwifi_link_net_success=0;
     g_wifi.get_rx_beijing_time_enable=0;
     g_wifi.linking_tencent_cloud_doing=1;//wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
   }
   else if(strstr((char*)g_wifi.wifi_rx_data_array,"+TCSAP:WIFI_CONNECT_FAILED")){
 
    // net_t.wifi_link_net_success=0;//wifi_t.esp8266_login_cloud_success =0;
-    g_wifi.gwifi_link_net_state_flag=0;
+    g_wifi.gwifi_link_net_success=0;
     g_wifi.get_rx_beijing_time_enable=0;
     g_wifi.linking_tencent_cloud_doing=1;//wifi_t.linking_tencent_cloud_doing=1; //release this flag. usart
     }
@@ -556,7 +558,7 @@ void Json_Parse_Command_Fun(void)
 		
          g_pro.gpower_on = power_on;
 		 g_disp.g_second_disp_flag = 1;
-	     g_wifi.gwifi_link_net_state_flag =1;
+	     g_wifi.gwifi_link_net_success =1;
           g_wifi.gwifi_normal_power_on_flag= 1;
           SendData_Set_Command(CMD_POWER,open);
 		  osDelay(5);
@@ -574,7 +576,7 @@ void Json_Parse_Command_Fun(void)
 			osDelay(100);
 
             g_pro.gpower_on = power_off;
-	        g_wifi.gwifi_link_net_state_flag =1;
+	        g_wifi.gwifi_link_net_success =1;
             g_disp.g_second_disp_flag = 1;
 			SendData_Set_Command(CMD_POWER,close);
 			osDelay(5);
@@ -826,7 +828,7 @@ void Json_Parse_Command_Fun(void)
 			  
 			   SendWifiData_To_Cmd(0x21,0x01); //smart phone is open that App timer 
                osDelay(5);
-			    g_wifi.gwifi_link_net_state_flag =1;
+			    g_wifi.gwifi_link_net_success =1;
 			   g_pro.gpower_on = power_on; //WT.EDIT 
 			   g_wifi.link_net_step = 0; //WT.EDIT 2025.05.12
 			   g_wifi.gwifi_normal_power_on_flag =0;
@@ -839,7 +841,7 @@ void Json_Parse_Command_Fun(void)
 		   
 		   
 			    g_wifi.app_timer_power_on_flag = 0;
-		         g_wifi.gwifi_link_net_state_flag =1;
+		         g_wifi.gwifi_link_net_success =1;
 
 		 		  MqttData_Publish_SetOpen(0);  
 			       osDelay(100);//HAL_Delay(350);
