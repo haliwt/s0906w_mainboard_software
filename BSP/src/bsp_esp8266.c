@@ -46,16 +46,19 @@ uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 		return 0;
 	}
 	#else
-	 if (pdata == NULL || len == 0)
-        return 0;
+//	 if (pdata == NULL || len == 0)
+//        return 0;
 
-    dma_tx_done = 0;
-    USART2_DMA_Send((uint8_t *)pdata, len);
+//    dma_tx_done = 0;
+//    USART2_DMA_Send((uint8_t *)pdata, len);
 
-    // 等待 DMA 发送完成（可加超时机制）
-    uint32_t timeout = 100000;
-    while (!dma_tx_done && --timeout);
-    return (timeout == 0) ? 0 : len;
+//    // 等待 DMA 发送完成（可加超时机制）
+//    uint32_t timeout = 100000;
+//    while (!dma_tx_done && --timeout);
+//    return (timeout == 0) ? 0 : len;
+
+
+	 USART2_DMA_Send(pdata,len);
 
 	#endif
 	

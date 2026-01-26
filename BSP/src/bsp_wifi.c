@@ -1,7 +1,7 @@
 /*
  * bsp_wifi.c
  *
- *  Created on: 2025Âπ?3Êú?7Êó?
+ *  Created on: 2025ÔøΩ?3ÔøΩ?7ÔøΩ?
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -201,7 +201,7 @@ static void link_wifi_net_handler(void)
                    g_wifi.link_net_step = 4;
            
 			
-          //  HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //Âä®Ê?ÅÊ≥®ÂÜ? 
+          //  HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //Âä®ÔøΩ?ÔøΩÊ≥®ÔøΩ? 
            at_send_data((uint8_t *)"AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"));
 	  		//osDelay(1000);//HAL_Delay(1000);
 	  		 wifi_led_fast_blink_handler();
@@ -269,7 +269,7 @@ static void link_wifi_net_handler(void)
             if(g_wifi.soft_ap_config_success==1){
 
              g_wifi.soft_ap_config_success=0;
-          //  HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//Âº?ÂßãËøûÊé?
+          //  HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//ÔøΩ?ÂßãËøûÔøΩ?
               at_send_data((uint8_t *)"AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
              wifi_led_fast_blink_handler();
         		 osDelay(200);
@@ -377,6 +377,7 @@ static void send_connect_wifi_init(void)
     
 
 }
+
 
 
 

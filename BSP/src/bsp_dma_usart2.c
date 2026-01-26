@@ -47,7 +47,7 @@ void callback_register_usart2_rx(void)
 */
 void usart2_isr_callback_fun(uint8_t data)
 {
-    #if 1
+    #if 0
      wifi_rx_inputBuf[0] =data;
      if(g_wifi.linking_tencent_cloud_doing ==1){
 
@@ -109,7 +109,7 @@ void usart2_isr_callback_fun(uint8_t data)
 
 void USART2_DMA_Send(uint8_t *txBuf,uint16_t txlen)
 {
-    if(txBuf ==NULL || txlen ==0) return ;
+     if(txBuf ==NULL || txlen ==0) return ;
 	
 	LL_DMA_DisableChannel(DMA1,LL_DMA_CHANNEL_4);
 

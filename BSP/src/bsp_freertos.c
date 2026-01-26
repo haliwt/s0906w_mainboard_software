@@ -47,7 +47,7 @@ static StackType_t xTaskDecoderProStack[128];
 
 /* vTaskMsgPro 任务 */
 static StaticTask_t xTaskRunProTCB;
-static StackType_t xTaskRunProStack[512];
+static StackType_t xTaskRunProStack[256];
 
 /* vTaskStart 任务 */
 static StaticTask_t xTaskStartTCB;
@@ -316,7 +316,7 @@ void AppTaskCreate (void)
 	xHandleTaskRunPro = xTaskCreateStatic(
 			vTaskRunPro,			/* 任务函数 */
 			"vTaskRunPro",			/* 任务名 */
-			512,					/* 栈大小（word） */
+			256,					/* 栈大小（word） */
 			NULL,					/* 参数 */
 			1,						/* 优先级 */
 			xTaskRunProStack,		/* 栈数组 */
