@@ -62,7 +62,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		 
 		 
           SendWifiData_Answer_Cmd(CMD_POWER,0x01); //WT.EDIT 2025.01.07 
-          osDelay(5);
+          osDelay(100);
         }
         else{ //close 
          
@@ -72,7 +72,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
           power_off_test_counter++;
 		
 		 SendWifiData_Answer_Cmd(CMD_POWER,0x0); //WT.EDIT 2025.01.07
-		 osDelay(5);
+		 osDelay(100);
 
         }
 
@@ -564,7 +564,7 @@ static void copy_receive_data(uint8_t cmd,uint8_t type,uint8_t mycmd)
 	   case CMD_CONNECT_WIFI:
 	   	if(mycmd == 1){
 			buzzer_sound();
-            g_key.key_long_power_flag =  KEY_LONG_POWER; //wifi led blink fast .
+           // g_key.key_long_power_flag =  KEY_LONG_POWER; //wifi led blink fast .
 			g_wifi.gTimer_wifi_led_fast_blink = 0; //time start 120s ->look for wifi information 120s,timer.
 			g_wifi.gwifi_link_net_state_flag=0 ; //clear wifi link net flag .repeat be detected wifi state.
 			g_wifi.wifi_led_fast_blink_flag=1;   // led blink flag .

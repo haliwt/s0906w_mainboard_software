@@ -9,6 +9,7 @@ void usart2_rx_callback_invoke(uint8_t data);
 void  callback_register_usart2_rx(void);
 
 
+void usart2_isr_callback_fun(uint8_t data);
 
 
 

@@ -55,7 +55,7 @@ typedef struct Msg
 	uint8_t  usData[12];
     uint8_t  ucMessageID;
     uint8_t  rx_data_counter;
-    uint8_t  disp_rx_cmd_done_flag;
+ 
     uint8_t  bcc_check_code;
     volatile uint8_t ulid;
 
@@ -64,7 +64,7 @@ typedef struct Msg
 MSG_T   gl_tMsg; /* 定义丢�个结构体用于消息队列 */
 
 uint8_t check_code;
-uint8_t rx_end_flag;
+
 
 
 /********************************************************************************
@@ -88,10 +88,10 @@ void usart1_isr_callback_handler(uint8_t data)
 				state=1; //=1
 
              }
-			else if(inputBuf[0]== 0xF0){//IAP boodloader flag
+//			else if(inputBuf[0]== 0xF0){//IAP boodloader flag
         
-	           state = 0x0A;//gl_tMsg.ucMessageID = 0xF0;
-			}
+//	           //state = 0x0A;//gl_tMsg.ucMessageID = 0xF0;
+//			}
             else
                 state=0;
 		break;
@@ -99,40 +99,34 @@ void usart1_isr_callback_handler(uint8_t data)
 
 		case 1: //#1
 
-            if(gl_tMsg.disp_rx_cmd_done_flag ==0){
+   
               /* 初始化结构体指针 */
                gl_tMsg.rx_data_counter++;
 
 	          gl_tMsg.usData[gl_tMsg.rx_data_counter] = inputBuf[0];
 
+			  if(gl_tMsg.usData[gl_tMsg.rx_data_counter] == 0xFE){
 
-              if(rx_end_flag == 1){
+                       state = 3;
+			  }
+
+	    break;
+
+		case 3:
+	
 
                 state = 0;
 
                 gl_tMsg.ulid = gl_tMsg.rx_data_counter;
-                rx_end_flag=0;
-
                 gl_tMsg.rx_data_counter =0;
 
-                gl_tMsg.disp_rx_cmd_done_flag = 1 ;
 
                 gl_tMsg.bcc_check_code=inputBuf[0];
 
                  vtask_isq_handler();
-                 //usart1_rx_decoder();
+               
 
-              }
-
-              }
-
-              if(gl_tMsg.usData[gl_tMsg.rx_data_counter] ==0xFE && rx_end_flag == 0 &&   gl_tMsg.rx_data_counter > 4){
-
-                     rx_end_flag = 1 ;
-
-              }
-
-        break;
+          break;
 
 		  }
 }
@@ -141,7 +135,7 @@ void usart1_isr_callback_handler(uint8_t data)
 void usart1_rx_decoder(void)
 {
 
-	gl_tMsg.disp_rx_cmd_done_flag = 0;
+
 	check_code =	bcc_check(gl_tMsg.usData,gl_tMsg.ulid);
 
 	if(check_code == gl_tMsg.bcc_check_code ){

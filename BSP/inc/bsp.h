@@ -145,7 +145,7 @@ typedef struct _process{
    uint8_t set_temp_first_closeptc;
  
 
-   uint8_t key_long_power_pressed;
+   //uint8_t key_long_power_pressed;
 
    uint8_t g_fan_switch_gears_flag;
    uint8_t set_temperature_success_flag;
@@ -180,6 +180,7 @@ typedef struct _process{
    uint8_t ptc_on_off_flag;
    uint8_t led_bar ;
 
+
    //timer
    
    uint8_t  gTimer_disp_time_second;
@@ -196,7 +197,7 @@ typedef struct _process{
    uint8_t gTimer_send_dht11_disp;
    uint8_t gTimer_set_temp_counter;
    uint8_t gTimer_led_wifi_bilnk_counter;
-   uint8_t gTimer_key_long_counter;
+ //  uint8_t gTimer_key_long_counter;
    uint8_t  gTimer_to_disp_counter;
    uint8_t gTimer_mainboard_fun_counter;
    

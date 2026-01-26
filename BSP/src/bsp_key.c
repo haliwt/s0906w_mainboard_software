@@ -639,13 +639,9 @@ void set_timer_timing_value_handler(void)
 
 void mode_short_key_fun(void)
 {
-
-     g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
-     g_pro.key_gtime_timer_define_state = timer_time_mode; //WT.EDIT 2025.10.17
-     set_timer_mode();
-		
-  
-  
+	g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
+	g_pro.key_gtime_timer_define_state = timer_time_mode; //WT.EDIT 2025.10.17
+	set_timer_mode();
 }
 
 // 提取的辅助函�????

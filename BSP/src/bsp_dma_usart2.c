@@ -1,6 +1,6 @@
 #include "bsp.h"
 
-static void usart2_isr_callback_handler(uint8_t data);
+//static void usart2_isr_callback_handler(uint8_t data);
 
 /**
 * @brief  call back example
@@ -35,7 +35,7 @@ void usart2_rx_callback_invoke(uint8_t data)
 void callback_register_usart2_rx(void)
 {
 
-  usart2_register_rx_callback(usart2_isr_callback_handler);
+ // usart2_register_rx_callback(usart2_isr_callback_handler);
 
 
 }
@@ -45,28 +45,28 @@ void callback_register_usart2_rx(void)
 *
 *
 */
-static void usart2_isr_callback_handler(uint8_t data)
+void usart2_isr_callback_fun(uint8_t data)
 {
-    #if 0
+    #if 1
      wifi_rx_inputBuf[0] =data;
-     if(net_t.linking_tencent_cloud_doing ==1){
+     if(g_wifi.linking_tencent_cloud_doing ==1){
 
-			gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
-			gpro_t.wifi_rx_data_counter++;
+			g_wifi.wifi_rx_data_array[g_wifi.wifi_rx_data_counter] =wifi_rx_inputBuf[0];
+			g_wifi.wifi_rx_data_counter++;
 
 			if(*wifi_rx_inputBuf==0x0A) // 0x0A = "\n"
 			{
 				
 				Wifi_Rx_InputInfo_Handler();
-				gpro_t.wifi_rx_data_counter=0;
+				g_wifi.wifi_rx_data_counter=0;
 			}
 
 	 } 
      else{
 
-		    if(wifi_t.get_rx_beijing_time_enable==1){
-					gpro_t.wifi_rx_data_array[gpro_t.wifi_rx_data_counter] = wifi_rx_inputBuf[0];
-					gpro_t.wifi_rx_data_counter++;
+		    if(g_wifi.get_rx_beijing_time_enable==1){
+					g_wifi.wifi_rx_data_array[g_wifi.wifi_rx_data_counter] = wifi_rx_inputBuf[0];
+					g_wifi.wifi_rx_data_counter++;
 					
 			}
 			else

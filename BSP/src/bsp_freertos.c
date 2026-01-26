@@ -118,15 +118,15 @@ void freeRTOS_Handler(void)
 #if 1
 static void vTaskDecoderPro(void *pvParameters)
 {
-   // BaseType_t xResult;
-	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(1000); /* 设置�?大等待时间为30ms */
-	//uint32_t ulValue;
+  BaseType_t xResult;
+	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(3000); /* 设置�?大等待时间为30ms */
+	uint32_t ulValue;
 
 
     while(1)
     {
 
-	#if 0
+	#if 1
 
 	xResult = xTaskNotifyWait(0x00000000,
 						0xFFFFFFFF,     /* Reset the notification value to 0 on */
@@ -225,10 +225,14 @@ static void vTaskStart(void *pvParameters)
 
 	 if(KEY_MODE_VALUE() == KEY_DOWN  &&g_pro.gpower_on == power_on){
 
-	       g_key.key_mode_flag = KEY_MODEL_ID;
-		   g_key.key_down_flag=0;
-	       g_key.key_up_flag=0;
+	       key_mode_long_fun();
+		   if(g_key.mode_key_long_counter == COUNTER_LOCK) g_key.key_mode_flag = 11;
+		   else{
+		        g_key.key_mode_flag = KEY_MODEL_ID;
+			    g_key.key_down_flag=0;
+			    g_key.key_up_flag=0;
 
+		   }
 	 }
 	 else if(KEY_UP_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
 
@@ -238,23 +242,24 @@ static void vTaskStart(void *pvParameters)
      }
 	 else if(KEY_DOWN_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
 
-            g_key.key_down_flag =KEY_DOWN_ID;
-			g_key.key_power_flag=0;
-	        g_key.key_mode_flag=0;
+            key_down_long_fun();
+			if(g_key.down_key_long_counter == COUNTER_LOCK)g_key.key_down_flag = 13;
+			else{
+               g_key.key_down_flag =KEY_DOWN_ID;
+			   g_key.key_power_flag=0;
+	           g_key.key_mode_flag=0;
+		   }
 
      }
      else if(KEY_POWER_VALUE()  ==KEY_DOWN){
 
-		 g_key.key_power_flag = KEY_POWER_ID;
+         key_power_longk_fun();
+	     if(g_key.power_on_key_counter == COUNTER_LOCK)g_key.key_power_flag = 9;
+         else
+		     g_key.key_power_flag = KEY_POWER_ID;
 
      }
-	 else  if(g_pro.key_long_power_pressed ==1 && g_pro.gTimer_key_long_counter > 0){
-				  g_key.key_power_flag = 0;
-                  g_key.power_on_key_counter=0;
-			      g_pro.key_long_power_pressed =0;
 
-
-     }
 
 	
 	
@@ -341,7 +346,7 @@ void AppTaskCreate (void)
 *******************************************************************************/
 void vtask_isq_handler(void)
 {
-    #if 0
+    #if 1
 
 	 BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
@@ -350,8 +355,8 @@ void vtask_isq_handler(void)
                                     eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志�? */
                                     &xHigherPriorityTaskWoken);
 
-                /* 如果xHigherPriorityTaskWoken = pdTRUE，那么�??出中断后切到当前�?高优先级任务执行 */
-                portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    /* 如果xHigherPriorityTaskWoken = pdTRUE，那么�??出中断后切到当前�?高优先级任务执行 */
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 
    #else
 

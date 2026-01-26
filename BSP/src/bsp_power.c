@@ -63,12 +63,12 @@ void power_onoff_handler(uint8_t data)
 
 			works_run_two_hours_state();
 
-			  if(g_key.key_mode_flag ==3 && g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
-        			g_key.key_mode_flag ++;
+//			  if(g_key.key_mode_flag ==3 && g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+//        			g_key.key_mode_flag ++;
 					
-					mode_short_key_fun();
+//					mode_short_key_fun();
        
-	            }
+//	            }
 			
 	    }
 
@@ -345,7 +345,7 @@ void power_off_run_handler(void)
 
    	  power_off_led();
       TM1639_Display_ON_OFF(0);
-	  g_key.key_long_power_flag  = 0;
+	 // g_key.key_long_power_flag  = 0;
 	  g_key.key_long_mode_flag = 0;
 	
 	  g_pro.key_gtime_timer_define_state = temperature_mode;
@@ -385,7 +385,7 @@ void power_off_run_handler(void)
 	
 	 if(fan_run_one_minute ==1){
 	 
-		   if(gTimer_fan_run_one_minute  < 61){
+		   if(g_pro.gTimer_fan_run_one_minute  < 61){
 	 
 				Fan_Full_Speed();
 		   }

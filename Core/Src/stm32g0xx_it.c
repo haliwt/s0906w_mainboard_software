@@ -218,7 +218,7 @@ void DMA1_Ch4_5_DMAMUX1_OVR_IRQHandler(void)
 	 
 	 /* Check if transfer error interrupt */
 	 if(LL_DMA_IsActiveFlag_TE4(DMA1) != RESET) {
-		 LL_DMA_ClearFlag_TE3(DMA1);
+		 LL_DMA_ClearFlag_TE4(DMA1);
 		 // 处理DMA传输错误
 	 }
 
@@ -300,8 +300,8 @@ void USART2_IRQHandler(void)
   
 	   //LL_USART_ClearFlag_RXNE(USART2);
 	  data = LL_USART_ReceiveData8(USART2);
-	  //usart2_isr_callback_handler(data);
-	  usart2_rx_callback_invoke(data);
+
+	   usart2_isr_callback_fun(data);
   
 	}
 
