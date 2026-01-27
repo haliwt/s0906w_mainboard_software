@@ -88,7 +88,8 @@ static void link_wifi_net_handler(void)
 				 osDelay(100);
 				 wifi_led_fast_blink_handler();
         		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
-        		vTaskDelay(1000);//HAL_Delay(1000);
+				
+        		 vTaskDelay(100);//HAL_Delay(1000);
         		 wifi_led_fast_blink_handler();
         		 osDelay(100);
                  wifi_led_fast_blink_handler();
@@ -164,7 +165,7 @@ static void link_wifi_net_handler(void)
             			
                         sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,randomName[0]);
             			at_send_data(device_massage, strlen((const char *)device_massage));
-						
+						osDelay(100);
             	  		//osDelay(1000);//HAL_Delay(1000);
             	  		 wifi_led_fast_blink_handler();
         		 osDelay(100);
@@ -243,15 +244,26 @@ static void link_wifi_net_handler(void)
                  at_send_data(device_massage, strlen((const char *)device_massage));
 				 //osDelay(1000);//HAL_Delay(1000);
 				  wifi_led_fast_blink_handler();
-        		 osDelay(200);
+        		 osDelay(100);
                  wifi_led_fast_blink_handler();
-				 osDelay(200);
+				 osDelay(100);
 				 wifi_led_fast_blink_handler();
-				 osDelay(200);
+				 osDelay(100);
 				  wifi_led_fast_blink_handler();
-				  osDelay(200);
+				  osDelay(100);
 				  wifi_led_fast_blink_handler();
-				  osDelay(200);
+				  osDelay(1100);
+				   wifi_led_fast_blink_handler();
+				     wifi_led_fast_blink_handler();
+        		 osDelay(100);
+                 wifi_led_fast_blink_handler();
+				 osDelay(100);
+				 wifi_led_fast_blink_handler();
+				 osDelay(100);
+				  wifi_led_fast_blink_handler();
+				  osDelay(100);
+				  wifi_led_fast_blink_handler();
+				  osDelay(1100);
 				   wifi_led_fast_blink_handler();
 
 
@@ -272,15 +284,29 @@ static void link_wifi_net_handler(void)
           //  HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//�?始连�?
               at_send_data((uint8_t *)"AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
              wifi_led_fast_blink_handler();
-        		 osDelay(200);
+        		 osDelay(100);
                  wifi_led_fast_blink_handler();
-				 osDelay(200);
+				 osDelay(100);
 				 wifi_led_fast_blink_handler();
-				 osDelay(200);
+				 osDelay(100);
 				  wifi_led_fast_blink_handler();
-				  osDelay(200);
+				  osDelay(100);
 				  wifi_led_fast_blink_handler();
-				  osDelay(200);
+				  osDelay(100);
+				  wifi_led_fast_blink_handler();
+				  osDelay(100);
+				  wifi_led_fast_blink_handler();
+				  osDelay(100);
+				  wifi_led_fast_blink_handler();
+				  osDelay(100);
+				  wifi_led_fast_blink_handler();
+				  osDelay(100);
+				  wifi_led_fast_blink_handler();
+				  osDelay(100);
+				  wifi_led_fast_blink_handler();
+				   osDelay(100);
+				  wifi_led_fast_blink_handler();
+				   osDelay(100);
 				  wifi_led_fast_blink_handler();
 
             g_wifi.link_net_step = 6;
@@ -303,7 +329,7 @@ static void link_wifi_net_handler(void)
 			  g_wifi.wifi_led_fast_blink_flag=0; //WT.EDIT 2025.05.12
                 
                SendWifiData_One_Data(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-               osDelay(5);
+               osDelay(100);
 			   g_wifi.link_net_step = 0xfe;
               
 				
@@ -313,7 +339,8 @@ static void link_wifi_net_handler(void)
                   g_wifi.wifi_led_fast_blink_flag=0;
                   g_wifi.link_net_step = 8;
                   SendWifiData_One_Data(0x1F,0x00) ;	 //Link wifi net is fail .WT.EDTI .2024.08.31
-                   g_wifi.link_net_step = 0xff;
+                    osDelay(100);
+				   g_wifi.link_net_step = 0xff;
            
                 }
                 
@@ -341,7 +368,7 @@ static void send_connect_wifi_init(void)
           case 1:
            g_wifi.wifi_led_fast_blink_flag=0; //WT.EDIT 2025.05.12
            Subscriber_Data_FromCloud_Handler();
-			osDelay(50);
+			osDelay(200);
 		     g_pro.first_connect_wifi_flag = 2;
 		  break;
 
@@ -351,14 +378,14 @@ static void send_connect_wifi_init(void)
 			 
 				 MqttData_Publish_SetOpen(0x01);
 		         
-		         osDelay(50);
+		         osDelay(200);
 				 g_pro.first_connect_wifi_flag = 3;
 		    break;
 
 			case 3:
 		         Publish_Data_ToTencent_Initial_Data();
 				
-                  osDelay(50);
+                  osDelay(200);
 			g_pro.first_connect_wifi_flag = 4;
 
 			break;
@@ -367,7 +394,7 @@ static void send_connect_wifi_init(void)
 
 				Subscriber_Data_FromCloud_Handler();
 				
-	             osDelay(50);
+	             osDelay(200);
 
 				 g_pro.first_connect_wifi_flag = 0xff;
 			break;

@@ -138,7 +138,7 @@ void SendWifiData_To_PanelWindSpeed(uint8_t speed) {
 void SendWifiData_Answer_Cmd(uint8_t cmd, uint8_t cmdata) 
 {
     uint8_t cmdData[1] = {cmdata};
-    FillFrame_Response(outputBuf, cmd,cmdData ,0);
+    FillFrame_Response(outputBuf,cmd,cmdData ,0);
     TransmitData(outputBuf,7);
 }
 // smart phone send command

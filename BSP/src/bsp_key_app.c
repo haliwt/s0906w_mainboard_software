@@ -79,7 +79,7 @@ void key_handler(void)
 static void handle_power_key(void)
 {
     
-    if (KEY_POWER_VALUE() == KEY_UP && g_key.power_on_key_counter < LONG_PRESS_THRESHOLD)
+    if (KEY_POWER_VALUE() == KEY_UP)
     {
         g_key.key_power_flag = 0;
         g_key.power_on_key_counter = 0;
