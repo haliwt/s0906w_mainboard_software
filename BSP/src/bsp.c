@@ -82,8 +82,13 @@ void mainboard_fun_handler(void)
 		LED_DRY_ON();
 	    if(g_disp.g_second_disp_flag == 1){
 	    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-	    osDelay(5);
+	    osDelay(100);
 	    }
+        if(g_wifi.gwifi_link_net_success==1){
+		 MqttData_Publish_SetPtc(0x01);
+	  	 osDelay(300);
+		 
+         }
 	}
 	else{
 		LED_DRY_OFF();
@@ -92,6 +97,12 @@ void mainboard_fun_handler(void)
 	    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
 	    osDelay(5);
 	    }
+
+		if(g_wifi.gwifi_link_net_success==1){
+		 MqttData_Publish_SetPtc(0x0);
+	  	 osDelay(300);
+		 
+         }
 
 	}
 

@@ -6,10 +6,10 @@
  */
 #include "bsp.h"
 
-static void copy_receive_data(uint8_t cmd,uint8_t type,uint8_t mycmd);
+static void copy_receive_data(uint8_t *pdata);
 
 
-uint8_t power_off_test_counter;
+
 uint8_t temperature_value;
 uint8_t power_on_counter;
 
@@ -39,7 +39,8 @@ uint8_t bcc_check(const unsigned char *data, int len)
 **********************************************************************/
 void receive_data_from_displayboard(uint8_t *pdata)
 {
-  
+
+   static uint8_t ptc_on_default=0xff, ptc_off_default=0xff;
    if(pdata[1] == 0x02){ //the second display board DEVICE_ID 
 
     switch(pdata[2]){
@@ -51,13 +52,10 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      case 0x01: //表示�??机指�??
 
-        if(pdata[3] == 0x00){ // comand 判断是数据还是命�??
-
-		
-          if(pdata[4] == 0x01){ 
+       if(pdata[3] == 0x01){ 
 		  g_disp.g_second_disp_flag = 1;
 		  g_pro.gpower_on = power_on;
-		  power_on_counter++;
+	
           buzzer_sound();
 		 
 		 
@@ -69,14 +67,14 @@ void receive_data_from_displayboard(uint8_t *pdata)
           buzzer_sound();
 		  g_disp.g_second_disp_flag = 1;
 		  g_pro.gpower_on = power_off;
-          power_off_test_counter++;
+        
 		
 		 SendWifiData_Answer_Cmd(CMD_POWER,0x0); //WT.EDIT 2025.01.07
 		 osDelay(100);
 
         }
 
-    	}
+    	
 
      break;
 
@@ -95,21 +93,23 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      case 0x02: //PTC打开关闭指令
 
-     if(pdata[3] == 0x00){ //判断是否是数据，或�?�指令�?�知�?? 00- 命令和指令，下一个字节是指令 �??0x0F- 数据，下�??个字节是数据个数
-	 	if(pdata[4]==0x01){
+    // if(pdata[3] == 0x00){ //判断是否是数据，或�?�指令�?�知�?? 00- 命令和指令，下一个字节是指令 �??0x0F- 数据，下�??个字节是数据个数
+	 	if(pdata[3]==0x01){
 	 	if(g_pro.gpower_on == power_on){
 		 
           buzzer_sound();
           g_pro.gDry = 1;
 		   LED_DRY_ON();
 		  //manual close flag :
-		   SendWifiData_Answer_Cmd(CMD_PTC,0x01); //WT.EDIT 2025.01.07
+		 
 		  g_pro.g_manual_shutoff_dry_flag = 0;
 		  if(g_pro.works_two_hours_interval_flag==0){
 		      DRY_OPEN();
 		  }
 		  g_pro.gTimer_set_temp_counter=1;
 		 //compare_temperature_value_hanlder();
+		   SendWifiData_Answer_Cmd(CMD_PTC,0x01); //WT.EDIT 2025.01.07
+		   vTaskDelay(100);
     
          if(g_wifi.gwifi_link_net_success==wifi_link_success){
               MqttData_Publish_SetPtc(0x01);
@@ -118,7 +118,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
        
        }
        }
-       else if(pdata[4] == 0x0){
+       else if(pdata[3] == 0x0){
 	   	 if(g_pro.gpower_on == power_on){
 		  g_pro.g_manual_shutoff_dry_flag = 1;
           buzzer_sound();
@@ -127,69 +127,22 @@ void receive_data_from_displayboard(uint8_t *pdata)
           DRY_CLOSE();
 		  if(g_disp.g_second_disp_flag ==1){
 		  SendWifiData_Answer_Cmd(CMD_PTC,0x0); //WT.EDIT 2025.01.07
-		   osDelay(5);
+		   osDelay(100);
 		  }
             
          if(g_wifi.gwifi_link_net_success==wifi_link_success){
               MqttData_Publish_SetPtc(0x0);
-	  	      osDelay(50);//HAL_Delay(350);
+	  	      osDelay(200);//HAL_Delay(350);
           }
 	   	 }
        }
-     	}
+     
      break;
 
-	 
+	 case 0x03: //PLASMA 打开关闭指令
 
-
-	  case 0x22: //notice cmd ,PTC打开关闭指令,buzzer don't sound,温度对比后的指令
-
-	  if(pdata[3]==0){ //表示是指�??
-
-      if(pdata[4] == 0x01){
-        
-        if(g_pro.gpower_on == power_on){
-
-        g_pro.gDry = 1;
-		LED_DRY_ON();
-     	if(g_pro.works_two_hours_interval_flag==0){
-		  	DRY_OPEN();
-     	 }
-
-	 	 
-         if(g_wifi.gwifi_link_net_success==1){
-              MqttData_Publish_SetPtc(0x01);
-	  	      osDelay(50);//HAL_Delay(350);
-          }
-       
-       
-				}
-	  }
-      else if(pdata[4] == 0x0){
-        if(g_pro.gpower_on == power_on){
-
-         
-            g_pro.gDry =0;
-		    LED_DRY_OFF();
-          	DRY_CLOSE();
-		  
-		
-            
-         if(g_wifi.gwifi_link_net_success==1){
-              MqttData_Publish_SetPtc(0x0);
-	  	      osDelay(50);//HAL_Delay(350);
-          }
-	   	 
-       
-      }
-		}
-	  	}
-     break;
-
-     case 0x03: //PLASMA 打开关闭指令
-
-       if(pdata[3] == 0x00){
-	    if(pdata[4]==0x01){
+      
+	    if(pdata[3]==0x01){
        if(g_pro.gpower_on == power_on){
 	   	  
             buzzer_sound();
@@ -200,12 +153,12 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   }
 		if(g_wifi.gwifi_link_net_success==1){
            MqttData_Publish_SetPlasma(1);
-		       osDelay(50);//HAL_Delay(350);
+		       osDelay(200);//HAL_Delay(350);
           }
            
         }
         }
-        else if(pdata[4] == 0x0){
+        else if(pdata[3] == 0x0){
         if(g_pro.gpower_on == power_on){ 
             buzzer_sound();
 			g_pro.gPlasma = 0;
@@ -214,19 +167,19 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   
 		    if(g_wifi.gwifi_link_net_success==1){
               MqttData_Publish_SetPlasma(0);
-		       osDelay(50);//HAL_Delay(350);
+		       osDelay(200);//HAL_Delay(350);
             }
            
         }
         }
-       	}
+       	
       break;
 
 
       case 0x04: //ultrasonic  打开关闭指令
 
-       if(pdata[3] == 0x00){ // 00-》表示是指令或�?��?�知，不是数据，下一个数据就是命令或者�?�知
-	 	if(pdata[4]==0x01){
+        // 00-》表示是指令或�?��?�知，不是数据，下一个数据就是命令或者�?�知
+	 	if(pdata[3]==0x01){
           if(g_pro.gpower_on == power_on){ 
             buzzer_sound();
 			g_pro.gMouse = 1;
@@ -236,12 +189,12 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   }
 		if(g_wifi.gwifi_link_net_success==1){
            MqttData_Publish_SetUltrasonic(1);
-		       osDelay(50);//HAL_Delay(350);
+		       osDelay(200);//HAL_Delay(350);
           }
            
           }
        }
-        else if(pdata[4] == 0x0){ //close 
+        else if(pdata[3] == 0x0){ //close 
 		 if(g_pro.gpower_on == power_on){ 
 					buzzer_sound();
 					g_pro.gMouse = 0;
@@ -249,22 +202,22 @@ void receive_data_from_displayboard(uint8_t *pdata)
 					mouse_close();
           if(g_wifi.gwifi_link_net_success==1){
 				MqttData_Publish_SetUltrasonic(0);
-			    osDelay(50);//HAL_Delay(350);
+			    osDelay(200);//HAL_Delay(350);
 			}
 
         }
        }
     
-       	}
+       	
      break;
 
       case 0x05: // link wifi command
 
-       if(pdata[3] == 0x00){
-	 	if(pdata[4]==0x01){
+ 
+	 	if(pdata[3]==0x01){
         if(g_pro.gpower_on == power_on){ 
 		  SendWifiData_Answer_Cmd(0x05,0x01); //WT.EDIT 2024.12.28
-		  osDelay(5);
+		  osDelay(100);
           buzzer_sound();
 		  
         
@@ -276,56 +229,34 @@ void receive_data_from_displayboard(uint8_t *pdata)
          }
         
        	}
-       	}
+       	
 
      break;
 
      case 0x06: //buzzer sound command 
 
-        if(pdata[3] == 0x00){  //buzzer sound 
-          if(pdata[4]==0x01){
+        
+        if(pdata[3]==0x01){
            buzzer_sound();
         }
-        else if(pdata[4] == 0x0){ // don't buzzer sound .
-        
-        }
-    	}
+       
 
      break;
 
-
-	 case 0x10: //has two display board.
-
-	   if(pdata[3] == 0x00){ //notice message.
-	   	   if(pdata[4]==0x01){
-           g_disp.g_second_disp_flag = 1; 
-
-	       }
-		   else{
-		   g_disp.g_second_disp_flag = 0; 
-		   	}
-	   	}
-		
-     break;
 
      case 0x16 : //buzzer sound command with answer .
 
       
-       if(pdata[3] == 0x00){  //buzzer sound 
+         if(pdata[3]==0x01){
 
-	      if(pdata[4]==0x01){
-
-          if(g_pro.gpower_on == power_on){  
-          SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2025.01.07
-          osDelay(5);
           buzzer_sound();
+          SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2025.01.07
+          osDelay(100);
+          
 
           }
-	      }
-       	}
-
-
-     break;
+	      
+       break;
 
 
       case 0x1A: //read 温度数据
@@ -366,50 +297,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         }
       break;
 
-	  
-	 case 0x2A: //display board set up tempeature value send data to mainboard
-	 
-			if(pdata[3] == 0x0F){ //数据
-
-			   if(pdata[4]==0x01){ // has dat only one value ,next receive byte is value
-	         
-			   if(g_pro.gpower_on == power_on){ 
-
-			    g_pro.g_dispboard_set_temp_flag = 1;
-		
-                g_pro.g_manual_shutoff_dry_flag =0;
-               
-				g_pro.key_set_temperature_flag = 1;
-				g_pro.gTimer_input_set_temp_timer=0;
-				
-			    if(pdata[5] < 41 && pdata[5]> 19){
-					g_pro.gset_temperture_value = pdata[5];
-					
-					g_wifi.wifi_set_temperature_value = pdata[5];
-			    }
-				g_pro.gTimer_set_temp_counter=10;
-		        compare_temperature_value_hanlder();
-
-      
-				if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
-				   TM1639_Display_Temperature(g_pro.gset_temperture_value);
-				  
-
-				}
-				
-             }
-
-			 }
-				
-	 
-			}
-	 break;
-
-	  
-
-    
-
-     case 0x27: //smart phone set AI mode
+	 case 0x27: //smart phone set AI mode
 
       if(pdata[3] == 0x02){ //don't AI
        
@@ -424,19 +312,125 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      break;
 
-	case 0x2B: //set up timer timing value 
-		if(pdata[3] == 0x0F){ //数据
 
-			if(pdata[4]==0x01){ // has dat only one value ,next receive byte is value
+	  case 0x22: //notice  don't command,温度对比后的指令
 
-			if(g_pro.gpower_on == power_on){ 
+       if(pdata[3] == 0x01){
+        
+        if(g_pro.gpower_on == power_on && g_pro.g_manual_shutoff_dry_flag ==0){
+
+        g_pro.gDry = 1;
+		LED_DRY_ON();
+     	if(g_pro.works_two_hours_interval_flag==0 ){
+		  	DRY_OPEN();
+     	 }
+         if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
+		 	  ptc_on_default = g_pro.gDry;
+              MqttData_Publish_SetPtc(0x01);
+	  	      osDelay(200);//HAL_Delay(350);
+         }
+       
+       
+		}
+	  }
+      else if(pdata[3] == 0x0){
+        if(g_pro.gpower_on == power_on){
+
+         
+            g_pro.gDry =0;
+		    LED_DRY_OFF();
+          	DRY_CLOSE();
+		  
+		
+            
+         if(g_wifi.gwifi_link_net_success==1 && ptc_off_default != g_pro.gDry){
+		 	  ptc_off_default = g_pro.gDry;
+              MqttData_Publish_SetPtc(0x0);
+	  	      osDelay(200);//HAL_Delay(350);
+          }
+	   	 
+       
+      }
+		}
+	  	
+     break;
+
+	  
+	 case 0x2A: //display board set up tempeature value send data to mainboard
+	 
+			if(pdata[4] == 0x01){ //数据
+  				if(pdata[5] < 41 && pdata[5]> 19 && g_pro.gpower_on == power_on){
+				    g_pro.g_dispboard_set_temp_flag = 1;
+			
+	                g_pro.g_manual_shutoff_dry_flag =0;
+	               
+					g_pro.key_set_temperature_flag = 1;
+					g_pro.gTimer_input_set_temp_timer=0;
+					g_pro.gset_temperture_value = pdata[5];
+					g_wifi.wifi_set_temperature_value = pdata[5];
+
+					if(g_pro.gset_temperture_value > g_pro.g_temperature_value){
+                   
+				           g_pro.gDry = 1;
+		                   LED_DRY_ON();
+					       if(g_pro.works_two_hours_interval_flag==0){
+					        DRY_OPEN();
+					       }
+
+										       
+				         if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
+						 	  ptc_on_default = g_pro.gDry;
+				              MqttData_Publish_SetPtc(0x01);
+					  	      osDelay(200);//HAL_Delay(350);
+				          }
+									      
+
+					}
+					else{
+
+					    g_pro.gDry = 0;
+						 LED_DRY_OFF();
+					    DRY_CLOSE();
+
+										    
+				         if(g_wifi.gwifi_link_net_success==1 && ptc_off_default != g_pro.gDry){
+						 	  ptc_off_default = g_pro.gDry;
+				              MqttData_Publish_SetPtc(0x0);
+					  	      osDelay(200);//HAL_Delay(350);
+				          }
+
+					 }
+					
+				    g_pro.gTimer_set_temp_counter=10;
+		      
+                   if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
+				      TM1639_Display_Temperature(g_pro.gset_temperture_value);
+				  
+                    }
+				
+             }
+
+		}
+				
+	 
+			
+	 break;
+
+	  case 0x2B: //set up timer timing value 
+		
+
+			if(pdata[4]==0x01 && g_pro.gpower_on == power_on){ // has dat only one value ,next receive byte is value
+
+		
+
+			    if(pdata[5] > 0){
                 g_pro.gdisp_timer_hours_value = pdata[5];
 			
 				g_pro.key_gtime_timer_define_state = timer_time_mode; //WT.EDTI 2025.10.17
 				g_pro.gTimer_switch_set_timer_times = 0;
 			     g_pro.gTimer_timer_time_second=0;
 				 g_pro.disp_timer_minutes_value=0;
-				 //g_pro.key_add_dec_be_pressed_flag=TIMER_TIME;
+				
 				  g_pro.set_timing_or_timer_time_flag = TIMER_TIME;//WT.EDIT 2025.10.18
 			  
 			    //g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;//input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
@@ -444,10 +438,8 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
                 }
 			 }
-
-			}
 			else{
-	           if(g_pro.gpower_on == power_on){ 
+	           
 
 			    g_pro.gAI = 1;
 				LED_AI_ON();
@@ -468,18 +460,18 @@ void receive_data_from_displayboard(uint8_t *pdata)
 					TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 					osDelay(500);
 				}
-	           	}
+	           	
+		   		
 		   }
-       }
-	 	
+		}
      break;
 
-	 case 0x5C: // display has been set up timer timing value 
-		if(pdata[3] == 0x0F){ //数据
+	 case 0x6C: // display  Synchronization Time don't beijing timing.
+		if(pdata[4] == 0x03){ //数据
 
-			if(pdata[4]==0x03){ // has dat only one value ,next receive byte is value
+			 if(pdata[5] < 25 && pdata[6] < 61 && pdata[7] < 61){
 
-				if(g_pro.gpower_on == power_on){
+				
 
                 if(g_pro.gdisp_timer_hours_value > 1){
 				   g_pro.gdisp_timer_hours_value = pdata[5];
@@ -487,15 +479,33 @@ void receive_data_from_displayboard(uint8_t *pdata)
                 }
 				g_pro.disp_timer_minutes_value=pdata[6];
 				g_pro.gTimer_timer_time_second=pdata[7];
-				}
+				
+			}
+		} 
+		
+	 	
+     break;
+
+
+	 case 0x6B: // display  Synchronization Timer  Time
+		if(pdata[4] == 0x03){ //数据
+
+			 if(pdata[5] < 25 && pdata[6] < 61 && pdata[7] < 61){
+              
+	   
+                  g_pro.gdisp_hours_value = pdata[5];
+                  g_pro.gdisp_minutes_value=pdata[6];
+				  g_pro.gTimer_disp_time_second=pdata[7];
 			}
 		}
+		 
+		
 	 	
      break;
 
      case 0xFF: //copy send cmd acknowlege
 
-	 copy_receive_data(pdata[3],pdata[4],pdata[5]);
+	 copy_receive_data(pdata);
 
 	       
      break;
@@ -518,29 +528,18 @@ void receive_data_from_displayboard(uint8_t *pdata)
 	*Return Ref:NO
 	*
 *********************************************************************/
-static void copy_receive_data(uint8_t cmd,uint8_t type,uint8_t mycmd)
+static void copy_receive_data(uint8_t *pdata)
 {
-     switch(cmd){
+     switch(pdata[3]){
 
        case CMD_POWER:
 
    
-	        if(type == 0x0){
-				if(mycmd ==1){
-                 g_disp.g_second_disp_flag =1;
-			    }
-                else{
-             
-			    g_disp.g_second_disp_flag =0;
-			   }
-            }
-	 
-
 	   break;
 	  
 
 	   case CMD_PTC :
-	   	if(mycmd == 1){
+	   	if(pdata[4] == 1){
 
 		   buzzer_sound();
 		   g_pro.gDry=1;
@@ -562,7 +561,7 @@ static void copy_receive_data(uint8_t cmd,uint8_t type,uint8_t mycmd)
 	   break;
 
 	   case CMD_CONNECT_WIFI:
-	   	if(mycmd == 1){
+	   	if(pdata[4] == 1){
 			buzzer_sound();
            // g_key.key_long_power_flag =  KEY_LONG_POWER; //wifi led blink fast .
 			g_wifi.gTimer_wifi_led_fast_blink = 0; //time start 120s ->look for wifi information 120s,timer.

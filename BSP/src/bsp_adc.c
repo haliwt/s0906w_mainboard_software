@@ -61,7 +61,7 @@ void adc_detected_hundler(void)
 			 #endif 
 			  if(counter_error > 9){
 			      g_pro.fan_warning=1;
-				  g_pro.ptc_on_off_flag = 1;
+			
 			      g_pro.gDry =0;
 				  DRY_CLOSE();
 

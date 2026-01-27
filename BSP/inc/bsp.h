@@ -177,7 +177,6 @@ typedef struct _process{
    
    uint8_t ptc_warning;
    uint8_t fan_warning ;
-   uint8_t ptc_on_off_flag;
    uint8_t led_bar ;
 
 

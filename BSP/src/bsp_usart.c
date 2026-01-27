@@ -99,15 +99,14 @@ void usart1_isr_callback_handler(uint8_t data)
 
 		case 1: //#1
 
-   
-              /* 初始化结构体指针 */
+             /* 初始化结构体指针 */
                gl_tMsg.rx_data_counter++;
 
 	          gl_tMsg.usData[gl_tMsg.rx_data_counter] = inputBuf[0];
 
 			  if(gl_tMsg.usData[gl_tMsg.rx_data_counter] == 0xFE){
 
-                       state = 3;
+                   state = 3;
 			  }
 
 	    break;
@@ -131,7 +130,13 @@ void usart1_isr_callback_handler(uint8_t data)
 		  }
 }
 
-
+/**
+*
+*@brief
+*@notice
+*@param
+*
+**/
 void usart1_rx_decoder(void)
 {
 

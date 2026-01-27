@@ -22,11 +22,6 @@ typedef enum{
 }wifi_send_cmd_name;
 
 
-
-
-
-
-
 typedef struct _wifi_state_ref{
 
   uint8_t gwifi_link_net_success;

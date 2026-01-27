@@ -6,9 +6,9 @@
 
 
 /**
-* @brief  call back example
-*
-*
+* @brief  call back example,
+* @notice //The second display board baud rate = 9600bps  usart1
+* @param
 */
 void usart1_dma_send(uint8_t *txbuf,uint16_t txlen)
 {
