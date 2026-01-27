@@ -57,7 +57,7 @@ typedef struct Msg
     uint8_t  rx_data_counter;
  
     uint8_t  bcc_check_code;
-    volatile uint8_t ulid;
+    uint8_t   data_length;
 
 }MSG_T;
 
@@ -81,10 +81,9 @@ void usart1_isr_callback_handler(uint8_t data)
     switch(state)
 		{
 		case 0:  //#0
-			if(inputBuf[0] == 0xA5){  // 0xA5 -- second display board ID
+			if(data == 0xA5){  // 0xA5 -- second display board ID
                gl_tMsg.rx_data_counter=0;
-			   gl_tMsg.ulid=0;
-               gl_tMsg.usData[gl_tMsg.rx_data_counter] = inputBuf[0];
+               gl_tMsg.usData[gl_tMsg.rx_data_counter] = data;
 				state=1; //=1
 
              }
@@ -92,8 +91,7 @@ void usart1_isr_callback_handler(uint8_t data)
         
 //	           //state = 0x0A;//gl_tMsg.ucMessageID = 0xF0;
 //			}
-            else
-                state=0;
+           
 		break;
 
 
@@ -102,25 +100,29 @@ void usart1_isr_callback_handler(uint8_t data)
              /* 初始化结构体指针 */
                gl_tMsg.rx_data_counter++;
 
-	          gl_tMsg.usData[gl_tMsg.rx_data_counter] = inputBuf[0];
+	          gl_tMsg.usData[gl_tMsg.rx_data_counter] = data;
 
 			  if(gl_tMsg.usData[gl_tMsg.rx_data_counter] == 0xFE){
 
-                   state = 3;
+                   state = 2;
 			  }
 
 	    break;
 
-		case 3:
+		case 2:
 	
+				gl_tMsg.rx_data_counter++;
+				
+			    gl_tMsg.usData[gl_tMsg.rx_data_counter] = data;
 
-                state = 0;
+               
 
-                gl_tMsg.ulid = gl_tMsg.rx_data_counter;
+                gl_tMsg.data_length = gl_tMsg.rx_data_counter;
                 gl_tMsg.rx_data_counter =0;
+				 state = 0;
 
 
-                gl_tMsg.bcc_check_code=inputBuf[0];
+                gl_tMsg.bcc_check_code= data;
 
                  vtask_isq_handler();
                
@@ -141,7 +143,7 @@ void usart1_rx_decoder(void)
 {
 
 
-	check_code =	bcc_check(gl_tMsg.usData,gl_tMsg.ulid);
+	check_code =	bcc_check(gl_tMsg.usData,gl_tMsg.data_length);
 
 	if(check_code == gl_tMsg.bcc_check_code ){
 

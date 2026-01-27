@@ -37,7 +37,6 @@ void receive_data_from_displayboard(uint8_t *pdata)
 {
 
    static uint8_t ptc_on_default=0xff, ptc_off_default=0xff;
-   if(pdata[1] == 0x02){ //the second display board DEVICE_ID 
 
     switch(pdata[2]){
 
@@ -512,9 +511,9 @@ void receive_data_from_displayboard(uint8_t *pdata)
      
      }
 
-   }
+ }
  
-}
+
 
 /********************************************************************
 	*

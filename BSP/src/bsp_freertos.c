@@ -27,7 +27,7 @@
 
 
 
-uint8_t inputBuf[1];
+
 
 
 /***********************************************************************************************************
@@ -131,7 +131,7 @@ static void vTaskDecoderPro(void *pvParameters)
 	xResult = xTaskNotifyWait(0x00000000,
 						0xFFFFFFFF,     /* Reset the notification value to 0 on */
 						&ulValue,        /* 保存ulNotifiedValue到变量ulValue�? */
-						portMAX_DELAY);//portMAX_DELAY);  /* 阻塞时间30ms，释放CUP控制�?,给其它任务执行的权限*/
+						xMaxBlockTime);//portMAX_DELAY);  /* 阻塞时间30ms，释放CUP控制�?,给其它任务执行的权限*/
 
 	if( xResult == pdPASS )
 	{

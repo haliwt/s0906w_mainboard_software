@@ -9,7 +9,7 @@
 #define BSP_INC_BSP_FREERTOS_H_
 #include "main.h"
 
-extern uint8_t inputBuf[1];
+
 
 
 void freeRTOS_Handler(void);

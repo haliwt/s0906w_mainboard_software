@@ -14,7 +14,7 @@
 #define FRAME_END 0xFE
 
 
-//uint8_t  inputBuf[4];
+
 uint8_t  inputCmd[30];
 uint8_t  wifiInputBuf[1];
 
