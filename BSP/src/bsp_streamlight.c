@@ -121,7 +121,7 @@ void Check_LED_Hardware_Test(void)
             TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, 0xFF); // 第3位显示8
             
             // 等待1秒让用户观察数码管显示
-            HAL_Delay(1000);
+            vTaskDelay(1000);//HAL_Delay(1000);
             
             // LED测试
             uint8_t test_result = LED_TEST_OK;
@@ -160,7 +160,8 @@ void Check_LED_Hardware_Test(void)
                 }
                 
                 // 延时500ms
-                HAL_Delay(500);
+                //HAL_Delay(500);
+                vTaskDelay(500);
             }
             
             // 测试完成，显示结果
@@ -178,7 +179,7 @@ void Check_LED_Hardware_Test(void)
             }
             
             // 等待2秒显示结果
-            HAL_Delay(2000);
+            vTaskDelay(2000);//HAL_Delay(2000);
             
             // 关闭所有LED
             StreamLight_All_LED_Off();

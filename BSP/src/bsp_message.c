@@ -8,11 +8,7 @@
 
 static void copy_receive_data(uint8_t *pdata);
 
-
-
-uint8_t temperature_value;
-uint8_t power_on_counter;
-
+//uint8_t ptc_on_default=0xff, ptc_off_default=0xff;
 /**********************************************************************
     *
     *Function Name:uint8_t bcc_check(const unsigned char *data, int len) 
@@ -111,9 +107,10 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   SendWifiData_Answer_Cmd(CMD_PTC,0x01); //WT.EDIT 2025.01.07
 		   vTaskDelay(100);
     
-         if(g_wifi.gwifi_link_net_success==wifi_link_success){
+         if(g_wifi.gwifi_link_net_success==wifi_link_success && ptc_on_default != g_pro.gDry){
+		 	  ptc_on_default = g_pro.gDry;
               MqttData_Publish_SetPtc(0x01);
-	  	      osDelay(50);//HAL_Delay(350);
+	  	      osDelay(200);//HAL_Delay(350);
           }
        
        }
@@ -130,7 +127,8 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   osDelay(100);
 		  }
             
-         if(g_wifi.gwifi_link_net_success==wifi_link_success){
+         if(g_wifi.gwifi_link_net_success==wifi_link_success && ptc_off_default != g_pro.gDry){
+		 	  ptc_off_default = g_pro.gDry;
               MqttData_Publish_SetPtc(0x0);
 	  	      osDelay(200);//HAL_Delay(350);
           }
@@ -360,9 +358,10 @@ void receive_data_from_displayboard(uint8_t *pdata)
 	 
 			if(pdata[4] == 0x01){ //数据
   				if(pdata[5] < 41 && pdata[5]> 19 && g_pro.gpower_on == power_on){
-				    g_pro.g_dispboard_set_temp_flag = 1;
+				   
 			
 	                g_pro.g_manual_shutoff_dry_flag =0;
+					g_pro.first_set_ptc_on=0;//recoder over set up temperature value .
 	               
 					g_pro.key_set_temperature_flag = 1;
 					g_pro.gTimer_input_set_temp_timer=0;
@@ -389,7 +388,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 					else{
 
 					    g_pro.gDry = 0;
-						 LED_DRY_OFF();
+						LED_DRY_OFF();
 					    DRY_CLOSE();
 
 										    
@@ -400,10 +399,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				          }
 
 					 }
-					
-				    g_pro.gTimer_set_temp_counter=10;
-		      
-                   if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
+					if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
 				      TM1639_Display_Temperature(g_pro.gset_temperture_value);
 				  
                     }

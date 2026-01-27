@@ -553,17 +553,17 @@ void Json_Parse_Command_Fun(void)
 	case OPEN_ON_ITEM:
       
 		MqttData_Publish_SetOpen(1);  
-		HAL_Delay(100);//osDelay(100);//HAL_Delay(100);
+		vTaskDelay(200);//HAL_Delay(100);//osDelay(100);//HAL_Delay(100);
 
         Publish_Data_ToTencent_Initial_Data();
-	    HAL_Delay(200);
+	    vTaskDelay(300);//HAL_Delay(300);
 		
          g_pro.gpower_on = power_on;
 		 g_disp.g_second_disp_flag = 1;
 	     g_wifi.gwifi_link_net_success =1;
           g_wifi.gwifi_normal_power_on_flag= 1;
-          SendData_Set_Command(CMD_POWER,open);
-		  osDelay(5);
+          SendData_Set_Command(0x20,open);
+		  osDelay(100);
 
        
 		buzzer_temp_on=0;
@@ -580,7 +580,7 @@ void Json_Parse_Command_Fun(void)
             g_pro.gpower_on = power_off;
 	        g_wifi.gwifi_link_net_success =1;
             g_disp.g_second_disp_flag = 1;
-			SendData_Set_Command(CMD_POWER,close);
+			SendData_Set_Command(0x20,close);
 			osDelay(100);
           
 			buzzer_temp_on=0;
@@ -607,7 +607,7 @@ void Json_Parse_Command_Fun(void)
 	 
          if(g_disp.g_second_disp_flag == 1){
 			 SendWifiData_To_Cmd(0x02,0x01);
-			 osDelay(50);//HAL_Delay(5);
+			 osDelay(100);//HAL_Delay(5);
          }
 		
          }
@@ -650,7 +650,7 @@ void Json_Parse_Command_Fun(void)
 			LED_PLASMA_OFF();
 			if(g_disp.g_second_disp_flag == 1){
 			SendWifiData_To_Cmd(0x03,0x0);
-	  	    osDelay(5);//HAL_Delay(5);
+	  	    osDelay(50);//HAL_Delay(5);
 			 }
 	  	}
       
@@ -666,7 +666,7 @@ void Json_Parse_Command_Fun(void)
               LED_PLASMA_ON();
               if(g_disp.g_second_disp_flag == 1){
 					SendWifiData_To_Cmd(0x03,0x01);
-	  	   			osDelay(5);//HAL_Delay(5);
+	  	   			osDelay(50);//HAL_Delay(5);
               }
 	  	}
   
@@ -776,7 +776,7 @@ void Json_Parse_Command_Fun(void)
 		    }
 			if(g_disp.g_second_disp_flag == 1){
 				SendWifiData_One_Data(0x2A, g_wifi.wifi_set_temperature_value); //smart phone set temperature value .
-				osDelay(50);//HAL_Delay(10);
+				osDelay(100);//HAL_Delay(10);
 		    }
 			
        }

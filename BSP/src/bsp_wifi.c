@@ -88,7 +88,7 @@ static void link_wifi_net_handler(void)
 				 osDelay(100);
 				 wifi_led_fast_blink_handler();
         		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
-        		//HAL_Delay(1000);
+        		vTaskDelay(1000);//HAL_Delay(1000);
         		 wifi_led_fast_blink_handler();
         		 osDelay(100);
                  wifi_led_fast_blink_handler();

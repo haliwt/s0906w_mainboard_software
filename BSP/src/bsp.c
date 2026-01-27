@@ -50,7 +50,7 @@ void bsp_init(void)
 ******************************************************************************/
 void mainboard_fun_handler(void)
 {
- 
+  static uint8_t ptc_on_default =0xff, ptc_off_default= 0xff;
   if(g_pro.gTimer_mainboard_fun_counter > 4){// 2s  //300 ~= 6s, 50 ~=1s
        g_pro.gTimer_mainboard_fun_counter=0;
 
@@ -77,30 +77,33 @@ void mainboard_fun_handler(void)
    
    	
 
-	if(g_pro.gDry == 1 && read_wifi_dry_value()==0){
+	if(g_pro.gDry == 1 && g_pro.g_manual_shutoff_dry_flag ==0 && g_pro.works_two_hours_interval_flag ==0){
 		DRY_OPEN();
 		LED_DRY_ON();
-	    if(g_disp.g_second_disp_flag == 1){
-	    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-	    osDelay(100);
-	    }
-        if(g_wifi.gwifi_link_net_success==1){
+//	    if(g_disp.g_second_disp_flag == 1){
+//	    	sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
+//	    	osDelay(100);
+//	    }
+        if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
+		 ptc_on_default = g_pro.gDry;
 		 MqttData_Publish_SetPtc(0x01);
-	  	 osDelay(300);
+	  	 osDelay(200);
 		 
          }
 	}
 	else{
+		g_pro.gDry = 0;
 		LED_DRY_OFF();
 		DRY_CLOSE();
-	    if(g_disp.g_second_disp_flag == 1){
-	    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-	    osDelay(5);
-	    }
+//	    if(g_disp.g_second_disp_flag == 1){
+//		    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
+//		    osDelay(100);
+//	    }
 
-		if(g_wifi.gwifi_link_net_success==1){
+		if(g_wifi.gwifi_link_net_success==1 && ptc_off_default != g_pro.gDry){
+			ptc_off_default = g_pro.gDry;
 		 MqttData_Publish_SetPtc(0x0);
-	  	 osDelay(300);
+	  	 osDelay(200);
 		 
          }
 
@@ -147,11 +150,12 @@ static void mainboard_special_fun(void)
 
 	}
 
-	if(g_pro.gDry == 1){
+	if(g_pro.gDry == 1 && g_pro.g_manual_shutoff_dry_flag ==0){
 		DRY_OPEN();
 		LED_DRY_ON();
 	}
 	else{
+		g_pro.gDry =0;
 		DRY_CLOSE();
 		LED_DRY_OFF();
 
@@ -248,7 +252,7 @@ void works_run_two_hours_state(void)
       }
      #else 
 
-      if(g_pro.gTimer_two_hours_counter  > 600){ //10*60s=600s
+      if(g_pro.gTimer_two_hours_counter  > 600){ // 10 minutes *60=  minutes =
          g_pro.gTimer_two_hours_counter =0; 
 		 
 		 g_pro.delay_run_adc_counter=0;

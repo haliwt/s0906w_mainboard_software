@@ -87,68 +87,6 @@ void adc_detected_hundler(void)
 
 }
 
-//void Get_PTC_Temperature_Voltage(uint32_t channel,uint8_t times)
-//{
-//    static uint8_t times_i;
-//	uint16_t adcx;
-//	
-//	//adcx = Get_Adc_Average(channel,times);
-
-//    ptc_temp_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
-
-//    if(times_i < 2){
-//	    times_i++;
-//	    ptc_temp_voltage=2000;
-//	
-//	}
-//	#ifdef DEBUG
-//      printf("ptc= %d",gctl_t.ptc_temp_voltage);
-//	#endif 
-
-//	 Judge_PTC_Temperature_Value(ptc_temp_voltage);
-
-//     
-//}
-
-
-/*****************************************************************
-	*
-	*Function Name: void Judge_PTC_Temperature_Value(void)
-	*Function: PTC adc read voltage
-	*Input Ref: NO
-	*Return Ref: No
-	*
-	*
-*****************************************************************/
-////static void Judge_PTC_Temperature_Value(uint16_t adc_ptc)
-//{
-//  
-// #if HAINAN
-//  if(adc_ptc < 215 || adc_ptc == 215){  //115 degree 
-//         g_pro.ptc_warning =1;
-
-//		 g_pro.gDry=0 ;
-
-//         DRY_CLOSE();//Ptc_Off();
-//		 LED_DRY_OFF();//LED_PTC_ICON_OFF();
-//		 vTaskDelay(pdMS_TO_TICKS(50));//HAL_Delay(50);
-//		
-//      
-
-//		Publish_Data_Warning(ptc_temp_warning,1);
-//		HAL_Delay(200);  
-//        
-//		MqttData_Publish_SetPtc(0);
-//		HAL_Delay(100);  
-//		
-//		Buzzer_Ptc_Error_Sound();
-//		
-//			  
-//				
-//	   	}
-//  #endif 
-//}
-
 /*****************************************************************
 	*
 	*Function Name: static void Judge_Fan_State(void)
@@ -162,15 +100,15 @@ static void Judge_Fan_State(void)
 {
 
 		  Publish_Data_Warning(fan_warning,g_pro.fan_warning);
-	      //Delay(200);//HAL_Delay(200);
+	       vTaskDelay(200);//HAL_Delay(200);
 
 		   MqttData_Publis_SetFan(0);
-	       //Delay(100);//HAL_Delay(100);
+	       vTaskDelay(200);//Delay(100);//HAL_Delay(100);
 
 		  Buzzer_Fan_Error_Sound();
 
 		  SendWifiData_To_Cmd(0x09,0x01);//Fan fault warning .
-		  osDelay(5);
+		  osDelay(100);
 
 }
 /*****************************************************************

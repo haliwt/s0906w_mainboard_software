@@ -136,13 +136,15 @@ typedef struct _process{
    uint8_t key_add_dec_be_pressed_flag;
    uint8_t set_timing_or_timer_time_flag;
    uint8_t disp_59minutes_flag ;
+   uint8_t first_set_ptc_on;
+   uint8_t first_rcoder_ptc_on_flag ;
   
 
  
 
    uint8_t g_humidity_value;
    uint8_t g_temperature_value;
-   uint8_t set_temp_first_closeptc;
+
  
 
    //uint8_t key_long_power_pressed;
@@ -170,7 +172,7 @@ typedef struct _process{
    uint8_t timer_powerOff_oneHour_flag;
    uint8_t current_temperature;
    
-   uint8_t g_dispboard_set_temp_flag ;
+
 
    int8_t gdisp_timer_hours_value;
    int8_t  disp_timer_minutes_value;

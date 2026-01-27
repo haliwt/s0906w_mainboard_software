@@ -7,10 +7,6 @@
 #include "bsp.h"
 
 
-
-
-
-
 typedef struct{
 
   uint8_t process_on_step;
@@ -63,12 +59,6 @@ void power_onoff_handler(uint8_t data)
 
 			works_run_two_hours_state();
 
-//			  if(g_key.key_mode_flag ==3 && g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
-//        			g_key.key_mode_flag ++;
-					
-//					mode_short_key_fun();
-       
-//	            }
 			
 	    }
 
@@ -207,6 +197,8 @@ void power_on_run_handler(void)
 	   g_pro.ptc_warning =0;
 	   g_pro.gTimer_display_adc_value=0;
 	   g_pro.delay_run_adc_counter=0;
+	   g_pro.first_set_ptc_on=0;
+	   g_pro.first_rcoder_ptc_on_flag =0;
 
 	   g_pro.disp_59minutes_flag =0;
 	   g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18

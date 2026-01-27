@@ -79,13 +79,13 @@ void wifi_auto_detected_link_state(void)
         
           if(g_pro.gpower_on == power_off){
 		     MqttData_Publish_PowerOff_Ref();
-             HAL_Delay(50);
+             vTaskDelay(200);//HAL_Delay(50);
 
           }
 		  
           
           Subscriber_Data_FromCloud_Handler();
-          HAL_Delay(50);
+          vTaskDelay(200);//HAL_Delay(50);
          
      }
 
@@ -191,7 +191,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
              flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Subscriber_Data_FromCloud_Handler();
-            osDelay(50);//HAL_Delay(200)
+            osDelay(200);//HAL_Delay(200)
              g_wifi.wifi_get_beijing_step = 1; //g_wifi.get_beijing_flag = 1;
 
             
@@ -200,7 +200,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
             flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Update_Dht11_Totencent_Value();
-            osDelay(30);//HAL_Delay(200) //WT.EDIT 2024.08.10
+            osDelay(200);//HAL_Delay(200) //WT.EDIT 2024.08.10
             
             // gpro_t.get_beijing_flag = 1;
             g_wifi.wifi_get_beijing_step = 1;
@@ -294,7 +294,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
     		
     		Get_BeiJing_Time_Cmd();
-    	    osDelay(100);//HAL_Delay(20); //WT.EDIT .2024.08.10//HAL_Delay(20);
+    	    osDelay(300);//HAL_Delay(20); //WT.EDIT .2024.08.10//HAL_Delay(20);
     	    beijing_step =1;
 
          break;
@@ -423,7 +423,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
           //  WIFI_IC_ENABLE();
        
     		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
-            HAL_Delay(1000);
+            vTaskDelay(1000);//HAL_Delay(1000);
             g_wifi.gTimer_auto_link_net_time =0;
             auto_link_net_flag=1;
 
@@ -453,7 +453,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
              auto_link_net_flag =2;
    
 	       // HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//å¼?å§‹è¿žæŽ?
-            HAL_Delay(1000);
+            vTaskDelay(1000);//HAL_Delay(1000);
          
            
 		
