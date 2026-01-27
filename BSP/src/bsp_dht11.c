@@ -307,7 +307,7 @@ void updateDht11_toDisplayBoard_value(void)
 	    
 		if(dht11_data.temperature!=0 && dht11_data.humidity!=0){
 		    sendData_Real_TimeHum(dht11_data.humidity,dht11_data.temperature);
-			osDelay(5);
+			osDelay(100);
 			copy_dht11_temp= dht11_data.temperature;
 		    copy_dht11_hum = dht11_data.humidity;
 			g_pro.current_temperature= copy_dht11_temp;
@@ -318,14 +318,14 @@ void updateDht11_toDisplayBoard_value(void)
 		  if(counter > 4){//continuce 4 times is confirm is dht11_data.temperature=0
 		      counter=0;
 		      sendData_Real_TimeHum(dht11_data.humidity,dht11_data.temperature);
-			  osDelay(5);
+			  osDelay(100);
 
 
 		  }
 		  else{
 		  	  counter=0;
 			  sendData_Real_TimeHum(copy_dht11_hum,copy_dht11_temp);
-			  osDelay(5);
+			  osDelay(100);
 		  }
 
 		}
@@ -334,7 +334,7 @@ void updateDht11_toDisplayBoard_value(void)
 	else{
 	    sendData_Real_TimeHum(copy_dht11_hum,copy_dht11_temp);
 		   
-		osDelay(5);
+		osDelay(100);
 
 
 	}

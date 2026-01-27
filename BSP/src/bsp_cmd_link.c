@@ -299,12 +299,12 @@ void SendWifiData_Answer_Cmd(uint8_t cmd ,uint8_t data)
 }
 #else 
 // 公共函数：填充帧数据
-void FillFrame(uint8_t *buf, uint8_t cmd, uint8_t *data, uint8_t dataLen) 
+void FillFrame(uint8_t *buf, uint8_t cmd, uint8_t icmd,uint8_t *data, uint8_t dataLen) 
 {
     buf[0] = FRAME_HEADER;
     buf[1] = 0x10; // Mainboard device number
     buf[2] = cmd;
-    buf[3] = data[0]; //(dataLen > 0) ? 0x0F : 0x00; // Data or command
+    buf[3] = icmd; //(dataLen > 0) ? 0x0F : 0x00; // Data or command
 
 	if(buf[3] !=0x0F){ //is command or notice
        buf[4] = 0x00;
@@ -371,10 +371,10 @@ void TransmitData(uint8_t *buf, uint8_t size)
 }
 
 // 发送实时温湿度数据
-void sendData_Real_TimeHum(uint8_t hum, uint8_t temp) 
+void sendData_Real_TimeHum(uint8_t hum,uint8_t temp) 
 {
     uint8_t data[2] = {hum, temp};
-    FillFrame(outputBuf, 0x1A, data, 2);
+    FillFrame(outputBuf,0x1A,0x0F,data, 2);
     TransmitData(outputBuf, 9);
 }
 
@@ -382,7 +382,7 @@ void sendData_Real_TimeHum(uint8_t hum, uint8_t temp)
 void SendWifiData_To_PanelTime(uint8_t hours, uint8_t minutes, uint8_t seconds) 
 {
     uint8_t data[3] = {hours, minutes, seconds};
-    FillFrame(outputBuf, 0x1C, data, 3);
+    FillFrame(outputBuf, 0x1C,0x0F,data,3);
     TransmitData(outputBuf, 10);
 }
 
@@ -390,14 +390,14 @@ void SendWifiData_To_PanelTime(uint8_t hours, uint8_t minutes, uint8_t seconds)
 void SendData_Set_Command(uint8_t cmd, uint8_t data) 
 {
     uint8_t cmdData[1] = {data};
-    FillFrame(outputBuf, cmd, cmdData, 0);
+    FillFrame(outputBuf,cmd,cmdData[0],cmdData, 0);
     TransmitData(outputBuf, 7);
 }
 
 // 发送风速数据
 void SendWifiData_To_PanelWindSpeed(uint8_t speed) {
     uint8_t data[1] = {speed};
-    FillFrame(outputBuf, 0x1E, data, 1);
+    FillFrame(outputBuf, 0x1E,0x0F, data, 1);
     TransmitData(outputBuf, 8);
 }
 
@@ -412,12 +412,45 @@ void SendWifiData_Answer_Cmd(uint8_t cmd, uint8_t cmdata)
 void SendWifiData_To_Cmd(uint8_t cmd,uint8_t data)
 {
 	 uint8_t cmdData[1] = {data};
-    FillFrame(outputBuf, cmd, cmdData, 0);
+    FillFrame(outputBuf,cmd,cmdData[0],cmdData, 0);
     TransmitData(outputBuf, 7);
 
 }
 
+/********************************************************************************
+	**
+	*Function Name:sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
+	*Function :
+	*Input Ref: humidity value and temperature value
+	*Return Ref:NO
+	*
+*******************************************************************************/
+#if 0
+void sendData_Real_TimeHum(uint8_t hum,uint8_t temp)
+{
 
+	//crc=0x55;
+	outputBuf[0]=0x5A; //head : mainboard Board = 0x5A
+	outputBuf[1]=0x10; //main board device No: 0x10
+	outputBuf[2]=0x1A; //command : temperature of value 
+	outputBuf[3]=0x0F; // 0x0F : is data ,don't command data.
+	outputBuf[4]= 0x02; //data of length: 0x01 - 2 byte.
+	outputBuf[5] =hum;
+    outputBuf[6] =temp;
+
+    outputBuf[7] = 0xFE;
+    outputBuf[8] = bcc_check(outputBuf,8);
+	
+	//for(i=3;i<6;i++) crc ^= outputBuf[i];
+	//outputBuf[i]=crc;
+	transferSize=9;
+	
+    TransmitData(outputBuf, transferSize);
+
+	
+
+}
+#endif 
 /***********************************************************************
 	*
 	*Function Name:void SendWifiData_One_Data(uint8_t cmd,uint8_t data)
@@ -457,7 +490,7 @@ void SendWifiData_One_Data(uint8_t cmd,uint8_t data)
 
 	
 	uint8_t cmdata[1] = {data};
-	FillFrame(outputBuf, cmd, cmdata, 1);
+	FillFrame(outputBuf,cmd,0x0F,cmdata, 1);
 	TransmitData(outputBuf, 8);
 
 }
@@ -474,7 +507,7 @@ void SendWifidata_Two_Data(uint8_t cmd,uint8_t datacmd)
 {
    
     uint8_t cmdata[1] = {datacmd};
-	FillFrame(outputBuf, cmd, cmdata, 2);
+	FillFrame(outputBuf,cmd,0x0F,cmdata, 2);
 	TransmitData(outputBuf, 9);
 
 }
