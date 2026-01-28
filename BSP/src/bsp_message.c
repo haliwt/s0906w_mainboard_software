@@ -74,18 +74,6 @@ void receive_data_from_displayboard(uint8_t *pdata)
      break;
 
 
-	 case 0x11: //has the second display board exist .this notice 
-		   if(pdata[3] == 0x00){ // comand 判断是数据还是命�??
-		   
-				  
-		if(pdata[4] == 0x01){ 
-
-	       g_disp.g_second_disp_flag = 1;
-
-		}
-	}
-	 break;
-
      case 0x02: //PTC打开关闭指令
 
     // if(pdata[3] == 0x00){ //判断是否是数据，或�?�指令�?�知�?? 00- 命令和指令，下一个字节是指令 �??0x0F- 数据，下�??个字节是数据个数
@@ -241,6 +229,18 @@ void receive_data_from_displayboard(uint8_t *pdata)
         if(pdata[3]==0x01){
 		   g_disp.g_second_disp_flag=1;
            buzzer_sound();
+        }
+       
+
+     break;
+
+	 
+
+     case 0x11: //notice has outside the second connector display board 
+
+        if(pdata[3]==0x01){
+		   g_disp.g_second_disp_flag=1;
+          
         }
        
 

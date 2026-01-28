@@ -87,4 +87,7 @@ uint8_t read_dht11_temperature_value(void);
 
 uint8_t read_sensor_dht11_data(void);
 
+void Update_Dht11_toDisplayBoard_Value(void);
+
+
 #endif /* BSP_INC_BSP_DHT11_H_ */

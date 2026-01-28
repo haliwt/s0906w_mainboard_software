@@ -262,7 +262,7 @@ void power_on_run_handler(void)
 				   if(switch_dht11==1){
 		         	   Subscriber_Data_FromCloud_Handler();
 				
-	                   vTaskDelay(50);
+	                   vTaskDelay(200);
 				   	}
 				    else{
 					Update_Dht11_Totencent_Value()	;
@@ -300,11 +300,10 @@ void power_on_run_handler(void)
 
 	 case 5:
      
-	    if(g_disp.g_second_disp_flag == 1 &&  g_pro.gTimer_to_disp_counter > 2){    
+	    if(g_pro.gTimer_to_disp_counter > 3){    
 			 g_pro.gTimer_to_disp_counter=0;
-			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-			 vTaskDelay(100);
-
+			  Update_Dht11_toDisplayBoard_Value();
+		
 		}
 	     gl_run.process_on_step =1;
 

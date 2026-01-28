@@ -682,11 +682,18 @@ static void set_timer_mode(void)
     LED_AI_OFF();
     HUMIDITY_ICON_OFF();
     TEMP_ICON_OFF();
-	
+   if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
 	if(g_pro.gdisp_hours_value >0)
        TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 	else 
 	   TM1639_Display_3_Digit(g_pro.gdisp_timer_minutes_value);
+
+	}
+	else{
+	  
+       TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+
+	}
 
 }
 

@@ -307,9 +307,10 @@ void updateDht11_toDisplayBoard_value(void)
 	    
 		if(dht11_data.temperature!=0 && dht11_data.humidity!=0){
 		    sendData_Real_TimeHum(dht11_data.humidity,dht11_data.temperature);
-			osDelay(5);
+			osDelay(50);
 			copy_dht11_temp= dht11_data.temperature;
 		    copy_dht11_hum = dht11_data.humidity;
+			
 			g_pro.current_temperature= copy_dht11_temp;
 		
 		}
@@ -318,14 +319,15 @@ void updateDht11_toDisplayBoard_value(void)
 		  if(counter > 4){//continuce 4 times is confirm is dht11_data.temperature=0
 		      counter=0;
 		      sendData_Real_TimeHum(dht11_data.humidity,dht11_data.temperature);
-			  osDelay(5);
+		     // sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
+			  osDelay(50);
 
 
 		  }
 		  else{
 		  	  counter=0;
 			  sendData_Real_TimeHum(copy_dht11_hum,copy_dht11_temp);
-			  osDelay(5);
+			  osDelay(50);
 		  }
 
 		}
@@ -334,7 +336,7 @@ void updateDht11_toDisplayBoard_value(void)
 	else{
 	    sendData_Real_TimeHum(copy_dht11_hum,copy_dht11_temp);
 		   
-		osDelay(5);
+		osDelay(50);
 
 
 	}
@@ -363,6 +365,26 @@ void Update_Dht11_Totencent_Value(void)
     }
 
 }
+
+void Update_Dht11_toDisplayBoard_Value(void)
+{
+    static uint8_t error_flag;
+    error_flag= dht11_read_data(&dht11_data.temperature, &dht11_data.humidity);
+
+	//Dht11_Read_TempHumidity_Handler(&DHT11);
+	if(error_flag == 0){
+	 g_pro.g_temperature_value = dht11_data.temperature;
+	 g_pro.g_humidity_value= dht11_data.humidity;
+
+    if(g_disp.g_second_disp_flag == 1){ 
+		sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
+    	osDelay(100);//HAL_Delay(100);
+    }
+
+    }
+
+}
+
 
 
 
