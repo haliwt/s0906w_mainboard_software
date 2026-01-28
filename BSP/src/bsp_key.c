@@ -589,19 +589,21 @@ void set_timer_timing_value_handler(void)
 			g_pro.key_gtime_timer_define_state = temperature_mode; //define UP and down key is set temperature value 
 			g_pro.set_timing_or_timer_time_flag=TIMER_TIME;
 			g_pro.gTimer_timer_time_second=0;
-			if(g_pro.gdisp_timer_hours_value > 1)
-			   g_pro.disp_timer_minutes_value=60;//60 minutes
-			else
-			   g_pro.disp_timer_minutes_value=0;//60 minutes
 			
-		
+//			if(g_pro.gdisp_timer_hours_value > 1)
+//			   g_pro.disp_timer_minutes_value=60;//60 minutes
+//			else
+//			   g_pro.disp_timer_minutes_value=0;//60 minutes
+			
+	
 			g_pro.disp_59minutes_flag = 0;
             SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
-	        osDelay(5);
+	        osDelay(100);
 
                
 			}
 			else{
+			
 				g_pro.gAI = 1;
 				LED_AI_ON();
 				g_pro.gdisp_timer_hours_value=0;
@@ -610,7 +612,7 @@ void set_timer_timing_value_handler(void)
 
 				g_pro.key_gtime_timer_define_state = temperature_mode;
 				SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
-	            osDelay(5);
+	            osDelay(100);
 			}
 		}
 		else{ //times is done ,exit this process
@@ -625,7 +627,7 @@ void set_timer_timing_value_handler(void)
 		 
         }
    	}
-    else if(g_pro.set_timing_or_timer_time_flag==TIMER_TIME){ //has been set up timer timing value .
+    else if(g_pro.set_timing_or_timer_time_flag==TIMER_TIME && g_key.key_mode_long_flag !=1){ //has been set up timer timing value .
 
        if(g_pro.gTimer_timer_time_second > 59){
 	       g_pro.gTimer_timer_time_second=0;
@@ -636,21 +638,16 @@ void set_timer_timing_value_handler(void)
 		   #endif 
 
 		   if(g_pro.disp_timer_minutes_value< 0){
-			  g_pro.disp_timer_minutes_value =59;
 
-		      
-                    
-			  if(g_pro.gdisp_timer_hours_value==1 || g_pro.disp_59minutes_flag ==1){ //WT.EDIT 2025.10.06
-			     g_pro.gdisp_timer_hours_value--;
-                 g_pro.disp_59minutes_flag = 1;
+		       g_pro.disp_timer_minutes_value =59;
+			  
+              if(g_pro.gdisp_timer_hours_value==1){
+                  g_pro.gdisp_timer_hours_value=0;
+				  g_pro.disp_59minutes_flag = 1;
               }
-			  else{
-
-			      g_pro.gdisp_timer_hours_value--;
-				  if(g_pro.gdisp_timer_hours_value==1 || g_pro.disp_59minutes_flag ==1){ //WT.EDIT 2025.10.06
-                      g_pro.gdisp_timer_hours_value--;
-				   g_pro.disp_59minutes_flag = 1;
-                 }
+			  else {
+                  g_pro.gdisp_timer_hours_value--;
+				
 
              }
 			 
@@ -660,7 +657,7 @@ void set_timer_timing_value_handler(void)
                    buzzer_sound();
 			       g_pro.gpower_on = power_off;
 			       SendData_Set_Command(CMD_POWER,close);
-	               osDelay(5);
+	               osDelay(100);
 
 			  }
 			 
@@ -681,30 +678,23 @@ void mode_short_key_fun(void)
 	set_timer_mode();
 }
 
-// 提取的辅助函�????
-//static void set_normal_mode(void)
-//{
-//    uint8_t error_dht11_flag;
-//	g_pro.gAI = 1;
-//    LED_AI_ON();
-//    HUMIDITY_ICON_OFF();
-//    TEMP_ICON_ON();
-	
-//    error_dht11_flag=DHT11_Display_Data(0); // 显示温度
-//    if(error_dht11_flag == 0)DHT11_Display_Data(0);
-    
-//}
+
 
 static void set_timer_mode(void)
 {
-    g_pro.gAI = 0;
+
+   if(g_pro.set_timing_or_timer_time_flag==TIMER_TIME){
+	g_pro.gAI = 0;
     LED_AI_OFF();
     HUMIDITY_ICON_OFF();
     TEMP_ICON_OFF();
 	if(g_pro.disp_59minutes_flag ==0)
-     TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+       TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 	else 
-	  TM1639_Display_3_Digit(g_pro.disp_timer_minutes_value);
+	   TM1639_Display_3_Digit(g_pro.disp_timer_minutes_value);
+   }
+  
+   
 	
 }
 

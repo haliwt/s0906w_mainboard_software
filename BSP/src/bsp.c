@@ -54,14 +54,8 @@ void mainboard_fun_handler(void)
   if(g_pro.gTimer_mainboard_fun_counter > 4){// 2s  //300 ~= 6s, 50 ~=1s
        g_pro.gTimer_mainboard_fun_counter=0;
 
-   if(g_key.key_mode_long_flag ==2){
 
-      g_key.key_mode_long_flag++;
-
-  }
-  
-
-   if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
+  if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
 	  g_pro.gAI = 0;
   
       LED_AI_OFF();
@@ -85,9 +79,9 @@ void mainboard_fun_handler(void)
 //	    	osDelay(100);
 //	    }
         if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
-		 ptc_on_default = g_pro.gDry;
-		 MqttData_Publish_SetPtc(0x01);
-	  	 osDelay(200);
+			 ptc_on_default = g_pro.gDry;
+			 MqttData_Publish_SetPtc(0x01);
+		  	 osDelay(200);
 		 
          }
 	}
@@ -102,8 +96,8 @@ void mainboard_fun_handler(void)
 
 		if(g_wifi.gwifi_link_net_success==1 && ptc_off_default != g_pro.gDry){
 			ptc_off_default = g_pro.gDry;
-		 MqttData_Publish_SetPtc(0x0);
-	  	 osDelay(200);
+		 	MqttData_Publish_SetPtc(0x0);
+	  		 osDelay(200);
 		 
          }
 

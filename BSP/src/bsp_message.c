@@ -421,12 +421,16 @@ void receive_data_from_displayboard(uint8_t *pdata)
 			    if(pdata[5] > 0){
                 g_pro.gdisp_timer_hours_value = pdata[5];
 			
-				g_pro.key_gtime_timer_define_state = timer_time_mode; //WT.EDTI 2025.10.17
+		
 				g_pro.gTimer_switch_set_timer_times = 0;
-			     g_pro.gTimer_timer_time_second=0;
-				 g_pro.disp_timer_minutes_value=0;
+			 
 				
-				  g_pro.set_timing_or_timer_time_flag = TIMER_TIME;//WT.EDIT 2025.10.18
+
+				g_pro.key_gtime_timer_define_state = temperature_mode; //define UP and down key is set temperature value 
+			    g_pro.set_timing_or_timer_time_flag=TIMER_TIME;
+			    g_pro.gTimer_timer_time_second=0;
+				g_pro.disp_timer_minutes_value=0;
+				  
 			  
 			    //g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;//input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
                 if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){

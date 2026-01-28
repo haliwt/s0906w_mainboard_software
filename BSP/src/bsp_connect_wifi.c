@@ -93,10 +93,8 @@ void wifi_auto_detected_link_state(void)
 	   if(dc_power_on==1){
 	   	   dc_power_on ++;
 	       SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-		    osDelay(5);
-
-
-	   }
+		   osDelay(100);
+        }
    
    
 }
@@ -160,7 +158,7 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
     else if(g_wifi.gwifi_link_net_success ==0 && power_on_login_tencent_cloud_flag ==4){
        power_on_login_tencent_cloud_flag++;
         SendWifiData_To_Cmd(0x1F,0x00);
-	    osDelay(5);
+	    osDelay(100);
     }
 }
 
@@ -233,14 +231,14 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
 				g_wifi.wifi_get_beijing_step = 2;
            		g_wifi.linking_tencent_cloud_doing  =0; //receive from tencent command state .
-                SendWifiData_One_Data(0x1F,0x01); //connect net flag 1: connect .0: don't connect.
-                osDelay(5);
+                SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x01); //connect net flag 1: connect .0: don't connect.
+                osDelay(100);
 
          }
          else{
               
-               SendWifiData_One_Data(0x1F,0x0); //0x1F: 0x1=wifi link net is succes ,0x0 = wifi link net is fail
-               osDelay(5);
+               SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x0); //0x1F: 0x1=wifi link net is succes ,0x0 = wifi link net is fail
+               osDelay(100);
 		       g_wifi.wifi_get_beijing_step = 10;
                g_wifi.linking_tencent_cloud_doing  =1; //receive from tencent command state .
              
@@ -495,8 +493,8 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
             Subscriber_Data_FromCloud_Handler();
             osDelay(200);//HAL_Delay(200);
 
-            SendWifiData_One_Data(0x1F,0x01); //0x1F: wifi link net is succes 
-
+            SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x01); //0x1F: wifi link net is succes 
+            vTaskDelay(100);
              g_wifi.wifi_get_beijing_step = 0;
 		
          }

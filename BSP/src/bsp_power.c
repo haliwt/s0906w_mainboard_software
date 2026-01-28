@@ -64,7 +64,7 @@ void power_onoff_handler(uint8_t data)
 
         }
 			
-        break;
+      break;
 
 	  case power_off:
          gl_run.process_on_step =0;
