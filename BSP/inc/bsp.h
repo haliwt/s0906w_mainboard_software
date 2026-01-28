@@ -158,7 +158,7 @@ typedef struct _process{
    uint8_t gset_temperture_value;
    uint8_t temperature_init_value;
 
-   uint8_t key_gtime_timer_define_state;
+   uint8_t switch_disp_time_or_temp_item;
    uint8_t gdisp_hours_value;
    uint8_t gdisp_minutes_value;
    
@@ -175,7 +175,7 @@ typedef struct _process{
 
 
    int8_t gdisp_timer_hours_value;
-   int8_t  disp_timer_minutes_value;
+   int8_t  gdisp_timer_minutes_value;
    
    uint8_t ptc_warning;
    uint8_t fan_warning ;

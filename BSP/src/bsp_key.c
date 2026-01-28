@@ -164,7 +164,7 @@ static void adjust_timer(int8_t delta)
  */
 void key_dwon_fun(void)
 {
-    switch (g_pro.key_gtime_timer_define_state) {
+    switch (g_pro.switch_disp_time_or_temp_item) {
         case temperature_mode:
             adjust_temperature(-1);
 	        g_pro.first_set_ptc_on  = 0;
@@ -185,7 +185,7 @@ void key_dwon_fun(void)
  */
  void key_up_fun(void)
 {
-	 switch (g_pro.key_gtime_timer_define_state) {
+	 switch (g_pro.switch_disp_time_or_temp_item) {
         case temperature_mode:
             adjust_temperature(1);
 	        g_pro.first_set_ptc_on  = 0;
@@ -586,14 +586,15 @@ void set_timer_timing_value_handler(void)
 			if(g_pro.gdisp_timer_hours_value>0){
 			g_pro.gAI = 0;
 			LED_AI_OFF();
-			g_pro.key_gtime_timer_define_state = temperature_mode; //define UP and down key is set temperature value 
+			g_pro.switch_disp_time_or_temp_item = temperature_mode; //define UP and down key is set temperature value 
 			g_pro.set_timing_or_timer_time_flag=TIMER_TIME;
 			g_pro.gTimer_timer_time_second=0;
+			g_pro.gdisp_timer_minutes_value =0;
 			
 //			if(g_pro.gdisp_timer_hours_value > 1)
-//			   g_pro.disp_timer_minutes_value=60;//60 minutes
+//			   g_pro.gdisp_timer_minutes_value=60;//60 minutes
 //			else
-//			   g_pro.disp_timer_minutes_value=0;//60 minutes
+//			   g_pro.gdisp_timer_minutes_value=0;//60 minutes
 			
 	
 			g_pro.disp_59minutes_flag = 0;
@@ -607,16 +608,17 @@ void set_timer_timing_value_handler(void)
 				g_pro.gAI = 1;
 				LED_AI_ON();
 				g_pro.gdisp_timer_hours_value=0;
+				g_pro.gdisp_timer_minutes_value =0;
 
 				g_pro.set_timing_or_timer_time_flag = WORKS_TIME; //WT.EDIT 2025.10.18
 
-				g_pro.key_gtime_timer_define_state = temperature_mode;
+				g_pro.switch_disp_time_or_temp_item = temperature_mode;
 				SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
 	            osDelay(100);
 			}
 		}
 		else{ //times is done ,exit this process
-		   g_pro.key_gtime_timer_define_state = temperature_mode; //WT.EDIT 2025.10.17
+		   g_pro.switch_disp_time_or_temp_item = temperature_mode; //WT.EDIT 2025.10.17
 		   if(g_pro.set_timing_or_timer_time_flag==TIMER_TIME){ //WT.EDIT 2025.11.07 
                LED_AI_OFF();
 		   }
@@ -632,14 +634,14 @@ void set_timer_timing_value_handler(void)
        if(g_pro.gTimer_timer_time_second > 59){
 	       g_pro.gTimer_timer_time_second=0;
 		   #if TEST_UNIT
-		   	 g_pro.disp_timer_minutes_value =g_pro.disp_timer_minutes_value - 40;
+		   	 g_pro.gdisp_timer_minutes_value =g_pro.gdisp_timer_minutes_value - 40;
 		   #else
-		    g_pro.disp_timer_minutes_value--;
+		    g_pro.gdisp_timer_minutes_value--;
 		   #endif 
 
-		   if(g_pro.disp_timer_minutes_value< 0){
+		   if(g_pro.gdisp_timer_minutes_value< 0){
 
-		       g_pro.disp_timer_minutes_value =59;
+		       g_pro.gdisp_timer_minutes_value =59;
 			  
               if(g_pro.gdisp_timer_hours_value==1){
                   g_pro.gdisp_timer_hours_value=0;
@@ -663,9 +665,17 @@ void set_timer_timing_value_handler(void)
 			 
           }
       }
+      
 
-   }
-	
+	if(g_pro.gdisp_timer_minutes_value ==59 && g_pro.disp_59minutes_flag == 0 && g_disp.g_second_disp_flag ==1){
+			  
+            if(g_pro.gdisp_timer_hours_value==1){
+                  g_pro.gdisp_timer_hours_value=0;
+				  g_pro.disp_59minutes_flag = 1;
+          }
+
+      }
+  }
 }
 
 
@@ -674,7 +684,7 @@ void set_timer_timing_value_handler(void)
 void mode_short_key_fun(void)
 {
 	g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
-	g_pro.key_gtime_timer_define_state = timer_time_mode; //WT.EDIT 2025.10.17
+	g_pro.switch_disp_time_or_temp_item = timer_time_mode; //WT.EDIT 2025.10.17
 	set_timer_mode();
 }
 
@@ -682,19 +692,18 @@ void mode_short_key_fun(void)
 
 static void set_timer_mode(void)
 {
-
-   if(g_pro.set_timing_or_timer_time_flag==TIMER_TIME){
-	g_pro.gAI = 0;
+    g_pro.gAI = 0;
     LED_AI_OFF();
     HUMIDITY_ICON_OFF();
     TEMP_ICON_OFF();
+	
 	if(g_pro.disp_59minutes_flag ==0)
        TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 	else 
-	   TM1639_Display_3_Digit(g_pro.disp_timer_minutes_value);
-   }
-  
-   
+	   TM1639_Display_3_Digit(g_pro.gdisp_timer_minutes_value);
+
 	
-}
+   
+  
+ }
 

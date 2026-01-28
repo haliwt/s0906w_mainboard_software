@@ -90,6 +90,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
     // if(pdata[3] == 0x00){ //判断是否是数据，或�?�指令�?�知�?? 00- 命令和指令，下一个字节是指令 �??0x0F- 数据，下�??个字节是数据个数
 	 	if(pdata[3]==0x01){
+			 g_disp.g_second_disp_flag=1;
 	 	if(g_pro.gpower_on == power_on){
 		 
           buzzer_sound();
@@ -115,6 +116,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
        }
        }
        else if(pdata[3] == 0x0){
+	   	g_disp.g_second_disp_flag=1;
 	   	 if(g_pro.gpower_on == power_on){
 		  g_pro.g_manual_shutoff_dry_flag = 1;
           buzzer_sound();
@@ -140,6 +142,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
       
 	    if(pdata[3]==0x01){
+			g_disp.g_second_disp_flag=1;
        if(g_pro.gpower_on == power_on){
 	   	  
             buzzer_sound();
@@ -156,6 +159,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         }
         }
         else if(pdata[3] == 0x0){
+			g_disp.g_second_disp_flag=1;
         if(g_pro.gpower_on == power_on){ 
             buzzer_sound();
 			g_pro.gPlasma = 0;
@@ -212,6 +216,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
  
 	 	if(pdata[3]==0x01){
+		   g_disp.g_second_disp_flag=1;
         if(g_pro.gpower_on == power_on){ 
 		  SendWifiData_Answer_Cmd(0x05,0x01); //WT.EDIT 2024.12.28
 		  osDelay(100);
@@ -234,6 +239,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
         
         if(pdata[3]==0x01){
+		   g_disp.g_second_disp_flag=1;
            buzzer_sound();
         }
        
@@ -245,7 +251,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
       
          if(pdata[3]==0x01){
-
+          g_disp.g_second_disp_flag=1;
           buzzer_sound();
           SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2025.01.07
           osDelay(100);
@@ -315,7 +321,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
        if(pdata[3] == 0x01){
         
         if(g_pro.gpower_on == power_on && g_pro.g_manual_shutoff_dry_flag ==0){
-
+         g_disp.g_second_disp_flag=1;
         g_pro.gDry = 1;
 		LED_DRY_ON();
      	if(g_pro.works_two_hours_interval_flag==0 ){
@@ -333,7 +339,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
       else if(pdata[3] == 0x0){
         if(g_pro.gpower_on == power_on){
 
-         
+            g_disp.g_second_disp_flag=1;
             g_pro.gDry =0;
 		    LED_DRY_OFF();
           	DRY_CLOSE();
@@ -426,10 +432,10 @@ void receive_data_from_displayboard(uint8_t *pdata)
 			 
 				
 
-				g_pro.key_gtime_timer_define_state = temperature_mode; //define UP and down key is set temperature value 
+				g_pro.switch_disp_time_or_temp_item = temperature_mode; //define UP and down key is set temperature value 
 			    g_pro.set_timing_or_timer_time_flag=TIMER_TIME;
 			    g_pro.gTimer_timer_time_second=0;
-				g_pro.disp_timer_minutes_value=0;
+				g_pro.gdisp_timer_minutes_value=0;
 				  
 			  
 			    //g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;//input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
@@ -445,14 +451,15 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 				g_pro.key_add_dec_be_pressed_flag=0xf0;
 				
-				g_pro.key_gtime_timer_define_state = temperature_mode; //WT.EDIT 2025.10.17
+				g_pro.switch_disp_time_or_temp_item = temperature_mode; //WT.EDIT 2025.10.17
 			
 				g_pro.gTimer_switch_set_timer_times = 0;
 			
 				g_pro.gdisp_timer_hours_value = 0;
+				g_pro.gdisp_timer_minutes_value=0;
 
 				g_pro.gTimer_timer_time_second=0;
-				g_pro.disp_timer_minutes_value=0;
+				
 				
 
 				if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
@@ -468,17 +475,14 @@ void receive_data_from_displayboard(uint8_t *pdata)
 	 case 0x6C: // display  Synchronization Time don't beijing timing.
 		if(pdata[4] == 0x03){ //数据
 
-			 if(pdata[5] < 25 && pdata[6] < 61 && pdata[7] < 61){
+			if(pdata[5] < 25 && pdata[6] < 61 && pdata[7] < 61){
+              
+	              g_disp.g_second_disp_flag=1;
+                  g_pro.gdisp_hours_value = pdata[5];
+                  g_pro.gdisp_minutes_value=pdata[6];
+				  g_pro.gTimer_disp_time_second=pdata[7];
 
-				
-
-                if(g_pro.gdisp_timer_hours_value > 1){
-				   g_pro.gdisp_timer_hours_value = pdata[5];
-
-                }
-				g_pro.disp_timer_minutes_value=pdata[6];
-				g_pro.gTimer_timer_time_second=pdata[7];
-				
+             
 			}
 		} 
 		
@@ -488,14 +492,23 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 	 case 0x6B: // display  Synchronization Timer  Time
 		if(pdata[4] == 0x03){ //数据
+            g_disp.g_second_disp_flag=1;
+		    g_pro.gdisp_timer_hours_value = pdata[5];
+			g_pro.gdisp_timer_minutes_value=pdata[6];
+			g_pro.gTimer_timer_time_second=pdata[7];
+			if(pdata[5]==0 && pdata[6]==0){
 
-			 if(pdata[5] < 25 && pdata[6] < 61 && pdata[7] < 61){
-              
-	   
-                  g_pro.gdisp_hours_value = pdata[5];
-                  g_pro.gdisp_minutes_value=pdata[6];
-				  g_pro.gTimer_disp_time_second=pdata[7];
+			  g_pro.set_timing_or_timer_time_flag = WORKS_TIME;
+
 			}
+			else{
+				
+			 	g_pro.set_timing_or_timer_time_flag = TIMER_TIME;
+
+
+			}
+				
+			
 		}
 		 
 		

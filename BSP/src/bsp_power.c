@@ -98,7 +98,7 @@ void power_on_init_ref(void)
 		   g_pro.gdisp_hours_value =0;
 		   g_pro.gdisp_timer_hours_value =0; //设置定时时间�??
 
-		   g_pro.key_gtime_timer_define_state=temperature_mode; //
+		   g_pro.switch_disp_time_or_temp_item=temperature_mode; //
 		  // g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode;
 		
 		 
@@ -340,7 +340,7 @@ void power_off_run_handler(void)
 	 // g_key.key_long_power_flag  = 0;
 	  g_key.key_long_mode_flag = 0;
 	
-	  g_pro.key_gtime_timer_define_state = temperature_mode;
+	  g_pro.switch_disp_time_or_temp_item = temperature_mode;
 	
 	  g_pro.led_bar =0;
 
@@ -361,6 +361,7 @@ void power_off_run_handler(void)
 	   g_wifi.app_timer_power_on_flag =0;
 	   g_pro.fan_warning =0 ;
 	   g_pro.ptc_warning =0;
+	   g_disp.g_second_disp_flag =0;
 	 
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
 	   g_pro.disp_59minutes_flag =0;

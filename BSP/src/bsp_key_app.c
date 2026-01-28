@@ -162,14 +162,14 @@ void key_mode_long_fun(void)
        if(g_key.mode_key_long_counter > LONG_PRESS_THRESHOLD - 1){
            g_key.mode_key_long_counter= COUNTER_LOCK;
         buzzer_sound();
-        g_pro.key_gtime_timer_define_state = timer_time_mode;
+        g_pro.switch_disp_time_or_temp_item = timer_time_mode;
         g_key.key_mode_long_flag = 1;
         g_pro.gTimer_switch_set_timer_times = 0;
 		g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
         g_pro.gAI = 0;
         HUMIDITY_ICON_OFF();
         TEMP_ICON_OFF();
-        TM1639_Display_3_Digit(g_pro.disp_59minutes_flag ? g_pro.disp_timer_minutes_value :g_pro.gdisp_timer_hours_value);
+        TM1639_Display_3_Digit(g_pro.disp_59minutes_flag ? g_pro.gdisp_timer_minutes_value :g_pro.gdisp_timer_hours_value);
       }
   	}
 }

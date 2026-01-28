@@ -29,7 +29,7 @@ void display_digital_3_numbers(void)
 
 	
 
-     switch(g_pro.key_gtime_timer_define_state){
+     switch(g_pro.switch_disp_time_or_temp_item){
 
 
 	 case timer_time_mode:
@@ -40,15 +40,16 @@ void display_digital_3_numbers(void)
     	 		   LED_AI_OFF();
 		           HUMIDITY_ICON_OFF();
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
-		           if(g_pro.disp_59minutes_flag ==0)
-    	 		    TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value); // 显示时间//WT.EDIT 2025.04.23
-    	 		   else 
-				   	 TM1639_Display_3_Digit(g_pro.disp_timer_minutes_value);
-    	 		  
+		           
+			        if(g_pro.disp_59minutes_flag ==0 && g_pro.gdisp_timer_hours_value >0)
+	    	 		   TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value); // 显示时间//WT.EDIT 2025.04.23
+	    	 		else 
+					   	TM1639_Display_3_Digit(g_pro.gdisp_timer_minutes_value);
+		          
     	 }
 		 else{
 
-			 g_pro.key_gtime_timer_define_state = temperature_mode;// g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode; //WT.EDIT 2025.010.06
+			 g_pro.switch_disp_time_or_temp_item = temperature_mode;// g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode; //WT.EDIT 2025.010.06
              //at once display "temperature_mode" //WT.EDIT 2025.10.17
              g_pro.gTimer_switch_temp_hum=5;
 		     if(g_pro.set_timing_or_timer_time_flag !=TIMER_TIME && g_key.key_mode_long_flag != 1){
@@ -72,19 +73,18 @@ void display_digital_3_numbers(void)
 
 	   case temperature_mode :
 
-	      if(g_key.key_mode_long_flag ==2){ //WT.EDIT 2025.11.07
+	    
 
-                  g_key.key_mode_long_flag++;
-				  if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
+         if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
 			         
-				     LED_AI_OFF(); 
-				  }
-				  else{
-				     LED_AI_ON(); 
+		     LED_AI_OFF(); 
+		   }
+		  else{
+		     LED_AI_ON(); 
 
-				  }
+		   }
 
-          }
+          
                   
           if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD && g_key.key_mode_long_flag !=1){
 			  g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
