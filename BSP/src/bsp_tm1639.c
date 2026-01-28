@@ -197,7 +197,7 @@ void TM1639_Write_Half_Digit(uint8_t addr, uint8_t data)
  */
 void TM1639_Display_3_Digit(uint8_t num)
 {
-    uint8_t ten, one;
+    static uint8_t ten, one;
     
    // 提取各位数字
    
@@ -224,6 +224,36 @@ void TM1639_Display_3_Digit(uint8_t num)
 	 
 	 }
 }
+
+/**
+ * @brief  显示3位数�?
+ * @param  num: 要显示的数字(0-999)
+ * @retval None
+ */
+void TM1639_Display_setTimer_3_Digit(uint8_t num)
+{
+    static uint8_t ten, one;
+    
+   // 提取各位数字
+   
+    ten = num  / 10;
+    one = num % 10;
+    
+    // 写入十位（最左边�?
+    
+    TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L, TM1639_Number_Table[ten]);
+        
+    // 写入十位（中间）
+ 
+    TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Number_Table[one]);
+        
+    // 写入个位（最右边�?'H'
+	
+	 TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_H);
+	 
+	 
+}
+
 
 /**
  * @brief  显示带小数点的数�?

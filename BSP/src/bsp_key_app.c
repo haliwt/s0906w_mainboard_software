@@ -35,10 +35,10 @@ void key_handler(void)
         handle_power_key();
     }
 	else if(g_key.key_mode_flag == 11 && KEY_MODE_VALUE() == KEY_UP){
-              g_key.key_down_flag ++;
-			  g_key.mode_key_long_counter = 0;
-	          g_key.power_on_key_counter=0;
-	          g_key.down_key_long_counter = 0;
+      g_key.key_down_flag ++;
+	  g_key.mode_key_long_counter = 0;
+      g_key.power_on_key_counter=0;
+      g_key.down_key_long_counter = 0;
            
 	}
     else if (g_key.key_mode_flag == KEY_MODEL_ID && KEY_MODE_VALUE() == KEY_UP && g_pro.ptc_warning ==0 &&g_pro.fan_warning ==0)
@@ -167,6 +167,7 @@ void key_mode_long_fun(void)
         g_pro.gTimer_switch_set_timer_times = 0;
 		g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
         g_pro.gAI = 0;
+		LED_AI_OFF();
         HUMIDITY_ICON_OFF();
         TEMP_ICON_OFF();
 		if(g_pro.set_timing_or_timer_time_flag == TIMER_TIME){

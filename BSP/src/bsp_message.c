@@ -419,12 +419,13 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 	  case 0x2B: //set up timer timing value 
 		
+         if(pdata[4]==0x01 && g_pro.gpower_on == power_on){ // has dat only one value ,next receive byte is value
 
-			if(pdata[4]==0x01 && g_pro.gpower_on == power_on){ // has dat only one value ,next receive byte is value
-
-		
+		        g_disp.g_second_disp_flag=1;
 
 			    if(pdata[5] > 0){
+				g_pro.gAI = 0;
+				LED_AI_OFF();
                 g_pro.gdisp_timer_hours_value = pdata[5];
 			
 		
@@ -461,6 +462,8 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				g_pro.gTimer_timer_time_second=0;
 				
 				
+				g_pro.set_timing_or_timer_time_flag = WORKS_TIME;
+				
 
 				if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
 					TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
@@ -496,20 +499,8 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		    g_pro.gdisp_timer_hours_value = pdata[5];
 			g_pro.gdisp_timer_minutes_value=pdata[6];
 			g_pro.gTimer_timer_time_second=pdata[7];
-			if(pdata[5]==0 && pdata[6]==0){
-
-			  g_pro.set_timing_or_timer_time_flag = WORKS_TIME;
-
-			}
-			else{
-				
-			 	g_pro.set_timing_or_timer_time_flag = TIMER_TIME;
-
-
-			}
-				
 			
-		}
+			}
 		 
 		
 	 	

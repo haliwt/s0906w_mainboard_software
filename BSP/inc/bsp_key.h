@@ -131,7 +131,7 @@ void key_up_fun(void);
 
 void set_temperature_value_handler(void);
 
-void set_timer_timing_value_handler(void);
+
 
 void sendDisplayCommand(uint8_t command,uint8_t data) ;
 void mode_short_key_fun(void);

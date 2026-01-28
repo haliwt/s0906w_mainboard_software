@@ -20,6 +20,9 @@ typedef enum {
 
 void display_digital_3_numbers(void);
 
+void set_timer_timing_value_handler(void);
+
+
 
 
 #endif /* BSP_INC_BSP_DISP_H_ */
