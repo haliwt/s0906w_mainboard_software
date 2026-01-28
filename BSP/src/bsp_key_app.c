@@ -169,7 +169,12 @@ void key_mode_long_fun(void)
         g_pro.gAI = 0;
         HUMIDITY_ICON_OFF();
         TEMP_ICON_OFF();
-        TM1639_Display_3_Digit(g_pro.disp_59minutes_flag ? g_pro.gdisp_timer_minutes_value :g_pro.gdisp_timer_hours_value);
+	    if(g_pro.gdisp_hours_value >0)
+          TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+	   else 
+	     TM1639_Display_3_Digit(g_pro.gdisp_timer_minutes_value);
+
+		//TM1639_Display_3_Digit(g_pro.disp_59minutes_flag ? g_pro.gdisp_timer_minutes_value :g_pro.gdisp_timer_hours_value);
       }
   	}
 }

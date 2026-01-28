@@ -200,7 +200,7 @@ void power_on_run_handler(void)
 	   g_pro.first_set_ptc_on=0;
 	   g_pro.first_rcoder_ptc_on_flag =0;
 
-	   g_pro.disp_59minutes_flag =0;
+	 
 	   g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
 	   
 	   temp_second_displboard=0;
@@ -364,7 +364,7 @@ void power_off_run_handler(void)
 	   g_disp.g_second_disp_flag =0;
 	 
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
-	   g_pro.disp_59minutes_flag =0;
+
         gl_run.process_off_step = 1;
 
    break;

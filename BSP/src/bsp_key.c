@@ -147,7 +147,7 @@ static void adjust_timer(int8_t delta)
     g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
 	g_pro.gTimer_switch_set_timer_times = 0;
     g_pro.key_add_dec_be_pressed_flag = 1;
-	g_pro.disp_59minutes_flag =0;  //WT.EDIT 2025.10.06
+
     g_pro.gdisp_timer_hours_value += delta;
     if (g_pro.gdisp_timer_hours_value > MAX_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MAX_TIMER_HOURS;
     if (g_pro.gdisp_timer_hours_value < MIN_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MIN_TIMER_HOURS;
@@ -597,7 +597,7 @@ void set_timer_timing_value_handler(void)
 //			   g_pro.gdisp_timer_minutes_value=0;//60 minutes
 			
 	
-			g_pro.disp_59minutes_flag = 0;
+	
             SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
 	        osDelay(100);
 
@@ -643,12 +643,8 @@ void set_timer_timing_value_handler(void)
 
 		       g_pro.gdisp_timer_minutes_value =59;
 			  
-              if(g_pro.gdisp_timer_hours_value==1){
-                  g_pro.gdisp_timer_hours_value=0;
-				  g_pro.disp_59minutes_flag = 1;
-              }
-			  else {
-                  g_pro.gdisp_timer_hours_value--;
+           
+                g_pro.gdisp_timer_hours_value--;
 				
 
              }
@@ -665,18 +661,8 @@ void set_timer_timing_value_handler(void)
 			 
           }
       }
-      
-
-	if(g_pro.gdisp_timer_minutes_value ==59 && g_pro.disp_59minutes_flag == 0 && g_disp.g_second_disp_flag ==1){
-			  
-            if(g_pro.gdisp_timer_hours_value==1){
-                  g_pro.gdisp_timer_hours_value=0;
-				  g_pro.disp_59minutes_flag = 1;
-          }
-
-      }
-  }
 }
+
 
 
 
@@ -697,13 +683,10 @@ static void set_timer_mode(void)
     HUMIDITY_ICON_OFF();
     TEMP_ICON_OFF();
 	
-	if(g_pro.disp_59minutes_flag ==0)
+	if(g_pro.gdisp_hours_value >0)
        TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 	else 
 	   TM1639_Display_3_Digit(g_pro.gdisp_timer_minutes_value);
 
-	
-   
-  
- }
+}
 

@@ -213,7 +213,7 @@ void TM1639_Display_3_Digit(uint8_t num)
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Number_Table[one]);
         
     // 写入个位（最右边�?'H'
-    if(g_pro.disp_59minutes_flag ==0)
+    if(g_pro.gdisp_timer_hours_value > 0)
        TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_H);
 	else 
 	  TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_N);

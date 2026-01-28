@@ -41,7 +41,7 @@ void display_digital_3_numbers(void)
 		           HUMIDITY_ICON_OFF();
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
 		           
-			        if(g_pro.disp_59minutes_flag ==0 && g_pro.gdisp_timer_hours_value >0)
+			        if(g_pro.gdisp_timer_hours_value >0)
 	    	 		   TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value); // 显示时间//WT.EDIT 2025.04.23
 	    	 		else 
 					   	TM1639_Display_3_Digit(g_pro.gdisp_timer_minutes_value);
