@@ -213,16 +213,9 @@ void TM1639_Display_3_Digit(uint8_t num)
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Number_Table[one]);
         
     // 写入个位（最右边�?'H'
-	if(g_pro.set_timing_or_timer_time_flag == TIMER_TIME){
-		if(g_pro.gdisp_timer_hours_value > 0)
-		   TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_H);
-		else 
-		  TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_N);
-     }
-	 else{
-	     TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_H);
-	 
-	 }
+
+	TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_H);
+
 }
 
 /**
@@ -230,7 +223,7 @@ void TM1639_Display_3_Digit(uint8_t num)
  * @param  num: 要显示的数字(0-999)
  * @retval None
  */
-void TM1639_Display_setTimer_3_Digit(uint8_t num)
+void TM1639_Display_setTimerHours_3_Digit(uint8_t num)
 {
     static uint8_t ten, one;
     
@@ -253,6 +246,32 @@ void TM1639_Display_setTimer_3_Digit(uint8_t num)
 	 
 	 
 }
+
+void TM1639_Display_setTimerMinutes_3_Digit(uint8_t num)
+{
+    static uint8_t ten, one;
+    
+   // 提取各位数字
+   
+    ten = num  / 10;
+    one = num % 10;
+    
+    // 写入十位（最左边�?
+    
+    TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L, TM1639_Number_Table[ten]);
+        
+    // 写入十位（中间）
+ 
+    TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Number_Table[one]);
+        
+    // 写入个位（最右边�?'H'
+	
+	 TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_N);
+	 
+	 
+}
+
+
 
 
 /**

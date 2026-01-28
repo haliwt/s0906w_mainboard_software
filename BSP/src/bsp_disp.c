@@ -31,8 +31,7 @@ void display_digital_3_numbers(void)
 
      switch(g_pro.switch_disp_time_or_temp_item){
 
-
-	 case timer_time_mode:
+       case timer_time_mode:
 	  
 
     	 if(g_pro.gTimer_switch_set_timer_times < 2){
@@ -41,11 +40,15 @@ void display_digital_3_numbers(void)
 		           HUMIDITY_ICON_OFF();
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
 		           if(g_pro.set_timing_or_timer_time_flag == TIMER_TIME || g_key.key_mode_long_flag ==1){
-			           TM1639_Display_setTimer_3_Digit(g_pro.gdisp_timer_hours_value);
+				   	   if(g_pro.gdisp_timer_hours_value >0)
+			               TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
+					   else
+					   	   TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);
 		           }
 				   else if(g_key.key_mode_long_flag !=1){
+					   g_pro.gdisp_timer_hours_value=0;
 
-				       TM1639_Display_3_Digit(g_pro.gdisp_hours_value);
+				       TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 
 				   }
 		          
@@ -216,6 +219,8 @@ void set_timer_timing_value_handler(void)
           }
       }
 }
+
+
 
 
 

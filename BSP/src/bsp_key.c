@@ -37,7 +37,7 @@ static void handleDefaultTemperatureControl(void);
 static void setDryState(uint8_t state);
 static void publishMqttData(DryState state, uint8_t temperature);
 
-static void set_timer_mode(void);
+static void disp_set_timer_mode(void);
 //static void set_normal_mode(void);
 
 
@@ -152,7 +152,7 @@ static void adjust_timer(int8_t delta)
     if (g_pro.gdisp_timer_hours_value > MAX_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MAX_TIMER_HOURS;
     if (g_pro.gdisp_timer_hours_value < MIN_TIMER_HOURS) g_pro.gdisp_timer_hours_value = MIN_TIMER_HOURS;
     //TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
-    TM1639_Display_setTimer_3_Digit(g_pro.gdisp_timer_hours_value);
+    TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
 	
 }
 
@@ -561,22 +561,27 @@ void sendDisplayCommand(uint8_t command,uint8_t data)
 		SendData_Set_Command(command, data);
     }
 }
-
-
-
-
-
-
+/**
+*@brief :
+*@notice:
+*@param:
+*
+**/
 void mode_short_key_fun(void)
 {
 	g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
 	g_pro.switch_disp_time_or_temp_item = timer_time_mode; //WT.EDIT 2025.10.17
-	set_timer_mode();
+	
+	disp_set_timer_mode();
 }
 
-
-
-static void set_timer_mode(void)
+/**
+*@brief :
+*@notice:
+*@param:
+*
+**/
+static void disp_set_timer_mode(void)
 {
     g_pro.gAI = 0;
     LED_AI_OFF();
@@ -588,16 +593,16 @@ static void set_timer_mode(void)
      case TIMER_TIME:
 	
 	    if(g_pro.gdisp_timer_hours_value >0)
-	         TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+	         TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
 		else 
-		   TM1639_Display_3_Digit(g_pro.gdisp_timer_minutes_value);
+		   TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);
 
 		
 	break;
 
 	case WORKS_TIME:
-	  
-       TM1639_Display_3_Digit(g_pro.gdisp_hours_value);
+	   g_pro.gdisp_timer_hours_value=0;
+       TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 
 	break;
    	}

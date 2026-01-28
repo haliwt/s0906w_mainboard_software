@@ -78,7 +78,13 @@ void TM1639_All_Off(void);                  // 关闭�?有显示（包括数砝
 
 void TM1639_Write_Half_Digit(uint8_t addr,uint8_t data);
 void disp_decimal_point(uint8_t idata);
-void TM1639_Display_setTimer_3_Digit(uint8_t num);
+
+void TM1639_Display_setTimerHours_3_Digit(uint8_t num);
+
+void TM1639_Display_setTimerMinutes_3_Digit(uint8_t num);
+
+
+
 
 
 #endif /* __BSP_TM1639_H_ */

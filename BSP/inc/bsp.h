@@ -117,7 +117,8 @@ typedef enum{
 	input_set_null=6,
 	input_set_timer_mode_null=7,
 	input_set_normal_time_mode=8,
-	input_normal_null=9
+	input_normal_null=9,
+	disp_works_mode
 	
 }time_state;
 
