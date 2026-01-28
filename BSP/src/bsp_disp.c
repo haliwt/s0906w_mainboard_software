@@ -39,13 +39,17 @@ void display_digital_3_numbers(void)
     	 		   LED_AI_OFF();
 		           HUMIDITY_ICON_OFF();
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
-		           if(g_pro.set_timing_or_timer_time_flag == TIMER_TIME || g_key.key_mode_long_flag ==1){
+		           if((g_pro.set_timing_or_timer_time_flag == TIMER_TIME || g_key.key_mode_long_flag ==1) && g_pro.key_add_dec_be_pressed_flag == 1){
+						 TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
+
+				   }
+		           else if((g_pro.set_timing_or_timer_time_flag == TIMER_TIME || g_key.key_mode_long_flag ==1) && (g_pro.key_add_dec_be_pressed_flag == 0 || g_pro.key_add_dec_be_pressed_flag == 2)){
 				   	   if(g_pro.gdisp_timer_hours_value >0)
 			               TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
 					   else
 					   	   TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);
 		           }
-				   else if(g_key.key_mode_long_flag !=1){
+				   else if(g_key.key_mode_long_flag !=1 && g_pro.set_timing_or_timer_time_flag == WORKS_TIME){
 					   g_pro.gdisp_timer_hours_value=0;
 
 				       TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
