@@ -243,6 +243,7 @@ static void vTaskStart(void *pvParameters)
 	 else if(KEY_DOWN_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
 
             key_down_long_fun();
+			
 			if(g_key.down_key_long_counter == COUNTER_LOCK)g_key.key_down_flag = 13;
 			else{
                g_key.key_down_flag =KEY_DOWN_ID;

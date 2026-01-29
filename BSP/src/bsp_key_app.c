@@ -109,21 +109,17 @@ void key_power_longk_fun(void)
             g_key.power_on_key_counter = COUNTER_LOCK;
            // g_key.key_long_power_flag = KEY_LONG_POWER;
 
-            g_wifi.gTimer_wifi_led_fast_blink = 0;
-            g_wifi.gwifi_link_net_success = 0;
-            g_wifi.wifi_led_fast_blink_flag = 1;
-            g_wifi.link_net_step = 0;
-            g_pro.first_connect_wifi_flag = 0;
-            g_pro.set_temperature_success_flag = 0;
+            g_wifi.gTimer_wifi_led_fast_blink = 0; //reset wifi led blink timer
+            g_wifi.gwifi_link_net_success = 0; //reset wifi link status
+            g_wifi.wifi_led_fast_blink_flag = 1;//
+            g_wifi.link_net_step = 0;//reset wifi link step
+            g_pro.first_connect_wifi_flag = 0;//reset first connect wifi flag
 
             buzzer_sound();
-            //g_pro.key_long_power_pressed = 1;
-           // g_pro.gTimer_key_long_counter = 0;
-
-                wifi_led_fast_blink_handler();
-                SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
-                osDelay(100);
-                wifi_led_fast_blink_handler();
+            wifi_led_fast_blink_handler();
+            SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
+            osDelay(100);
+            wifi_led_fast_blink_handler();
             
         }
     }
