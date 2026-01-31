@@ -47,7 +47,7 @@ static StackType_t xTaskDecoderProStack[128];
 
 /* vTaskMsgPro 任务 */
 static StaticTask_t xTaskRunProTCB;
-static StackType_t xTaskRunProStack[256];
+static StackType_t xTaskRunProStack[384];
 
 /* vTaskStart 任务 */
 static StaticTask_t xTaskStartTCB;
@@ -246,7 +246,7 @@ static void vTaskStart(void *pvParameters)
 			
 			if(g_key.down_key_long_counter == COUNTER_LOCK)g_key.key_down_flag = 13;
 			else{
-               g_key.key_down_flag =KEY_DOWN_ID;
+               g_key.key_down_flag =0x01;
 			   g_key.key_power_flag=0;
 	           g_key.key_mode_flag=0;
 		   }
@@ -317,7 +317,7 @@ void AppTaskCreate (void)
 	xHandleTaskRunPro = xTaskCreateStatic(
 			vTaskRunPro,			/* 任务函数 */
 			"vTaskRunPro",			/* 任务名 */
-			256,					/* 栈大小（word） */
+			384,					/* 栈大小（word） */
 			NULL,					/* 参数 */
 			1,						/* 优先级 */
 			xTaskRunProStack,		/* 栈数组 */

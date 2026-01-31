@@ -259,7 +259,41 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
           }
 	      
-       break;
+      break;
+
+	  case 0x19 : //works two hours flag bit is notice.
+       #if 0
+	    if(pdata[3]==0x01){
+		
+
+		    g_pro.delay_run_adc_counter=0;
+			g_pro.gTimer_two_hours_counter= 0;
+		    g_pro.g_fan_switch_gears_flag++;
+		    g_pro.works_two_hours_interval_flag=1;
+
+			PLASMA_CLOSE(); //
+			DRY_CLOSE();
+			mouse_close();
+		    g_pro.gTimer_fan_run_one_minute=0;
+		   
+
+			g_pro.one_minutes_fan_flag=1;
+           
+           
+
+	    }
+		else{
+		  g_pro.gTimer_two_hours_counter =0; 
+		 
+		 g_pro.delay_run_adc_counter=0;
+         g_pro.works_two_hours_interval_flag=0;
+         mainboard_special_fun();
+
+        }
+      #endif 
+
+
+	  break;
 
 
       case 0x1A: //read 温度数据
@@ -441,7 +475,9 @@ void receive_data_from_displayboard(uint8_t *pdata)
 			  
 			    //g_pro.g_disp_smg_timer_or_temp_hours_item = timer_time_mode;//input_set_timer_mode;//WT.EDIT 2025.04.23//input_temp_time_mode  ;
                 if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
-				TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+				//TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+				TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
+				  
                 }
 			 }
 			else{
@@ -466,8 +502,9 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				
 
 				if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
-					TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
-					osDelay(500);
+					//TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+					TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
+                    osDelay(500);
 				}
 	           	
 		   		

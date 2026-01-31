@@ -50,7 +50,14 @@ void key_handler(void)
 		
 		handle_mode_key();
     }
-    else if (g_key.key_down_flag == KEY_DOWN_ID && KEY_DOWN_VALUE() == KEY_UP && !g_pro.fan_warning && !g_pro.ptc_warning)
+	else if(g_key.key_down_flag == 13 &&  KEY_DOWN_VALUE() == KEY_UP){
+
+	      g_key.key_down_flag++;
+          g_key.down_key_long_counter = 0;
+	     g_key.mode_key_long_counter = 0;
+	   	 g_key.power_on_key_counter=0;
+	}
+    else if (g_key.key_down_flag == 0x01 && KEY_DOWN_VALUE() == KEY_UP && !g_pro.fan_warning && !g_pro.ptc_warning)
     {
          g_key.key_down_flag++;
 		 g_key.down_key_long_counter = 0;
@@ -167,14 +174,15 @@ void key_mode_long_fun(void)
         HUMIDITY_ICON_OFF();
         TEMP_ICON_OFF();
 		if(g_pro.set_timing_or_timer_time_flag == TIMER_TIME){
-		    if(g_pro.gdisp_hours_value >0)
-	          TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+		    if(g_pro.gdisp_timer_hours_value >0)
+	          TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
 		    else 
-		     TM1639_Display_3_Digit(g_pro.gdisp_timer_minutes_value);
+		      TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);
 		}
 		else{
+			 g_pro.gdisp_timer_minutes_value=0;
 
-		    TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+		     TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);//TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 
 		}
 

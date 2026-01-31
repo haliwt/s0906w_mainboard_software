@@ -23,8 +23,8 @@
 
 KEY_PROCESS_TYPEDEF  g_key;
 
-int8_t  gl_timer_minutes_value;
-uint8_t define_timer_mode;
+
+
 
 uint8_t ptc_on_flag =0xff,ptc_off_flag=0xff;
 
@@ -50,8 +50,7 @@ uint8_t timer_power_off_flag;
 void key_referen_init(void)
 {
   g_pro.set_temperature_success_flag=0;
-  gl_timer_minutes_value =0;
-  define_timer_mode=0;
+
   g_pro.key_set_temperature_flag=0;
   g_pro.key_add_dec_be_pressed_flag=0;
   g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
@@ -132,7 +131,7 @@ static void adjust_temperature(int8_t delta)
     TM1639_Display_Temperature(g_pro.gset_temperture_value);
     g_pro.gTimer_input_set_temp_times = 0;
     g_pro.gTimer_switch_temp_hum = 0;
-	g_pro.gTimer_input_set_temp_timer=0;
+	
 	
 	
 }
@@ -592,17 +591,18 @@ static void disp_set_timer_mode(void)
 
      case TIMER_TIME:
 	
-	    if(g_pro.gdisp_timer_hours_value >0)
-	         TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
-		else 
-		   TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);
+//	    if(g_pro.gdisp_timer_hours_value >0)
+//	         TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
+//		else 
+//		   TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value); //display "0 0 n"
 
 		
 	break;
 
 	case WORKS_TIME:
-	   g_pro.gdisp_timer_hours_value=0;
-       TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+	  // g_pro.gdisp_timer_hours_value=0;
+       //TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+     //  TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
 
 	break;
    	}

@@ -95,6 +95,7 @@ void wifi_auto_detected_link_state(void)
 	       SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
 		   osDelay(100);
         }
+	   
    
    
 }

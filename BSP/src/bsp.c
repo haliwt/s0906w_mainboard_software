@@ -200,7 +200,7 @@ void mainboard_close_all_fun(void)
 ************************************************************************/
 void works_run_two_hours_state(void)
 {
-   static uint8_t timer_fan_flag;
+  
 
    #if TEST_UNIT
 	if(g_pro.gTimer_two_hours_counter > 300 && g_pro.works_two_hours_interval_flag==0){ //five minutes 5x60=300s
@@ -221,7 +221,7 @@ void works_run_two_hours_state(void)
     g_pro.gTimer_fan_run_one_minute=0;
    
 
-	timer_fan_flag=1;
+	g_pro.one_minutes_fan_flag=1;
 
    
    }
@@ -258,7 +258,7 @@ void works_run_two_hours_state(void)
 
       #endif 
 
-	 if(timer_fan_flag ==1){
+	 if(g_pro.one_minutes_fan_flag ==1){
 
 	      if(g_pro.gTimer_fan_run_one_minute < 60){
 	  
@@ -271,7 +271,7 @@ void works_run_two_hours_state(void)
 	           
 			   g_pro.gTimer_fan_run_one_minute=0;
 			
-			  timer_fan_flag=0;
+			  g_pro.one_minutes_fan_flag=0;
              
 			   FAN_Stop();
 			   g_pro.delay_run_adc_counter=0;

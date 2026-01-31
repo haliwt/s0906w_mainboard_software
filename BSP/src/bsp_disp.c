@@ -49,10 +49,11 @@ void display_digital_3_numbers(void)
 					   else
 					   	   TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);
 		           }
-				   else if(g_key.key_mode_long_flag !=1 && g_pro.set_timing_or_timer_time_flag == WORKS_TIME){
+				   else if(g_pro.set_timing_or_timer_time_flag == WORKS_TIME){//g_key.key_mode_long_flag !=1 &&
 					   g_pro.gdisp_timer_hours_value=0;
+					   g_pro.gdisp_timer_minutes_value=0;
 
-				       TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
+				       TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);//TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 
 				   }
 		          
@@ -62,7 +63,7 @@ void display_digital_3_numbers(void)
 			 g_pro.switch_disp_time_or_temp_item = temperature_mode;// g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode; //WT.EDIT 2025.010.06
              //at once display "temperature_mode" //WT.EDIT 2025.10.17
              g_pro.gTimer_switch_temp_hum=5;
-		     if(g_pro.set_timing_or_timer_time_flag !=TIMER_TIME && g_key.key_mode_long_flag != 1){
+		     if(g_pro.set_timing_or_timer_time_flag ==WORKS_TIME){ // && g_key.key_mode_long_flag != 1){
                   g_pro.gAI=1;
     	 		  LED_AI_ON(); 
 			   #if DEBUG_ENABLE
