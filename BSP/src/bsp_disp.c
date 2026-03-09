@@ -140,7 +140,6 @@ void display_digital_3_numbers(void)
 void set_timer_timing_value_handler(void)
 {
    
-  
    if(g_key.key_mode_long_flag ==1 && g_pro.gTimer_switch_set_timer_times > 2 ){ // 2
 
    	      g_pro.gTimer_switch_set_timer_times=0;
@@ -198,21 +197,32 @@ void set_timer_timing_value_handler(void)
 		   #if TEST_UNIT
 		   	 g_pro.gdisp_timer_minutes_value =g_pro.gdisp_timer_minutes_value - 40;
 		   #else
-		    g_pro.gdisp_timer_minutes_value--;
+		     g_pro.gdisp_timer_minutes_value--;
+
+			 
+		   
 		   #endif 
 
 		   if(g_pro.gdisp_timer_minutes_value< 0){
 
 		       g_pro.gdisp_timer_minutes_value =59;
-			  
-           
-                g_pro.gdisp_timer_hours_value--;
-				
 
-             }
-			 
+               g_pro.g_real_hours_counter++;
+		        // 只有当小时数 > 1 时才减小时2026.03.09 .WT.EDIT .
+		        if (g_pro.gdisp_timer_hours_value > 1 &&  g_pro.gdisp_timer_hours_value !=1 ){
+		            g_pro.gdisp_timer_hours_value = g_pro.gdisp_timer_hours_value - g_pro.g_real_hours_counter +1;
+		        }
+				
+				if(g_pro.gdisp_timer_hours_value ==1){
+
+				    g_pro.gdisp_timer_hours_value--;
+                }
+		        
+			}
+		   
 			
-			 if(g_pro.gdisp_timer_hours_value < 0){
+
+		    if(g_pro.gdisp_timer_hours_value < 0){
             	
                    buzzer_sound();
 			       g_pro.gpower_on = power_off;

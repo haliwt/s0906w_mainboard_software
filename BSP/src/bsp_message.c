@@ -49,13 +49,13 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
        if(pdata[3] == 0x01){ 
 		  g_disp.g_second_disp_flag = 1;
-		  g_pro.gpower_on = power_on;
+	
 	
           buzzer_sound();
 		 
 		 
           SendWifiData_Answer_Cmd(CMD_POWER,0x01); //WT.EDIT 2025.01.07 
-          osDelay(100);
+          osDelay(30);
         }
         else{ //close 
          
@@ -233,6 +233,31 @@ void receive_data_from_displayboard(uint8_t *pdata)
        
 
      break;
+
+	 case 0x10: //power on or off don't sound 
+          if(pdata[3] == 0x01){ //open
+
+		   g_disp.g_second_disp_flag = 1;
+	       g_pro.gpower_on = power_on;
+	       SendWifiData_Answer_Cmd(0x10,0x01);
+	       vTaskDelay(pdMS_TO_TICKS(100));
+	         
+	    }
+        else if(pdata[3] == 0x0){ //close 
+
+			   
+			
+              SendWifiData_Answer_Cmd(0x10,0x0); //power off .
+
+              vTaskDelay(pdMS_TO_TICKS(100)); 
+      
+             
+               g_pro.gpower_on = power_off;
+			 
+		     
+        }
+
+	 break;
 
 	 
 

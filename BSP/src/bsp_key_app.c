@@ -167,6 +167,7 @@ void key_mode_long_fun(void)
         buzzer_sound();
         g_pro.switch_disp_time_or_temp_item = timer_time_mode;
         g_key.key_mode_long_flag = 1;
+		g_pro.g_real_hours_counter =0;
         g_pro.gTimer_switch_set_timer_times = 0;
 		g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
         g_pro.gAI = 0;
