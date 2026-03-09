@@ -331,6 +331,7 @@ void power_on_run_handler(void)
 			  Update_Dht11_toDisplayBoard_Value();
 		
 		}
+		
 	     gl_run.process_on_step =1;
 
 	 break;

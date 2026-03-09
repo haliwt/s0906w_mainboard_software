@@ -65,9 +65,10 @@ DHT11_Status DHT11_Display_Data(uint8_t mode);   // 在TM1639上显示温湿度
 /******************************************************************************************/
 
 /* IO操作函数 */
-#define DHT11_DQ_OUT(x)     do{ x ? \
-                                HAL_GPIO_WritePin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN, GPIO_PIN_SET) : \
-                                HAL_GPIO_WritePin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN, GPIO_PIN_RESET); \
+#define DHT11_DQ_OUT(x)     do{ if(x)\
+                                    LL_GPIO_SetOutputPin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN) ; \
+                                else \
+									LL_GPIO_ResetOutputPin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN);\
                             }while(0)                                                /* 数据端口输出 */
 //#define DHT11_DQ_IN         HAL_GPIO_ReadPin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN)  /* 数据端口输入 */
 #define DHT11_DQ_IN         LL_GPIO_IsInputPinSet(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN)

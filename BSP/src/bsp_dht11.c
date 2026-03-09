@@ -160,7 +160,8 @@ uint8_t dht11_read_data(uint8_t *temp, uint8_t *humi)
  */
 uint8_t dht11_init(void)
 {
-    GPIO_InitTypeDef gpio_init_struct={0};
+   #if 0
+	GPIO_InitTypeDef gpio_init_struct={0};
 
     DHT11_DQ_GPIO_CLK_ENABLE();     /* �??启DQ引脚时钟 */
 
@@ -170,6 +171,21 @@ uint8_t dht11_init(void)
     gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;          /* 高�?? */
     HAL_GPIO_Init(DHT11_DQ_GPIO_PORT, &gpio_init_struct);   /* 初始化DHT11_DQ引脚 */
     /* DHT11_DQ引脚模式设置,�??漏输�??,上拉, 这样就不用再设置IO方向�??, �??漏输出的时�??(=1), 也可以读取外部信号的高低电平 */
+   #endif 
+
+   
+	LL_GPIO_InitTypeDef gpio_init_struct = {0};
+	
+	DHT11_DQ_GPIO_CLK_ENABLE();
+	
+	gpio_init_struct.Pin = DHT11_DQ_GPIO_PIN;
+	gpio_init_struct.Mode = LL_GPIO_MODE_OUTPUT;	   // LL 没有 HAL 的 OUTPUT_OD，需结合 Pull 配置
+	gpio_init_struct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+	gpio_init_struct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN; // 设置为开漏
+	gpio_init_struct.Pull = LL_GPIO_PULL_UP;		   // 上拉
+	
+	LL_GPIO_Init(DHT11_DQ_GPIO_PORT, &gpio_init_struct);
+
 
     dht11_reset();
     return dht11_check();
@@ -240,10 +256,7 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
     if(mode == 0)
     {
         // 显示温度
-//        if(dht11_data.is_negative){
-//            TM1639_Display_Temperature(-dht11_data.temperature);
-//        }
-//        else{
+
         	LED_TEMP_ICON_ON();
         	LED_HUM_ICON_OFF();
            
