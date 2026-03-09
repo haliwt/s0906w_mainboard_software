@@ -246,7 +246,12 @@ void TM1639_Display_setTimerHours_3_Digit(uint8_t num)
 	 
 	 
 }
-
+/**
+ *@breif
+ *@param :
+ *
+ *
+**/
 void TM1639_Display_setTimerMinutes_3_Digit(uint8_t num)
 {
     static uint8_t ten, one;
@@ -263,16 +268,17 @@ void TM1639_Display_setTimerMinutes_3_Digit(uint8_t num)
     // 写入十位（中间）
  
     TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Number_Table[one]);
+
+	#if 0 //WT.EDIT 2026.03.09
         
-    // 写入个位（最右边�?'H'
+    // 写入个位（最右边 N)
 	
 	 TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,TM1639_CHAR_N);
-	 
+	#else
+	 TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,0x0);
+	#endif  
 	 
 }
-
-
-
 
 /**
  * @brief  显示带小数点的数�?

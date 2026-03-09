@@ -231,6 +231,7 @@ void power_on_run_handler(void)
 		     if(temp_second_displboard < 8){
                    temp_second_displboard ++;
 			 }
+			 
 		    if(g_pro.gTimer_send_dht11_disp > 2){ //3s
 		       g_pro.gTimer_send_dht11_disp=0;
 	           updateDht11_toDisplayBoard_value();
