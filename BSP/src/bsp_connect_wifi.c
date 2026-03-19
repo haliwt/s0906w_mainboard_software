@@ -1,7 +1,7 @@
 /*
  * bsp_connect_link.c
  *
- *  Created on: 2025å¹?3æœ?10æ—?
+ *  Created on: 2025ï¿½?3ï¿½?10ï¿½?
  *      Author: Administrator
  */
 #include "bsp.h"
@@ -145,7 +145,7 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
    if(power_on_login_tencent_cloud_flag==3 ){
 	 power_on_login_tencent_cloud_flag++;
 	   g_wifi.gTimer_link_net_timer_time=0;
-      // HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//å¼?
+      // HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//ï¿½?
         vTaskDelay(pdMS_TO_TICKS(1000));//HAL_Delay(1000);
 	  
 	}
@@ -339,8 +339,8 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
                     
                     
                 
-                }
-                else if(g_wifi.wifi_rx_data_array[50] == 0x31){  //"0x31" ASCII = '1'
+            }
+            else if(g_wifi.wifi_rx_data_array[50] == 0x31){  //"0x31" ASCII = '1'
 
                    g_wifi.get_rx_beijing_time_enable=0; //enable beijing times
                    if(g_wifi.gwifi_link_net_success==1){
@@ -368,8 +368,8 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
     case 6:
 
   
-       confirm_wifi_link_net_state();
-    
+       //confirm_wifi_link_net_state(); //WT.EDIT 2026.03.09
+       //vTaskDelay(1000);
 
        g_wifi.gTimer_auto_detected_net_state_times=0;  
 
@@ -451,8 +451,10 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 	      
              auto_link_net_flag =2;
    
-	       // HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//å¼?å§‹è¿žæŽ?
-            vTaskDelay(1000);//HAL_Delay(1000);
+	       // HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//ï¿½?å§‹è¿žï¿½?
+          at_send_data("AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
+          vTaskDelay(1000);//HAL_Delay(1000);
+          
          
            
 		
@@ -516,7 +518,7 @@ static void confirm_wifi_link_net_state(void)
 {
 
    //HAL_UART_Transmit(&huart2, "AT+TCMQTTSTATE?\r\n", strlen("AT+TCMQTTSTATE?\r\n"), 5000);
-
+   // at_send_data("AT+TCMQTTSTATE?\r\n", strlen("AT+TCMQTTSTATE?\r\n"));
 
 }
 

@@ -8,7 +8,8 @@
 
 #define SWITCH_THRESHOLD 2
 
-uint8_t disp_temp_hum;
+uint8_t disp_temp_hum,dsip_timer_value;
+uint8_t timerbuf[1];
 
 void display_digital_3_numbers(void)
 {
@@ -150,6 +151,7 @@ void set_timer_timing_value_handler(void)
 		  	
             g_pro.key_add_dec_be_pressed_flag ++ ;
 			if(g_pro.gdisp_timer_hours_value>0){
+			timerbuf[0] = g_pro.gdisp_timer_hours_value;
 			g_pro.gAI = 0;
 			LED_AI_OFF();
 			g_pro.switch_disp_time_or_temp_item = temperature_mode; //define UP and down key is set temperature value 
@@ -194,13 +196,11 @@ void set_timer_timing_value_handler(void)
 
        if(g_pro.gTimer_timer_time_second > 59){
 	       g_pro.gTimer_timer_time_second=0;
-		   #if TEST_UNIT
+		   #if 0 //TEST_UNIT
 		   	 g_pro.gdisp_timer_minutes_value =g_pro.gdisp_timer_minutes_value - 40;
 		   #else
 		     g_pro.gdisp_timer_minutes_value--;
 
-			 
-		   
 		   #endif 
 
 		   if(g_pro.gdisp_timer_minutes_value< 0){
@@ -210,10 +210,12 @@ void set_timer_timing_value_handler(void)
                g_pro.g_real_hours_counter++;
 		        // 只有当小时数 > 1 时才减小时2026.03.09 .WT.EDIT .
 		        if (g_pro.gdisp_timer_hours_value > 1 &&  g_pro.gdisp_timer_hours_value !=1 ){
-		            g_pro.gdisp_timer_hours_value = g_pro.gdisp_timer_hours_value - g_pro.g_real_hours_counter +1;
+
+				    dsip_timer_value = timerbuf[0] - g_pro.g_real_hours_counter +1;
+		            g_pro.gdisp_timer_hours_value = dsip_timer_value;
 		        }
 				
-				if(g_pro.gdisp_timer_hours_value ==1){
+				if(g_pro.gdisp_timer_hours_value ==1 || g_pro.gdisp_timer_hours_value==0){
 
 				    g_pro.gdisp_timer_hours_value--;
                 }

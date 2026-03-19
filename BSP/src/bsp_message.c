@@ -49,6 +49,10 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
        if(pdata[3] == 0x01){ 
 		  g_disp.g_second_disp_flag = 1;
+
+	      if(g_disp.soft_version ==0){
+             g_pro.gpower_on = power_on;
+		  }
 	
 	
           buzzer_sound();
@@ -237,8 +241,8 @@ void receive_data_from_displayboard(uint8_t *pdata)
 	 case 0x10: //power on or off don't sound 
           if(pdata[3] == 0x01){ //open
 
-		   g_disp.g_second_disp_flag = 1;
-	       g_pro.gpower_on = power_on;
+		   
+		   g_pro.gpower_on = power_on;
 	       SendWifiData_Answer_Cmd(0x10,0x01);
 	       vTaskDelay(pdMS_TO_TICKS(100));
 	         
@@ -567,6 +571,19 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		
 	 	
      break;
+
+	 
+	 	
+	 case 0xF0: //software version difference older and new sotfware 
+		  
+		   g_disp.soft_version = pdata[3];
+		 
+		  // printf("gpro_t.soft_version = %d\r\n",gpro_t.soft_version);
+	 
+		  
+	break;
+
+
 
      case 0xFF: //copy send cmd acknowlege
 
