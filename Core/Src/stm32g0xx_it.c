@@ -22,7 +22,7 @@
 #include "stm32g0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "bsp.h"
+//#include "bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,6 +98,46 @@ void HardFault_Handler(void)
   }
 }
 
+/**
+  * @brief This function handles System service call via SWI instruction.
+  */
+void SVC_Handler(void)
+{
+  /* USER CODE BEGIN SVC_IRQn 0 */
+
+  /* USER CODE END SVC_IRQn 0 */
+  /* USER CODE BEGIN SVC_IRQn 1 */
+
+  /* USER CODE END SVC_IRQn 1 */
+}
+
+/**
+  * @brief This function handles Pendable request for system service.
+  */
+void PendSV_Handler(void)
+{
+  /* USER CODE BEGIN PendSV_IRQn 0 */
+
+  /* USER CODE END PendSV_IRQn 0 */
+  /* USER CODE BEGIN PendSV_IRQn 1 */
+
+  /* USER CODE END PendSV_IRQn 1 */
+}
+
+/**
+  * @brief This function handles System tick timer.
+  */
+void SysTick_Handler(void)
+{
+  /* USER CODE BEGIN SysTick_IRQn 0 */
+
+  /* USER CODE END SysTick_IRQn 0 */
+
+  /* USER CODE BEGIN SysTick_IRQn 1 */
+
+  /* USER CODE END SysTick_IRQn 1 */
+}
+
 /******************************************************************************/
 /* STM32G0xx Peripheral Interrupt Handlers                                    */
 /* Add here the Interrupt Handlers for the used peripherals.                  */
@@ -113,27 +153,21 @@ void EXTI0_1_IRQHandler(void)
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
 
   /* USER CODE END EXTI0_1_IRQn 0 */
-  if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_0) != RESET)
+  if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_0) != RESET)
   {
-    LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_0);
+    LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_0);
     /* USER CODE BEGIN LL_EXTI_LINE_0_RISING */
 	//ll_gpio_falling_callback(KEY_POWER_Pin);
 
     /* USER CODE END LL_EXTI_LINE_0_RISING */
   }
-  else if(LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_1) != RESET){
-
-      LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_1);
-	  /* USER CODE BEGIN LL_EXTI_LINE_0_RISING */
-	  //ll_gpio_falling_callback(KEY_MODE_Pin);
-
-
-  }
- 
+  if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_1) != RESET)
+  {
+    LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_1);
     /* USER CODE BEGIN LL_EXTI_LINE_1_RISING */
 
     /* USER CODE END LL_EXTI_LINE_1_RISING */
-  
+  }
   /* USER CODE BEGIN EXTI0_1_IRQn 1 */
 
   /* USER CODE END EXTI0_1_IRQn 1 */
@@ -147,22 +181,20 @@ void EXTI2_3_IRQHandler(void)
   /* USER CODE BEGIN EXTI2_3_IRQn 0 */
 
   /* USER CODE END EXTI2_3_IRQn 0 */
-  if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_2) != RESET)
+  if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_2) != RESET)
   {
-    LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_2);
-	//ll_gpio_falling_callback(KEY_UP_Pin);
+    LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_2);
     /* USER CODE BEGIN LL_EXTI_LINE_2_RISING */
 
     /* USER CODE END LL_EXTI_LINE_2_RISING */
   }
-  //else if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_3) != RESET)
-  //{
-   // LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_3);
-	//ll_gpio_falling_callback(KEY_DOWN_Pin);
+  if (LL_EXTI_IsActiveRisingFlag_0_31(LL_EXTI_LINE_3) != RESET)
+  {
+    LL_EXTI_ClearRisingFlag_0_31(LL_EXTI_LINE_3);
     /* USER CODE BEGIN LL_EXTI_LINE_3_RISING */
 
     /* USER CODE END LL_EXTI_LINE_3_RISING */
-  //}
+  }
   /* USER CODE BEGIN EXTI2_3_IRQn 1 */
 
   /* USER CODE END EXTI2_3_IRQn 1 */
@@ -213,7 +245,7 @@ void DMA1_Ch4_5_DMAMUX1_OVR_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Ch4_5_DMAMUX1_OVR_IRQn 0 */
   if(LL_DMA_IsActiveFlag_TC4(DMA1) != RESET) {
 		 LL_DMA_ClearFlag_TC4(DMA1);
-		 dma_tx_done=1;
+		// dma_tx_done=1;
 		 
 	 }
 	 
@@ -253,7 +285,7 @@ void TIM17_IRQHandler(void)
   if(LL_TIM_IsActiveFlag_UPDATE(TIM17)){
   	
       LL_TIM_ClearFlag_UPDATE(TIM17); // ✅ 清除更新中断标志
-      tim_invoke_callback(17);//tim17_isr_callback_handler();
+      //tim_invoke_callback(17);//tim17_isr_callback_handler();
 
 
   }
@@ -268,21 +300,16 @@ void TIM17_IRQHandler(void)
   */
 void USART1_IRQHandler(void)
 {
-  volatile uint8_t data;
   /* USER CODE BEGIN USART1_IRQn 0 */
   if(LL_USART_IsActiveFlag_RXNE(USART1)){
 
-      data = LL_USART_ReceiveData8(USART1);
-	  //usart1_isr_callback_handler(data);
-	  usart1_rx_displayboard_callbck_invoke(data);
+    //  data = LL_USART_ReceiveData8(USART1);
+	  
+	//  usart1_rx_displayboard_callbck_invoke(data);
 
   }
 
   /* USER CODE END USART1_IRQn 0 */
-  if(LL_USART_IsActiveFlag_ORE(USART1)){
-
-       LL_USART_ClearFlag_ORE(USART1);
-   }
   /* USER CODE BEGIN USART1_IRQn 1 */
 
   /* USER CODE END USART1_IRQn 1 */
@@ -302,7 +329,7 @@ void USART2_IRQHandler(void)
 	   //LL_USART_ClearFlag_RXNE(USART2);
 	  data = LL_USART_ReceiveData8(USART2);
 
-	   usart2_isr_callback_fun(data);
+	   //usart2_isr_callback_fun(data);
   
 	}
 

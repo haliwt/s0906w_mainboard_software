@@ -207,7 +207,7 @@ void works_run_two_hours_state(void)
 
 
    #else 
-    if(g_pro.gTimer_two_hours_counter > 7200 ){ //two hours
+    if(g_pro.gTimer_two_hours_counter > 7200 && g_pro.works_two_hours_interval_flag==0 ){ //two hours
 
    #endif 
     g_pro.delay_run_adc_counter=0;

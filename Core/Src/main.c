@@ -19,17 +19,15 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
 #include "adc.h"
 #include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "wwdg.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "bsp.h"
+//#include "bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,7 +53,6 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -71,7 +68,6 @@ void MX_FREERTOS_Init(void);
   */
 int main(void)
 {
-
 
   /* USER CODE BEGIN 1 */
 
@@ -96,8 +92,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
- // MX_IWDG_Init();
- 
   MX_ADC1_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
@@ -108,18 +102,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	// ʹ��USART�����ж�
  //  LL_IWDG_ReloadCounter(IWDG);
-   bsp_init();
+  // bsp_init();
    //LL_USART_EnableIT_RXNE(USART1); //WT.EDIT 2025.09.28
-   freeRTOS_Handler();
+  
   /* USER CODE END 2 */
-
-  /* Call init function for freertos objects (in cmsis_os2.c) */
-  //MX_FREERTOS_Init();
-
-  /* Start scheduler */
- // osKernelStart();
-
-  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -217,8 +203,7 @@ void Error_Handler(void)
     }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
