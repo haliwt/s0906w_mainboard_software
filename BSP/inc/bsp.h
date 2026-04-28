@@ -73,6 +73,7 @@
 
 
 
+
 #define USE_THREADX       1  // ??? ThreadX
 
 #define Enable_EventRecorder          0
@@ -86,9 +87,9 @@
     #include "tx_api.h"
     
     /* ThreadX ?????????????????? */
-    extern UINT old_post; 
-    #define DISABLE_INT()    old_post = tx_interrupt_control(TX_INT_DISABLE)
-    #define ENABLE_INT()     tx_interrupt_control(old_post)
+    //extern UINT old_post; 
+    #define DISABLE_INT()   UINT __old_post = tx_interrupt_control(TX_INT_DISABLE)
+    #define ENABLE_INT()     tx_interrupt_control(__old_post)
 #else
     /* ??? RTOS ?????????? */
     #define ENABLE_INT()    __set_PRIMASK(0)    /* ?????? */
