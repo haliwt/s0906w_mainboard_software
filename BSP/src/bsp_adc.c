@@ -167,7 +167,7 @@ static void ADC_GetValues(void)
 	   //mean_fan_buf[fan_counter] = compute_voltage(adc_buffer[0]);//(adc_buffer[0] * 3300 )/4095;//compute_voltage(adc_buffer[0]) ;
 	  // mean_fan_buf[fan_counter]
 	   fan_detect_voltage= (adc_buffer[0] * 3300 )/4095;
-       tx_thread_sleep((10));
+       tx_thread_sleep(10);
 	   #if DEBUG_ENABLE
           printf("fan_voltale = %d \r\n",fan_detect_voltage);
 	   #endif 

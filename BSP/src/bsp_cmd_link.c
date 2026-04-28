@@ -229,15 +229,15 @@ void SendWifidata_Two_Data(uint8_t cmd,uint8_t datacmd)
 	*Return Ref:NO
 	*
 *******************************************************************************/
-void Start_DMA_Receive(void) 
-{
-    // 清空缓冲区
-    memset(rxBuffer, 0, MAX_BUFFER_SIZE);
-    dataReceived = 0;
-    
-    // 启动DMA接收
-   // HAL_UART_Receive_DMA(&huart1, rxBuffer,sizeof(rxBuffer));
-}
+//void Start_DMA_Receive(void) 
+//{
+//    // 清空缓冲区
+//    memset(rxBuffer, 0, MAX_BUFFER_SIZE);
+//    dataReceived = 0;
+//    
+//    // 启动DMA接收
+//   // HAL_UART_Receive_DMA(&huart1, rxBuffer,sizeof(rxBuffer));
+//}
 
 
 

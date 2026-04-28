@@ -79,7 +79,7 @@ void MX_IWDG_Init(void)
   // 设置分频与重载（约 5s）
   //T = ((Reload+1)*Prescaler)/Flsi; //Flsi = 32KHZ .
    LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_128); //Prescaler = 128
-   LL_IWDG_SetReloadCounter(IWDG, 2499);// T =((Reload+1)*Prescaler)/32000=5s
+   LL_IWDG_SetReloadCounter(IWDG, 1499);// T =((Reload+1)*Prescaler)/32000=6s
 	
   while (LL_IWDG_IsReady(IWDG) != 1)
   {

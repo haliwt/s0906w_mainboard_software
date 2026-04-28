@@ -34,7 +34,7 @@ static uint8_t device_massage[128];
  *return: the len of data send success
  * @brief hal api for at data send
  */
-uint8_t at_send_data(uint8_t* pdata, uint16_t len)
+uint8_t at_send_data(const uint8_t* pdata, uint16_t len)
 {
     #if 0
 	if(HAL_OK == HAL_UART_Transmit(&huart2, pdata, len, 10000))
@@ -46,22 +46,13 @@ uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 		return 0;
 	}
 	#else
-//	 if (pdata == NULL || len == 0)
-//        return 0;
-
-//    dma_tx_done = 0;
-//    USART2_DMA_Send((uint8_t *)pdata, len);
-
-//    // 等待 DMA 发送完成（可加超时机制）
-//    uint32_t timeout = 100000;
-//    while (!dma_tx_done && --timeout);
-//    return (timeout == 0) ? 0 : len;
+    if (pdata == NULL || len == 0) return 0;
 
 
-	 USART2_DMA_Send(pdata,len);
+	 USART2_DMA_Send((uint8_t *)pdata,len);
 
 	#endif
-	
+	return len;
 }
 
 
@@ -85,7 +76,7 @@ void InitWifiModule(void)
 	
 	if(g_wifi.wifi_config_net_lable==0){
 		 g_wifi.wifi_config_net_lable++;
-	    at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+	    at_send_data((const uint8_t *)"AT+RST\r\n", strlen("AT+RST\r\n"));
 		//HAL_Delay(1000);
 		tx_thread_sleep(1000);
 	}
@@ -95,7 +86,7 @@ void InitWifiModule(void)
 void InitWifiModule_Hardware(void)
 {
 	
-	at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+	at_send_data((const uint8_t *)"AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
 	//HAL_Delay(1000);
 	tx_thread_sleep(1000);
 			
@@ -105,7 +96,7 @@ void InitWifiModule_Hardware(void)
 void ReConnect_Wifi_Net_ATReset_Hardware(void)
 {
 	   
-		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+		at_send_data((const uint8_t *)"AT+RST\r\n", strlen("AT+RST\r\n"));
 		//HAL_Delay(1000);
 		tx_thread_sleep(1000);
 

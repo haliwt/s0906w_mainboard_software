@@ -121,7 +121,7 @@ static void Auto_InitWifiModule_Hardware(void)
        g_wifi.linking_tencent_cloud_doing = 1;
 	   //at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n")); //
 	   at_send_data((const uint8_t *)"AT+RST\r\n", strlen("AT+RST\r\n"));
-       tx_thread_sleep((1000));//HAL_Delay(1000);
+       tx_thread_sleep(1000);//HAL_Delay(1000);
 
 	}
 	if(g_wifi.gTimer_link_net_timer_time > 2 &&  power_on_login_tencent_cloud_flag==1 ){
@@ -146,7 +146,7 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
 	 power_on_login_tencent_cloud_flag++;
 	   g_wifi.gTimer_link_net_timer_time=0;
       // HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//�?
-        tx_thread_sleep((1000));//HAL_Delay(1000);
+        tx_thread_sleep(1000);//HAL_Delay(1000);
 	  
 	}
    
@@ -421,7 +421,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
           //  WIFI_IC_ENABLE();
        
-    		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+    		at_send_data((const uint8_t *)"AT+RST\r\n", strlen("AT+RST\r\n"));
             tx_thread_sleep(1000);//HAL_Delay(1000);
             g_wifi.gTimer_auto_link_net_time =0;
             auto_link_net_flag=1;
@@ -452,7 +452,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
              auto_link_net_flag =2;
    
 	       // HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//�?始连�?
-          at_send_data("AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
+          at_send_data((const uint8_t *)"AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
           tx_thread_sleep(1000);//HAL_Delay(1000);
           
          

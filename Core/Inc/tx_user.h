@@ -84,7 +84,7 @@
 /* Override various options with default values already assigned in tx_port.h. Please also refer
    to tx_port.h for descriptions on each of these options.  */
 
-/*#define TX_MAX_PRIORITIES                32*/
+#define TX_MAX_PRIORITIES                8
 /*#define TX_THREAD_USER_EXTENSION                ????*/
 /*#define TX_TIMER_THREAD_STACK_SIZE                1024*/
 /*#define TX_TIMER_THREAD_PRIORITY                0*/
@@ -223,7 +223,7 @@
 
 /* Define the common timer tick reference for use by other middleware components. */
 
-/*#define TX_TIMER_TICKS_PER_SECOND                100*/
+#define TX_TIMER_TICKS_PER_SECOND                1000
 
 /* Determinate if the basic alignment type is defined. */
 

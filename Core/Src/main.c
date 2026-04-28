@@ -104,14 +104,15 @@ int main(void)
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 	// ʹ��USART�����ж�
- //  LL_IWDG_ReloadCounter(IWDG);
-  // bsp_init();
-   //LL_USART_EnableIT_RXNE(USART1); //WT.EDIT 2025.09.28
+   LL_IWDG_ReloadCounter(IWDG);
+   bsp_init();
+   LL_USART_EnableIT_RXNE(USART1); //WT.EDIT 2025.09.28
   
   /* USER CODE END 2 */
 
- 
-  MX_ThreadX_Init();
+  
+  tx_kernel_enter();
+  //MX_ThreadX_Init();
 
   /* We should never get here as control is now taken by the scheduler */
 

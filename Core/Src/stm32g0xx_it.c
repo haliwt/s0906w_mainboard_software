@@ -22,7 +22,7 @@
 #include "stm32g0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-//#include "bsp.h"
+#include "bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -205,7 +205,7 @@ void DMA1_Ch4_5_DMAMUX1_OVR_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Ch4_5_DMAMUX1_OVR_IRQn 0 */
   if(LL_DMA_IsActiveFlag_TC4(DMA1) != RESET) {
 		 LL_DMA_ClearFlag_TC4(DMA1);
-		// dma_tx_done=1;
+		 dma_tx_done=1;
 		 
 	 }
 	 
@@ -245,7 +245,7 @@ void TIM17_IRQHandler(void)
   if(LL_TIM_IsActiveFlag_UPDATE(TIM17)){
   	
       LL_TIM_ClearFlag_UPDATE(TIM17); // ✅ 清除更新中断标志
-      //tim_invoke_callback(17);//tim17_isr_callback_handler();
+      tim_invoke_callback(17);//tim17_isr_callback_handler();
 
 
   }
@@ -260,12 +260,13 @@ void TIM17_IRQHandler(void)
   */
 void USART1_IRQHandler(void)
 {
+   volatile uint8_t data;
   /* USER CODE BEGIN USART1_IRQn 0 */
   if(LL_USART_IsActiveFlag_RXNE(USART1)){
 
-    //  data = LL_USART_ReceiveData8(USART1);
+     data = LL_USART_ReceiveData8(USART1);
 	  
-	//  usart1_rx_displayboard_callbck_invoke(data);
+	  usart1_rx_displayboard_callbck_invoke(data);
 
   }
 
@@ -289,7 +290,7 @@ void USART2_IRQHandler(void)
 	   //LL_USART_ClearFlag_RXNE(USART2);
 	  data = LL_USART_ReceiveData8(USART2);
 
-	   //usart2_isr_callback_fun(data);
+	   usart2_isr_callback_fun(data);
   
 	}
 

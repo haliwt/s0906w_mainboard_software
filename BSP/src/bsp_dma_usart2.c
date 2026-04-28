@@ -110,21 +110,41 @@ void usart2_isr_callback_fun(uint8_t data)
 void USART2_DMA_Send(uint8_t *txBuf,uint16_t txlen)
 {
      if(txBuf ==NULL || txlen ==0) return ;
+    
+    dma_tx_done = 0;
 	
 	LL_DMA_DisableChannel(DMA1,LL_DMA_CHANNEL_4);
-
+    /* 5. 配置传输参数 */
     LL_DMA_ConfigAddresses(DMA1,LL_DMA_CHANNEL_4,
                             (uint32_t)txBuf,
                             (uint32_t)&USART2->TDR,
                             LL_DMA_DIRECTION_MEMORY_TO_PERIPH);
+     /* 3. 配置长度 */
     LL_DMA_SetDataLength(DMA1,LL_DMA_CHANNEL_4,txlen);
 
    
-    LL_DMA_EnableChannel(DMA1,LL_DMA_CHANNEL_4);
+    /* 4. 清除所有相关标志（顺序必须在 EnableChannel 前） */
+    LL_DMA_ClearFlag_TC4(DMA1);
+    LL_DMA_ClearFlag_TE4(DMA1);
+    
+    /* 使能 DMA 中断 */
+    LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_4);
+    LL_DMA_EnableIT_TE(DMA1, LL_DMA_CHANNEL_4);
 
-	 LL_DMA_ClearFlag_TC5(DMA1);//TC5 -> clear transfer complete flag
+    LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_4);
+    
+      /* 6. 启动 DMA */
+    LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_4);
 
+    /* 7. 使能 USART2 的 DMA TX 请求 */
     LL_USART_EnableDMAReq_TX(USART2);
+    
+    
+//    LL_DMA_EnableChannel(DMA1,LL_DMA_CHANNEL_4);
+
+//	 LL_DMA_ClearFlag_TC4(DMA1);//TC5 -> clear transfer complete flag
+
+//    LL_USART_EnableDMAReq_TX(USART2);
 
 
 }

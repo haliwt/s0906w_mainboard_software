@@ -184,7 +184,7 @@ static void threadx_handler(void)
 
 	key_handler();
 	
-	 tx_thread_sleep((20));
+	 tx_thread_sleep(20);
 
    }
 	
@@ -252,9 +252,9 @@ static void vTaskUiPro(ULONG thread_input)
          wifi_led_fast_blink_handler();
 	}
 	
-   // LL_IWDG_ReloadCounter(IWDG);
+   LL_IWDG_ReloadCounter(IWDG);
 
-	tx_thread_sleep((100));
+	tx_thread_sleep(10);
 
 	  
     }
