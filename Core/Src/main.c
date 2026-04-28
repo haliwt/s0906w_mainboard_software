@@ -18,6 +18,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include "app_threadx.h"
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
@@ -106,6 +107,10 @@ int main(void)
    //LL_USART_EnableIT_RXNE(USART1); //WT.EDIT 2025.09.28
   
   /* USER CODE END 2 */
+
+  MX_ThreadX_Init();
+
+  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
