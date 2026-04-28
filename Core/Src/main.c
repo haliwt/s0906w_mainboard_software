@@ -22,13 +22,14 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "iwdg.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-//#include "bsp.h"
+#include "bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,6 +101,7 @@ int main(void)
   MX_TIM17_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 	// ʹ��USART�����ж�
  //  LL_IWDG_ReloadCounter(IWDG);
@@ -108,6 +110,7 @@ int main(void)
   
   /* USER CODE END 2 */
 
+ 
   MX_ThreadX_Init();
 
   /* We should never get here as control is now taken by the scheduler */
@@ -136,6 +139,12 @@ void SystemClock_Config(void)
   /* HSI configuration and activation */
   LL_RCC_HSI_Enable();
   while(LL_RCC_HSI_IsReady() != 1)
+  {
+  }
+
+  /* LSI configuration and activation */
+  LL_RCC_LSI_Enable();
+  while(LL_RCC_LSI_IsReady() != 1)
   {
   }
 

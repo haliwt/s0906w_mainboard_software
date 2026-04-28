@@ -142,13 +142,13 @@ void power_on_run_handler(void)
 	      
 	   	  g_wifi.gwifi_link_net_success=wifi_link_success;
           MqttData_Publish_SetOpen(1);  
-		  vTaskDelay(100);
+		  tx_thread_sleep(100);
 		}
         else{
 		   
 		   	 if(g_wifi.gwifi_link_net_success == wifi_link_success && g_wifi.gwifi_normal_power_on_flag == 0){
 		       MqttData_Publish_SetOpen(1);  
-		       vTaskDelay(100);
+		       tx_thread_sleep(100);
 		    }
         }
 		updateDht11_toDisplayBoard_value();
@@ -166,7 +166,7 @@ void power_on_run_handler(void)
 		
 		  
 		  updateDht11_toDisplayBoard_value();
-	      vTaskDelay(100);
+	      tx_thread_sleep(100);
 		   	
 	        send_wifi_power_on_state = 1;
 		
@@ -245,7 +245,7 @@ void power_on_run_handler(void)
 		      send_wifi_power_on_state++;
 		      g_pro.gset_temperture_value = 40;
 			   MqttData_Publish_Update_Data();
-			   vTaskDelay(200);
+			   tx_thread_sleep(200);
 
 
 		  }
@@ -279,11 +279,11 @@ void power_on_run_handler(void)
 			   if(switch_dht11==1){
 	         	   Subscriber_Data_FromCloud_Handler();
 			
-                   vTaskDelay(200);
+                   tx_thread_sleep(200);
 			   	}
 			    else{
 				Update_Dht11_Totencent_Value()	;
-				 vTaskDelay(200);
+				 tx_thread_sleep(200);
 
 
 				}
@@ -310,11 +310,11 @@ void power_on_run_handler(void)
 			   	 send_net_state=0;
 				 if(g_wifi.gwifi_link_net_success==1) {
 				     SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-			         osDelay(100);
+			         tx_thread_sleep(100);
 				 }
 				 else{
 				     SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
-					  osDelay(100);
+					  tx_thread_sleep(100);
 
 				 }
 				 
@@ -377,9 +377,9 @@ void power_off_run_handler(void)
 
 	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
             MqttData_Publish_SetOpen(0);  
-			vTaskDelay(100);//osDelay(50);
+			tx_thread_sleep(100);//tx_thread_sleep(50);
 	        MqttData_Publish_PowerOff_Ref() ;//
-	        vTaskDelay(100);//osDelay(100);
+	        tx_thread_sleep(100);//tx_thread_sleep(100);
            
 	  }
 	 
@@ -429,9 +429,9 @@ void power_off_run_handler(void)
 	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){
 	 	    wifi_first_connect=0;
             MqttData_Publish_SetOpen(0);  
-			osDelay(100);
+			tx_thread_sleep(100);
 	        MqttData_Publish_PowerOff_Ref() ;//
-	        osDelay(100);
+	        tx_thread_sleep(100);
            
 	 }
 

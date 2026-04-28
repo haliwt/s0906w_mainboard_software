@@ -95,7 +95,7 @@ static void handle_power_key(void)
         g_pro.gpower_on = (g_pro.gpower_on == power_off) ? power_on : power_off;
         g_wifi.gwifi_normal_power_on_flag = 0;
         SendData_Set_Command(CMD_POWER,(g_pro.gpower_on == power_on) ? open : close);
-        osDelay(100);
+        tx_thread_sleep(100);
     }
 }
 /*
@@ -125,7 +125,7 @@ void key_power_longk_fun(void)
             buzzer_sound();
             wifi_led_fast_blink_handler();
             SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
-            osDelay(100);
+            tx_thread_sleep(100);
             wifi_led_fast_blink_handler();
             
         }

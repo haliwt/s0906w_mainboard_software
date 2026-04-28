@@ -53,7 +53,7 @@ void Subscriber_Data_FromCloud_Handler(void)
          //HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000); 
         // free(device_massage);
         USART2_DMA_Send(device_massage, sizeof(device_massage));
-		vTaskDelay(pdMS_TO_TICKS(200));
+		tx_thread_sleep((200));
 }
 /*******************************************************************************
 **
@@ -553,17 +553,17 @@ void Json_Parse_Command_Fun(void)
 	case OPEN_ON_ITEM:
       
 		MqttData_Publish_SetOpen(1);  
-		vTaskDelay(200);//HAL_Delay(100);//osDelay(100);//HAL_Delay(100);
+		tx_thread_sleep(200);//HAL_Delay(100);//tx_thread_sleep(100);//HAL_Delay(100);
 
         Publish_Data_ToTencent_Initial_Data();
-	    vTaskDelay(300);//HAL_Delay(300);
+	    tx_thread_sleep(300);//HAL_Delay(300);
 		
          g_pro.gpower_on = power_on;
 		 g_disp.g_second_disp_flag = 1;
 	     g_wifi.gwifi_link_net_success =1;
           g_wifi.gwifi_normal_power_on_flag= 1;
           SendData_Set_Command(0x20,open);
-		  osDelay(100);
+		  tx_thread_sleep(100);
 
        
 		buzzer_temp_on=0;
@@ -575,13 +575,13 @@ void Json_Parse_Command_Fun(void)
 
       
 		 	MqttData_Publish_SetOpen(0);  
-			osDelay(200);
+			tx_thread_sleep(200);
             
             g_pro.gpower_on = power_off;
 	        g_wifi.gwifi_link_net_success =1;
             g_disp.g_second_disp_flag = 1;
 			SendData_Set_Command(0x20,close);
-			osDelay(100);
+			tx_thread_sleep(100);
           
 			buzzer_temp_on=0;
 	
@@ -594,7 +594,7 @@ void Json_Parse_Command_Fun(void)
 	  if(g_pro.gpower_on ==power_on){
 	    if(g_pro.ptc_warning ==0){
          MqttData_Publish_SetPtc(0x01);
-	  	 osDelay(300);//HAL_Delay(350);
+	  	 tx_thread_sleep(300);//HAL_Delay(350);
 		 g_pro.gDry = 1;
 		 LED_DRY_ON();
 		 g_pro.g_manual_shutoff_dry_flag = 0;
@@ -607,7 +607,7 @@ void Json_Parse_Command_Fun(void)
 	 
          if(g_disp.g_second_disp_flag == 1){
 			 SendWifiData_To_Cmd(0x02,0x01);
-			 osDelay(100);//HAL_Delay(5);
+			 tx_thread_sleep(100);//HAL_Delay(5);
          }
 		
          }
@@ -622,7 +622,7 @@ void Json_Parse_Command_Fun(void)
 	  	if(g_pro.gpower_on ==power_on){
 	
          MqttData_Publish_SetPtc(0);
-		 osDelay(300);//HAL_Delay(350);
+		 tx_thread_sleep(300);//HAL_Delay(350);
 		 g_pro.gDry = 0;
 		 LED_DRY_OFF();
 	     DRY_CLOSE();
@@ -631,7 +631,7 @@ void Json_Parse_Command_Fun(void)
 
 		  if(g_disp.g_second_disp_flag == 1){
 			 SendWifiData_To_Cmd(0x02,0x0);
-	         osDelay(50);//HAL_Delay(5);
+	         tx_thread_sleep(50);//HAL_Delay(5);
 		  }
          }
 		buzzer_temp_on=0;
@@ -644,13 +644,13 @@ void Json_Parse_Command_Fun(void)
 	  	if(g_pro.gpower_on ==power_on){
 			
             MqttData_Publish_SetPlasma(0);
-			osDelay(300);//HAL_Delay(350);
+			tx_thread_sleep(300);//HAL_Delay(350);
 			g_pro.gPlasma =0 ;
 			PLASMA_CLOSE();
 			LED_PLASMA_OFF();
 			if(g_disp.g_second_disp_flag == 1){
 			SendWifiData_To_Cmd(0x03,0x0);
-	  	    osDelay(50);//HAL_Delay(5);
+	  	    tx_thread_sleep(50);//HAL_Delay(5);
 			 }
 	  	}
       
@@ -661,12 +661,12 @@ void Json_Parse_Command_Fun(void)
 	  case ANION_ON_ITEM: //plasma 
 	  	if(g_pro.gpower_on ==power_on){
             MqttData_Publish_SetPlasma(1);
-			osDelay(300);//HAL_Delay(350);
+			tx_thread_sleep(300);//HAL_Delay(350);
 		      g_pro.gPlasma =1 ;
               LED_PLASMA_ON();
               if(g_disp.g_second_disp_flag == 1){
 					SendWifiData_To_Cmd(0x03,0x01);
-	  	   			osDelay(50);//HAL_Delay(5);
+	  	   			tx_thread_sleep(50);//HAL_Delay(5);
               }
 	  	}
   
@@ -678,14 +678,14 @@ void Json_Parse_Command_Fun(void)
         if(g_pro.gpower_on ==power_on){
 
             MqttData_Publish_SetUltrasonic(0);
-			osDelay(300);	//HAL_Delay(350);
+			tx_thread_sleep(300);	//HAL_Delay(350);
 			g_pro.gMouse = 0;
 			mouse_close();
 			LED_MOUSE_OFF();
            
 			 if(g_disp.g_second_disp_flag == 1){
 			   SendWifiData_To_Cmd(0x04,0x0);
-			   osDelay(50);
+			   tx_thread_sleep(50);
 			  }
         }
 		buzzer_temp_on=0;
@@ -696,7 +696,7 @@ void Json_Parse_Command_Fun(void)
 	    if(g_pro.gpower_on ==power_on){
 		
              MqttData_Publish_SetUltrasonic(1);
-			 osDelay(300);	//HAL_Delay(350);
+			 tx_thread_sleep(300);	//HAL_Delay(350);
 
              g_pro.gMouse = 1;
 			 LED_MOUSE_ON();
@@ -704,7 +704,7 @@ void Json_Parse_Command_Fun(void)
         
 		    if(g_disp.g_second_disp_flag == 1){
 			SendWifiData_To_Cmd(0x04,0x01);
-			osDelay(50);//HAL_Delay(5);
+			tx_thread_sleep(50);//HAL_Delay(5);
 		    }
         }
         
@@ -719,10 +719,10 @@ void Json_Parse_Command_Fun(void)
              g_pro.gAI=2;
 			 LED_AI_OFF();
              MqttData_Publish_SetState(2);
-    	     osDelay(300);//HAL_Delay(350);
+    	     tx_thread_sleep(300);//HAL_Delay(350);
             if(g_disp.g_second_disp_flag ==1){
     	        SendWifiData_To_Cmd(0x27,0x02);
-				osDelay(50);
+				tx_thread_sleep(50);
             }
 
            
@@ -738,10 +738,10 @@ void Json_Parse_Command_Fun(void)
               g_pro.gAI=1;
 			  LED_AI_ON();
               MqttData_Publish_SetState(1);
-    		  osDelay(300);//HAL_Delay(350);
+    		  tx_thread_sleep(300);//HAL_Delay(350);
               if(g_disp.g_second_disp_flag ==1){
     		   SendWifiData_To_Cmd(0x27,0x01);
-			   osDelay(50);
+			   tx_thread_sleep(50);
               }
 
             
@@ -770,13 +770,13 @@ void Json_Parse_Command_Fun(void)
 			
 			
             MqttData_Publis_SetTemp(g_wifi.wifi_set_temperature_value);
-		    osDelay(300);//HAL_Delay(350);
+		    tx_thread_sleep(300);//HAL_Delay(350);
 		    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			    TM1639_Display_Temperature(g_wifi.wifi_set_temperature_value); //WT.EDIT 2025.03.11
 		    }
 			if(g_disp.g_second_disp_flag == 1){
 				SendWifiData_One_Data(0x2A, g_wifi.wifi_set_temperature_value); //smart phone set temperature value .
-				osDelay(100);//HAL_Delay(10);
+				tx_thread_sleep(100);//HAL_Delay(10);
 		    }
 			
        }
@@ -800,10 +800,10 @@ void Json_Parse_Command_Fun(void)
 			
          
 			MqttData_Publis_SetFan(g_wifi.set_wind_speed_value);
-			osDelay(300);//HAL_Delay(350);
+			tx_thread_sleep(300);//HAL_Delay(350);
 			if(g_disp.g_second_disp_flag == 1){
 	    		SendWifiData_To_PanelWindSpeed(g_wifi.set_wind_speed_value);
-				osDelay(50);//HAL_Delay(10);
+				tx_thread_sleep(50);//HAL_Delay(10);
 			}
           
 		    }
@@ -811,7 +811,7 @@ void Json_Parse_Command_Fun(void)
 				g_wifi.set_wind_speed_value=0;
 
 			    MqttData_Publis_SetFan(g_wifi.set_wind_speed_value);
-				osDelay(300);//HAL_Delay(350);
+				tx_thread_sleep(300);//HAL_Delay(350);
 
 
 			}
@@ -833,7 +833,7 @@ void Json_Parse_Command_Fun(void)
               
 			  
 			   SendWifiData_To_Cmd(0x21,0x01); //smart phone is open that App timer 
-               osDelay(100);
+               tx_thread_sleep(100);
 			    g_wifi.gwifi_link_net_success =1;
 			   g_pro.gpower_on = power_on; //WT.EDIT 
 			   g_wifi.link_net_step = 0; //WT.EDIT 2025.05.12
@@ -850,12 +850,12 @@ void Json_Parse_Command_Fun(void)
 		         g_wifi.gwifi_link_net_success =1;
 
 		 		  MqttData_Publish_SetOpen(0);  
-			       osDelay(300);//HAL_Delay(350);
+			       tx_thread_sleep(300);//HAL_Delay(350);
 	
 	            g_pro.gpower_on = power_off;
            
 			SendWifiData_To_Cmd(0x21,0x0); //turn off power off
-			osDelay(100);//HAL_Delay(10);
+			tx_thread_sleep(100);//HAL_Delay(10);
             
 		      buzzer_temp_on=0;
 				

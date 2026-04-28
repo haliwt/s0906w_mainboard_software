@@ -59,7 +59,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		 
 		 
           SendWifiData_Answer_Cmd(CMD_POWER,0x01); //WT.EDIT 2025.01.07 
-          osDelay(30);
+          tx_thread_sleep(30);
         }
         else{ //close 
          
@@ -69,7 +69,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         
 		
 		 SendWifiData_Answer_Cmd(CMD_POWER,0x0); //WT.EDIT 2025.01.07
-		 osDelay(100);
+		 tx_thread_sleep(100);
 
         }
 
@@ -97,12 +97,12 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  g_pro.gTimer_set_temp_counter=1;
 		 //compare_temperature_value_hanlder();
 		   SendWifiData_Answer_Cmd(CMD_PTC,0x01); //WT.EDIT 2025.01.07
-		   vTaskDelay(100);
+		   tx_thread_sleep(100);
     
          if(g_wifi.gwifi_link_net_success==wifi_link_success && ptc_on_default != g_pro.gDry){
 		 	  ptc_on_default = g_pro.gDry;
               MqttData_Publish_SetPtc(0x01);
-	  	      osDelay(200);//HAL_Delay(350);
+	  	      tx_thread_sleep(200);//HAL_Delay(350);
           }
        
        }
@@ -117,13 +117,13 @@ void receive_data_from_displayboard(uint8_t *pdata)
           DRY_CLOSE();
 		  if(g_disp.g_second_disp_flag ==1){
 		  SendWifiData_Answer_Cmd(CMD_PTC,0x0); //WT.EDIT 2025.01.07
-		   osDelay(100);
+		   tx_thread_sleep(100);
 		  }
             
          if(g_wifi.gwifi_link_net_success==wifi_link_success && ptc_off_default != g_pro.gDry){
 		 	  ptc_off_default = g_pro.gDry;
               MqttData_Publish_SetPtc(0x0);
-	  	      osDelay(200);//HAL_Delay(350);
+	  	      tx_thread_sleep(200);//HAL_Delay(350);
           }
 	   	 }
        }
@@ -145,7 +145,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   }
 		if(g_wifi.gwifi_link_net_success==1){
            MqttData_Publish_SetPlasma(1);
-		       osDelay(200);//HAL_Delay(350);
+		       tx_thread_sleep(200);//HAL_Delay(350);
           }
            
         }
@@ -160,7 +160,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   
 		    if(g_wifi.gwifi_link_net_success==1){
               MqttData_Publish_SetPlasma(0);
-		       osDelay(200);//HAL_Delay(350);
+		       tx_thread_sleep(200);//HAL_Delay(350);
             }
            
         }
@@ -182,7 +182,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   }
 		if(g_wifi.gwifi_link_net_success==1){
            MqttData_Publish_SetUltrasonic(1);
-		       osDelay(200);//HAL_Delay(350);
+		       tx_thread_sleep(200);//HAL_Delay(350);
           }
            
           }
@@ -195,7 +195,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 					mouse_close();
           if(g_wifi.gwifi_link_net_success==1){
 				MqttData_Publish_SetUltrasonic(0);
-			    osDelay(200);//HAL_Delay(350);
+			    tx_thread_sleep(200);//HAL_Delay(350);
 			}
 
         }
@@ -211,7 +211,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   g_disp.g_second_disp_flag=1;
         if(g_pro.gpower_on == power_on){ 
 		  SendWifiData_Answer_Cmd(0x05,0x01); //WT.EDIT 2024.12.28
-		  osDelay(100);
+		  tx_thread_sleep(100);
           buzzer_sound();
 		  
         
@@ -244,7 +244,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   
 		   g_pro.gpower_on = power_on;
 	       SendWifiData_Answer_Cmd(0x10,0x01);
-	       vTaskDelay(pdMS_TO_TICKS(100));
+	       tx_thread_sleep((100));
 	         
 	    }
         else if(pdata[3] == 0x0){ //close 
@@ -253,7 +253,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 			
               SendWifiData_Answer_Cmd(0x10,0x0); //power off .
 
-              vTaskDelay(pdMS_TO_TICKS(100)); 
+              tx_thread_sleep((100)); 
       
              
                g_pro.gpower_on = power_off;
@@ -283,7 +283,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
           g_disp.g_second_disp_flag=1;
           buzzer_sound();
           SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2025.01.07
-          osDelay(100);
+          tx_thread_sleep(100);
           
 
           }
@@ -393,7 +393,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
          if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
 		 	  ptc_on_default = g_pro.gDry;
               MqttData_Publish_SetPtc(0x01);
-	  	      osDelay(200);//HAL_Delay(350);
+	  	      tx_thread_sleep(200);//HAL_Delay(350);
          }
        
        
@@ -412,7 +412,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
          if(g_wifi.gwifi_link_net_success==1 && ptc_off_default != g_pro.gDry){
 		 	  ptc_off_default = g_pro.gDry;
               MqttData_Publish_SetPtc(0x0);
-	  	      osDelay(200);//HAL_Delay(350);
+	  	      tx_thread_sleep(200);//HAL_Delay(350);
           }
 	   	 
        
@@ -448,7 +448,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				         if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
 						 	  ptc_on_default = g_pro.gDry;
 				              MqttData_Publish_SetPtc(0x01);
-					  	      osDelay(200);//HAL_Delay(350);
+					  	      tx_thread_sleep(200);//HAL_Delay(350);
 				          }
 									      
 
@@ -463,7 +463,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				         if(g_wifi.gwifi_link_net_success==1 && ptc_off_default != g_pro.gDry){
 						 	  ptc_off_default = g_pro.gDry;
 				              MqttData_Publish_SetPtc(0x0);
-					  	      osDelay(200);//HAL_Delay(350);
+					  	      tx_thread_sleep(200);//HAL_Delay(350);
 				          }
 
 					 }
@@ -533,7 +533,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
 					//TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 					TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
-                    osDelay(500);
+                    tx_thread_sleep(500);
 				}
 	           	
 		   		

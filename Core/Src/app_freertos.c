@@ -108,7 +108,7 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    tx_thread_sleep(1);
   }
   /* USER CODE END StartDefaultTask */
 }

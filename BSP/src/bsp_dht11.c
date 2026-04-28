@@ -204,7 +204,7 @@ uint8_t read_sensor_dht11_data(void)
 	 // 读取DHT11数据
     status = dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
     //dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
-	osDelay(200);
+	tx_thread_sleep(200);
     if(status != DHT11_OK)
     {
         // 读取失败，显示错误代�??
@@ -320,7 +320,7 @@ void updateDht11_toDisplayBoard_value(void)
 	    
 		if(dht11_data.temperature!=0 && dht11_data.humidity!=0){
 		    sendData_Real_TimeHum(dht11_data.humidity,dht11_data.temperature);
-			osDelay(50);
+			tx_thread_sleep(50);
 			copy_dht11_temp= dht11_data.temperature;
 		    copy_dht11_hum = dht11_data.humidity;
 			
@@ -333,14 +333,14 @@ void updateDht11_toDisplayBoard_value(void)
 		      counter=0;
 		      sendData_Real_TimeHum(dht11_data.humidity,dht11_data.temperature);
 		     // sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-			  osDelay(50);
+			  tx_thread_sleep(50);
 
 
 		  }
 		  else{
 		  	  counter=0;
 			  sendData_Real_TimeHum(copy_dht11_hum,copy_dht11_temp);
-			  osDelay(50);
+			  tx_thread_sleep(50);
 		  }
 
 		}
@@ -349,7 +349,7 @@ void updateDht11_toDisplayBoard_value(void)
 	else{
 	    sendData_Real_TimeHum(copy_dht11_hum,copy_dht11_temp);
 		   
-		osDelay(50);
+		tx_thread_sleep(50);
 
 
 	}
@@ -373,7 +373,7 @@ void Update_Dht11_Totencent_Value(void)
 	 g_pro.g_humidity_value= dht11_data.humidity;
 
 	MqttData_Publis_ReadTempHum(dht11_data.temperature,dht11_data.humidity);
-    osDelay(200);//HAL_Delay(100);
+    tx_thread_sleep(200);//HAL_Delay(100);
 
     }
 
@@ -391,7 +391,7 @@ void Update_Dht11_toDisplayBoard_Value(void)
 
     if(g_disp.g_second_disp_flag == 1){ 
 		sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-    	osDelay(100);//HAL_Delay(100);
+    	tx_thread_sleep(100);//HAL_Delay(100);
     }
 
     }

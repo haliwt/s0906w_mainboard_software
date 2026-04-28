@@ -13,8 +13,6 @@
 
 
 
-
-#include "bsp_freertos.h"
 #include "bsp_streamlight.h"
 #include "bsp_key.h"
 #include "bsp_key_app.h"
@@ -38,6 +36,7 @@
 #include "bsp_adc.h"
 #include "bsp_iap.h"
 #include "bsp_wwdg.h"
+#include "bsp_threadx.h"
 
 #include "interrupt_manager.h"
 
@@ -65,30 +64,35 @@
 #include "gpio.h"
 #include "wwdg.h"
 
-//freeRtos
-#include "FreeRTOS.h"
-#include "task.h"
-#include "cmsis_os.h"
+//Threadx
+#include "app_threadx.h"
 
 
-#define  USE_FreeRTOS      1
+
+
+
+
+
+#define USE_THREADX       1  // ??? ThreadX
 
 #define Enable_EventRecorder          0
   
-#define  TEST_UNIT        0 //Enable_EventRecorder
+#define TEST_UNIT         0 
 
 #define DEBUG_ENABLE        Enable_EventRecorder 
 
 
-#if USE_FreeRTOS == 1
-	//#include "FreeRTOS.h"
-	///#include "task.h"
-	#define DISABLE_INT()    taskENTER_CRITICAL()
-	#define ENABLE_INT()     taskEXIT_CRITICAL()
+#if USE_THREADX == 1
+    #include "tx_api.h"
+    
+    /* ThreadX ?????????????????? */
+    extern UINT old_post; 
+    #define DISABLE_INT()    old_post = tx_interrupt_control(TX_INT_DISABLE)
+    #define ENABLE_INT()     tx_interrupt_control(old_post)
 #else
-	/* ����ȫ���жϵĺ� */
-	#define ENABLE_INT()	__set_PRIMASK(0)	/* ʹ��ȫ���ж� */
-	#define DISABLE_INT()	__set_PRIMASK(1)	/* ��ֹȫ���ж� */
+    /* ??? RTOS ?????????? */
+    #define ENABLE_INT()    __set_PRIMASK(0)    /* ?????? */
+    #define DISABLE_INT()   __set_PRIMASK(1)    /* ?????? */
 #endif
 
 #if Enable_EventRecorder == 1
