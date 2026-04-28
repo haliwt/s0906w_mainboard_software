@@ -20,8 +20,8 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_ONE  256//1792//3072//2048//1024//896//768
-#define STACK_SIZE_TWO  512//256
-#define STACK_SIZE_THREE  256
+#define STACK_SIZE_TWO  256//256
+#define STACK_SIZE_THREE  128
 
 /*在 ThreadX 里，优先级数字越小，优先级越高：*/
 
