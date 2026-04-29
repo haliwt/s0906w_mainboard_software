@@ -261,9 +261,6 @@ static void vTaskUiPro(ULONG thread_input)
 		}
 		#endif 
 	}
-	else{
-         wifi_led_fast_blink_handler();
-	}
 	
    LL_IWDG_ReloadCounter(IWDG);
 

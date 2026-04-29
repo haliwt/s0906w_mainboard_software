@@ -79,7 +79,7 @@ void Update_Dht11_Totencent_Value(void);
 void read_sensorData(void);
 
 
-DHT11_Status DHT11_Display_Data(uint8_t mode);
+
 
 
 

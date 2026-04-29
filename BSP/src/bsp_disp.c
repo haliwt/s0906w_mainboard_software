@@ -109,14 +109,14 @@ void display_digital_3_numbers(void)
 					LED_HUM_ICON_OFF();
 
 					TM1639_Display_Temperature(g_pro.g_temperature_value);//read_error_flag =DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
-					//if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
+					
 				}
 				else {
                     LED_TEMP_ICON_OFF();
 					LED_HUM_ICON_ON();
 					
 				   TM1639_Display_Humidity(g_pro.g_humidity_value);//read_error_flag =DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
-				   //if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
+				 
 					
                 }
        

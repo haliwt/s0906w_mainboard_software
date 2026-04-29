@@ -40,24 +40,12 @@ void power_onoff_handler(uint8_t data)
 	   case power_on :
 
           power_on_run_handler();
-
-	    if(gl_run.process_on_step > 5)gl_run.process_on_step=1;
-		if(g_pro.fan_warning > 1 || g_pro.ptc_warning >1){
-           if(g_pro.fan_warning > 1) g_pro.fan_warning =0;
-		   if(g_pro.ptc_warning >1)  g_pro.ptc_warning =0;
-		}
+         
         if(gl_run.process_on_step !=0){ //logically rigorous
-
+              display_digital_3_numbers();
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			wifi_led_fast_blink_handler();
-		    smart_phone_timer_power_on_handler();
-	        
-			link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
-			
-			set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
-			set_timer_timing_value_handler();
-
-		}
+		  }
 
         }
 			
@@ -133,6 +121,7 @@ void power_on_run_handler(void)
 {
 
    static uint8_t temp_second_displboard,switch_dht11,send_net_state;
+   static uint16_t counter_dht11=0;
 	switch(gl_run.process_on_step){
 
 
@@ -274,7 +263,7 @@ void power_on_run_handler(void)
 
 	case 2: //DISPAY 3 digital numbers . process .
          // read_dht11_f =  read_sensor_dht11_data();
-	  display_digital_3_numbers();
+	 // display_digital_3_numbers();
 	  gl_run.process_on_step =3; 
 
 	 break;
@@ -309,7 +298,7 @@ void power_on_run_handler(void)
 		   	}
 
           }
-		     gl_run.process_on_step =4;
+		    
 
          }
 		    
@@ -319,47 +308,23 @@ void power_on_run_handler(void)
 
 	 case 4: // wifi function
 	  
-         if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
-		 	g_pro.gTimer_display_adc_value=0;
-			send_net_state++;
-              adc_detected_hundler();
-		 
-               if(send_net_state > 2){
-			   	 send_net_state=0;
-				 if(g_wifi.gwifi_link_net_success==1) {
-				    if(g_pro.disp_second_f ==1){
-						if(timer_expired(&t_xdp)){
-						   SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-			             //tx_thread_sleep(10);
-						}
-				    }
-				 }
-				 else{
-				     if(g_pro.disp_second_f ==1){
-					 	if(timer_expired(&t_xdp)){
-					 	   SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
-					     //tx_thread_sleep(10);
-					 	}
-				     	}
-
-				 }
-				 
-              	}
-			 
-		  }
-
+        
       gl_run.process_on_step =5;
 
 	 break;
 
 	 case 5:
-     
+        counter_dht11++;
 	    if(g_pro.gTimer_to_disp_counter > 3 && g_wifi.gwifi_link_net_success==1){    
 			 g_pro.gTimer_to_disp_counter=0;
 			 // Update_Dht11_toDisplayBoard_Value();
 		
 		}
-		read_sensorData();//Update_Dht11_toDisplayBoard_Value();
+		if(counter_dht11 > 300){//10ms*200 =2000ms =2s
+			counter_dht11 =0;
+		    read_sensorData();//Update_Dht11_toDisplayBoard_Value();
+
+		}
 		
 	     gl_run.process_on_step =6;
 
@@ -368,7 +333,74 @@ void power_on_run_handler(void)
 
 	 case 6:
 	 	  	works_run_two_hours_state();
-	        gl_run.process_on_step =1;
+	        gl_run.process_on_step =7;
+
+	 break;
+
+     case 7:
+	 	 smart_phone_timer_power_on_handler();
+	        
+			///link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
+			
+			//set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
+			//set_timer_timing_value_handler();
+	      gl_run.process_on_step =8;
+
+	 break;
+
+	 case 8:
+	    link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
+
+	 
+      gl_run.process_on_step =9;
+
+	 break;
+
+	 case 9:
+	     set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
+				 
+	 gl_run.process_on_step =10;
+
+	 break;
+
+	 case 10:
+	 set_timer_timing_value_handler();
+	 gl_run.process_on_step =11;
+
+	 break;
+
+	 case 11:
+	 	
+	 if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
+				g_pro.gTimer_display_adc_value=0;
+				send_net_state++;
+				  adc_detected_hundler();
+			 
+				   if(send_net_state > 2){
+					 send_net_state=0;
+					 if(g_wifi.gwifi_link_net_success==1) {
+						if(g_pro.disp_second_f ==1){
+							if(timer_expired(&t_xdp)){
+							   SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+							 //tx_thread_sleep(10);
+							}
+						}
+					 }
+					 else{
+						 if(g_pro.disp_second_f ==1){
+							if(timer_expired(&t_xdp)){
+							   SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
+							 //tx_thread_sleep(10);
+							}
+							}
+	 
+					 }
+					 
+					}
+				 
+			  }
+	     gl_run.process_on_step =1;
+
 
 	 break;
 
@@ -391,7 +423,7 @@ void power_on_run_handler(void)
 void power_off_run_handler(void)
 {
 
-   static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute;
+   static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute,switch_f;
    switch(gl_run.process_off_step){
 
    case 0:
@@ -409,13 +441,7 @@ void power_off_run_handler(void)
 	  fan_run_one_minute = 1;
 	  g_pro.gTimer_fan_run_one_minute =0;
 
-	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
-            MqttData_Publish_SetOpen(0);  
-			tx_thread_sleep(20);//tx_thread_sleep(50);
-	        MqttData_Publish_PowerOff_Ref() ;//
-	        tx_thread_sleep(20);//tx_thread_sleep(100);
-           
-	  }
+	 
 	 
 	   g_pro.g_fan_switch_gears_flag++;
       
@@ -437,7 +463,36 @@ void power_off_run_handler(void)
 	 	fan_flag++;
 	    fan_run_one_minute =2;
      }
-	
+	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
+            MqttData_Publish_SetOpen(0);  
+			
+           
+	  }
+     gl_run.process_off_step = 2;
+
+  break;
+
+  case 2:
+
+   if(g_wifi.gwifi_link_net_success == wifi_link_success){
+          
+	        MqttData_Publish_PowerOff_Ref() ;//
+	       
+        }
+
+
+      gl_run.process_off_step = 3;
+  break;
+
+  case 3:
+
+     mainboard_close_all_fun();
+
+    gl_run.process_off_step = 4;
+
+  break;
+	 
+  case 4:
 	 if(fan_run_one_minute ==1){
 	 
 		   if(g_pro.gTimer_fan_run_one_minute  < 61){
@@ -453,19 +508,17 @@ void power_off_run_handler(void)
 	 
 	   }
 	
-
-     mainboard_close_all_fun();
-	
-
-     LED_Power_Breathing();
+      LED_Power_Breathing();
 	 wifi_first_connect++;
 
 	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){
 	 	    wifi_first_connect=0;
-            MqttData_Publish_SetOpen(0);  
-			tx_thread_sleep(20);
-	        MqttData_Publish_PowerOff_Ref() ;//
-	        tx_thread_sleep(20);
+			switch_f = switch_f ^ 0x01;
+	        if(switch_f ==1)
+             MqttData_Publish_SetOpen(0);  
+		    else
+	         MqttData_Publish_PowerOff_Ref() ;//
+	       
            
 	 }
 

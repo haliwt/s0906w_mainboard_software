@@ -29,7 +29,7 @@ static void send_connect_wifi_init(void);
 void link_wifi_to_tencent_handler(uint8_t data)
 {
     if(data == 1){//if(gpro_t.wifi_led_fast_blink_flag==1){
-        if(g_wifi.gTimer_wifi_led_fast_blink  > 119 && g_wifi.gwifi_link_net_success==0){
+        if(g_wifi.gTimer_wifi_led_fast_blink  > 120 && g_wifi.gwifi_link_net_success==0){
 
            g_wifi.gTimer_wifi_led_fast_blink =0;//
            g_wifi.wifi_led_fast_blink_flag=0;

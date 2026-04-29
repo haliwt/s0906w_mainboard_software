@@ -233,7 +233,7 @@ void key_dwon_fun(void)
 void set_temperature_value_handler(void)
 {
 
-   if((g_pro.key_set_temperature_flag==1 || g_wifi.g_wifi_set_temp_flag==1) && g_pro.gTimer_input_set_temp_timer >2)
+   if((g_pro.key_set_temperature_flag==1 || g_wifi.g_wifi_set_temp_flag==1) && g_pro.gTimer_input_set_temp_timer >1)
    {
         g_pro.key_set_temperature_flag++;
         g_wifi.g_wifi_set_temp_flag=0;
@@ -242,7 +242,7 @@ void set_temperature_value_handler(void)
 		g_pro.g_manual_shutoff_dry_flag =0;
 		g_pro.first_set_ptc_on=0;
 		
-		if (g_pro.current_temperature >= g_pro.gset_temperture_value){
+		if (g_pro.g_temperature_value >= g_pro.gset_temperture_value){
 
 			g_pro.gDry= DRY_STATE_OFF;
 		    setDryState(g_pro.gDry);
@@ -274,7 +274,7 @@ void set_temperature_value_handler(void)
 
 			
         } 
-		else if (g_pro.current_temperature < g_pro.gset_temperture_value){
+		else if (g_pro.g_temperature_value < g_pro.gset_temperture_value){
 			if(g_pro.works_two_hours_interval_flag ==0){
 
 			   g_pro.gDry = DRY_STATE_ON;
