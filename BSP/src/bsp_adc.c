@@ -100,15 +100,16 @@ static void Judge_Fan_State(void)
 {
 
 		  Publish_Data_Warning(fan_warning,g_pro.fan_warning);
-	       tx_thread_sleep(200);//HAL_Delay(200);
+	       tx_thread_sleep(20);//HAL_Delay(200);
 
 		   MqttData_Publis_SetFan(0);
-	       tx_thread_sleep(200);//Delay(100);//HAL_Delay(100);
+	       tx_thread_sleep(20);//Delay(100);//HAL_Delay(100);
 
 		  Buzzer_Fan_Error_Sound();
 
-		  SendWifiData_To_Cmd(0x09,0x01);//Fan fault warning .
-		  tx_thread_sleep(100);
+		  if(g_pro.disp_second_f ==1){SendWifiData_To_Cmd(0x09,0x01);//Fan fault warning .
+		     tx_thread_sleep(10);
+		  }
 
 }
 /*****************************************************************

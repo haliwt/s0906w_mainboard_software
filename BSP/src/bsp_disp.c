@@ -160,8 +160,9 @@ void set_timer_timing_value_handler(void)
 			g_pro.gdisp_timer_minutes_value =0;
 			
 
-			SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
-	        tx_thread_sleep(100);
+			if(g_pro.disp_second_f ==1){SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
+	        tx_thread_sleep(10);
+				}
 
                
 			}
@@ -176,8 +177,10 @@ void set_timer_timing_value_handler(void)
 
 				g_pro.switch_disp_time_or_temp_item = temperature_mode;
 				
-				SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
-	            tx_thread_sleep(100);
+				if(g_pro.disp_second_f ==1){
+					SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
+	            tx_thread_sleep(10);
+					}
 			}
 		}
 		else{ //times is done ,exit this process
@@ -228,8 +231,9 @@ void set_timer_timing_value_handler(void)
             	
                    buzzer_sound();
 			       g_pro.gpower_on = power_off;
-			       SendData_Set_Command(CMD_POWER,close);
-	               tx_thread_sleep(100);
+			       if(g_pro.disp_second_f ==1){SendData_Set_Command(CMD_POWER,close);
+	               tx_thread_sleep(10);
+			       	}
 
 			  }
 			 

@@ -194,7 +194,7 @@ static void threadx_handler(void)
 
      
 
-	 tx_thread_sleep(20);
+	 tx_thread_sleep(2);//10ms *2 
 
    }
 	
@@ -271,7 +271,7 @@ static void vTaskUiPro(ULONG thread_input)
     debug_stack_ui_check();
    #endif 
 
-	tx_thread_sleep(10);
+	tx_thread_sleep(1);//10ms *1
 
 	  
     }

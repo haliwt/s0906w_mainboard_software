@@ -81,7 +81,7 @@ void mainboard_fun_handler(void)
         if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
 			 ptc_on_default = g_pro.gDry;
 			 MqttData_Publish_SetPtc(0x01);
-		  	 tx_thread_sleep(200);
+		  	 tx_thread_sleep(20);//10ms*20 =200ms
 		 
          }
 	}
@@ -89,15 +89,11 @@ void mainboard_fun_handler(void)
 		g_pro.gDry = 0;
 		LED_DRY_OFF();
 		DRY_CLOSE();
-//	    if(g_disp.g_second_disp_flag == 1){
-//		    sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-//		    tx_thread_sleep(100);
-//	    }
 
 		if(g_wifi.gwifi_link_net_success==1 && ptc_off_default != g_pro.gDry){
 			ptc_off_default = g_pro.gDry;
 		 	MqttData_Publish_SetPtc(0x0);
-	  		 tx_thread_sleep(200);
+	  		 tx_thread_sleep(20);
 		 
          }
 
@@ -307,7 +303,8 @@ void copy_cmd_hanlder(void)
 		
 	   
 	    SendWifiData_Answer_Cmd(CMD_POWER,0x01); //WT.EDIT 2025.01.07 
-			tx_thread_sleep(5);
+		  tx_thread_sleep(10);//10*5 =50ms
+	    
       g_pro.g_copy_power_onoff_flag =0xff;
 
 	}
@@ -315,7 +312,7 @@ void copy_cmd_hanlder(void)
 
 	  g_pro.g_copy_power_onoff_flag =0xfe;
 	  SendWifiData_Answer_Cmd(CMD_POWER,0x0); //WT.EDIT 2025.01.07 
-        tx_thread_sleep(5);
+        tx_thread_sleep(10);
 
 	}
 
@@ -343,7 +340,7 @@ void  smart_phone_timer_power_on_handler(void)
 			g_wifi.app_timer_power_on_flag++; 
 
 		    MqttData_Publish_Update_Data();//property_report_phone_timer_on_data();// MqttData_Publish_Update_Data();
-	        tx_thread_sleep(100);//HAL_Delay(100);
+	        tx_thread_sleep(10);//HAL_Delay(100);
 
 
 
@@ -370,7 +367,7 @@ void fault_handler(void)
 	   DRY_CLOSE();
 	   LED_DRY_OFF();
        SMG_Display_Err(2);
-	   tx_thread_sleep(1000);
+	   tx_thread_sleep(100);
 
 
 	}
@@ -382,7 +379,7 @@ void fault_handler(void)
 	     LED_DRY_OFF();
          
 	     SMG_Display_Err(1);
-	     tx_thread_sleep(1000);
+	     tx_thread_sleep(100);//10ms*100 = 1s
 		 
 
 
