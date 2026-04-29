@@ -230,8 +230,11 @@ void updateDht11_sensorData_toDisp(void)
 {
 	
 	    Dht11_Read_TempHumidity_Handler(&DHT11);
-	    if(g_pro.disp_second_f == 1){sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-		tx_thread_sleep(10);
+	    if(g_pro.disp_second_f == 1){
+			if(timer_expired(&t_display)){
+			sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
+		    //tx_thread_sleep(10);
+			}
 
 	    	}
 	

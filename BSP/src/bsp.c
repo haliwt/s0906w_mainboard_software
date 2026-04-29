@@ -76,15 +76,19 @@ void mainboard_fun_handler(void)
 		DRY_OPEN();
 		LED_DRY_ON();
 	    if(g_pro.disp_second_f == 1){
+			if(timer_expired(&t_xdp)){
 	    	sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-	    	tx_thread_sleep(10);
+	    	//tx_thread_sleep(10);
+			}
 	    }
 		
 		if(g_wifi.gwifi_link_net_success ==1 && ptc_default != g_pro.set_temp_counter){
 			 ptc_default ++;
 			 ptc_default = g_pro.set_temp_counter;
+		    if(timer_expired(&t_mqtt_1)){
 			 MqttData_Publish_SetPtc(0x01);
-		  	 tx_thread_sleep(20);//HAL_Delay(350);
+		  	 //tx_thread_sleep(20);//HAL_Delay(350);
+		    }
 		}
      
 	}
@@ -93,15 +97,19 @@ void mainboard_fun_handler(void)
 		LED_DRY_OFF();
 		DRY_CLOSE();
 	     if(g_pro.disp_second_f == 1){
+		 	if(timer_expired(&t_xdp)){
 			   sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-			   tx_thread_sleep(10);
+			   //tx_thread_sleep(10);
+		 		}
 		  }
 		 if(g_wifi.gwifi_link_net_success ==1 &&  ptc_default != g_pro.set_temp_counter ){
 
 		     ptc_default ++;
 			 ptc_default = g_pro.set_temp_counter;
-			 MqttData_Publish_SetPtc(0);
-		  	 tx_thread_sleep(20);//HAL_Delay(350);
+		     if(timer_expired(&t_mqtt_1)){
+			   MqttData_Publish_SetPtc(0);
+		  	// tx_thread_sleep(20);//HAL_Delay(350);
+		     }
 		 }
 		   
 
@@ -347,9 +355,10 @@ void  smart_phone_timer_power_on_handler(void)
    }
    else if(g_wifi.app_timer_power_on_flag==2){
 			g_wifi.app_timer_power_on_flag++; 
-
-		    MqttData_Publish_Update_Data();//property_report_phone_timer_on_data();// MqttData_Publish_Update_Data();
-	        tx_thread_sleep(10);//HAL_Delay(100);
+            if(timer_expired(&t_mqtt_0)){
+		       MqttData_Publish_Update_Data();//property_report_phone_timer_on_data();// MqttData_Publish_Update_Data();
+	            //tx_thread_sleep(10);//HAL_Delay(100);
+            }
 
 
 
