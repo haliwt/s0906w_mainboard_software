@@ -31,6 +31,7 @@ void bsp_init(void)
 	 callback_register_fun();
 	 callback_register_usart1_rx();
 	 callback_register_usart2_rx();
+	 soft_timer_init();
 #if(Enable_EventRecorder == 1) 
 	/* ³õÊ¼»¯EventRecorder²¢¿ªÆô */
 	EventRecorderInitialize(EventRecordAll, 1U);

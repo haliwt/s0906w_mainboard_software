@@ -50,6 +50,7 @@
 #include "bsp_dma_usart2.h"
 
 #include "bsp_connect_wifi.h"
+#include "bsp_soft_timer.h"
 
 
 //second display board
@@ -145,6 +146,7 @@ typedef struct _process{
    uint8_t first_set_ptc_on;
    uint8_t first_rcoder_ptc_on_flag ;
    uint8_t one_minutes_fan_flag;
+   
   
 
  
