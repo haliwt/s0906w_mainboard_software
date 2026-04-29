@@ -107,7 +107,7 @@ void power_on_init_ref(void)
             power_on_led();
 		   //display smg led turn on
 		    Fan_Full_Speed();
-		    DHT11_Display_Data(0); //display temperature value 
+		   // DHT11_Display_Data(0); //display temperature value 
 		    DRY_OPEN();
 			PLASMA_OPEN();
 			mouse_open();
@@ -128,6 +128,7 @@ void power_on_init_ref(void)
 	*Return Ref: NO
 	*
 **********************************************************************/
+uint8_t read_dht11_f;
 void power_on_run_handler(void)
 {
 
@@ -151,7 +152,7 @@ void power_on_run_handler(void)
 		       tx_thread_sleep(100);
 		    }
         }
-		updateDht11_toDisplayBoard_value();
+		read_sensorData();//updateDht11_toDisplayBoard_value();
 			 
 		   
 		   
@@ -165,7 +166,7 @@ void power_on_run_handler(void)
 		   power_on_init_ref();
 		
 		  
-		  updateDht11_toDisplayBoard_value();
+		  read_sensorData();//updateDht11_toDisplayBoard_value();
 	      tx_thread_sleep(100);
 		   	
 	        send_wifi_power_on_state = 1;
@@ -225,7 +226,8 @@ void power_on_run_handler(void)
 	 break;
 
 	 case 1:
-
+      // read_dht11_f =  read_sensor_dht11_data();
+     read_sensorData();
       if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 	
 		  if(g_disp.g_second_disp_flag == 1 || temp_second_displboard < 5){
@@ -236,7 +238,7 @@ void power_on_run_handler(void)
 			 
 		    if(g_pro.gTimer_send_dht11_disp > 2){ //3s
 		       g_pro.gTimer_send_dht11_disp=0;
-	           updateDht11_toDisplayBoard_value();
+	           updateDht11_sensorData_toDisp();//updateDht11_toDisplayBoard_value();
 
 		   }
 		  }
@@ -260,7 +262,7 @@ void power_on_run_handler(void)
 
 
 	case 2: //DISPAY 3 digital numbers . process .
-    
+         // read_dht11_f =  read_sensor_dht11_data();
 	  display_digital_3_numbers();
 	  gl_run.process_on_step =3; 
 
@@ -277,6 +279,7 @@ void power_on_run_handler(void)
 
 		       switch_dht11 = switch_dht11 ^0x01;
 			   if(switch_dht11==1){
+			   	
 	         	   Subscriber_Data_FromCloud_Handler();
 			
                    tx_thread_sleep(200);
@@ -309,12 +312,16 @@ void power_on_run_handler(void)
                if(send_net_state > 2){
 			   	 send_net_state=0;
 				 if(g_wifi.gwifi_link_net_success==1) {
-				     SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+				    if(g_pro.disp_second_f ==1){
+						SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
 			         tx_thread_sleep(100);
+				    	}
 				 }
 				 else{
-				     SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
-					  tx_thread_sleep(100);
+				     if(g_pro.disp_second_f ==1){
+					 	SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
+					     tx_thread_sleep(100);
+				     	}
 
 				 }
 				 
@@ -328,11 +335,12 @@ void power_on_run_handler(void)
 
 	 case 5:
      
-	    if(g_pro.gTimer_to_disp_counter > 3){    
+	    if(g_pro.gTimer_to_disp_counter > 3 && g_wifi.gwifi_link_net_success==1){    
 			 g_pro.gTimer_to_disp_counter=0;
-			  Update_Dht11_toDisplayBoard_Value();
+			 // Update_Dht11_toDisplayBoard_Value();
 		
 		}
+		read_sensorData();//Update_Dht11_toDisplayBoard_Value();
 		
 	     gl_run.process_on_step =1;
 

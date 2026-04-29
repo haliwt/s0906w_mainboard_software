@@ -9,41 +9,7 @@
 #define __BSP_DHT11_H_
 #include "main.h"
 
-// DHT11错误代码定义
-typedef enum {
-    DHT11_OK = 0,           // 操作成功
-    DHT11_NO_RESPONSE,      // 传感器无响应
-    DHT11_CHECKSUM_ERROR,   // 校验和错误
-    DHT11_TIMEOUT_ERROR     // 通信超时错误
-} DHT11_Status;
 
-// DHT11 数据结构体
-typedef struct {
-    uint8_t humidity;       // 湿度值
-    uint8_t temperature;    // 温度值
-    int8_t  is_negative;    // 温度是否为负
-} DHT11_Data_TypeDef;
-
-// DHT11 显示模式定义
-#define DHT11_DISPLAY_TEMP     0    // 显示温度
-#define DHT11_DISPLAY_HUMI     1    // 显示湿度
-
-#if 0
-// DHT11 GPIO控制宏定义
-#define DHT11_PIN_SET()     HAL_GPIO_WritePin(TEMP_SENSOR_GPIO_Port, TEMP_SENSOR_Pin, GPIO_PIN_SET)
-#define DHT11_PIN_RESET()   HAL_GPIO_WritePin(TEMP_SENSOR_GPIO_Port, TEMP_SENSOR_Pin, GPIO_PIN_RESET)
-#define DHT11_PIN_READ()    HAL_GPIO_ReadPin(TEMP_SENSOR_GPIO_Port, TEMP_SENSOR_Pin)
-
-// 超时定义（单位：微秒）
-#define DHT11_TIMEOUT       1000
-#define DHT11_START_TIME    18000  // 18ms
-#define DHT11_STOP_TIME     30     // 30us
-
-// 函数声明
-void DHT11_Init(void);
-DHT11_Status DHT11_Read_Data(void);
-DHT11_Status DHT11_Display_Data(uint8_t mode);   // 在TM1639上显示温湿度
-#endif 
 
 #define TEMP_ICON_ON()         	do{LED_TEMP_GPIO_Port->BSRR |=(uint32_t)LED_TEMP_Pin << 16 ;}while(0) //low level
 #define TEMP_ICON_OFF()         do{LED_TEMP_GPIO_Port->BSRR |=LED_TEMP_Pin;}while(0) //high level
@@ -51,44 +17,61 @@ DHT11_Status DHT11_Display_Data(uint8_t mode);   // 在TM1639上显示温湿度
 #define HUMIDITY_ICON_ON()      do{LED_HUM_SYMBOL_GPIO_Port->BSRR |=(uint32_t)LED_HUM_SYMBOL_Pin << 16;}while(0)
 #define HUMIDITY_ICON_OFF()     do{LED_HUM_SYMBOL_GPIO_Port->BSRR |=LED_HUM_SYMBOL_Pin;}while(0)
 
-/******************************************************************************************/
-/* DHT11 引脚 定义 */
-
-//TEMP_SENSOR_GPIO_Port
 
 
 
-#define DHT11_DQ_GPIO_PORT                  TEMP_SENSOR_GPIO_Port
-#define DHT11_DQ_GPIO_PIN                   TEMP_SENSOR_Pin
-#define DHT11_DQ_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* GPIOA口时钟使能 */
+//IO????
+#define DHT11_DATA_IO_IN()      {GPIOB->MODER&=0XFFFFFFFC;GPIOB->MODER|=0<<0;}  //0x00 input mode
+#define DHT11_DATA_IO_OUT()     {GPIOB->MODER&=0XFFFFFFFC;GPIOB->MODER|=1<<0;}   //0x01 output  mode 
 
-/******************************************************************************************/
+#define DHT11_DATA      GPIO_PIN_4
+#define DHT11_GPIO      GPIOA
 
-/* IO操作函数 */
-#define DHT11_DQ_OUT(x)     do{ if(x)\
-                                    LL_GPIO_SetOutputPin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN) ; \
-                                else \
-									LL_GPIO_ResetOutputPin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN);\
-                            }while(0)                                                /* 数据端口输出 */
-//#define DHT11_DQ_IN         HAL_GPIO_ReadPin(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN)  /* 数据端口输入 */
-#define DHT11_DQ_IN         LL_GPIO_IsInputPinSet(DHT11_DQ_GPIO_PORT, DHT11_DQ_GPIO_PIN)
+#define DHT11_DATA_SetHigh()            do{DHT11_GPIO -> BSRR = DHT11_DATA;}while(0)//HAL_GPIO_WritePin(DHT11_GPIO,DHT11_DATA,GPIO_PIN_SET)    // output high level
+#define DHT11_DATA_SetLow()             do{DHT11_GPIO -> BSRR = (uint32_t)DHT11_DATA<<16;}while(0)//HAL_GPIO_WritePin(DHT11_GPIO,DHT11_DATA,GPIO_PIN_RESET)    // output low level
+
+#define DHT11_ReadData()	           LL_GPIO_IsInputPinSet(DHT11_GPIO,DHT11_DATA) //HAL_GPIO_ReadPin(DHT11_GPIO,DHT11_DATA)
+
+/* ??? -------------------------------------------------------------------*/
+/***********************   DHT11 ??????  **************************/
+#define DHT11_Dout_GPIO_CLK_ENABLE()              __HAL_RCC_GPIOA_CLK_ENABLE()//__HAL_RCC_GPIOA_CLK_ENABLE()
+#define DHT11_Dout_PORT                           GPIOA
+#define DHT11_Dout_PIN                            LL_GPIO_PIN_4
+
+/***********************   DHT11 ?????  ****************************/
+#define DHT11_Dout_LOW()                         do{DHT11_Dout_PORT->BSRR |=(uint32_t)DHT11_Dout_PIN<<16;}while(0)// HAL_GPIO_WritePin(DHT11_Dout_PORT, DHT11_Dout_PIN, GPIO_PIN_RESET)
+#define DHT11_Dout_HIGH()                        do{DHT11_Dout_PORT->BSRR =DHT11_Dout_PIN;}while(0)//HAL_GPIO_WritePin(DHT11_Dout_PORT, DHT11_Dout_PIN, GPIO_PIN_SET)
+#define DHT11_Data_IN()	                         LL_GPIO_IsInputPinSet(DHT11_Dout_PORT,DHT11_Dout_PIN)//HAL_GPIO_ReadPin(DHT11_Dout_PORT,DHT11_Dout_PIN)
 
 
-uint8_t dht11_init(void);   /* 初始化DHT11 */
-uint8_t dht11_check(void);  /* 检测是否存在DHT11 */
-uint8_t dht11_read_data(uint8_t *temp,uint8_t *humi);   /* 读取温湿度 */
 
-void Update_Dht11_Totencent_Value(void);
+/* ???? ------------------------------------------------------------------*/
+/************************ DHT11 ??????******************************/
+typedef struct
+{
+	uint8_t  humi_high8bit;		//????:???8?
+	uint8_t  humi_low8bit;	 	//????:???8?
+	uint8_t  temp_high8bit;	 	//????:???8?
+	uint8_t  temp_low8bit;	 	//????:???8?
+	uint8_t  check_sum;	 	    //???
+  float    humidity;            //????
+  float    temperature;        //????  
+} DHT11_Data_TypeDef;
 
-void updateDht11_toDisplayBoard_value(void);
+extern DHT11_Data_TypeDef DHT11;
 
-DHT11_Status DHT11_Display_Data(uint8_t mode);
+void DHT11_Init(void);
 
-uint8_t read_dht11_temperature_value(void);
+void updateDht11_sensorData_toDisp(void);
 
-uint8_t read_sensor_dht11_data(void);
+void Update_Dht11_Totencent_Value(void);    
+                            
+void read_sensorData(void);
 
-void Update_Dht11_toDisplayBoard_Value(void);
+
+
+
+
 
 
 #endif /* BSP_INC_BSP_DHT11_H_ */

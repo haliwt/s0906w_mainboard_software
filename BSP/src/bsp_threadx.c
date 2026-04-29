@@ -182,8 +182,8 @@ static void threadx_handler(void)
      }
 
 
-	key_handler();
-	
+	//key_handler();
+	 LL_IWDG_ReloadCounter(IWDG);
 	 tx_thread_sleep(20);
 
    }
@@ -229,7 +229,7 @@ static void vTaskUiPro(ULONG thread_input)
 
   while(1){
     
-	//key_handler();
+	key_handler();
 
     power_onoff_handler(g_pro.gpower_on);
     

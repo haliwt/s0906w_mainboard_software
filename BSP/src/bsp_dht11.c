@@ -1,405 +1,279 @@
 #include "bsp.h"
 
+#define Bit_RESET 0
+#define Bit_SET   1
 
-DHT11_Data_TypeDef dht11_data;
-DHT11_Status status;
+uint8_t read_flag;
 
-static void delay_us(uint32_t us)
-{
-    // ?? us ???? 16 ???(64 cycles / 4 cycles per loop)
-    uint32_t cycles = us * 16;  //16
+static void DHT11_Mode_IPU(void);
+static void DHT11_Mode_Out_PP(void);
+static uint8_t DHT11_ReadByte(void);
+DHT11_Data_TypeDef DHT11;
+void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11);
+uint8_t dht11_read_flag;
 
-    while(cycles--)
-    {
-        __NOP();
-    }
-}
+//??us??
+//void delay_us(unsigned long i)
+//{
+//	unsigned long j;
+//	for(;i>0;i--)
+//	{
+//			for(j=6;j>0;j--);
+//	}
+//}
 
-
-/**
- * @brief       复位DHT11
- * @param       data: 要写入的数据
- * @retval      �??
- */
-static void dht11_reset(void)
-{
-    DHT11_DQ_OUT(0);    /* 拉低DQ */
-    delay_ms(20);       /* 拉低至少18ms */
-    DHT11_DQ_OUT(1);    /* DQ=1 */
-    delay_us(30);       /* 主机拉高10~35us */
-}
 
 /**
- * @brief       等待DHT11的回�??
- * @param       �??
- * @retval      0, DHT11正常
- *              1, DHT11异常/不存�??
- */
-uint8_t dht11_check(void)
+  * ????: DHT11 ?????
+  * ????: ?
+  * ? ? ?: ?
+  * ?    ?:?
+  */
+void DHT11_Init(void)
 {
-    uint8_t retry = 0;
-    uint8_t rval = 0;
 
-    while (DHT11_DQ_IN && retry < 100)  /* DHT11会拉�??83us */
-    {
-        retry++;
-        delay_us(4);
-    }
-
-    if (retry >= 100)
-    {
-        rval = 1;
-    }
-    else
-    {
-        retry = 0;
-
-        while (!DHT11_DQ_IN && retry < 100) /* DHT11拉低后会再次拉高87us */
-        {
-            retry++;
-            delay_us(4);
-        }
-        if (retry >= 100) rval = 1;
-    }
-    
-    return rval;
-}
-
-/**
- * @brief       从DHT11读取�??个位
- * @param       �??
- * @retval      读取到的位�??: 0 / 1
- */
-uint8_t dht11_read_bit(void)
-{
-    uint8_t retry = 0;
-
-    while (DHT11_DQ_IN && retry < 100)  /* 等待变为低电�?? */
-    {
-        retry++;
-        delay_us(2);
-    }
-
-    retry = 0;
-
-    while (!DHT11_DQ_IN && retry < 100) /* 等待变高电平 */
-    {
-        retry++;
-        delay_us(2);
-    }
-
-    delay_us(40);//       /* 等待40us */
-
-    if (DHT11_DQ_IN)    /* 根据引脚状�?�返�?? bit */
-    {
-        return 1;
-    }
-    else 
-    {
-        return 0;
-    }
-}
-
-/**
- * @brief       从DHT11读取�??个字�??
- * @param       �??
- * @retval      读到的数�??
- */
-static uint8_t dht11_read_byte(void)
-{
-    uint8_t i, data = 0;
-
-    for (i = 0; i < 8; i++)         /* 循环读取8位数�?? */
-    {
-        data <<= 1;                 /* 高位数据先输�??, 先左移一�?? */
-        data |= dht11_read_bit();   /* 读取1bit数据 */
-    }
-
-    return data;
-}
-
-/**
- * @brief       从DHT11读取�??次数�??
- * @param       temp: 温度�??(范围:-20~50°)
- * @param       humi: 湿度�??(范围:5%~95%)
- * @retval      0, 正常.
- *              1, 失败
- */
-uint8_t dht11_read_data(uint8_t *temp, uint8_t *humi)
-{
-    uint8_t buf[5];
-    uint8_t i;
-    dht11_reset();
-
-    if (dht11_check() == 0)
-    {
-        for (i = 0; i < 5; i++)     /* 读取40位数�?? */
-        {
-            buf[i] = dht11_read_byte();
-        }
-
-        if ((buf[0] + buf[1] + buf[2] + buf[3]) == buf[4])
-        {
-            *humi = buf[0];
-            *temp = buf[2];
-        }
-    }
-    else
-    {
-        return 1;
-    }
-    
-    return 0;
-}
-
-/**
- * @brief       初始化DHT11的IO�?? DQ 同时�??测DHT11的存�??
- * @param       �??
- * @retval      0, 正常
- *              1, 不存�??/不正�??
- */
-uint8_t dht11_init(void)
-{
-   #if 0
-	GPIO_InitTypeDef gpio_init_struct={0};
-
-    DHT11_DQ_GPIO_CLK_ENABLE();     /* �??启DQ引脚时钟 */
-
-    gpio_init_struct.Pin = DHT11_DQ_GPIO_PIN;
-    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_OD;            /* �??漏输�?? */
-    gpio_init_struct.Pull = GPIO_PULLUP;                    /* 上拉 */
-    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;          /* 高�?? */
-    HAL_GPIO_Init(DHT11_DQ_GPIO_PORT, &gpio_init_struct);   /* 初始化DHT11_DQ引脚 */
-    /* DHT11_DQ引脚模式设置,�??漏输�??,上拉, 这样就不用再设置IO方向�??, �??漏输出的时�??(=1), 也可以读取外部信号的高低电平 */
-   #endif 
-
-   
-	LL_GPIO_InitTypeDef gpio_init_struct = {0};
+	//__HAL_RCC_GPIOA_CLK_ENABLE();
+	//DHT11_Mode_Out_PP();
 	
-	DHT11_DQ_GPIO_CLK_ENABLE();
-	
-	gpio_init_struct.Pin = DHT11_DQ_GPIO_PIN;
-	gpio_init_struct.Mode = LL_GPIO_MODE_OUTPUT;	   // LL 没有 HAL 的 OUTPUT_OD，需结合 Pull 配置
-	gpio_init_struct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-	gpio_init_struct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN; // 设置为开漏
-	gpio_init_struct.Pull = LL_GPIO_PULL_UP;		   // 上拉
-	
-	LL_GPIO_Init(DHT11_DQ_GPIO_PORT, &gpio_init_struct);
-
-
-    dht11_reset();
-    return dht11_check();
+	///DHT11_Dout_HIGH();  // ??GPIO
 }
 
-
-
 /**
- * @brief  read_
- * @param  mode: 0-显示温度�??1-显示湿度
- * @retval DHT11_Status 类型的操作结�??
- */
-uint8_t read_sensor_dht11_data(void)
+  * ????: ?DHT11-DATA??????????
+  * ????: ?
+  * ? ? ?: ?
+  * ?    ?:?
+  */
+static void DHT11_Mode_IPU(void)
 {
-   uint8_t status;  
-	 // 读取DHT11数据
-    status = dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
-    //dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
-	tx_thread_sleep(200);
-    if(status != DHT11_OK)
-    {
-        // 读取失败，显示错误代�??
-        LED_TEMP_ICON_ON();
-        LED_HUM_ICON_OFF();
-        SMG_Display_Err(0);
-        return status;
-    }
+	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
 
-	return  DHT11_OK;
+     /**/
+	  GPIO_InitStruct.Pin = TEMP_SENSOR_Pin;
+	  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+	  GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
+	  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
+/**
+  * ????: ?DHT11-DATA??????????
+  * ????: ?
+  * ? ? ?: ?
+  * ?    ?:?
+  */
+static void DHT11_Mode_Out_PP(void)
+{
+	
+
+	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
+/**/
+	GPIO_InitStruct.Pin = TEMP_SENSOR_Pin ;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+}
 
 /**
- * @brief  在TM1639上显示DHT11的温湿度数据
- * @param  mode: 0-显示温度�??1-显示湿度
- * @retval DHT11_Status 类型的操作结�??
- */
-DHT11_Status DHT11_Display_Data(uint8_t mode)
+  * ????: ?DHT11??????,MSB??
+  * ????: ?
+  * ? ? ?: ?
+  * ?    ?:?
+  */
+static uint8_t DHT11_ReadByte ( void )
 {
+	uint8_t i, temp=0;
+	
+	for(i=0;i<8;i++)    
+	{	 
+		/*?bit?50us???????,???????? ?50us ??? ??*/  
+		while(DHT11_Data_IN()==Bit_RESET);
 
-    static uint8_t  copy_temp_value, copy_humidity_value;
-    uint8_t  status;
-   
-    // 读取DHT11数据
-    status = dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
+		/*DHT11 ?26~28us??????�?0�?,?70us?????�?1�?,
+		 *???? x us???????????? ,x ?????? 
+		 */
+		delay_us(40); //??x us ??????????0???????	   	  
 
+		if(DHT11_Data_IN()==Bit_SET)/* x us??????????�?1�? */
+		{
+			/* ????1?????? */
+			while(DHT11_Data_IN()==Bit_SET);
 
-	if(status !=0){
-	    if(mode == 0)
-	    {
-	    	 LED_TEMP_ICON_ON();
-	         LED_HUM_ICON_OFF();
-	           
-	         TM1639_Display_Temperature(copy_temp_value);
-	    }
-	    else
-	    {
-	        // 显示湿度
-	    	LED_TEMP_ICON_OFF();
-	    	LED_HUM_ICON_ON();
-	        TM1639_Display_Humidity(copy_humidity_value);
+			temp|=(uint8_t)(0x01<<(7-i));  //??7-i??1,MSB?? 
 		}
-    }
-	else if(status==0){
-   
-    // 根据模式显示温度或湿�??
-    if(mode == 0)
-    {
-        // 显示温度
-
-        	LED_TEMP_ICON_ON();
-        	LED_HUM_ICON_OFF();
-           
-            TM1639_Display_Temperature(dht11_data.temperature);
-			g_pro.current_temperature = dht11_data.temperature;
-		    copy_temp_value = dht11_data.temperature;
-				
-        
-    }
-    else
-    {
-        // 显示湿度
-    	LED_TEMP_ICON_OFF();
-    	LED_HUM_ICON_ON();
-        TM1639_Display_Humidity(dht11_data.humidity);
-		copy_humidity_value = dht11_data.humidity;
-    }
+		else	 // x us?????????�?0�?
+		{			   
+			temp&=(uint8_t)~(0x01<<(7-i)); //??7-i??0,MSB??
+		}
 	}
-    
-    return DHT11_OK;
+	return temp;
 }
 
 /**
- * @brief  在TM1639上显示DHT11的温湿度数据
- * @param  mode: 0-显示温度�??1-显示湿度
- * @retval DHT11_Status 类型的操作结�??
- */
+  * ????: ??????????40bit,????
+  * ????: DHT11_Data:DHT11????
+  * ? ? ?: ERROR:  ????
+  *           SUCCESS:????
+  * ?    ?:8bit ???? + 8bit ???? + 8bit ???? + 8bit ???? + 8bit ??? 
+  */
+uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef *DHT11_Data)
+{  
+  uint8_t temp;
+  uint16_t humi_temp;
+  
+	/*????*/
+	DHT11_Mode_Out_PP();
+	/*????*/
+	DHT11_Dout_LOW();
+	/*??18ms*/
+	delay_ms(18);//HAL_Delay(20);//tx_thread_sleep(pdMS_TO_TICKS(20));//HAL_Delay(20);
 
-uint8_t read_dht11_temperature_value(void)
-{
-    static uint8_t copy_dht11_value;
-	uint8_t error_flag;
-	error_flag =  dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
-	if(error_flag !=0){
-		return copy_dht11_value;
-	}
-	else if(error_flag ==0){
-		 copy_dht11_value=dht11_data.temperature;
-		 g_pro.current_temperature = dht11_data.temperature;
-	    return dht11_data.temperature;
+	/*???? ????30us*/
+	DHT11_Dout_HIGH(); 
 
-	}
-	return 0;
-}
+	delay_us(30);   //??30us
 
+	/*?????? ????????*/ 
+	DHT11_Mode_IPU();
+      delay_us(30);   //??30us
+	/*?????????????? ???????,???????*/   
+	if(DHT11_Data_IN()==Bit_RESET)     
+	{
+		/*???????? ?80us ??? ??????*/  
+		while(DHT11_Data_IN()==Bit_RESET);
 
-/**
- * @brief  void updateDht11_toDisplayBoard_value(void)
- * @param  mode: 0-显示温度�??1-显示湿度
- * @retval DHT11_Status 类型的操作结�??
- */
-void updateDht11_toDisplayBoard_value(void)
-{
-    
-     static uint8_t error_flag,counter;
-	 static uint8_t copy_dht11_temp,copy_dht11_hum;
-	 error_flag = dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
-	
-    if(error_flag ==0){
+		/*????????? 80us ??? ??????*/
+		while(DHT11_Data_IN()==Bit_SET);
 
-	    
-		if(dht11_data.temperature!=0 && dht11_data.humidity!=0){
-		    sendData_Real_TimeHum(dht11_data.humidity,dht11_data.temperature);
-			tx_thread_sleep(50);
-			copy_dht11_temp= dht11_data.temperature;
-		    copy_dht11_hum = dht11_data.humidity;
-			
-			g_pro.current_temperature= copy_dht11_temp;
+		/*??????*/   
+		DHT11_Data->humi_high8bit= DHT11_ReadByte();
+		DHT11_Data->humi_low8bit = DHT11_ReadByte();
+		DHT11_Data->temp_high8bit= DHT11_ReadByte();
+		DHT11_Data->temp_low8bit = DHT11_ReadByte();
+		DHT11_Data->check_sum    = DHT11_ReadByte();
+
+		/*????,????????*/
+		DHT11_Mode_Out_PP();
+		/*????*/
+		DHT11_Dout_HIGH();
 		
-		}
-		else if(dht11_data.temperature==0 && dht11_data.humidity!=0){
-          counter++;
-		  if(counter > 4){//continuce 4 times is confirm is dht11_data.temperature=0
-		      counter=0;
-		      sendData_Real_TimeHum(dht11_data.humidity,dht11_data.temperature);
-		     // sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-			  tx_thread_sleep(50);
-
-
-		  }
-		  else{
-		  	  counter=0;
-			  sendData_Real_TimeHum(copy_dht11_hum,copy_dht11_temp);
-			  tx_thread_sleep(50);
-		  }
-
-		}
+		/* ??????? */
+		humi_temp=DHT11_Data->humi_high8bit*100+DHT11_Data->humi_low8bit;
+		//DHT11_Data->humidity =(float)humi_temp/100;
 		
-    }
-	else{
-	    sendData_Real_TimeHum(copy_dht11_hum,copy_dht11_temp);
+		humi_temp=DHT11_Data->temp_high8bit*100+DHT11_Data->temp_low8bit;
+		//DHT11_Data->temperature=(float)humi_temp/100;    
+		
+		/*???????????*/
+		temp = DHT11_Data->humi_high8bit + DHT11_Data->humi_low8bit + 
+			DHT11_Data->temp_high8bit+ DHT11_Data->temp_low8bit;
+		if(DHT11_Data->check_sum==temp)
+		{ 
+		return SUCCESS;
+		}
+		else 
+		return ERROR;
+	}	
+	else
+		return ERROR;
+}
+
+/**
+*@breif :
+*@note:
+*@param:
+*@return:
+*
+*/
+void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
+{
+   
+
+	if(dht11_read_flag==0){
+
+	 read_flag =DHT11_Read_TempAndHumidity(pdth11);
+    if(read_flag == 0){
 		   
-		tx_thread_sleep(50);
+		   g_pro.g_humidity_value = (pdth11->humi_high8bit);
+		   
+		   g_pro.g_temperature_value = (pdth11->temp_high8bit);
+	   
+	 }
+	 else{
 
+	    dht11_read_flag=1;
+		g_pro.gTimer_read_dth11_sensor =0;
+
+	 }
+	}
+
+	if(g_pro.gTimer_read_dth11_sensor > 2 && dht11_read_flag==1){
+            dht11_read_flag=0;
 
 	}
 	
-    
+
+}
+/**
+*@breif :
+*@note:
+*@param:
+*@return:
+*
+*/
+void updateDht11_sensorData_toDisp(void)
+{
+	
+	    Dht11_Read_TempHumidity_Handler(&DHT11);
+	    if(g_pro.disp_second_f == 1){sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
+		tx_thread_sleep(100);
+
+	    	}
+	
+}
+/**
+*@breif :
+*@note:
+*@param:
+*@return:
+*
+*/
+void read_sensorData(void)
+{
+	
+	    Dht11_Read_TempHumidity_Handler(&DHT11);
+	  //  if(g_pro.disp_second_f == 1){sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
+		///tx_thread_sleep(100);
+
+	    ///	}
+	
 }
 
 /**
- * @brief  void Update_Dht11_Totencent_Value(void)
- * @param  mode: 0-显示温度�??1-显示湿度
- * @retval DHT11_Status 类型的操作结�??
- */
+*@breif :
+*@note:
+*@param:
+*@return:
+*
+*/
 void Update_Dht11_Totencent_Value(void)
 {
-    static uint8_t error_flag;
-    error_flag= dht11_read_data(&dht11_data.temperature, &dht11_data.humidity);
 
-	//Dht11_Read_TempHumidity_Handler(&DHT11);
-	if(error_flag == 0){
-	 g_pro.g_temperature_value = dht11_data.temperature;
-	 g_pro.g_humidity_value= dht11_data.humidity;
+  
+	Dht11_Read_TempHumidity_Handler(&DHT11);
+	
+	// dht11_read_data(&gctl_t.gDht11_temperature, &gctl_t.gDht11_humidity);
 
-	MqttData_Publis_ReadTempHum(dht11_data.temperature,dht11_data.humidity);
+
+	MqttData_Publis_ReadTempHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
     tx_thread_sleep(200);//HAL_Delay(100);
 
-    }
-
 }
-
-void Update_Dht11_toDisplayBoard_Value(void)
-{
-    static uint8_t error_flag;
-    error_flag= dht11_read_data(&dht11_data.temperature, &dht11_data.humidity);
-
-	//Dht11_Read_TempHumidity_Handler(&DHT11);
-	if(error_flag == 0){
-	 g_pro.g_temperature_value = dht11_data.temperature;
-	 g_pro.g_humidity_value= dht11_data.humidity;
-
-    if(g_disp.g_second_disp_flag == 1){ 
-		sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-    	tx_thread_sleep(100);//HAL_Delay(100);
-    }
-
-    }
-
-}
-
-
-
 
 
 

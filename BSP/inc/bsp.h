@@ -151,6 +151,7 @@ typedef struct _process{
 
    uint8_t g_humidity_value;
    uint8_t g_temperature_value;
+   uint8_t disp_second_f ;
 
  
 
@@ -209,6 +210,7 @@ typedef struct _process{
  //  uint8_t gTimer_key_long_counter;
    uint8_t  gTimer_to_disp_counter;
    uint8_t gTimer_mainboard_fun_counter;
+   uint8_t gTimer_read_dth11_sensor;
    
 }process_t;
 

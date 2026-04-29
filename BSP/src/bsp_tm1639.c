@@ -1,16 +1,16 @@
 #include "bsp.h"
 
 
-static void delay_us(uint32_t us)
-{
-    // 每个 us 需要大约 16 次循环（64 cycles / 4 cycles per loop）
-    uint32_t cycles = us * 16;//  
+//static void delay_us(uint32_t us)
+//{
+//    // 每个 us 需要大约 16 次循环（64 cycles / 4 cycles per loop）
+//    uint32_t cycles = us * 16;//  
 
-    while(cycles--)
-    {
-        __NOP();
-    }
-}
+//    while(cycles--)
+//    {
+//        __NOP();
+//    }
+//}
 
 
 // 数码管段码表�?0-9的显示码

@@ -87,6 +87,7 @@ static void tim17_isr_callback_handler(void)
 		  //g_pro.gTimer_key_long_counter++;
 		  g_pro.gTimer_to_disp_counter++;
 		  g_pro.gTimer_mainboard_fun_counter++;
+		  g_pro.gTimer_read_dth11_sensor++;
 		   
 		  
 

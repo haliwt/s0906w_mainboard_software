@@ -312,7 +312,7 @@ void compare_temperature_value_hanlder(void)
 // 读取温度�????
 uint8_t readTemperature(void) 
 {
-    return read_dht11_temperature_value();
+    return g_pro.g_temperature_value;
 }
 
 /******************************************************************************
