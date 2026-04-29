@@ -7,8 +7,8 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_ONE  256//1792//3072//2048//1024//896//768
-#define STACK_SIZE_TWO  384//384//256
-#define STACK_SIZE_THREE  256
+#define STACK_SIZE_UI  512//384//256
+#define STACK_SIZE_KEY  256
 
 /*在 ThreadX 里，优先级数字越小，优先级越高：*/
 
@@ -23,9 +23,9 @@ TX_SEMAPHORE decoder_semaphore;
 
 
 static UCHAR stack_decoder_pro[STACK_SIZE_ONE];
-static UCHAR stack_ui_pro[STACK_SIZE_TWO];
+static UCHAR stack_ui_pro[STACK_SIZE_UI];
 
-static UCHAR stack_start_pro[STACK_SIZE_THREE];
+static UCHAR stack_start_pro[STACK_SIZE_KEY];
 
 
 
@@ -106,7 +106,7 @@ static void threadx_handler(void)
                      vTaskUiPro,                  /* 启动任务函数地址 */
                      0,                            /* 传递给任务的参数 */
                      stack_ui_pro,                /* 堆栈基地址 */
-                     STACK_SIZE_TWO,               /* 堆栈空间大小 */ 
+                     STACK_SIZE_UI,               /* 堆栈空间大小 */ 
                      2,							   /* 任务优先级*/
                      2,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
@@ -118,7 +118,7 @@ static void threadx_handler(void)
                      vTaskStart,                   /* 启动任务函数地址 */
                      0,                            /* 传递给任务的参数 */
                      stack_start_pro,              /* 堆栈基地址 */
-                     STACK_SIZE_THREE,			   /* 堆栈空间大小 */  
+                     STACK_SIZE_KEY,			   /* 堆栈空间大小 */  
                      1, 						   /* 任务优先级*/
                      1, 						   /* 任务抢占阀值 */
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
@@ -257,7 +257,9 @@ static void vTaskUiPro(ULONG thread_input)
 	
    LL_IWDG_ReloadCounter(IWDG);
 
-   
+   #if DEBUG_ENABLE
+    debug_stack_check();
+   #endif 
 
 	tx_thread_sleep(10);
 
@@ -315,9 +317,9 @@ static void debug_stack_check(void)
    // ULONG unused = 0;
    ULONG temp_unused = 0; // 使用局部变量进行统计
 
-   #if 0
+   #if 1
     // 从数组起始位置（栈底/低地址）开始数连续的 0xEF
-    for (i = 0; i < STACK_SIZE_TWO; i++)
+    for (i = 0; i < STACK_SIZE_UI; i++)
     {
         if (stack_ui_pro[i] == 0xEF)
             temp_unused++;
@@ -326,7 +328,7 @@ static void debug_stack_check(void)
     }
    #else 
     /* 从高地址往低地址扫描 */
-    for (i = STACK_SIZE_TWO - 1; i >= 0; i--)
+    for (i = STACK_SIZE_UI - 1; i >= 0; i--)
     {
         if (stack_ui_pro[i] == 0xEF)
             temp_unused++;
