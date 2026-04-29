@@ -36,7 +36,7 @@ void power_on_smart_app_led(void)
     LED_WIFI_ON();
     LED_TEMP_ICON_ON();
 	LED_FUN_ON();
-	DHT11_Display_Data(0); //display temperature value 
+	//DHT11_Display_Data(0); //display temperature value 
    
 }
 

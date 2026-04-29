@@ -104,7 +104,7 @@ void power_on_init_ref(void)
             power_on_led();
 		   //display smg led turn on
 		    Fan_Full_Speed();
-		    DHT11_Display_Data(0); //display temperature value 
+		    //DHT11_Display_Data(0); //display temperature value 
 		    DRY_OPEN();
 			PLASMA_OPEN();
 			mouse_open();
@@ -139,6 +139,7 @@ void power_on_run_handler(void)
 	   if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	      
 		   power_on_init_ref();
+	       read_sensorData();//updateDht11_toDisplayBoard_value();
 
        }
 	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
@@ -179,7 +180,7 @@ void power_on_run_handler(void)
 			   	}
 		    }
         }
-		read_sensorData();//updateDht11_toDisplayBoard_value();
+		
 	  
 	   
 	 
@@ -231,7 +232,7 @@ void power_on_run_handler(void)
 
 	 case 1:
       // read_dht11_f =  read_sensor_dht11_data();
-     read_sensorData();
+
       if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 	
 		  if(g_pro.disp_second_f == 1 || temp_second_displboard < 5){
