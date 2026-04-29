@@ -40,9 +40,11 @@ static void threadx_handler(void);
 /* 创建任务通信机制 */
 static void tx_thread_stack_error_handler(TX_THREAD *thread_ptr);
 
-static void debug_stack_check(void);
+static void debug_stack_ui_check(void);
 
-ULONG unused ;
+static void debug_stack_key_check(void);
+
+ULONG unused,unused_key ;
 
 
 /**
@@ -61,7 +63,7 @@ void tx_application_define(void *first_unused_memory)
     #if DEBUG_ENABLE
     /* 2. 只有当 stack_msg_pro 是全局定义的静态数组时，这样写才有效 */
     memset(stack_ui_pro, 0xEF, sizeof(stack_ui_pro));
-    // memset(stack_start_pro, 0xEF, sizeof(stack_start_pro));
+    memset(stack_start_pro, 0xEF, sizeof(stack_start_pro));
     #endif 
 
     /* 3. 注册堆栈错误回调（推荐保持） */
@@ -179,12 +181,15 @@ static void threadx_handler(void)
 
      }
 
-     #if DEBUG_ENABLE
+  
 
-   //  debug_stack_check();
+    
+   #if DEBUG_ENABLE
+    debug_stack_key_check();
+   #endif 
 
      
-   #endif 
+ 
 	 //key_handler();
 	 //LL_IWDG_ReloadCounter(IWDG);
 	 tx_thread_sleep(20);
@@ -258,7 +263,7 @@ static void vTaskUiPro(ULONG thread_input)
    LL_IWDG_ReloadCounter(IWDG);
 
    #if DEBUG_ENABLE
-    debug_stack_check();
+    debug_stack_ui_check();
    #endif 
 
 	tx_thread_sleep(10);
@@ -311,7 +316,7 @@ void vtask_isq_handler(void)
 
 
 #if DEBUG_ENABLE
-static void debug_stack_check(void)
+static void debug_stack_ui_check(void)
 {
     ULONG i;
    // ULONG unused = 0;
@@ -345,6 +350,42 @@ static void debug_stack_check(void)
     // 剩下的 unused 就是你安全的“护城河”
     // 如果 unused < 100 字节，你的 G030 就危险了！
 }
+
+static void debug_stack_key_check(void)
+{
+    ULONG i;
+   // ULONG unused = 0;
+   ULONG temp_unused = 0; // 使用局部变量进行统计
+
+   #if 1
+    // 从数组起始位置（栈底/低地址）开始数连续的 0xEF
+    for (i = 0; i < STACK_SIZE_KEY; i++)
+    {
+        if (stack_start_pro[i] == 0xEF)
+            temp_unused++;
+        else
+            break; 
+    }
+   #else 
+    /* 从高地址往低地址扫描 */
+    for (i = STACK_SIZE_UI - 1; i >= 0; i--)
+    {
+        if (stack_ui_pro[i] == 0xEF)
+            temp_unused++;
+        else
+            break;
+    }
+
+
+
+   #endif 
+ 
+	
+	unused_key = temp_unused;  // 统计完后再赋值给全局变量，方便 Watch 窗口查看
+    // 剩下的 unused 就是你安全的“护城河”
+    // 如果 unused < 100 字节，你的 G030 就危险了！
+}
+
 
 #endif 
 
