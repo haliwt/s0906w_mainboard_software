@@ -151,6 +151,8 @@ void power_on_run_handler(void)
 			   if(timer_expired(&t_mqtt_1)){
 
 			      MqttData_Publish_SetOpen(1);  
+
+			       power_on_init_ref();
 		       //tx_thread_sleep(20);
 			   	}
 		    }
@@ -161,12 +163,12 @@ void power_on_run_handler(void)
 		   
       if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	      
-		   power_on_init_ref();
+		  // power_on_init_ref();
 
        }
 	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
 		  
-		   power_on_init_ref();
+		  // power_on_init_ref();
 		
 		  
 		  read_sensorData();//updateDht11_toDisplayBoard_value();

@@ -7,9 +7,12 @@ uint8_t read_flag;
 
 static void DHT11_Mode_IPU(void);
 static void DHT11_Mode_Out_PP(void);
-static uint8_t DHT11_ReadByte(void);
+static uint8_t DHT11_ReadByte_Fun(void);
 DHT11_Data_TypeDef DHT11;
 void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11);
+
+uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp);
+
 uint8_t dht11_read_flag;
 
 //??us??
@@ -21,6 +24,15 @@ uint8_t dht11_read_flag;
 //			for(j=6;j>0;j--);
 //	}
 //}
+
+
+static inline void delay_us_TIM16(uint16_t us)
+{
+    uint16_t start = TIM16->CNT;
+    while ((uint16_t)(TIM16->CNT - start) < us) {
+        ;
+    }
+}
 
 
 /**
@@ -37,6 +49,7 @@ void DHT11_Init(void)
 	
 	///DHT11_Dout_HIGH();  // ??GPIO
 }
+
 
 /**
   * ????: ?DHT11-DATA??????????
@@ -184,12 +197,104 @@ uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef *DHT11_Data)
 }
 
 /**
+ * @brief  读取 DHT11 温湿度
+ * @param  humi: 湿度输出指针
+ * @param  temp: 温度输出指针
+ * @retval 0: 成功，其他: 失败
+ */
+uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
+{
+    uint8_t data[5] = {0};
+    uint32_t timeout;
+    UINT old_post;
+
+    //if (humi == 0 || temp ==0)
+        ///return 1;
+
+    /* 1. 禁止 ThreadX 调度 + 全局中断（关键时序区） */
+	
+    old_post = tx_interrupt_control(TX_INT_DISABLE);
+
+    __disable_irq();
+
+    /* 2. 主机拉低 18ms */
+    DHT11_Mode_Out_PP();//DHT11_GPIO_Output();
+    DHT11_Dout_LOW();//DHT11_WritePin(0);
+    delay_us(18000);
+
+    /* 3. 拉高 20~40us */
+    DHT11_Dout_HIGH();//DHT11_WritePin(1);
+    delay_us(30);
+
+    /* 4. 切换输入，等待 DHT11 响应 */
+    DHT11_Mode_IPU();//DHT11_GPIO_Input();
+    delay_us(5);
+
+    /* 等待 DHT11 拉低（80us） */
+    timeout = 0;
+    while (DHT11_Data_IN())
+    {
+        if (++timeout > 300) goto error;
+        delay_us(1);
+    }
+
+    /* 等待 DHT11 拉高（80us） */
+    timeout = 0;
+    while (!DHT11_Data_IN()	 )
+    {
+        if (++timeout > 300) goto error;
+        delay_us(1);
+    }
+
+    /* 等待 DHT11 再次拉低，开始传输数据 */
+    timeout = 0;
+    while (DHT11_Data_IN()	 )
+    {
+        if (++timeout > 300) goto error;
+        delay_us(1);
+    }
+
+    /* 5. 读取 5 字节（40bit） */
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        data[i] = DHT11_ReadByte();
+        if (data[i] == 0xFF) goto error;
+    }
+
+    /* 6. 恢复中断 & 调度 */
+    __enable_irq();
+    tx_interrupt_control(old_post);
+
+
+    /* 7. 校验 */
+    if ((uint8_t)(data[0] + data[1] + data[2] + data[3]) != data[4])
+        return 2;
+
+	
+
+    *humi = data[0];
+    *temp = data[2];
+
+	
+
+
+    return 0;
+
+error:
+    __enable_irq();
+    tx_interrupt_control(old_post);
+    return 3;
+}
+
+
+/**
 *@breif :
 *@note:
 *@param:
 *@return:
 *
 */
+#if 0
 void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
 {
    
@@ -219,6 +324,8 @@ void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
 	
 
 }
+
+#endif 
 /**
 *@breif :
 *@note:
@@ -229,7 +336,7 @@ void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
 void updateDht11_sensorData_toDisp(void)
 {
 	
-	    Dht11_Read_TempHumidity_Handler(&DHT11);
+	   // Dht11_Read_TempHumidity_Handler(&DHT11);
 	    if(g_pro.disp_second_f == 1){
 			if(timer_expired(&t_display)){
 			sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
@@ -253,7 +360,7 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
    
     // 读取DHT11数据
     //status = dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
-    status =DHT11_Read_TempAndHumidity(&DHT11);// Dht11_Read_TempHumidity_Handler(&DHT11);
+    status =DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);//DHT11_Read_TempAndHumidity(&DHT11);// Dht11_Read_TempHumidity_Handler(&DHT11);
 
    #if 0
 	if(status !=0){
@@ -313,7 +420,7 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
 void read_sensorData(void)
 {
 	
-	    Dht11_Read_TempHumidity_Handler(&DHT11);
+	   DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
 	    if(g_pro.disp_second_f == 1){
 			if(timer_expired(&t_display)){
 			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
@@ -334,7 +441,7 @@ void Update_Dht11_Totencent_Value(void)
 {
 
   
-	Dht11_Read_TempHumidity_Handler(&DHT11);
+	//Dht11_Read_TempHumidity_Handler(&DHT11);
 	if(timer_expired(&t_mqtt_0)){
 	MqttData_Publis_ReadTempHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
    // tx_thread_sleep(20);//HAL_Delay(100);

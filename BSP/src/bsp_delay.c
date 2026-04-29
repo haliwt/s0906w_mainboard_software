@@ -7,6 +7,14 @@
  */
 #include "bsp.h"
 
+void TIM17_Init_1MHz(void)
+{
+    RCC->APBENR2 |= RCC_APBENR2_TIM17EN;
+
+    TIM16->PSC = (SystemCoreClock / 1000000) - 1;   // 64MHz → 1MHz
+    TIM16->ARR = 0xFFFF;
+    TIM16->CR1 |= TIM_CR1_CEN;
+}
 
 
 /**
@@ -14,8 +22,13 @@
  * @param     sysclk: 系统时钟频率, 即CPU频率(HCLK), 72Mhz
  * @retval    无
  */
-void delay_init(uint16_t sysclk)
+void delay_init(void)
 {
+	RCC->APBENR2 |= RCC_APBENR2_TIM17EN;
+	
+	  TIM16->PSC = (SystemCoreClock / 1000000) - 1;   // 64MHz → 1MHz
+	  TIM16->ARR = 0xFFFF;
+	  TIM16->CR1 |= TIM_CR1_CEN;
 
 }
 
@@ -36,7 +49,10 @@ void delay_us(uint32_t nus)
         __NOP();
     }
 
-	#else 
+	#endif
+
+	#if 0
+	
 	uint32_t start = SysTick->VAL;
 	uint32_t ticks = nus * (SystemCoreClock / 1000000);	 // 64 ticks = 1us
 	uint32_t reload = SysTick->LOAD;
@@ -58,6 +74,11 @@ void delay_us(uint32_t nus)
 
 
 	#endif 
+
+	uint16_t start = TIM17->CNT;
+    while ((uint16_t)(TIM17->CNT - start) < nus) {
+        ;
+    }
 
 }
 

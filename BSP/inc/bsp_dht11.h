@@ -30,7 +30,7 @@
 #define DHT11_DATA_SetHigh()            do{DHT11_GPIO -> BSRR = DHT11_DATA;}while(0)//HAL_GPIO_WritePin(DHT11_GPIO,DHT11_DATA,GPIO_PIN_SET)    // output high level
 #define DHT11_DATA_SetLow()             do{DHT11_GPIO -> BSRR = (uint32_t)DHT11_DATA<<16;}while(0)//HAL_GPIO_WritePin(DHT11_GPIO,DHT11_DATA,GPIO_PIN_RESET)    // output low level
 
-#define DHT11_ReadData()	           LL_GPIO_IsInputPinSet(DHT11_GPIO,DHT11_DATA) //HAL_GPIO_ReadPin(DHT11_GPIO,DHT11_DATA)
+//#define DHT11_ReadData()	           LL_GPIO_IsInputPinSet(DHT11_GPIO,DHT11_DATA) //HAL_GPIO_ReadPin(DHT11_GPIO,DHT11_DATA)
 
 /* ??? -------------------------------------------------------------------*/
 /***********************   DHT11 ??????  **************************/

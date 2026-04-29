@@ -23,7 +23,7 @@ uint8_t counter_flag ;
 ******************************************************************************/
 void bsp_init(void)
 {
-	 delay_init(64); 
+	 delay_init(); 
 	  DHT11_Init();
 	 key_referen_init();
 	 g_pro.gset_temperture_value=40; //WT.EDIT 2025.05.05
