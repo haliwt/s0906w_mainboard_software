@@ -6,8 +6,8 @@
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
-#define STACK_SIZE_ONE  256//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI  512//384//256
+#define STACK_SIZE_ONE  128//1792//3072//2048//1024//896//768
+#define STACK_SIZE_UI  1024//384//256
 #define STACK_SIZE_KEY  256
 
 /*在 ThreadX 里，优先级数字越小，优先级越高：*/
@@ -44,7 +44,10 @@ static void debug_stack_ui_check(void);
 
 static void debug_stack_key_check(void);
 
-ULONG unused,unused_key ;
+static void debug_stack_decoder_check(void);
+
+
+ULONG unused,unused_key,unused_decoder ;
 
 
 /**
@@ -64,6 +67,7 @@ void tx_application_define(void *first_unused_memory)
     /* 2. 只有当 stack_msg_pro 是全局定义的静态数组时，这样写才有效 */
     memset(stack_ui_pro, 0xEF, sizeof(stack_ui_pro));
     memset(stack_start_pro, 0xEF, sizeof(stack_start_pro));
+	memset(stack_decoder_pro, 0xEF, sizeof(stack_decoder_pro));
     #endif 
 
     /* 3. 注册堆栈错误回调（推荐保持） */
@@ -189,9 +193,7 @@ static void threadx_handler(void)
    #endif 
 
      
- 
-	 //key_handler();
-	 //LL_IWDG_ReloadCounter(IWDG);
+
 	 tx_thread_sleep(20);
 
    }
@@ -219,6 +221,9 @@ static void vTaskDecoderPro(ULONG thread_input)
       {
 			/* 接收到消息，�?测那个位被按�? */
             usart1_rx_decoder(); 
+			 #if DEBUG_ENABLE
+              debug_stack_decoder_check();
+            #endif 
 	  }
 	
    }
@@ -357,7 +362,7 @@ static void debug_stack_key_check(void)
    // ULONG unused = 0;
    ULONG temp_unused = 0; // 使用局部变量进行统计
 
-   #if 1
+
     // 从数组起始位置（栈底/低地址）开始数连续的 0xEF
     for (i = 0; i < STACK_SIZE_KEY; i++)
     {
@@ -366,25 +371,31 @@ static void debug_stack_key_check(void)
         else
             break; 
     }
-   #else 
-    /* 从高地址往低地址扫描 */
-    for (i = STACK_SIZE_UI - 1; i >= 0; i--)
-    {
-        if (stack_ui_pro[i] == 0xEF)
-            temp_unused++;
-        else
-            break;
-    }
-
-
-
-   #endif 
- 
-	
-	unused_key = temp_unused;  // 统计完后再赋值给全局变量，方便 Watch 窗口查看
+    unused_key = temp_unused;  // 统计完后再赋值给全局变量，方便 Watch 窗口查看
     // 剩下的 unused 就是你安全的“护城河”
     // 如果 unused < 100 字节，你的 G030 就危险了！
 }
+
+static void debug_stack_decoder_check(void)
+{
+    ULONG i;
+   // ULONG unused = 0;
+   ULONG temp_unused = 0; // 使用局部变量进行统计
+
+
+    // 从数组起始位置（栈底/低地址）开始数连续的 0xEF
+    for (i = 0; i < STACK_SIZE_ONE; i++)
+    {
+        if (stack_decoder_pro[i] == 0xEF)
+            temp_unused++;
+        else
+            break; 
+    }
+    unused_decoder = temp_unused;  // 统计完后再赋值给全局变量，方便 Watch 窗口查看
+    // 剩下的 unused 就是你安全的“护城河”
+    // 如果 unused < 100 字节，你的 G030 就危险了！
+}
+
 
 
 #endif 
