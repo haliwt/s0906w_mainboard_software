@@ -551,7 +551,7 @@ void Json_Parse_Command_Fun(void)
    switch(gl_msg.response_wifi_signal_label){
   
 	case OPEN_ON_ITEM:
-		buzzer_sound();
+	
        //if(timer_expired(&t_mqtt_0)){
 		MqttData_Publish_SetOpen(1);  
 		//tx_thread_sleep(20);//HAL_Delay(100);//tx_thread_sleep(100);//HAL_Delay(100);
@@ -577,12 +577,12 @@ void Json_Parse_Command_Fun(void)
 
        
 		buzzer_temp_on=0;
-		gl_msg.response_wifi_signal_label = 0xee;
+		gl_msg.response_wifi_signal_label = 0xff;
 
 	  break;
 
        case OPEN_OFF_ITEM:
-	   	     buzzer_sound();
+	   
 
              if(timer_expired(&t_mqtt_0)){
 		 			MqttData_Publish_SetOpen(0);  
@@ -602,7 +602,7 @@ void Json_Parse_Command_Fun(void)
 			buzzer_temp_on=0;
 	
          
-        gl_msg.response_wifi_signal_label = 0xed;
+        gl_msg.response_wifi_signal_label = 0xff;
         
 	  break;
 
@@ -931,25 +931,14 @@ void Json_Parse_Command_Fun(void)
    }
 
 
-   if(gl_msg.response_wifi_signal_label==0xfe){
+   if(gl_msg.response_wifi_signal_label==0xff){
         
         if(buzzer_temp_on ==0){
 			buzzer_temp_on++;
    	        buzzer_sound();
         }
-         
-		
-
-//		for(i=0;i<20;i++){
-//		   gpro_t.wifi_rx_data_array[i]=0;
-//		   
-//
-//        }
-         if(gl_msg.response_wifi_signal_label==0xff){
-             memset(g_wifi.wifi_rx_data_array,'\0',20);
-         }
-      
-		//gl_msg.response_wifi_signal_label=0xf0;
+         memset(g_wifi.wifi_rx_data_array,'\0',20);
+         gl_msg.response_wifi_signal_label=0xf0;
 	}
 
   
