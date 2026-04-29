@@ -47,6 +47,16 @@
 
 /* ???? ------------------------------------------------------------------*/
 /************************ DHT11 ??????******************************/
+
+// DHT11错误代码定义
+typedef enum {
+    DHT11_OK = 0,           // 操作成功
+    DHT11_NO_RESPONSE,      // 传感器无响应
+    DHT11_CHECKSUM_ERROR,   // 校验和错误
+    DHT11_TIMEOUT_ERROR     // 通信超时错误
+} DHT11_Status;
+
+
 typedef struct
 {
 	uint8_t  humi_high8bit;		//????:???8?
@@ -69,6 +79,7 @@ void Update_Dht11_Totencent_Value(void);
 void read_sensorData(void);
 
 
+DHT11_Status DHT11_Display_Data(uint8_t mode);
 
 
 

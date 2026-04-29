@@ -107,7 +107,7 @@ void power_on_init_ref(void)
             power_on_led();
 		   //display smg led turn on
 		    Fan_Full_Speed();
-		   // DHT11_Display_Data(0); //display temperature value 
+		    DHT11_Display_Data(0); //display temperature value 
 		    DRY_OPEN();
 			PLASMA_OPEN();
 			mouse_open();

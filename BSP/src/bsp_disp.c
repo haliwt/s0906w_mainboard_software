@@ -108,15 +108,15 @@ void display_digital_3_numbers(void)
 					LED_TEMP_ICON_ON();
 					LED_HUM_ICON_OFF();
 
-					//read_error_flag =DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
-					//if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
+					read_error_flag =DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
+					if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
 				}
 				else {
                     LED_TEMP_ICON_OFF();
 					LED_HUM_ICON_ON();
 					
-				   // read_error_flag =DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
-					//if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
+				   read_error_flag =DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
+				   if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
 					
                 }
        

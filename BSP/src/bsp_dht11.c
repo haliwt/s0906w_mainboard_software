@@ -177,7 +177,7 @@ uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef *DHT11_Data)
 		return SUCCESS;
 		}
 		else 
-		return ERROR;
+		 return ERROR;
 	}	
 	else
 		return ERROR;
@@ -236,6 +236,70 @@ void updateDht11_sensorData_toDisp(void)
 	    	}
 	
 }
+
+/**
+ * @brief  在TM1639上显示DHT11的温湿度数据
+ * @param  mode: 0-显示温度�??1-显示湿度
+ * @retval DHT11_Status 类型的操作结�??
+ */
+DHT11_Status DHT11_Display_Data(uint8_t mode)
+{
+
+    static uint8_t  copy_temp_value, copy_humidity_value;
+    uint8_t  status;
+   
+    // 读取DHT11数据
+    //status = dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
+    status =DHT11_Read_TempAndHumidity(&DHT11);// Dht11_Read_TempHumidity_Handler(&DHT11);
+
+   #if 0
+	if(status !=0){
+	    if(mode == 0)
+	    {
+	    	 LED_TEMP_ICON_ON();
+	         LED_HUM_ICON_OFF();
+	           
+	         TM1639_Display_Temperature(copy_temp_value);
+	    }
+	    else
+	    {
+	        // 显示湿度
+	    	LED_TEMP_ICON_OFF();
+	    	LED_HUM_ICON_ON();
+	        TM1639_Display_Humidity(copy_humidity_value);
+		}
+    }
+	else if(status==0){
+
+	#endif 
+   
+    // 根据模式显示温度或湿�??
+    if(mode == 0)
+    {
+        // 显示温度
+
+        	LED_TEMP_ICON_ON();
+        	LED_HUM_ICON_OFF();
+           
+            TM1639_Display_Temperature(g_pro.g_temperature_value);
+			g_pro.current_temperature = g_pro.g_temperature_value;
+		    copy_temp_value = g_pro.g_temperature_value;
+				
+        
+    }
+    else
+    {
+        // 显示湿度
+    	LED_TEMP_ICON_OFF();
+    	LED_HUM_ICON_ON();
+        TM1639_Display_Humidity(g_pro.g_humidity_value);
+		copy_humidity_value = g_pro.g_humidity_value;
+    }
+	//}
+    
+    return DHT11_OK;
+}
+
 /**
 *@breif :
 *@note:

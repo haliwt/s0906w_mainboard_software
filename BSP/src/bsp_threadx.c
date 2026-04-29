@@ -20,7 +20,7 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_ONE  256//1792//3072//2048//1024//896//768
-#define STACK_SIZE_TWO  256//256
+#define STACK_SIZE_TWO  384//256
 #define STACK_SIZE_THREE  128
 
 /*在 ThreadX 里，优先级数字越小，优先级越高：*/
@@ -182,8 +182,8 @@ static void threadx_handler(void)
      }
 
 
-	//key_handler();
-	 LL_IWDG_ReloadCounter(IWDG);
+	 key_handler();
+	 //LL_IWDG_ReloadCounter(IWDG);
 	 tx_thread_sleep(20);
 
    }
@@ -229,7 +229,7 @@ static void vTaskUiPro(ULONG thread_input)
 
   while(1){
     
-	key_handler();
+	//key_handler();
 
     power_onoff_handler(g_pro.gpower_on);
     
