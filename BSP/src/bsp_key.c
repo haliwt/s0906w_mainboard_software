@@ -174,8 +174,11 @@ static void adjust_timer(int8_t delta)
  */
 void key_dwon_fun(void)
 {
-    switch (g_pro.switch_disp_time_or_temp_item) {
+
+   if(g_key.key_mode_long_flag !=1)g_pro.switch_disp_time_or_temp_item = temperature_mode;
+	switch (g_pro.switch_disp_time_or_temp_item) {
         case temperature_mode:
+		
             adjust_temperature(-1);
 	       
 
@@ -196,8 +199,14 @@ void key_dwon_fun(void)
  */
  void key_up_fun(void)
 {
+
+     if(g_key.key_mode_long_flag !=1)g_pro.switch_disp_time_or_temp_item = temperature_mode;
+
 	 switch (g_pro.switch_disp_time_or_temp_item) {
+
+	   
         case temperature_mode:
+			
              adjust_temperature(1);
 		   
             break;
