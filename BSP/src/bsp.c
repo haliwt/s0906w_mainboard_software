@@ -74,28 +74,23 @@ void mainboard_fun_handler(void)
 	if(g_pro.gDry == 1 && g_pro.g_manual_shutoff_dry_flag ==0 && g_pro.works_two_hours_interval_flag ==0){
 		DRY_OPEN();
 		LED_DRY_ON();
-//	    if(g_disp.g_second_disp_flag == 1){
-//	    	sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-//	    	tx_thread_sleep(100);
-//	    }
-        if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
-			 ptc_on_default = g_pro.gDry;
-			 MqttData_Publish_SetPtc(0x01);
-		  	 tx_thread_sleep(20);//10ms*20 =200ms
-		 
-         }
+	    if(g_pro.disp_second_f == 1){
+	    	sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
+	    	tx_thread_sleep(10);
+	    }
+		
+     
 	}
 	else{
 		g_pro.gDry = 0;
 		LED_DRY_OFF();
 		DRY_CLOSE();
+	     if(g_pro.disp_second_f == 1){
+			   sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
+			   tx_thread_sleep(10);
+		  }
+		   
 
-		if(g_wifi.gwifi_link_net_success==1 && ptc_off_default != g_pro.gDry){
-			ptc_off_default = g_pro.gDry;
-		 	MqttData_Publish_SetPtc(0x0);
-	  		 tx_thread_sleep(20);
-		 
-         }
 
 	}
 

@@ -134,6 +134,34 @@ static void threadx_handler(void)
 
  
 }
+/**********************************************************************************************************
+*	Function Name: static void vTaskDecoderPro(void *pvParameters)
+*	Function:
+*	Input Ref: pvParameters 是在创建该任务时传的形参
+*	Return Ref:
+*   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
+
+**********************************************************************************************************/
+static void vTaskDecoderPro(ULONG thread_input)
+{
+   (void)thread_input;  /* 消除未使用的参数警告 */
+
+    while(1)
+    {
+
+	 // 阻塞等待 ISR 投递
+      if(tx_semaphore_get(&decoder_semaphore, TX_WAIT_FOREVER) == TX_SUCCESS)
+      {
+			/* 接收到消息，�?测那个位被按�? */
+            usart1_rx_decoder(); 
+			 #if DEBUG_ENABLE
+              debug_stack_decoder_check();
+            #endif 
+	  }
+	
+   }
+}
+
 
 /**
   * @brief	:  static void vTaskStart(void *pvParameters
@@ -200,35 +228,7 @@ static void threadx_handler(void)
 	
  } 
 
-/**********************************************************************************************************
-*	Function Name: static void vTaskDecoderPro(void *pvParameters)
-*	Function:
-*	Input Ref: pvParameters 是在创建该任务时传的形参
-*	Return Ref:
-*   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
 
-**********************************************************************************************************/
-#if 1
-static void vTaskDecoderPro(ULONG thread_input)
-{
-   (void)thread_input;  /* 消除未使用的参数警告 */
-
-    while(1)
-    {
-
-	 // 阻塞等待 ISR 投递
-      if(tx_semaphore_get(&decoder_semaphore, TX_WAIT_FOREVER) == TX_SUCCESS)
-      {
-			/* 接收到消息，�?测那个位被按�? */
-            usart1_rx_decoder(); 
-			 #if DEBUG_ENABLE
-              debug_stack_decoder_check();
-            #endif 
-	  }
-	
-   }
-}
-#endif 
 /**********************************************************************************************************
 *	Function Name: static void vTaskRunPro(void *pvParameters)
 *	Function:

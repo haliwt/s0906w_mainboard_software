@@ -311,10 +311,10 @@ void read_sensorData(void)
 {
 	
 	    Dht11_Read_TempHumidity_Handler(&DHT11);
-	  //  if(g_pro.disp_second_f == 1){sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-		///tx_thread_sleep(100);
-
-	    ///	}
+	    if(g_pro.disp_second_f == 1){
+			sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
+		     tx_thread_sleep(10);
+         }
 	
 }
 
@@ -331,9 +331,6 @@ void Update_Dht11_Totencent_Value(void)
   
 	Dht11_Read_TempHumidity_Handler(&DHT11);
 	
-	// dht11_read_data(&gctl_t.gDht11_temperature, &gctl_t.gDht11_humidity);
-
-
 	MqttData_Publis_ReadTempHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
     tx_thread_sleep(20);//HAL_Delay(100);
 

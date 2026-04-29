@@ -48,7 +48,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
      case 0x01: //表示�??机指�??
 
        if(pdata[3] == 0x01){ 
-		  g_disp.g_second_disp_flag = 1;
+		  g_pro.disp_second_f = 1;
 
 	      if(g_disp.soft_version ==0){
              g_pro.gpower_on = power_on;
@@ -66,7 +66,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         else{ //close 
          
           buzzer_sound();
-		  g_disp.g_second_disp_flag = 1;
+		  g_pro.disp_second_f = 1;
 		  g_pro.gpower_on = power_off;
         
 		
@@ -86,7 +86,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
     // if(pdata[3] == 0x00){ //判断是否是数据，或�?�指令�?�知�?? 00- 命令和指令，下一个字节是指令 �??0x0F- 数据，下�??个字节是数据个数
 	 	if(pdata[3]==0x01){
-			 g_disp.g_second_disp_flag=1;
+			 g_pro.disp_second_f=1;
 	 	if(g_pro.gpower_on == power_on){
 		 
           buzzer_sound();
@@ -113,14 +113,14 @@ void receive_data_from_displayboard(uint8_t *pdata)
        }
        }
        else if(pdata[3] == 0x0){
-	   	g_disp.g_second_disp_flag=1;
+	   	g_pro.disp_second_f=1;
 	   	 if(g_pro.gpower_on == power_on){
 		  g_pro.g_manual_shutoff_dry_flag = 1;
           buzzer_sound();
           g_pro.gDry =0;
 		  LED_DRY_OFF();
           DRY_CLOSE();
-		  if(g_disp.g_second_disp_flag ==1){
+		  if(g_pro.disp_second_f ==1){
 		  SendWifiData_Answer_Cmd(CMD_PTC,0x0); //WT.EDIT 2025.01.07
 		   tx_thread_sleep(10);
 		  }
@@ -139,7 +139,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
       
 	    if(pdata[3]==0x01){
-			g_disp.g_second_disp_flag=1;
+			g_pro.disp_second_f=1;
        if(g_pro.gpower_on == power_on){
 	   	  
             buzzer_sound();
@@ -156,7 +156,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         }
         }
         else if(pdata[3] == 0x0){
-			g_disp.g_second_disp_flag=1;
+			g_pro.disp_second_f=1;
         if(g_pro.gpower_on == power_on){ 
             buzzer_sound();
 			g_pro.gPlasma = 0;
@@ -213,7 +213,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
  
 	 	if(pdata[3]==0x01){
-		   g_disp.g_second_disp_flag=1;
+		   g_pro.disp_second_f=1;
         if(g_pro.gpower_on == power_on){ 
 		  if(g_pro.disp_second_f ==1){
 		  	SendWifiData_Answer_Cmd(0x05,0x01); //WT.EDIT 2024.12.28
@@ -238,7 +238,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
         
         if(pdata[3]==0x01){
-		   g_disp.g_second_disp_flag=1;
+		   g_pro.disp_second_f=1;
            buzzer_sound();
         }
        
@@ -277,7 +277,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
      case 0x11: //notice has outside the second connector display board 
 
         if(pdata[3]==0x01){
-		   g_disp.g_second_disp_flag=1;
+		   g_pro.disp_second_f=1;
           
         }
        
@@ -289,7 +289,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
       
          if(pdata[3]==0x01){
-          g_disp.g_second_disp_flag=1;
+          g_pro.disp_second_f=1;
           buzzer_sound();
           if(g_pro.disp_second_f ==1){SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2025.01.07
           tx_thread_sleep(10);
@@ -394,7 +394,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
        if(pdata[3] == 0x01){
         
         if(g_pro.gpower_on == power_on && g_pro.g_manual_shutoff_dry_flag ==0){
-         g_disp.g_second_disp_flag=1;
+         g_pro.disp_second_f=1;
         g_pro.gDry = 1;
 		LED_DRY_ON();
      	if(g_pro.works_two_hours_interval_flag==0 ){
@@ -412,7 +412,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
       else if(pdata[3] == 0x0){
         if(g_pro.gpower_on == power_on){
 
-            g_disp.g_second_disp_flag=1;
+            g_pro.disp_second_f=1;
             g_pro.gDry =0;
 		    LED_DRY_OFF();
           	DRY_CLOSE();
@@ -494,7 +494,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		
          if(pdata[4]==0x01 && g_pro.gpower_on == power_on){ // has dat only one value ,next receive byte is value
 
-		        g_disp.g_second_disp_flag=1;
+		        g_pro.disp_second_f=1;
 
 			    if(pdata[5] > 0){
 				g_pro.gAI = 0;
@@ -556,7 +556,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 			if(pdata[5] < 25 && pdata[6] < 61 && pdata[7] < 61){
               
-	              g_disp.g_second_disp_flag=1;
+	              g_pro.disp_second_f=1;
                   g_pro.gdisp_hours_value = pdata[5];
                   g_pro.gdisp_minutes_value=pdata[6];
 				  g_pro.gTimer_disp_time_second=pdata[7];
@@ -571,7 +571,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 	 case 0x6B: // display  Synchronization Timer  Time
 		if(pdata[4] == 0x03){ //数据
-            g_disp.g_second_disp_flag=1;
+            g_pro.disp_second_f=1;
 		    g_pro.gdisp_timer_hours_value = pdata[5];
 			g_pro.gdisp_timer_minutes_value=pdata[6];
 			g_pro.gTimer_timer_time_second=pdata[7];

@@ -57,7 +57,7 @@ void power_onoff_handler(uint8_t data)
 			set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
 			set_timer_timing_value_handler();
 
-			works_run_two_hours_state();
+		
 
 			
 	    }
@@ -215,6 +215,7 @@ void power_on_run_handler(void)
 	   g_pro.gTimer_display_adc_value=0;
 	   g_pro.delay_run_adc_counter=0;
 	   g_pro.g_real_hours_counter =0;
+	   
 	  
 
 	 
@@ -230,7 +231,7 @@ void power_on_run_handler(void)
      read_sensorData();
       if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 	
-		  if(g_disp.g_second_disp_flag == 1 || temp_second_displboard < 5){
+		  if(g_pro.disp_second_f == 1 || temp_second_displboard < 5){
 
 		     if(temp_second_displboard < 8){
                    temp_second_displboard ++;
@@ -342,7 +343,14 @@ void power_on_run_handler(void)
 		}
 		read_sensorData();//Update_Dht11_toDisplayBoard_Value();
 		
-	     gl_run.process_on_step =1;
+	     gl_run.process_on_step =6;
+
+	 break;
+
+
+	 case 6:
+	 	  	works_run_two_hours_state();
+	        gl_run.process_on_step =1;
 
 	 break;
 
@@ -397,7 +405,7 @@ void power_off_run_handler(void)
 	   g_wifi.app_timer_power_on_flag =0;
 	   g_pro.fan_warning =0 ;
 	   g_pro.ptc_warning =0;
-	   g_disp.g_second_disp_flag =0;
+	   g_pro.disp_second_f =0;
 	 
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
 
