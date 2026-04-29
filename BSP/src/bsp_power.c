@@ -108,6 +108,7 @@ void power_on_init_ref(void)
 		    DRY_OPEN();
 			PLASMA_OPEN();
 			mouse_open();
+			TM1639_Display_Temperature(g_pro.g_temperature_value);
 		   
            //timer 
            g_pro.g_manual_shutoff_dry_flag = 0;
