@@ -126,7 +126,7 @@ static uint8_t DHT11_ReadByte ( void )
 	}
 	return temp;
 }
-
+#if 0
 /**
   * ????: ??????????40bit,????
   * ????: DHT11_Data:DHT11????
@@ -195,7 +195,7 @@ uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef *DHT11_Data)
 	else
 		return ERROR;
 }
-
+#endif 
 /**
  * @brief  读取 DHT11 温湿度
  * @param  humi: 湿度输出指针
@@ -336,7 +336,7 @@ void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
 void updateDht11_sensorData_toDisp(void)
 {
 	
-	   // Dht11_Read_TempHumidity_Handler(&DHT11);
+	   DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
 	    if(g_pro.disp_second_f == 1){
 			if(timer_expired(&t_display)){
 			sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
@@ -441,7 +441,7 @@ void Update_Dht11_Totencent_Value(void)
 {
 
   
-	//Dht11_Read_TempHumidity_Handler(&DHT11);
+	DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);//Dht11_Read_TempHumidity_Handler(&DHT11);
 	if(timer_expired(&t_mqtt_0)){
 	MqttData_Publis_ReadTempHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
    // tx_thread_sleep(20);//HAL_Delay(100);

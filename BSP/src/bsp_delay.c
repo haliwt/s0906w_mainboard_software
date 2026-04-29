@@ -24,12 +24,20 @@ void TIM17_Init_1MHz(void)
  */
 void delay_init(void)
 {
-	RCC->APBENR2 |= RCC_APBENR2_TIM17EN;
+//	RCC->APBENR2 |= RCC_APBENR2_TIM17EN;
 	
-	  TIM16->PSC = (SystemCoreClock / 1000000) - 1;   // 64MHz → 1MHz
-	  TIM16->ARR = 0xFFFF;
-	  TIM16->CR1 |= TIM_CR1_CEN;
+//	  TIM16->PSC = (SystemCoreClock / 1000000) - 1;   // 64MHz → 1MHz
+//	  TIM16->ARR = 0xFFFF;
+//	  TIM16->CR1 |= TIM_CR1_CEN;
 
+}
+static inline void delay_us_dht11(uint32_t us)
+{
+    while (us--) {
+        for (volatile uint32_t i = 0; i < 64; i++) {
+            __NOP();
+        }
+    }
 }
 
 
@@ -75,10 +83,48 @@ void delay_us(uint32_t nus)
 
 	#endif 
 
-	uint16_t start = TIM17->CNT;
-    while ((uint16_t)(TIM17->CNT - start) < nus) {
-        ;
-    }
+    #if 1
+	
+	//void delay_us(uint32_t nus)
+	{
+		// 1. 获取当前频率下的 1us tick 数
+		// G030 频率 64MHz 时，ticksPerUs = 64
+		uint32_t ticksPerUs = SystemCoreClock / 1000000;
+		uint32_t ticks = nus * ticksPerUs;
+		
+		uint32_t reload = SysTick->LOAD;
+		uint32_t start = SysTick->VAL;
+		uint32_t elapsed = 0;
+		uint32_t now;
+	
+		// 2. 阻塞等待，直到累积的 ticks 达到目标值
+		while (elapsed < ticks)
+		{
+			now = SysTick->VAL;
+			
+			if (now <= start)
+			{
+				// 正常向下递减计数
+				elapsed += (start - now);
+			}
+			else
+			{
+				// 此时发生了 SysTick 重装载（可能是 ThreadX 的心跳中断触发了）
+				// 跨越零点流逝掉的 ticks = 当前值到0的距离 + 重装载值到新值的距离
+				// 简化公式：elapsed += start + (reload - now);
+				elapsed += (start + (reload - now));
+			}
+			start = now;
+	
+			// 3. 安全兜底：如果 nus 输入过大导致逻辑错误，防止死循环
+			// 如果延时超过了 100ms，建议检查代码逻辑是否应改用 tx_thread_sleep
+			//if (elapsed > (SystemCoreClock / 10)) break; 
+		}
+	}
+
+
+
+	#endif 
 
 }
 
