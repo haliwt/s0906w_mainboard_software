@@ -80,7 +80,7 @@
   
 #define TEST_UNIT         0 
 
-#define DEBUG_ENABLE        Enable_EventRecorder 
+#define DEBUG_ENABLE       1 //Enable_EventRecorder 
 
 
 #if USE_THREADX == 1

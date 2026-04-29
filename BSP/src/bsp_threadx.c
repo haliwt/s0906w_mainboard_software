@@ -3,25 +3,12 @@
 
 
 
-
-
-// 定义EXTI线，根据实际GPIO引脚对应的EXTI线号修改
-#define KEY_POWER_EXTI_LINE    LL_EXTI_LINE_0
-#define KEY_MODE_EXTI_LINE     LL_EXTI_LINE_1  
-#define KEY_DOWN_EXTI_LINE     LL_EXTI_LINE_2
-#define KEY_UP_EXTI_LINE       LL_EXTI_LINE_3
-
-
-
-
-
-
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_ONE  256//1792//3072//2048//1024//896//768
-#define STACK_SIZE_TWO  384//256
-#define STACK_SIZE_THREE  128
+#define STACK_SIZE_TWO  384//384//256
+#define STACK_SIZE_THREE  256
 
 /*在 ThreadX 里，优先级数字越小，优先级越高：*/
 
@@ -35,9 +22,13 @@ TX_SEMAPHORE decoder_semaphore;
 //static uint8_t uart1_rx_queue_buffer[UART1_RX_BUF_SIZE * sizeof(uint8_t)];
 
 
-static UCHAR stack_ui_pro[STACK_SIZE_ONE];
-static UCHAR stack_start_pro[STACK_SIZE_TWO];
-static UCHAR stack_decoder_pro[STACK_SIZE_THREE];
+static UCHAR stack_decoder_pro[STACK_SIZE_ONE];
+static UCHAR stack_ui_pro[STACK_SIZE_TWO];
+
+static UCHAR stack_start_pro[STACK_SIZE_THREE];
+
+
+
 
 static void vTaskUiPro(ULONG thread_input);
 static void vTaskStart(ULONG thread_input);
@@ -48,6 +39,12 @@ static void vTaskDecoderPro(ULONG thread_input);
 static void threadx_handler(void);
 /* 创建任务通信机制 */
 static void tx_thread_stack_error_handler(TX_THREAD *thread_ptr);
+
+static void debug_stack_check(void);
+
+ULONG unused ;
+
+
 /**
  * @brief  :  static void vTaskStart(void *pvParameters
  * @note    
@@ -63,7 +60,8 @@ void tx_application_define(void *first_unused_memory)
 
     #if DEBUG_ENABLE
     /* 2. 只有当 stack_msg_pro 是全局定义的静态数组时，这样写才有效 */
-    memset(stack_msg_pro, 0xEF, sizeof(stack_msg_pro));
+    memset(stack_ui_pro, 0xEF, sizeof(stack_ui_pro));
+    // memset(stack_start_pro, 0xEF, sizeof(stack_start_pro));
     #endif 
 
     /* 3. 注册堆栈错误回调（推荐保持） */
@@ -97,7 +95,7 @@ static void threadx_handler(void)
 					vTaskDecoderPro,   // 每个消息大小，这里用 1 字节
 					0,
 					stack_decoder_pro,
-					STACK_SIZE_THREE,
+					STACK_SIZE_ONE,
 					0,
 					0,
 					TX_NO_TIME_SLICE,
@@ -120,7 +118,7 @@ static void threadx_handler(void)
                      vTaskStart,                   /* 启动任务函数地址 */
                      0,                            /* 传递给任务的参数 */
                      stack_start_pro,              /* 堆栈基地址 */
-                     STACK_SIZE_TWO,			   /* 堆栈空间大小 */  
+                     STACK_SIZE_THREE,			   /* 堆栈空间大小 */  
                      1, 						   /* 任务优先级*/
                      1, 						   /* 任务抢占阀值 */
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
@@ -181,8 +179,13 @@ static void threadx_handler(void)
 
      }
 
+     #if DEBUG_ENABLE
 
-	 key_handler();
+   //  debug_stack_check();
+
+     
+   #endif 
+	 //key_handler();
 	 //LL_IWDG_ReloadCounter(IWDG);
 	 tx_thread_sleep(20);
 
@@ -226,10 +229,10 @@ static void vTaskDecoderPro(ULONG thread_input)
 static void vTaskUiPro(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
-
+  static uint16_t counter_f;
   while(1){
     
-	//key_handler();
+	key_handler();
 
     power_onoff_handler(g_pro.gpower_on);
     
@@ -253,6 +256,8 @@ static void vTaskUiPro(ULONG thread_input)
 	}
 	
    LL_IWDG_ReloadCounter(IWDG);
+
+   
 
 	tx_thread_sleep(10);
 
@@ -301,4 +306,43 @@ void vtask_isq_handler(void)
 {
     tx_semaphore_put(&decoder_semaphore);
 }
+
+
+#if DEBUG_ENABLE
+static void debug_stack_check(void)
+{
+    ULONG i;
+   // ULONG unused = 0;
+   ULONG temp_unused = 0; // 使用局部变量进行统计
+
+   #if 0
+    // 从数组起始位置（栈底/低地址）开始数连续的 0xEF
+    for (i = 0; i < STACK_SIZE_TWO; i++)
+    {
+        if (stack_ui_pro[i] == 0xEF)
+            temp_unused++;
+        else
+            break; 
+    }
+   #else 
+    /* 从高地址往低地址扫描 */
+    for (i = STACK_SIZE_TWO - 1; i >= 0; i--)
+    {
+        if (stack_ui_pro[i] == 0xEF)
+            temp_unused++;
+        else
+            break;
+    }
+
+
+
+   #endif 
+ 
+	
+	unused = temp_unused;  // 统计完后再赋值给全局变量，方便 Watch 窗口查看
+    // 剩下的 unused 就是你安全的“护城河”
+    // 如果 unused < 100 字节，你的 G030 就危险了！
+}
+
+#endif 
 
