@@ -24,8 +24,7 @@ void power_on_led(void)
     LED_HUM_ICON_ON();
     LED_MOUSE_ON();
     LED_FUN_ON();
-	//TEMP_ICON_ON() ;
-	//HUMIDITY_ICON_ON();
+	
 }
 
 void power_on_smart_app_led(void)
@@ -36,6 +35,8 @@ void power_on_smart_app_led(void)
     LED_WIFI_ON();
     LED_TEMP_ICON_ON();
 	LED_FUN_ON();
+	TEMP_ICON_ON() ;
+	HUMIDITY_ICON_ON();
 	TM1639_Display_Temperature(g_pro.g_temperature_value);//DHT11_Display_Data(0); //display temperature value 
    
 }

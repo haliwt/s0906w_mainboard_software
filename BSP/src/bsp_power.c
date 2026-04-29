@@ -104,11 +104,13 @@ void power_on_init_ref(void)
             power_on_led();
 		   //display smg led turn on
 		    Fan_Full_Speed();
-		    //DHT11_Display_Data(0); //display temperature value 
+		  
 		    DRY_OPEN();
 			PLASMA_OPEN();
 			mouse_open();
-			TM1639_Display_Temperature(g_pro.g_temperature_value);
+			TEMP_ICON_ON() ;
+	        HUMIDITY_ICON_ON();
+			TM1639_Display_Temperature(g_pro.g_temperature_value);  //DHT11_Display_Data(0); //display temperature value 
 		   
            //timer 
            g_pro.g_manual_shutoff_dry_flag = 0;
