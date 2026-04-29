@@ -562,9 +562,10 @@ void Json_Parse_Command_Fun(void)
 		 g_pro.disp_second_f = 1;
 	     g_wifi.gwifi_link_net_success =1;
           g_wifi.gwifi_normal_power_on_flag= 1;
-          if(g_pro.disp_second_f ==1){SendData_Set_Command(0x20,open);
-		  tx_thread_sleep(10);
-          	}
+          if(g_pro.disp_second_f ==1){
+		  	SendData_Set_Command(0x20,open);
+		    tx_thread_sleep(10);
+          }
 
        
 		buzzer_temp_on=0;
@@ -581,8 +582,9 @@ void Json_Parse_Command_Fun(void)
             g_pro.gpower_on = power_off;
 	        g_wifi.gwifi_link_net_success =1;
             g_pro.disp_second_f = 1;
-			if(g_pro.disp_second_f ==1){SendData_Set_Command(0x20,close);
-			tx_thread_sleep(10);
+			if(g_pro.disp_second_f ==1){
+				SendData_Set_Command(0x20,close);
+			     tx_thread_sleep(10);
 				}
           
 			buzzer_temp_on=0;
@@ -615,6 +617,7 @@ void Json_Parse_Command_Fun(void)
          }
          }
 		 buzzer_temp_on=0;
+	     g_pro.set_temp_counter ++;
          gl_msg.response_wifi_signal_label=0xff;
 	  	
        
@@ -637,6 +640,7 @@ void Json_Parse_Command_Fun(void)
 		  }
          }
 		buzzer_temp_on=0;
+		g_pro.set_temp_counter++;
 	     gl_msg.response_wifi_signal_label = 0xff;
 
 	  	

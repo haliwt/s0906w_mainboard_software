@@ -50,7 +50,7 @@ void bsp_init(void)
 ******************************************************************************/
 void mainboard_fun_handler(void)
 {
-  static uint8_t ptc_on_default =0xff, ptc_off_default= 0xff;
+  static uint8_t ptc_default =0xff;
   if(g_pro.gTimer_mainboard_fun_counter > 4){// 2s  //300 ~= 6s, 50 ~=1s
        g_pro.gTimer_mainboard_fun_counter=0;
 
@@ -79,6 +79,12 @@ void mainboard_fun_handler(void)
 	    	tx_thread_sleep(10);
 	    }
 		
+		if(g_wifi.gwifi_link_net_success ==1 && ptc_default != g_pro.set_temp_counter){
+			 ptc_default ++;
+			 ptc_default = g_pro.set_temp_counter;
+			 MqttData_Publish_SetPtc(0x01);
+		  	 tx_thread_sleep(20);//HAL_Delay(350);
+		}
      
 	}
 	else{
@@ -89,6 +95,13 @@ void mainboard_fun_handler(void)
 			   sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
 			   tx_thread_sleep(10);
 		  }
+		 if(g_wifi.gwifi_link_net_success ==1 &&  ptc_default != g_pro.set_temp_counter ){
+
+		     ptc_default ++;
+			 ptc_default = g_pro.set_temp_counter;
+			 MqttData_Publish_SetPtc(0);
+		  	 tx_thread_sleep(20);//HAL_Delay(350);
+		 }
 		   
 
 

@@ -57,10 +57,7 @@ void power_onoff_handler(uint8_t data)
 			set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
 			set_timer_timing_value_handler();
 
-		
-
-			
-	    }
+		}
 
         }
 			
