@@ -556,9 +556,7 @@ void Json_Parse_Command_Fun(void)
 		MqttData_Publish_SetOpen(1);  
 		//tx_thread_sleep(20);//HAL_Delay(100);//tx_thread_sleep(100);//HAL_Delay(100);
        	//}
-		
-		
-         g_pro.gpower_on = power_on;
+		 g_pro.gpower_on = power_on;
 		 g_pro.disp_second_f = 1;
 	     g_wifi.gwifi_link_net_success =1;
           g_wifi.gwifi_normal_power_on_flag= 1;
@@ -584,10 +582,9 @@ void Json_Parse_Command_Fun(void)
        case OPEN_OFF_ITEM:
 	   
 
-             if(timer_expired(&t_mqtt_0)){
-		 			MqttData_Publish_SetOpen(0);  
-			//tx_thread_sleep(20);
-             	}
+           MqttData_Publish_SetOpen(0);  
+			
+             	
             
             g_pro.gpower_on = power_off;
 	        g_wifi.gwifi_link_net_success =1;
