@@ -12,6 +12,8 @@ typedef struct {
 // 仅仅是声明，告诉编译器这些变量在别处
 extern soft_timer_t t_mqtt_0;
 extern soft_timer_t t_mqtt_1;
+extern soft_timer_t t_mqtt_2;
+
 extern soft_timer_t t_display;
 extern soft_timer_t t_xdp;
 extern soft_timer_t t_wifi_0;

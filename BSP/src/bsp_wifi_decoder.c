@@ -551,15 +551,12 @@ void Json_Parse_Command_Fun(void)
    switch(gl_msg.response_wifi_signal_label){
   
 	case OPEN_ON_ITEM:
-       if(timer_expired(&t_mqtt_0)){
+		buzzer_sound();
+       //if(timer_expired(&t_mqtt_0)){
 		MqttData_Publish_SetOpen(1);  
 		//tx_thread_sleep(20);//HAL_Delay(100);//tx_thread_sleep(100);//HAL_Delay(100);
-       	}
-		if(timer_expired(&t_mqtt_1)){
-
-        Publish_Data_ToTencent_Initial_Data();
-	    //tx_thread_sleep(30);//HAL_Delay(300);
-		}
+       	//}
+		
 		
          g_pro.gpower_on = power_on;
 		 g_pro.disp_second_f = 1;
@@ -572,16 +569,23 @@ void Json_Parse_Command_Fun(void)
 		  	 	}
           }
 
+		//  if(timer_expired(&t_mqtt_1)){
+
+        Publish_Data_ToTencent_Initial_Data();
+	    //tx_thread_sleep(30);//HAL_Delay(300);
+		//}
+
        
 		buzzer_temp_on=0;
-		gl_msg.response_wifi_signal_label = 0xff;
+		gl_msg.response_wifi_signal_label = 0xee;
 
 	  break;
 
        case OPEN_OFF_ITEM:
+	   	     buzzer_sound();
 
              if(timer_expired(&t_mqtt_0)){
-		 	MqttData_Publish_SetOpen(0);  
+		 			MqttData_Publish_SetOpen(0);  
 			//tx_thread_sleep(20);
              	}
             
@@ -598,7 +602,7 @@ void Json_Parse_Command_Fun(void)
 			buzzer_temp_on=0;
 	
          
-        gl_msg.response_wifi_signal_label = 0xff;
+        gl_msg.response_wifi_signal_label = 0xed;
         
 	  break;
 
@@ -927,7 +931,7 @@ void Json_Parse_Command_Fun(void)
    }
 
 
-   if(gl_msg.response_wifi_signal_label==0xff){
+   if(gl_msg.response_wifi_signal_label==0xfe){
         
         if(buzzer_temp_on ==0){
 			buzzer_temp_on++;
@@ -941,10 +945,11 @@ void Json_Parse_Command_Fun(void)
 //		   
 //
 //        }
-
-         memset(g_wifi.wifi_rx_data_array,'\0',20);
+         if(gl_msg.response_wifi_signal_label==0xff){
+             memset(g_wifi.wifi_rx_data_array,'\0',20);
+         }
       
-		gl_msg.response_wifi_signal_label=0xf0;
+		//gl_msg.response_wifi_signal_label=0xf0;
 	}
 
   

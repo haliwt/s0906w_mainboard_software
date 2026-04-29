@@ -4,6 +4,8 @@
 /* 实际分配内存的地方 */
 soft_timer_t t_mqtt_0;
 soft_timer_t t_mqtt_1;
+soft_timer_t t_mqtt_2;
+
 soft_timer_t t_display;
 soft_timer_t t_xdp;
 soft_timer_t t_wifi_0;
@@ -37,6 +39,6 @@ void soft_timer_init(void)
     timer_set(&t_xdp, 10);    //10ms*10 =100ms
 	timer_set(&t_wifi_0, 5);        //10ms*5 =200ms
 	timer_set(&t_dht11, 20);      //10ms*20 =200ms
-	//timer_set(&t_adc, 10);        //10ms*10 =200ms
+	timer_set(&t_mqtt_2, 20);        //10ms*10 =200ms
 
 }

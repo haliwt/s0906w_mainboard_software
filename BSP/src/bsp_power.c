@@ -138,7 +138,7 @@ void power_on_run_handler(void)
 
 	   if(g_wifi.app_timer_power_on_flag ==1){
 	      
-	   	  if(g_wifi.gwifi_link_net_success=wifi_link_success){
+	   	  if(g_wifi.gwifi_link_net_success==wifi_link_success){
 		  	   if(timer_expired(&t_mqtt_0)){
                  MqttData_Publish_SetOpen(1);  
 		       //tx_thread_sleep(20);
