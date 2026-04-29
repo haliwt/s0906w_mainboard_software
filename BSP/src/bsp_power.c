@@ -136,6 +136,28 @@ void power_on_run_handler(void)
      case 0:  //initial reference 
        gl_run.process_off_step =0 ; //clear power off process step .
 
+	   if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
+	      
+		   power_on_init_ref();
+
+       }
+	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
+		  
+		   power_on_init_ref();
+		
+		  
+		  read_sensorData();//updateDht11_toDisplayBoard_value();
+	     
+		   	
+	        send_wifi_power_on_state = 1;
+		
+	   }
+	   else{
+
+		    power_on_smart_app_led();
+
+	   }
+
 	   if(g_wifi.app_timer_power_on_flag ==1){
 	      
 	   	  if(g_wifi.gwifi_link_net_success==wifi_link_success){
@@ -158,31 +180,7 @@ void power_on_run_handler(void)
 		    }
         }
 		read_sensorData();//updateDht11_toDisplayBoard_value();
-			 
-		   
-		   
-      if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
-	      
-		  // power_on_init_ref();
-
-       }
-	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
-		  
-		  // power_on_init_ref();
-		
-		  
-		  read_sensorData();//updateDht11_toDisplayBoard_value();
-	     
-		   	
-	        send_wifi_power_on_state = 1;
-		
-	   }
-	   else{
-
-		    power_on_smart_app_led();
-
-	   }
-	   key_referen_init();
+	  
 	   
 	 
 	   g_pro.gTimer_send_dht11_disp=5;
