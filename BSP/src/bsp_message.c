@@ -98,10 +98,10 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  if(g_pro.works_two_hours_interval_flag==0){
 		      DRY_OPEN();
 		  }
-		  g_pro.gTimer_set_temp_counter=1;
-		 //compare_temperature_value_hanlder();
-		   if(g_pro.disp_second_f ==1){SendWifiData_Answer_Cmd(CMD_PTC,0x01); //WT.EDIT 2025.01.07
-		   tx_thread_sleep(10);
+		
+		   if(g_pro.disp_second_f ==1){
+		   	  SendWifiData_Answer_Cmd(CMD_PTC,0x01); //WT.EDIT 2025.01.07
+		      tx_thread_sleep(10);
 		   	}
     
          if(g_wifi.gwifi_link_net_success==wifi_link_success && ptc_on_default != g_pro.gDry){
