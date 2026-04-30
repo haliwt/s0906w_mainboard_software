@@ -433,7 +433,15 @@ void power_off_run_handler(void)
    	  gl_run.process_on_step =0;
 
    	  power_off_led();
-      TM1639_Display_ON_OFF(0);
+      gl_run.process_off_step = 1;
+   break;
+
+   case 1:
+   	  TM1639_Display_ON_OFF(0);
+      gl_run.process_off_step = 2;
+   break;
+
+   case 2:
 	 // g_key.key_long_power_flag  = 0;
 	  g_key.key_long_mode_flag = 0;
 	
@@ -456,26 +464,33 @@ void power_off_run_handler(void)
 	 
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
 
-        gl_run.process_off_step = 1;
+        gl_run.process_off_step = 3;
 
    break;
 
-   case 1:
+   case 3:
 
      if(fan_flag == 0){
 	 	fan_flag++;
 	    fan_run_one_minute =2;
      }
+      gl_run.process_off_step = 4;
+
+   break;
+
+
+   case 4:
+   	
 	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
             MqttData_Publish_SetOpen(0);  
 			
            
 	  }
-     gl_run.process_off_step = 2;
+     gl_run.process_off_step = 5;
 
   break;
 
-  case 2:
+  case 5:
 
    if(g_wifi.gwifi_link_net_success == wifi_link_success){
           
@@ -484,18 +499,18 @@ void power_off_run_handler(void)
         }
 
 
-      gl_run.process_off_step = 3;
+      gl_run.process_off_step = 6;
   break;
 
-  case 3:
+  case 6:
 
      mainboard_close_all_fun();
 
-    gl_run.process_off_step = 4;
+    gl_run.process_off_step = 7;
 
   break;
 	 
-  case 4:
+  case 7:
 	 if(fan_run_one_minute ==1){
 	 
 		   if(g_pro.gTimer_fan_run_one_minute  < 61){
@@ -510,11 +525,21 @@ void power_off_run_handler(void)
 		   }
 	 
 	   }
+	   gl_run.process_off_step = 8;
+   break;
+
+   case 8:
 	
       LED_Power_Breathing();
+
+      gl_run.process_off_step = 9;
+
+   break;
+
+   case 9:
 	 wifi_first_connect++;
 
-	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){
+	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){//10ms * 
 	 	    wifi_first_connect=0;
 			switch_f = switch_f ^ 0x01;
 	        if(switch_f ==1)
@@ -525,7 +550,7 @@ void power_off_run_handler(void)
            
 	 }
 
-   
+    gl_run.process_off_step = 6;
 
    break;
 

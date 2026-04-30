@@ -73,8 +73,7 @@ void LED_Power_Breathing(void)
     static uint8_t led_state = 0;
     
     breathing_time++;
-    if(breathing_time > 39) //69//80 // 呼吸周期1秒
-    {
+    if(breathing_time > 39){ //10ms *39 = 390ms
         breathing_time = 0;
         led_state = !led_state;
         
