@@ -177,7 +177,7 @@ static void vTaskRunPro(void *pvParameters)
 
   while(1){
     
-	//key_handler();
+	key_handler();
 
     power_onoff_handler(g_pro.gpower_on);
     
@@ -202,7 +202,7 @@ static void vTaskRunPro(void *pvParameters)
 	
    // LL_IWDG_ReloadCounter(IWDG);
 
-	vTaskDelay(pdMS_TO_TICKS(100));
+	vTaskDelay(pdMS_TO_TICKS(10));
 
 	  
     }
@@ -262,7 +262,7 @@ static void vTaskStart(void *pvParameters)
      }
 
 
-	key_handler();
+	//key_handler();
 	
 	 vTaskDelay(pdMS_TO_TICKS(20));
 

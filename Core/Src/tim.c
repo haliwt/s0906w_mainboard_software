@@ -235,6 +235,8 @@ void MX_TIM17_Init(void)
   TIM_InitStruct.RepetitionCounter = 0;
   LL_TIM_Init(TIM17, &TIM_InitStruct);
   LL_TIM_DisableARRPreload(TIM17);
+
+  
   /* USER CODE BEGIN TIM17_Init 2 */
   LL_TIM_EnableARRPreload(TIM17);
   LL_TIM_EnableIT_UPDATE(TIM17);
