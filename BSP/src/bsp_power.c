@@ -41,7 +41,7 @@ void power_onoff_handler(uint8_t data)
 
           power_on_run_handler();
          
-        if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1){ //logically rigorous
+        if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1 && gl_run.process_on_step !=2){ //logically rigorous
               display_digital_3_numbers();
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			wifi_led_fast_blink_handler();
@@ -76,6 +76,7 @@ void power_onoff_handler(uint8_t data)
 void power_on_init_ref(void)
 {
 	       g_pro.gAI =1;
+		
 		   g_pro.gDry =1;
 		   g_pro.gPlasma =1;
 		   g_pro.gMouse = 1;
@@ -211,7 +212,7 @@ void power_on_run_handler(void)
 	   g_pro.delay_run_adc_counter=0;
 	   g_pro.g_real_hours_counter =0;
 	   
-	  
+	 
 
 	 
 	   g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
@@ -303,11 +304,7 @@ void power_on_run_handler(void)
      case 8:
 	 	 smart_phone_timer_power_on_handler();
 	        
-			///link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
-			
-			//set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
-			//set_timer_timing_value_handler();
-	      gl_run.process_on_step =9;
+		gl_run.process_on_step =9;
 
 	 break;
 
@@ -320,7 +317,7 @@ void power_on_run_handler(void)
 	 break;
 
 	 case 10:
-	     set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
+	   set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
 				 
 	 gl_run.process_on_step =11;
 
@@ -431,8 +428,8 @@ void power_off_run_handler(void)
 
    case 0:
    	  gl_run.process_on_step =0;
-
-   	  power_off_led();
+      power_off_led();
+      DRY_CLOSE();
       gl_run.process_off_step = 1;
    break;
 

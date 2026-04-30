@@ -22,7 +22,14 @@ void display_digital_3_numbers(void)
     }
 	
 	 if(g_pro.key_set_temperature_flag == 1){
-	 
+	      if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){//if(g_pro.define_ai_f==0){//
+			         
+		     LED_AI_OFF(); 
+		  }
+		  else{
+		     LED_AI_ON(); 
+
+		  }
 			TM1639_Display_Temperature(g_pro.gset_temperture_value);
 		    return ;
 	 
@@ -36,7 +43,7 @@ void display_digital_3_numbers(void)
 	  
 
     	 if(g_pro.gTimer_switch_set_timer_times < 2){
-    	           g_pro.gAI=0;
+    	          // g_pro.gAI=0;
     	 		   LED_AI_OFF();
 		           HUMIDITY_ICON_OFF();
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
@@ -53,7 +60,7 @@ void display_digital_3_numbers(void)
 				   else if(g_pro.set_timing_or_timer_time_flag == WORKS_TIME){//g_key.key_mode_long_flag !=1 &&
 					   g_pro.gdisp_timer_hours_value=0;
 					   g_pro.gdisp_timer_minutes_value=0;
-
+                      
 				       TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);//TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 
 				   }
@@ -87,14 +94,14 @@ void display_digital_3_numbers(void)
 
 	     if(g_key.key_mode_long_flag == 1) return ;
 
-         if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
+          if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
 			         
 		     LED_AI_OFF(); 
-		   }
+		  }
 		  else{
 		     LED_AI_ON(); 
 
-		   }
+		  }
 
           
                   
@@ -152,6 +159,7 @@ void set_timer_timing_value_handler(void)
             g_pro.key_add_dec_be_pressed_flag ++ ;
 			if(g_pro.gdisp_timer_hours_value>0){
 			timerbuf[0] = g_pro.gdisp_timer_hours_value;
+			
 			g_pro.gAI = 0;
 			LED_AI_OFF();
 			g_pro.switch_disp_time_or_temp_item = temperature_mode; //define UP and down key is set temperature value 
@@ -160,14 +168,15 @@ void set_timer_timing_value_handler(void)
 			g_pro.gdisp_timer_minutes_value =0;
 			
 
-			if(g_pro.disp_second_f ==1){SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
-	        tx_thread_sleep(10);
-				}
+			if(g_pro.disp_second_f ==1){
+				SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
+	            tx_thread_sleep(10);
+			}
 
                
 			}
 			else if(g_pro.gdisp_timer_hours_value ==0){
-			
+			   
 				g_pro.gAI = 1;
 				LED_AI_ON();
 				g_pro.gdisp_timer_hours_value=0;

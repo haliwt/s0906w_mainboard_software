@@ -49,7 +49,7 @@ void power_on_smart_app_led(void)
  ************************************************************************/
 void power_off_led(void)
 {
-    //LED_POWER_OFF();
+    
     LED_TAPE_CTL_OFF();
     LED_AI_OFF();
     LED_WIFI_OFF();
