@@ -41,7 +41,7 @@ void power_onoff_handler(uint8_t data)
 
           power_on_run_handler();
          
-        if(gl_run.process_on_step !=0){ //logically rigorous
+        if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1){ //logically rigorous
               display_digital_3_numbers();
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			wifi_led_fast_blink_handler();
@@ -129,20 +129,15 @@ void power_on_run_handler(void)
        gl_run.process_off_step =0 ; //clear power off process step .
 
 	   if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
-	      
-		   power_on_init_ref();
 	       read_sensorData();//updateDht11_toDisplayBoard_value();
+		   power_on_init_ref();
+	      
 
        }
 	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
-		  
+		   read_sensorData();//updateDht11_toDisplayBoard_value();
 		   power_on_init_ref();
-		
-		  
-		  read_sensorData();//updateDht11_toDisplayBoard_value();
-	     
-		   	
-	        send_wifi_power_on_state = 1;
+		   send_wifi_power_on_state = 1;
 		
 	   }
 	   else{
@@ -150,6 +145,10 @@ void power_on_run_handler(void)
 		    power_on_smart_app_led();
 
 	   }
+         gl_run.process_on_step =1;
+	   break;
+
+	   case 1:
 
 	   if(g_wifi.app_timer_power_on_flag ==1){
 	      
@@ -166,14 +165,14 @@ void power_on_run_handler(void)
 			   if(timer_expired(&t_mqtt_1)){
 
 			      MqttData_Publish_SetOpen(1);  
-
-			       power_on_init_ref();
-		       //tx_thread_sleep(20);
+                   //tx_thread_sleep(20);
 			   	}
 		    }
         }
-		
-	  
+		  gl_run.process_on_step =2;
+	   break; 
+
+	   case 2:
 	   
 	 
 	   g_pro.gTimer_send_dht11_disp=5;
@@ -219,56 +218,20 @@ void power_on_run_handler(void)
 	   
 	   temp_second_displboard=0;
 
-	   gl_run.process_on_step =1;
+	   gl_run.process_on_step =3;
 	 break;
 
-	 case 1:
-      // read_dht11_f =  read_sensor_dht11_data();
-
-      if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 	
-		  if(g_pro.disp_second_f == 1 || temp_second_displboard < 5){
+      
 
-		     if(temp_second_displboard < 8){
-                   temp_second_displboard ++;
-			 }
-			 
-		    if(g_pro.gTimer_send_dht11_disp > 2){ //3s
-		       g_pro.gTimer_send_dht11_disp=0;
-	           updateDht11_sensorData_toDisp();//updateDht11_toDisplayBoard_value();
-
-		   }
-		  }
-
-		  if(send_wifi_power_on_state ==1){
-		      send_wifi_power_on_state++;
-		      g_pro.gset_temperture_value = 40;
-
-			  if(timer_expired(&t_mqtt_0)){
-			     MqttData_Publish_Update_Data();
-			   //tx_thread_sleep(20);
-			  }
-
-
-		  }
-	
-		  gl_run.process_on_step =2; 
-      }
-	  else{
-	  
-	     fault_handler();
-         gl_run.process_on_step =4; 
-	  }
-
-
-	case 2: //DISPAY 3 digital numbers . process .
+	case 3: //DISPAY 3 digital numbers . process .
          // read_dht11_f =  read_sensor_dht11_data();
 	 // display_digital_3_numbers();
-	  gl_run.process_on_step =3; 
+	  gl_run.process_on_step =4; 
 
 	 break;
 
-	 case 3: //WIFI link process
+	 case 4: //WIFI link process
 	  
          if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
@@ -302,18 +265,18 @@ void power_on_run_handler(void)
 
          }
 		    
-	     gl_run.process_on_step =4;
+	     gl_run.process_on_step =5;
 
 	 break;
 
-	 case 4: // wifi function
+	 case 5: // wifi function
 	  
         
-      gl_run.process_on_step =5;
+      gl_run.process_on_step =6;
 
 	 break;
 
-	 case 5:
+	 case 6:
         counter_dht11++;
 	    if(g_pro.gTimer_to_disp_counter > 3 && g_wifi.gwifi_link_net_success==1){    
 			 g_pro.gTimer_to_disp_counter=0;
@@ -326,50 +289,50 @@ void power_on_run_handler(void)
 
 		}
 		
-	     gl_run.process_on_step =6;
+	     gl_run.process_on_step =7;
 
 	 break;
 
 
-	 case 6:
+	 case 7:
 	 	  	works_run_two_hours_state();
-	        gl_run.process_on_step =7;
+	        gl_run.process_on_step =8;
 
 	 break;
 
-     case 7:
+     case 8:
 	 	 smart_phone_timer_power_on_handler();
 	        
 			///link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
 			
 			//set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
 			//set_timer_timing_value_handler();
-	      gl_run.process_on_step =8;
-
-	 break;
-
-	 case 8:
-	    link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
-
-	 
-      gl_run.process_on_step =9;
+	      gl_run.process_on_step =9;
 
 	 break;
 
 	 case 9:
-	     set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
-				 
-	 gl_run.process_on_step =10;
+	    link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
+
+	 
+      gl_run.process_on_step =10;
 
 	 break;
 
 	 case 10:
-	 set_timer_timing_value_handler();
+	     set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
+				 
 	 gl_run.process_on_step =11;
 
 	 break;
 
 	 case 11:
+	 set_timer_timing_value_handler();
+	 gl_run.process_on_step =12;
+
+	 break;
+
+	 case 12:
 	 	
 	 if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
 				g_pro.gTimer_display_adc_value=0;
@@ -399,9 +362,49 @@ void power_on_run_handler(void)
 					}
 				 
 			  }
-	     gl_run.process_on_step =1;
+	     gl_run.process_on_step =13;
 
 
+	 break;
+
+
+	 case 13:
+	 	
+	 if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+		 
+			   if(g_pro.disp_second_f == 1 || temp_second_displboard < 5){
+	 
+				  if(temp_second_displboard < 8){
+						temp_second_displboard ++;
+				  }
+				  
+				 if(g_pro.gTimer_send_dht11_disp > 2){ //3s
+					g_pro.gTimer_send_dht11_disp=0;
+					updateDht11_sensorData_toDisp();//updateDht11_toDisplayBoard_value();
+	 
+				}
+			   }
+	 
+			   if(send_wifi_power_on_state ==1){
+				   send_wifi_power_on_state++;
+				   g_pro.gset_temperture_value = 40;
+	 
+				   if(timer_expired(&t_mqtt_0)){
+					  MqttData_Publish_Update_Data();
+					//tx_thread_sleep(20);
+				   }
+	 
+	 
+			   }
+		 
+			   gl_run.process_on_step =2; 
+		   }
+		   else{
+		   
+			  fault_handler();
+			  gl_run.process_on_step =4; 
+		   }
+           gl_run.process_on_step =3;
 	 break;
 
 	 default :
