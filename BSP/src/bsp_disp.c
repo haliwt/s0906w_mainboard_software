@@ -21,7 +21,7 @@ void display_digital_3_numbers(void)
         return;
     }
 	
-	 if(g_pro.key_set_temperature_flag == 1){
+	 if(g_pro.key_set_temperature_flag == 1 || g_wifi.g_wifi_set_temp_flag==1){
 	      if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){//if(g_pro.define_ai_f==0){//
 			         
 		     LED_AI_OFF(); 
@@ -31,7 +31,8 @@ void display_digital_3_numbers(void)
 
 		  }
 			TM1639_Display_Temperature(g_pro.gset_temperture_value);
-		    return ;
+
+		   return ;
 	 
 	}
 

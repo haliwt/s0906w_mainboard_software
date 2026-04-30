@@ -820,9 +820,9 @@ void Json_Parse_Command_Fun(void)
 		    }
 			if(g_pro.disp_second_f == 1){
 				  if(timer_expired(&t_xdp)){
-				SendWifiData_One_Data(0x2A, g_wifi.wifi_set_temperature_value); //smart phone set temperature value .
+				     SendWifiData_One_Data(0x2A, g_wifi.wifi_set_temperature_value); //smart phone set temperature value .
 				//tx_thread_sleep(10);//HAL_Delay(10);
-				  	}
+				  }
 		    }
 			
        }
