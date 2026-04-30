@@ -158,3 +158,13 @@ void usart1_rx_decoder(void)
 
 
 
+
+int fputc(int ch, FILE *f)
+{
+    while (!LL_USART_IsActiveFlag_TXE(USART1));   // 等待 TXE 空
+    LL_USART_TransmitData8(USART1, (uint8_t)ch);  // 发送 1 字节
+    return ch;
+}
+
+
+
