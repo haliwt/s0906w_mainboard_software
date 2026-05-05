@@ -22,12 +22,20 @@
 #define STACK_SIZE_ONE  256//128//1792//3072//2048//1024//896//768
 #define STACK_SIZE_UI  1024//384//256
 #define STACK_SIZE_KEY  256
+#define STACK_SIZE_EVENT   256
+
+
+
+
+
 
 /*在 ThreadX 里，优先级数字越小，优先级越高：*/
 
 static TX_THREAD thread_ui;
 static TX_THREAD thread_start;
 static TX_THREAD thread_decoder;
+static TX_THREAD thread_key_event;
+
 /* 定义信号量 */
 TX_SEMAPHORE decoder_semaphore;
 /*队列*/
@@ -39,6 +47,8 @@ static UCHAR stack_decoder_pro[STACK_SIZE_ONE];
 static UCHAR stack_ui_pro[STACK_SIZE_UI];
 
 static UCHAR stack_start_pro[STACK_SIZE_KEY];
+static UCHAR stack_key_event[256];
+
 
 
 TX_EVENT_FLAGS_GROUP key_event;
@@ -46,6 +56,8 @@ TX_EVENT_FLAGS_GROUP key_event;
 
 static void vTaskUiPro(ULONG thread_input);
 static void vTaskStart(ULONG thread_input);
+static void vTaskKeyEvent(ULONG thread_input);
+
 
 static void vTaskDecoderPro(ULONG thread_input);
 
@@ -130,8 +142,8 @@ static void threadx_handler(void)
                      0,                            /* 传递给任务的参数 */
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
-                     2,							   /* 任务优先级*/
-                     2,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     3,							   /* 任务优先级*/
+                     3,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -147,6 +159,17 @@ static void threadx_handler(void)
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
   #endif 
+  tx_thread_create(&thread_key_event, 			   /* 任务控制块地址 */	  
+					 "KeyEvent",						/* 任务名 */
+					  vTaskKeyEvent,					/* 启动任务函数地址 */
+					  0,							/* 传递给任务的参数 */
+					  stack_key_event,				/* 堆栈基地址 */
+					  STACK_SIZE_EVENT,				/* 堆栈空间大小 */  
+					  2,							/* 任务优先级*/
+					  2,							/* 任务抢占阀值 */
+					  TX_NO_TIME_SLICE, 			/* 不开启时间片 */
+					  TX_AUTO_START);				/* 创建后立即启动 */
+
 
 
  
@@ -285,24 +308,22 @@ static void vTaskDecoderPro(ULONG thread_input)
 *	Return Ref:
 *   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
 **********************************************************************************************************/
-static void vTaskUiPro(ULONG thread_input)
+static void vTaskKeyEvent(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
   ULONG flags;
   UINT status;
-  static uint16_t counter_f;
+ 
 
   while(1)
   {
 
-      
-	
-
-      status = tx_event_flags_get(&key_event,
+     status = tx_event_flags_get(&key_event,
                            0xFFFFFFFF,
                            TX_OR_CLEAR,
                            &flags,
-                           TX_NO_WAIT);//TX_WAIT_FOREVER);//
+                           TX_WAIT_FOREVER);//TX_NO_WAIT);//TX_WAIT_FOREVER);//
+                           
      if(status == TX_SUCCESS){
 	  /* MODE 键 */
         if(flags & KEY_MODE_SHORT)  handle_mode_key();
@@ -318,6 +339,24 @@ static void vTaskUiPro(ULONG thread_input)
 	    if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
      }
     
+  	}
+   
+ }
+/**********************************************************************************************************
+*	Function Name: static void vTaskRunPro(void *pvParameters)
+*	Function:
+*	Input Ref: pvParameters 是在创建该任务时传的形参
+*	Return Ref:
+*   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
+**********************************************************************************************************/
+static void vTaskUiPro(ULONG thread_input)
+{
+  (void)thread_input;  /* 消除未使用的参数警告 */
+
+  while(1)
+  {
+
+   
 	
    
     power_onoff_handler(g_pro.gpower_on);
@@ -350,6 +389,7 @@ static void vTaskUiPro(ULONG thread_input)
     }
 	  
 }
+
 /****************************************************************
 *
 *	Function Name: vTaskStart
