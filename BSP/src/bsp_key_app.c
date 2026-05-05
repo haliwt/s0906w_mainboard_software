@@ -3,14 +3,15 @@
 
 
 
+
 //uint8_t complex_counter;
 
 
 
-static void handle_power_key(void);
-static void handle_mode_key(void);
-static void handle_down_key(void);
-static void handle_up_key(void);
+//static void handle_power_key(void);
+//static void handle_mode_key(void);
+//static void handle_down_key(void);
+//static void handle_up_key(void);
 
 /*
 	*@brief: all key parase state
@@ -34,6 +35,7 @@ void key_handler(void)
 		g_key.down_key_long_counter = 0;
         handle_power_key();
     }
+	#if 0
 	else if(g_key.key_mode_flag == 11 && KEY_MODE_VALUE() == KEY_UP){
       g_key.key_down_flag ++;
 	  g_key.mode_key_long_counter = 0;
@@ -50,6 +52,7 @@ void key_handler(void)
 		
 		handle_mode_key();
     }
+	#endif 
 	else if(g_key.key_down_flag == 13 &&  KEY_DOWN_VALUE() == KEY_UP){
 
 	      g_key.key_down_flag++;
@@ -83,7 +86,7 @@ void key_handler(void)
     *@retrval
     
 */
-static void handle_power_key(void)
+void handle_power_key(void)
 {
     
     if (KEY_POWER_VALUE() == KEY_UP)
@@ -151,7 +154,7 @@ void key_power_longk_fun(void)
     *@retrval
     
 */
-static void handle_mode_key(void)
+void handle_mode_key(void)
 {
     g_pro.gTimer_switch_set_timer_times = 0;
 	g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
@@ -170,11 +173,7 @@ static void handle_mode_key(void)
 */
 void key_mode_long_fun(void)
 {
-  if (!g_pro.fan_warning && !g_pro.ptc_warning && g_key.mode_key_long_counter < 100) {
-        g_key.mode_key_long_counter++;
-
-       if(g_key.mode_key_long_counter > LONG_PRESS_THRESHOLD - 1){
-           g_key.mode_key_long_counter= COUNTER_LOCK;
+  
         buzzer_sound();
         g_pro.switch_disp_time_or_temp_item = timer_time_mode;
         g_key.key_mode_long_flag = 1;
@@ -199,9 +198,9 @@ void key_mode_long_fun(void)
 		}
 
 		//TM1639_Display_3_Digit(g_pro.disp_59minutes_flag ? g_pro.gdisp_timer_minutes_value :g_pro.gdisp_timer_hours_value);
-      }
-  	}
 }
+  	
+
 /*
 	*@brief:mode Key 
 	*@notice:
@@ -209,7 +208,7 @@ void key_mode_long_fun(void)
     *@retrval
     
 */
-static void handle_down_key(void)
+void handle_down_key(void)
 {
  
   
@@ -254,7 +253,7 @@ void key_down_long_fun(void)
 */
 
 /* ---------------- Up Key ---------------- */
-static void handle_up_key(void)
+void handle_up_key(void)
 {
    
       g_key.key_up_flag = KEY_NULL;

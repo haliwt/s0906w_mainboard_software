@@ -17,6 +17,13 @@ void key_mode_long_fun(void);
 
 void key_down_long_fun(void);
 
+void handle_mode_key(void);
+
+void handle_power_key(void);
+void handle_mode_key(void);
+void handle_down_key(void);
+void handle_up_key(void);
+
 
 #endif 
 

@@ -3,6 +3,19 @@
 
 
 
+#define KEY_MODE_SHORT   (1 << 0)
+#define KEY_MODE_LONG    (1 << 1)
+
+#define KEY_UP_SHORT     (1 << 2)
+#define KEY_UP_LONG      (1 << 3)
+
+#define KEY_DOWN_SHORT   (1 << 4)
+#define KEY_DOWN_LONG    (1 << 5)
+
+#define KEY_POWER_SHORT  (1 << 6)
+#define KEY_POWER_LONG   (1 << 7)
+
+
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
@@ -28,6 +41,7 @@ static UCHAR stack_ui_pro[STACK_SIZE_UI];
 static UCHAR stack_start_pro[STACK_SIZE_KEY];
 
 
+TX_EVENT_FLAGS_GROUP key_event;
 
 
 static void vTaskUiPro(ULONG thread_input);
@@ -75,6 +89,7 @@ void tx_application_define(void *first_unused_memory)
     tx_thread_stack_error_notify(tx_thread_stack_error_handler);
 
     // 创建线程、信号量、事件组、队列
+    
      threadx_handler();
 }
 
@@ -95,6 +110,8 @@ static void threadx_handler(void)
 
       /* 创建信号量 */
    tx_semaphore_create(&decoder_semaphore, "DecoderSemaphore", 0);
+
+   tx_event_flags_create(&key_event, "key_event");
    
 	tx_thread_create(&thread_decoder,
 					"DecoderPro",
@@ -169,51 +186,83 @@ static void vTaskDecoderPro(ULONG thread_input)
   * @param	 None
   * @retval  None
   */
+ uint16_t mode_cnt = 0;
  static void vTaskStart(ULONG thread_input)
  {
    (void)thread_input;  /* 消除未使用的参数警告 */
+
+    //static uint16_t mode_cnt = 0;
+    static uint16_t up_cnt = 0;
+    static uint16_t down_cnt = 0;
+    static uint16_t power_cnt = 0;
+
+    const uint16_t LONG_PRESS_TIME = 90;   // 300 * 10ms = 3000ms
   
   
-   while(1){
-       if(KEY_MODE_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
+   while(1)
+   {
 
-	       key_mode_long_fun();
-		   if(g_key.mode_key_long_counter == COUNTER_LOCK) g_key.key_mode_flag = 11;
-		   else{
-		        g_key.key_mode_flag = KEY_MODEL_ID;
-			    g_key.key_down_flag=0;
-			    g_key.key_up_flag=0;
+     /* ================= MODE 键 ================= */
+        if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+        {
+            mode_cnt++;
+            if(mode_cnt == LONG_PRESS_TIME){
+				//buzzer_sound();
+                tx_event_flags_set(&key_event, KEY_MODE_LONG, TX_OR);
+                //key_mode_long_fun();
+            }
+        }
+        else
+        {
+            if(mode_cnt > 1 && mode_cnt < LONG_PRESS_TIME)
+                tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
+            mode_cnt = 0;
+        }
 
-		   }
-	 }
-	 else if(KEY_UP_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
+      /* ================= UP 键 ================= */
+        if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+        {
+            up_cnt++;
+            if(up_cnt == LONG_PRESS_TIME)
+                tx_event_flags_set(&key_event, KEY_UP_LONG, TX_OR);
+        }
+        else
+        {
+            if(up_cnt > 1 && up_cnt < LONG_PRESS_TIME)
+                tx_event_flags_set(&key_event, KEY_UP_SHORT, TX_OR);
 
-	      g_key.key_up_flag = KEY_UP_ID;
-		  g_key.key_power_flag=0;
-	       g_key.key_mode_flag=0;
-     }
-	 else if(KEY_DOWN_VALUE() == KEY_DOWN  && g_pro.gpower_on == power_on){
+            up_cnt = 0;
+        }
 
-            key_down_long_fun();
-			
-			if(g_key.down_key_long_counter == COUNTER_LOCK)g_key.key_down_flag = 13;
-			else{
-               g_key.key_down_flag =0x01;
-			   g_key.key_power_flag=0;
-	           g_key.key_mode_flag=0;
-		   }
+        /* ================= DOWN 键 ================= */
+        if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+        {
+            down_cnt++;
+            if(down_cnt == LONG_PRESS_TIME)
+                tx_event_flags_set(&key_event, KEY_DOWN_LONG, TX_OR);
+        }
+        else
+        {
+            if(down_cnt > 1 && down_cnt < LONG_PRESS_TIME)
+                tx_event_flags_set(&key_event, KEY_DOWN_SHORT, TX_OR);
 
-     }
-     else if(KEY_POWER_VALUE()  ==KEY_DOWN){
+            down_cnt = 0;
+        }
 
-         key_power_longk_fun();
-	     if(g_key.power_on_key_counter == COUNTER_LOCK)g_key.key_power_flag = 9;
-         else
-		     g_key.key_power_flag = KEY_POWER_ID;
+        /* ================= POWER 键 ================= */
+        if(KEY_POWER_VALUE() == KEY_DOWN)
+        {
+            power_cnt++;
+            if(power_cnt == LONG_PRESS_TIME)
+                tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
+        }
+        else
+        {
+            if(power_cnt > 1 && power_cnt < LONG_PRESS_TIME)
+                tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
 
-     }
-
-  
+            power_cnt = 0;
+        }
 
     
    #if DEBUG_ENABLE
@@ -239,11 +288,42 @@ static void vTaskDecoderPro(ULONG thread_input)
 static void vTaskUiPro(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
+  ULONG flags;
+  UINT status;
   static uint16_t counter_f;
-  while(1){
-    
-	key_handler();
+  static uint8_t power_on_flag;
+  while(1)
+  {
 
+      if(power_on_flag==0){
+             power_on_flag ++;
+			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
+			 buzzer_sound();
+	 }
+	
+
+      status = tx_event_flags_get(&key_event,
+                           0xFFFFFFFF,
+                           TX_OR_CLEAR,
+                           &flags,
+                           TX_NO_WAIT);//TX_WAIT_FOREVER);//
+     if(status == TX_SUCCESS){
+	  /* MODE 键 */
+        if(flags & KEY_MODE_SHORT)  handle_mode_key();
+	    if(flags & KEY_MODE_LONG)   key_mode_long_fun();
+
+	    if(flags & KEY_UP_SHORT)    handle_up_key();
+	    //if(flags & KEY_UP_LONG)     handle_up_long_key();
+
+	    if(flags & KEY_DOWN_SHORT)  handle_down_key();
+	    if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
+
+	    if(flags & KEY_POWER_SHORT) handle_power_key();
+	    if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
+     }
+    
+	//key_handler();
+   
     power_onoff_handler(g_pro.gpower_on);
     
 	if(g_wifi.wifi_led_fast_blink_flag==0 ){
@@ -261,7 +341,7 @@ static void vTaskUiPro(ULONG thread_input)
 		}
 		#endif 
 	}
-	
+
    LL_IWDG_ReloadCounter(IWDG);
 
    #if DEBUG_ENABLE
@@ -324,7 +404,7 @@ static void debug_stack_ui_check(void)
    // ULONG unused = 0;
    ULONG temp_unused = 0; // 使用局部变量进行统计
 
-   #if 1
+  
     // 从数组起始位置（栈底/低地址）开始数连续的 0xEF
     for (i = 0; i < STACK_SIZE_UI; i++)
     {
@@ -333,19 +413,7 @@ static void debug_stack_ui_check(void)
         else
             break; 
     }
-   #else 
-    /* 从高地址往低地址扫描 */
-    for (i = STACK_SIZE_UI - 1; i >= 0; i--)
-    {
-        if (stack_ui_pro[i] == 0xEF)
-            temp_unused++;
-        else
-            break;
-    }
-
-
-
-   #endif 
+  
  
 	
 	unused = temp_unused;  // 统计完后再赋值给全局变量，方便 Watch 窗口查看
