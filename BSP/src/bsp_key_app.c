@@ -104,7 +104,9 @@ void handle_power_key(void)
 		}
 		else{
           g_pro.gpower_on = power_off;
+		  TM1639_Display_ON_OFF(0);
 		  power_off_led();
+		
            
 		}
 		
