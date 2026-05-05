@@ -26,7 +26,7 @@ uint8_t send_wifi_power_on_state;
 
 /**********************************************************************
 	*
-	*Function Name: void power_on_init_ref(void)
+	*Function Name: 
 	*Function : 
 	*Input Ref: NO
 	*Return Ref: NO
@@ -54,6 +54,7 @@ void power_onoff_handler(uint8_t data)
 	  case power_off:
          gl_run.process_on_step =0;
 		 g_pro.g_real_hours_counter=0;
+	     
 	     if(power_on_flag==0){
              power_on_flag ++;
 			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
@@ -132,13 +133,17 @@ void power_on_run_handler(void)
 
 	   if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	       read_sensorData();//updateDht11_toDisplayBoard_value();
-		   power_on_init_ref();
+	       if(g_pro.gpower_on_key_f != 1){
+		      power_on_init_ref();
+	       	}
 	      
 
        }
 	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
 		   read_sensorData();//updateDht11_toDisplayBoard_value();
-		   power_on_init_ref();
+	       if(g_pro.gpower_on_key_f != 1){  
+		        power_on_init_ref();
+	        }
 		   send_wifi_power_on_state = 1;
 		
 	   }
@@ -429,6 +434,7 @@ void power_off_run_handler(void)
 
    case 0:
    	  gl_run.process_on_step =0;
+      g_pro.gpower_on_key_f = 0;
       power_off_led();
       DRY_CLOSE();
       gl_run.process_off_step = 1;

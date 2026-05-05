@@ -98,10 +98,13 @@ void handle_power_key(void)
         //g_pro.gpower_on = (g_pro.gpower_on == power_off) ? power_on : power_off;
         if(g_pro.gpower_on == power_off){
 			 g_pro.gpower_on = power_on;
+			 g_pro.gpower_on_key_f = 1;
+			 power_on_init_ref();
             
 		}
 		else{
           g_pro.gpower_on = power_off;
+		  power_off_led();
            
 		}
 		

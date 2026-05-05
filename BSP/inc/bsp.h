@@ -177,6 +177,7 @@ typedef struct _process{
    uint8_t first_connect_wifi_flag;
    uint8_t DMA_txComplete;
    uint8_t timer_powerOff_oneHour_flag;
+   uint8_t gpower_on_key_f;
 
    
 

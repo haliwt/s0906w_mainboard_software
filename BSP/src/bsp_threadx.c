@@ -325,6 +325,9 @@ static void vTaskKeyEvent(ULONG thread_input)
                            TX_WAIT_FOREVER);//TX_NO_WAIT);//TX_WAIT_FOREVER);//
                            
      if(status == TX_SUCCESS){
+
+	    if(flags & KEY_POWER_SHORT) handle_power_key();
+	    if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
 	  /* MODE 键 */
         if(flags & KEY_MODE_SHORT)  handle_mode_key();
 	    if(flags & KEY_MODE_LONG)   key_mode_long_fun();
@@ -335,8 +338,7 @@ static void vTaskKeyEvent(ULONG thread_input)
 	    if(flags & KEY_DOWN_SHORT)  handle_down_key();
 	    if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
 
-	    if(flags & KEY_POWER_SHORT) handle_power_key();
-	    if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
+	   
      }
     
   	}
@@ -356,10 +358,7 @@ static void vTaskUiPro(ULONG thread_input)
   while(1)
   {
 
-   
-	
-   
-    power_onoff_handler(g_pro.gpower_on);
+     power_onoff_handler(g_pro.gpower_on);
     
 	if(g_wifi.wifi_led_fast_blink_flag==0 ){
 		wifi_communication_tnecent_handler();//
