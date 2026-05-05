@@ -54,6 +54,11 @@ void power_onoff_handler(uint8_t data)
 	  case power_off:
          gl_run.process_on_step =0;
 		 g_pro.g_real_hours_counter=0;
+	     if(power_on_flag==0){
+             power_on_flag ++;
+			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
+			 buzzer_sound();
+	     }
         
          power_off_run_handler();
 

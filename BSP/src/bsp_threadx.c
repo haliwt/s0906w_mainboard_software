@@ -291,15 +291,11 @@ static void vTaskUiPro(ULONG thread_input)
   ULONG flags;
   UINT status;
   static uint16_t counter_f;
-  static uint8_t power_on_flag;
+
   while(1)
   {
 
-      if(power_on_flag==0){
-             power_on_flag ++;
-			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
-			 buzzer_sound();
-	 }
+      
 	
 
       status = tx_event_flags_get(&key_event,
@@ -322,7 +318,7 @@ static void vTaskUiPro(ULONG thread_input)
 	    if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
      }
     
-	//key_handler();
+	
    
     power_onoff_handler(g_pro.gpower_on);
     

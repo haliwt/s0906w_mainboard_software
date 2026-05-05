@@ -108,7 +108,7 @@ void handle_power_key(void)
         g_wifi.gwifi_normal_power_on_flag = 0;
         if(g_pro.disp_second_f ==1){SendData_Set_Command(CMD_POWER,(g_pro.gpower_on == power_on) ? open : close);
         tx_thread_sleep(10);
-        	}
+        }
     }
 }
 /*
@@ -120,32 +120,25 @@ void handle_power_key(void)
 */
 void key_power_longk_fun(void)
 {
-	if(g_pro.gpower_on == power_on && g_key.power_on_key_counter < 100)
-    {
-        g_key.power_on_key_counter++;
-		
-        if (g_key.power_on_key_counter > LONG_PRESS_THRESHOLD - 1)
-        {
-            g_key.power_on_key_counter = COUNTER_LOCK;
-           // g_key.key_long_power_flag = KEY_LONG_POWER;
 
-            g_wifi.gTimer_wifi_led_fast_blink = 0; //reset wifi led blink timer
-            g_wifi.gwifi_link_net_success = 0; //reset wifi link status
-            g_wifi.wifi_led_fast_blink_flag = 1;//
-            g_wifi.link_net_step = 0;//reset wifi link step
-            g_pro.first_connect_wifi_flag = 0;//reset first connect wifi flag
 
-            buzzer_sound();
-            wifi_led_fast_blink_handler();
-            if(g_pro.disp_second_f ==1){SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
-            tx_thread_sleep(10);
-            	}
-            wifi_led_fast_blink_handler();
+	g_wifi.gTimer_wifi_led_fast_blink = 0; //reset wifi led blink timer
+	g_wifi.gwifi_link_net_success = 0; //reset wifi link status
+	g_wifi.wifi_led_fast_blink_flag = 1;//
+	g_wifi.link_net_step = 0;//reset wifi link step
+	g_pro.first_connect_wifi_flag = 0;//reset first connect wifi flag
+
+	buzzer_sound();
+	wifi_led_fast_blink_handler();
+	if(g_pro.disp_second_f ==1){SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
+	tx_thread_sleep(10);
+		}
+	wifi_led_fast_blink_handler();
             
-        }
-    }
-
 }
+    
+
+
 
 /*
 	*@brief:mode Key 
@@ -229,20 +222,16 @@ void handle_down_key(void)
 void key_down_long_fun(void)
 {
 
-	if(g_key.down_key_long_counter < 100){
-        g_key.down_key_long_counter++;
-        if(g_key.down_key_long_counter > SHORT_PRESS_THRESHOLD - 1) {
-            g_key.down_key_long_counter = COUNTER_LOCK;
-            buzzer_sound();
-            g_pro.led_bar ^= 0x01;
-            if (g_pro.led_bar)
-                LED_TAPE_CTL_OFF();
-            else
-                LED_TAPE_CTL_ON();
-        }
-    }
+	buzzer_sound();
+	g_pro.led_bar ^= 0x01;
+	if (g_pro.led_bar)
+		LED_TAPE_CTL_OFF();
+	else
+		LED_TAPE_CTL_ON();
+ }
+    
   
-}
+
 
 /*
 	*@brief:mode Key 
