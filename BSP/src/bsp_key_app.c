@@ -246,7 +246,6 @@ void key_down_long_fun(void)
     *@retrval
     
 */
-
 /* ---------------- Up Key ---------------- */
 void handle_up_key(void)
 {
