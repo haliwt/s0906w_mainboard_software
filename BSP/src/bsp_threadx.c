@@ -230,9 +230,8 @@ static void vTaskDecoderPro(ULONG thread_input)
         {
             mode_cnt++;
             if(mode_cnt == LONG_PRESS_TIME){
-				//buzzer_sound();
-                tx_event_flags_set(&key_event, KEY_MODE_LONG, TX_OR);
-                //key_mode_long_fun();
+				tx_event_flags_set(&key_event, KEY_MODE_LONG, TX_OR);
+               
             }
         }
         else
@@ -276,8 +275,9 @@ static void vTaskDecoderPro(ULONG thread_input)
         if(KEY_POWER_VALUE() == KEY_DOWN)
         {
             power_cnt++;
-            if(power_cnt == LONG_PRESS_TIME)
+            if(power_cnt == LONG_PRESS_TIME && g_pro.gpower_on == power_on){
                 tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
+             }
         }
         else
         {
@@ -328,7 +328,7 @@ static void vTaskKeyEvent(ULONG thread_input)
 
 	    if(flags & KEY_POWER_SHORT) handle_power_key();
 	    else if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
-	    else if(flags & KEY_MODE_SHORT)  handle_mode_key();
+        else if(flags & KEY_MODE_SHORT)  handle_mode_key();
 	    else if(flags & KEY_MODE_LONG)   key_mode_long_fun();
         else if(flags & KEY_UP_SHORT)    handle_up_key();
 	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
