@@ -327,16 +327,12 @@ static void vTaskKeyEvent(ULONG thread_input)
      if(status == TX_SUCCESS){
 
 	    if(flags & KEY_POWER_SHORT) handle_power_key();
-	    if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
-	  /* MODE 键 */
-        if(flags & KEY_MODE_SHORT)  handle_mode_key();
-	    if(flags & KEY_MODE_LONG)   key_mode_long_fun();
-
-	    if(flags & KEY_UP_SHORT)    handle_up_key();
-	    //if(flags & KEY_UP_LONG)     handle_up_long_key();
-
-	    if(flags & KEY_DOWN_SHORT)  handle_down_key();
-	    if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
+	    else if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
+	    else if(flags & KEY_MODE_SHORT)  handle_mode_key();
+	    else if(flags & KEY_MODE_LONG)   key_mode_long_fun();
+        else if(flags & KEY_UP_SHORT)    handle_up_key();
+	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
+	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
 
 	   
      }
