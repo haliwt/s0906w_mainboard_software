@@ -92,7 +92,8 @@ void wifi_auto_detected_link_state(void)
   
 	   if(dc_power_on==1){
 	   	   dc_power_on ++;
-	       if(g_pro.disp_second_f ==1){SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+	       if(g_pro.disp_second_f ==1){
+		   	SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
 		   tx_thread_sleep(10);
 	       	}
         }
@@ -337,7 +338,8 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
                     g_pro.gTimer_disp_time_second= real_seconds;
                     g_wifi.get_beijing_time_success = 1;
 
-                    if(g_pro.disp_second_f ==1){SendWifiData_To_PanelTime(g_pro.gdisp_hours_value,g_pro.gdisp_minutes_value,g_pro.gTimer_disp_time_second);
+                    if(g_pro.disp_second_f ==1){
+						SendWifiData_To_PanelTime(g_pro.gdisp_hours_value,g_pro.gdisp_minutes_value,g_pro.gTimer_disp_time_second);
                     tx_thread_sleep(10);
                     	}
 

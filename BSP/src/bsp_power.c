@@ -344,7 +344,7 @@ void power_on_run_handler(void)
 						if(g_pro.disp_second_f ==1){
 							if(timer_expired(&t_xdp)){
 							   SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-							 //tx_thread_sleep(10);
+							   tx_thread_sleep(10);
 							}
 						}
 					 }
@@ -352,7 +352,7 @@ void power_on_run_handler(void)
 						 if(g_pro.disp_second_f ==1){
 							if(timer_expired(&t_xdp)){
 							   SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
-							 //tx_thread_sleep(10);
+							   tx_thread_sleep(10);
 							}
 							}
 	 
@@ -508,6 +508,8 @@ void power_off_run_handler(void)
   case 6:
 
      mainboard_close_all_fun();
+	 SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
+	 tx_thread_sleep(10);
 
     gl_run.process_off_step = 7;
 
@@ -545,10 +547,12 @@ void power_off_run_handler(void)
 	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){//10ms * 
 	 	    wifi_first_connect=0;
 			switch_f = switch_f ^ 0x01;
-	        if(switch_f ==1)
+	        if(switch_f ==1){
              MqttData_Publish_SetOpen(0);  
-		    else
+	        }
+		    else{
 	         MqttData_Publish_PowerOff_Ref() ;//
+		    }
 	       
            
 	 }

@@ -107,7 +107,8 @@ static void Judge_Fan_State(void)
 
 		  Buzzer_Fan_Error_Sound();
 
-		  if(g_pro.disp_second_f ==1){SendWifiData_To_Cmd(0x09,0x01);//Fan fault warning .
+		  if(g_pro.disp_second_f ==1){
+		  	SendWifiData_To_Cmd(0x09,0x01);//Fan fault warning .
 		     tx_thread_sleep(10);
 		  }
 

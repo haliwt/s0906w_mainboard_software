@@ -241,7 +241,8 @@ void set_timer_timing_value_handler(void)
             	
                    buzzer_sound();
 			       g_pro.gpower_on = power_off;
-			       if(g_pro.disp_second_f ==1){SendData_Set_Command(CMD_POWER,close);
+			       if(g_pro.disp_second_f ==1){
+				   	SendData_Set_Command(CMD_POWER,close);
 	               tx_thread_sleep(10);
 			       	}
 

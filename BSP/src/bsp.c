@@ -78,7 +78,7 @@ void mainboard_fun_handler(void)
 	    if(g_pro.disp_second_f == 1){
 			if(timer_expired(&t_xdp)){
 	    	sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-	    	//tx_thread_sleep(10);
+	    	tx_thread_sleep(10);
 			}
 	    }
 		
@@ -87,7 +87,7 @@ void mainboard_fun_handler(void)
 			 ptc_default = g_pro.set_temp_counter;
 		    if(timer_expired(&t_mqtt_1)){
 			 MqttData_Publish_SetPtc(0x01);
-		  	 //tx_thread_sleep(20);//HAL_Delay(350);
+		  	 tx_thread_sleep(20);//HAL_Delay(350);
 		    }
 		}
      
@@ -99,7 +99,7 @@ void mainboard_fun_handler(void)
 	     if(g_pro.disp_second_f == 1){
 		 	if(timer_expired(&t_xdp)){
 			   sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-			   //tx_thread_sleep(10);
+			   tx_thread_sleep(10);
 		 		}
 		  }
 		 if(g_wifi.gwifi_link_net_success ==1 &&  ptc_default != g_pro.set_temp_counter ){
@@ -108,7 +108,7 @@ void mainboard_fun_handler(void)
 			 ptc_default = g_pro.set_temp_counter;
 		     if(timer_expired(&t_mqtt_1)){
 			   MqttData_Publish_SetPtc(0);
-		  	// tx_thread_sleep(20);//HAL_Delay(350);
+		  	   tx_thread_sleep(20);//HAL_Delay(350);
 		     }
 		 }
 		   
@@ -215,8 +215,8 @@ void works_run_two_hours_state(void)
 {
   
 
-   #if TEST_UNIT
-	if(g_pro.gTimer_two_hours_counter > 300 && g_pro.works_two_hours_interval_flag==0){ //five minutes 5x60=300s
+   #if  TEST_UNIT
+	if(g_pro.gTimer_two_hours_counter > 720 && g_pro.works_two_hours_interval_flag==0){ //five minutes 5x60=300s
 
 
    #else 

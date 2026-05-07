@@ -50,18 +50,16 @@ void receive_data_from_displayboard(uint8_t *pdata)
        if(pdata[3] == 0x01){ 
 		  g_pro.disp_second_f = 1;
 
-	      if(g_disp.soft_version ==0){
+	      if(g_disp.soft_version ==0){//
              g_pro.gpower_on = power_on;
 		  }
 	
 	
           buzzer_sound();
 		 
-		 
-          if(g_pro.disp_second_f ==1){
-		  	SendWifiData_Answer_Cmd(CMD_POWER,0x01); //WT.EDIT 2025.01.07 
-          tx_thread_sleep(10);
-          	}
+		   SendWifiData_Answer_Cmd(CMD_POWER,0x01); //WT.EDIT 2025.01.07 
+           tx_thread_sleep(10);
+          	
         }
         else{ //close 
          
@@ -69,11 +67,9 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  g_pro.disp_second_f = 1;
 		  g_pro.gpower_on = power_off;
         
-		
-		 if(g_pro.disp_second_f ==1){
-		 	SendWifiData_Answer_Cmd(CMD_POWER,0x0); //WT.EDIT 2025.01.07
-		 tx_thread_sleep(10);
-		 	}
+		   SendWifiData_Answer_Cmd(CMD_POWER,0x0); //WT.EDIT 2025.01.07
+		   tx_thread_sleep(10);
+		 	
 
         }
 
@@ -81,7 +77,36 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
      break;
 
+	 
 
+	 case 0x10: //显示板已经开机或者关机,再次,发送给主机开机和关机 
+          if(pdata[3] == 0x01){ //open
+
+		   
+		   g_pro.gpower_on = power_on;
+	       
+		   SendWifiData_Answer_Cmd(0x10,0x01);
+	       tx_thread_sleep(10);
+	       
+	         
+	    }
+        else if(pdata[3] == 0x0){ //close 
+
+			  SendWifiData_Answer_Cmd(0x10,0x0); //power off .
+
+               tx_thread_sleep(10); 
+              
+      
+             
+            g_pro.gpower_on = power_off;
+			 
+		     
+        }
+
+	 break;
+	/*****************************power on off end**************************************/	
+
+     //function transmit information 
      case 0x02: //PTC打开关闭指令
 
     // if(pdata[3] == 0x00){ //判断是否是数据，或�?�指令�?�知�?? 00- 命令和指令，下一个字节是指令 �??0x0F- 数据，下�??个字节是数据个数
@@ -244,33 +269,6 @@ void receive_data_from_displayboard(uint8_t *pdata)
        
 
      break;
-
-	 case 0x10: //power on or off don't sound 
-          if(pdata[3] == 0x01){ //open
-
-		   
-		   g_pro.gpower_on = power_on;
-	       if(g_pro.disp_second_f ==1){SendWifiData_Answer_Cmd(0x10,0x01);
-	       tx_thread_sleep(10);
-	       	}
-	         
-	    }
-        else if(pdata[3] == 0x0){ //close 
-
-			   
-			
-              if(g_pro.disp_second_f ==1){SendWifiData_Answer_Cmd(0x10,0x0); //power off .
-
-              tx_thread_sleep(10); 
-              	}
-      
-             
-               g_pro.gpower_on = power_off;
-			 
-		     
-        }
-
-	 break;
 
 	 
 
@@ -667,6 +665,14 @@ static void copy_receive_data(uint8_t *pdata)
 
 		}
 
+	   break;
+
+	   case 0x11:
+
+	     if(pdata[4] == 1){
+           g_pro.disp_second_f = 1;
+	     }
+	  
 	   break;
 
 

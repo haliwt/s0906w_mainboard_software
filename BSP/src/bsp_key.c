@@ -374,7 +374,7 @@ static void CompareSetAndActualTemperature(void)
 				if(g_pro.disp_second_f ==1){
 					if(timer_expired(&t_xdp)){
 					SendData_Set_Command(0x22, 0x00); // close PTC
-					//tx_thread_sleep(10);
+					 tx_thread_sleep(10);
 					}
 				}
 
@@ -408,7 +408,7 @@ static void CompareSetAndActualTemperature(void)
 				   	if(timer_expired(&t_xdp)){
 				   	 SendData_Set_Command(0x22, 0x01); // open PTC
 
-				      //tx_thread_sleep(10);
+				      tx_thread_sleep(10);
 				   		}
 				   	}
 				   if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_on_counter != g_pro.set_temp_counter)){
@@ -436,7 +436,7 @@ static void CompareSetAndActualTemperature(void)
 						if(timer_expired(&t_xdp)){
 						SendData_Set_Command(0x22, 0x01); // open PTC
 
-					    //tx_thread_sleep(10);
+					    tx_thread_sleep(10);
 							}
 						}
 
@@ -458,7 +458,7 @@ static void CompareSetAndActualTemperature(void)
 				if(g_pro.disp_second_f ==1){
 					if(timer_expired(&t_xdp)){
 					SendData_Set_Command(0x22, 0x00); // close PTC
-				    // tx_thread_sleep(10);
+				     tx_thread_sleep(10);
 						}
 					}
 
@@ -521,6 +521,7 @@ void sendDisplayCommand(uint8_t command,uint8_t data)
 {
     if(g_pro.disp_second_f ==1){
 		SendData_Set_Command(command, data);
+		tx_thread_sleep(10);
     }
 }
 /**
