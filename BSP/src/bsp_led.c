@@ -124,34 +124,11 @@ void LED_FUN_ON(void)
  ************************************************************************/
 void wifi_led_fast_blink_handler(void)
 {
-   static uint8_t flag_counter;
-   if(g_pro.gpower_on==power_on){
+   
+   if(g_pro.gpower_on==power_on && g_wifi.wifi_led_fast_blink_flag==1){
 
-     
-
-   if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0){
-
-       
-	   if( g_pro.gTimer_led_wifi_bilnk_counter > 99){
-
-	       g_pro.gTimer_led_wifi_bilnk_counter=0;
-	
-           flag_counter = flag_counter ^ 0x01;
-	       if(flag_counter == 1) LED_WIFI_ON();
-	       else LED_WIFI_OFF();
-	  	}
-	   
-
-	 }
-	 else if(g_wifi.gwifi_link_net_success==1){
-
-       		LED_WIFI_ON();
+        LED_WIFI_TOGGLE() ;
 	}
-	else if(g_wifi.gwifi_link_net_success ==0){
-
-             wifi_led_slowly_blink();
-     }
-   	}
 }
 
 
@@ -167,7 +144,22 @@ void wifi_led_slowly_blink(void)
     }
 }
 
+void wifi_led_slowly_blink_handler(void)
+{
 
+   if(g_wifi.wifi_led_fast_blink_flag==1) return ;
+   
+
+	if(g_wifi.gwifi_link_net_success==1){
+	
+		  LED_WIFI_ON();
+	}
+	else if(g_wifi.gwifi_link_net_success ==0){
+	
+		wifi_led_slowly_blink();
+	}
+
+}
 
 
 

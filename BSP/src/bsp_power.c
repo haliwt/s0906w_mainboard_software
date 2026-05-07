@@ -43,11 +43,7 @@ void power_onoff_handler(uint8_t data)
          
         if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1 && gl_run.process_on_step !=2){ //logically rigorous
               display_digital_3_numbers();
-	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
-			wifi_led_fast_blink_handler();
-		  }
-
-        }
+	    }
 			
       break;
 
@@ -278,7 +274,7 @@ void power_on_run_handler(void)
 
 	 case 5: // wifi function
 	  
-        
+       wifi_led_slowly_blink_handler();
       gl_run.process_on_step =6;
 
 	 break;
@@ -400,15 +396,18 @@ void power_on_run_handler(void)
 	 
 			   }
 		 
-			   gl_run.process_on_step =2; 
-		   }
-		   else{
+			   gl_run.process_on_step =3; 
+	 }
+	 else{
 		   
-			  fault_handler();
-			  gl_run.process_on_step =4; 
-		   }
-           gl_run.process_on_step =3;
+	     fault_handler();
+		 wifi_led_slowly_blink_handler();
+		 gl_run.process_on_step =13; 
+	  }
+      
 	 break;
+
+	 
 
 	 default :
 

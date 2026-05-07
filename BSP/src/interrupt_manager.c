@@ -63,10 +63,16 @@ void callback_register_fun(void)
 static void tim17_isr_callback_handler(void)
 
 {
-   static  uint16_t tm0;
+   static volatile  uint16_t tm0;
+   static volatile uint8_t c100mscnt;
        tm0++;
-	  
+	   c100mscnt++;
 	   g_pro.gTimer_led_wifi_bilnk_counter++;
+       if(++c100mscnt ==200){
+	   	    c100mscnt  =0;
+	       wifi_led_fast_blink_handler();
+
+       }
 	   if(tm0> 999){ //1s
 	      tm0=0;
 		   g_pro.gTimer_disp_time_second ++;

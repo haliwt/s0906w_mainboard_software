@@ -54,5 +54,8 @@ void wifi_led_slowly_blink(void);
 
 void power_on_smart_app_led(void);
 
+void wifi_led_slowly_blink_handler(void);
+
+
 
 #endif /* BSP_INC_BSP_LED_H_ */

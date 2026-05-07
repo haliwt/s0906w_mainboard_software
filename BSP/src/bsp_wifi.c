@@ -45,7 +45,7 @@ void link_wifi_to_tencent_handler(uint8_t data)
 
     }
     else{
-	   wifi_led_fast_blink_handler();
+	  
        link_wifi_net_handler();
     }
     }
@@ -78,40 +78,15 @@ static void link_wifi_net_handler(void)
 
             case 0: //one step
 
-                wifi_led_fast_blink_handler();
-		        tx_thread_sleep(10);
-		        wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
+         
+				 tx_thread_sleep(100);
+			
         		at_send_data((const uint8_t *)"AT+RST\r\n", strlen("AT+RST\r\n"));
 				
-        		 tx_thread_sleep(10);//HAL_Delay(1000);
-        		 wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				  g_wifi.gTimer_link_net_timer_time = 0;
+        		 tx_thread_sleep(300);//3s //HAL_Delay(1000);
+        		 
+				
+				 g_wifi.gTimer_link_net_timer_time = 0;
                  g_wifi.link_net_step = 1;
 
             break;
@@ -122,31 +97,9 @@ static void link_wifi_net_handler(void)
 				  at_send_data((uint8_t *)"AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"));
                   //USART2_DMA_Send((const uint8_t *)"AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"));
                  randomName[0]=HAL_GetUIDw0();
-				 wifi_led_fast_blink_handler();
-
+			
+                  tx_thread_sleep(100);//10ms*100 =1s
 				
-        		 //tx_thread_sleep(1000);
-        		 wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
 			      
                   g_wifi.gTimer_link_net_timer_time = 0;
 				 
@@ -161,33 +114,13 @@ static void link_wifi_net_handler(void)
                  if(g_wifi.gTimer_link_net_timer_time  > 5){
                      g_wifi.gTimer_link_net_timer_time = 0;
 
-                        wifi_led_fast_blink_handler(); // WIFI_IC_ENABLE();
+                       
             			
                         sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,randomName[0]);
             			at_send_data(device_massage, strlen((const char *)device_massage));
-						tx_thread_sleep(10);
-            	  		//tx_thread_sleep(1000);//HAL_Delay(1000);
-            	  		 wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
+						tx_thread_sleep(100);
+            	  	
+              
                        g_wifi.link_net_step = 3;
 
                  }
@@ -196,7 +129,7 @@ static void link_wifi_net_handler(void)
 
 
             case 3:
-                 wifi_led_fast_blink_handler();
+                 
             if(g_wifi.gTimer_link_net_timer_time  > 5){
                     g_wifi.gTimer_link_net_timer_time = 0;
                    g_wifi.link_net_step = 4;
@@ -205,27 +138,9 @@ static void link_wifi_net_handler(void)
           //  HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动�?�注�? 
            at_send_data((uint8_t *)"AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"));
 	  		//tx_thread_sleep(1000);//HAL_Delay(1000);
-	  		 wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
+	  		
+        		 tx_thread_sleep(100);
+               
           
             }
 
@@ -233,7 +148,7 @@ static void link_wifi_net_handler(void)
 
 
             case 4:
-				 wifi_led_fast_blink_handler();
+		
                  if(g_wifi.gTimer_link_net_timer_time  > 7){
                      g_wifi.gTimer_link_net_timer_time = 0;
 
@@ -243,28 +158,9 @@ static void link_wifi_net_handler(void)
 				
                  at_send_data(device_massage, strlen((const char *)device_massage));
 				 //tx_thread_sleep(100);//HAL_Delay(1000);
-				  wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				   wifi_led_fast_blink_handler();
-				
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				   wifi_led_fast_blink_handler();
+			
+        		 tx_thread_sleep(100);
+             
 
 
                    g_wifi.link_net_step = 5;
@@ -283,31 +179,9 @@ static void link_wifi_net_handler(void)
              g_wifi.soft_ap_config_success=0;
           //  HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//�?始连�?
               at_send_data((uint8_t *)"AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
-             wifi_led_fast_blink_handler();
-        		 tx_thread_sleep(10);
-                 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				 wifi_led_fast_blink_handler();
-				 tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				  tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				   tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
-				   tx_thread_sleep(10);
-				  wifi_led_fast_blink_handler();
+            
+        		 tx_thread_sleep(100);
+                
 
             g_wifi.link_net_step = 6;
             g_wifi.gTimer_link_net_timer_time = 0;
@@ -317,7 +191,7 @@ static void link_wifi_net_handler(void)
             break;
 
             case 6:
-			//if(g_wifi.gwifi_link_net_success==0)wifi_led_fast_blink_handler();
+		
 				
 
             if( g_wifi.gTimer_link_net_timer_time  > 6){
