@@ -47,7 +47,7 @@ static UCHAR stack_decoder_pro[STACK_SIZE_ONE];
 static UCHAR stack_ui_pro[STACK_SIZE_UI];
 
 static UCHAR stack_start_pro[STACK_SIZE_KEY];
-static UCHAR stack_key_event[256];
+static UCHAR stack_key_event[STACK_SIZE_EVENT];
 
 
 
@@ -209,12 +209,12 @@ static void vTaskDecoderPro(ULONG thread_input)
   * @param	 None
   * @retval  None
   */
- uint16_t mode_cnt = 0;
+
  static void vTaskStart(ULONG thread_input)
  {
    (void)thread_input;  /* 消除未使用的参数警告 */
 
-    //static uint16_t mode_cnt = 0;
+    static uint16_t mode_cnt = 0;
     static uint16_t up_cnt = 0;
     static uint16_t down_cnt = 0;
     static uint16_t power_cnt = 0;
