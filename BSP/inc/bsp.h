@@ -206,8 +206,8 @@ typedef struct _process{
    uint8_t  gTimer_wifi_slowly_blink ;
    uint8_t gTimer_send_dht11_disp;
    uint8_t gTimer_set_temp_counter;
-   uint8_t gTimer_led_wifi_bilnk_counter;
- //  uint8_t gTimer_key_long_counter;
+
+
    uint8_t  gTimer_to_disp_counter;
    uint8_t gTimer_mainboard_fun_counter;
    uint8_t gTimer_read_dth11_sensor;
