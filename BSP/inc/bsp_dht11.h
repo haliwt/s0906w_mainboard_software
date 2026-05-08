@@ -72,7 +72,7 @@ extern DHT11_Data_TypeDef DHT11;
 
 void DHT11_Init(void);
 
-void updateDht11_sensorData_toDisp(void);
+
 
 void Update_Dht11_Totencent_Value(void);    
                             

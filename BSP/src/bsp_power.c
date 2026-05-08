@@ -120,7 +120,7 @@ void power_on_run_handler(void)
 {
 
    static uint8_t temp_second_displboard,switch_dht11,send_net_state;
-   static uint16_t counter_dht11=0;
+ 
 	switch(gl_run.process_on_step){
 
 
@@ -158,7 +158,7 @@ void power_on_run_handler(void)
 	   	  if(g_wifi.gwifi_link_net_success==wifi_link_success){
 		  	   if(timer_expired(&t_mqtt_0)){
                  MqttData_Publish_SetOpen(1);  
-		       //tx_thread_sleep(20);
+		         tx_thread_sleep(20);
 		  	   	}
 	   	  }
 		}
@@ -168,7 +168,7 @@ void power_on_run_handler(void)
 			   if(timer_expired(&t_mqtt_1)){
 
 			      MqttData_Publish_SetOpen(1);  
-                   //tx_thread_sleep(20);
+                   tx_thread_sleep(20);
 			   	}
 		    }
         }
@@ -178,7 +178,7 @@ void power_on_run_handler(void)
 	   case 2:
 	   
 	 
-	   g_pro.gTimer_send_dht11_disp=5;
+	 
        
 	   
 	   g_pro.g_fan_switch_gears_flag++;
@@ -221,6 +221,8 @@ void power_on_run_handler(void)
 	   
 	   temp_second_displboard=0;
 
+	   g_pro.gTimer_to_disp_counter= 20;
+
 	   gl_run.process_on_step =3;
 	 break;
 
@@ -228,8 +230,11 @@ void power_on_run_handler(void)
       
 
 	case 3: //DISPAY 3 digital numbers . process .
-         // read_dht11_f =  read_sensor_dht11_data();
-	 // display_digital_3_numbers();
+    if(g_pro.gTimer_to_disp_counter > 4){//10ms*200 =2000ms =2s
+			g_pro.gTimer_to_disp_counter=0;
+		    read_sensorData();//Update_Dht11_toDisplayBoard_Value();
+
+		}
 	  gl_run.process_on_step =4; 
 
 	 break;
@@ -275,22 +280,15 @@ void power_on_run_handler(void)
 	 case 5: // wifi function
 	  
        wifi_led_slowly_blink_handler();
+	
       gl_run.process_on_step =6;
 
 	 break;
 
 	 case 6:
-        counter_dht11++;
-	    if(g_pro.gTimer_to_disp_counter > 3 && g_wifi.gwifi_link_net_success==1){    
-			 g_pro.gTimer_to_disp_counter=0;
-			 // Update_Dht11_toDisplayBoard_Value();
-		
-		}
-		if(counter_dht11 > 300){//10ms*200 =2000ms =2s
-			counter_dht11 =0;
-		    read_sensorData();//Update_Dht11_toDisplayBoard_Value();
-
-		}
+   
+	 
+	
 		
 	     gl_run.process_on_step =7;
 
@@ -377,11 +375,7 @@ void power_on_run_handler(void)
 						temp_second_displboard ++;
 				  }
 				  
-				 if(g_pro.gTimer_send_dht11_disp > 2){ //3s
-					g_pro.gTimer_send_dht11_disp=0;
-					updateDht11_sensorData_toDisp();//updateDht11_toDisplayBoard_value();
-	 
-				}
+			
 			   }
 	 
 			   if(send_wifi_power_on_state ==1){
@@ -536,7 +530,11 @@ void power_off_run_handler(void)
    case 8:
 	
       LED_Power_Breathing();
-      read_sensorData();
+
+      if(g_pro.gTimer_to_disp_counter > 2){//10ms*200 =2000ms =2s
+			g_pro.gTimer_to_disp_counter=0;
+         read_sensorData();
+      }
       gl_run.process_off_step = 9;
 
    break;

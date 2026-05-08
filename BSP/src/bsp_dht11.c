@@ -193,7 +193,7 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
     while (!DHT11_Data_IN()	 )
     {
         if (++timeout > 9000) goto error_2;
-        delay_us(2);//delay_us_dht11(1);
+        delay_us(1);//delay_us_dht11(1);
     }
 
     /* 等待 DHT11 再次拉低，开始传输数据 */
@@ -260,38 +260,7 @@ error_1:
 *@return:
 *
 */
-#if 0
-void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
-{
-   
-
-	if(dht11_read_flag==0){
-
-	 read_flag =DHT11_Read_TempAndHumidity(pdth11);
-    if(read_flag == 0){
-		   
-		   g_pro.g_humidity_value = (pdth11->humi_high8bit);
-		   
-		   g_pro.g_temperature_value = (pdth11->temp_high8bit);
-	   
-	 }
-	 else{
-
-	    dht11_read_flag=1;
-		g_pro.gTimer_read_dth11_sensor =0;
-
-	 }
-	}
-
-	if(g_pro.gTimer_read_dth11_sensor > 2 && dht11_read_flag==1){
-            dht11_read_flag=0;
-
-	}
-	
-
-}
-
-#endif 
+ 
 /**
 *@breif :
 *@note:
@@ -300,19 +269,7 @@ void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
 *
 */
 uint8_t dht11_f ;
-void updateDht11_sensorData_toDisp(void)
-{
-	
-	  dht11_f = DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
-	    if(g_pro.disp_second_f == 1){
-			if(timer_expired(&t_display)){
-			sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-		    //tx_thread_sleep(10);
-			}
 
-	    	}
-	
-}
 
 /**
  * @brief  在TM1639上显示DHT11的温湿度数据
@@ -334,7 +291,7 @@ void read_sensorData(void)
 	    if(g_pro.disp_second_f == 1){
 			if(timer_expired(&t_display)){
 			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-		     //tx_thread_sleep(10);
+		     tx_thread_sleep(10);
 			}
          }
 	
