@@ -73,9 +73,6 @@ static void delay_us_dht11(uint32_t us)
 }
 
 
-
-
-
 /**
   * ????: ?DHT11-DATA??????????
   * ????: ?
@@ -181,29 +178,29 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
 
     /* 4. 切换输入，等待 DHT11 响应 */
     DHT11_Mode_InPut();//DHT11_GPIO_Input();
-    delay_us(10);//delay_us_dht11(5);
+    delay_us(5);//delay_us_dht11(5);
 
     /* 等待 DHT11 拉低（80us） */
     timeout = 0;
     while (DHT11_Data_IN())
     {
-        if (++timeout > 100000) goto error_1;
-        delay_us(2);//delay_us_dht11(1);
+        if (++timeout > 3000) goto error_1;
+        delay_us(1);//delay_us_dht11(1);
     }
 
     /* 等待 DHT11 拉高（80us） */
     timeout = 0;
     while (!DHT11_Data_IN()	 )
     {
-        if (++timeout > 300) goto error_2;
-        delay_us(1);//delay_us_dht11(1);
+        if (++timeout > 9000) goto error_2;
+        delay_us(2);//delay_us_dht11(1);
     }
 
     /* 等待 DHT11 再次拉低，开始传输数据 */
     timeout = 0;
     while (DHT11_Data_IN()	 )
     {
-        if (++timeout > 300) goto error_3;
+        if (++timeout > 3000) goto error_3;
         delay_us(1);//delay_us_dht11(1);
     }
 

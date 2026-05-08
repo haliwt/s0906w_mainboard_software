@@ -53,46 +53,8 @@ void delay_init(void)
  */
 void delay_us(uint32_t nus)
 {
-    #if 0
-	uint32_t cycles = (SystemCoreClock / 1000000) * nus;
-    while (cycles--)
-    {
-        __NOP();
-    }
-
-	#endif
-
-	#if 0
-	
-	uint32_t start = SysTick->VAL;
-	uint32_t ticks = nus * (SystemCoreClock / 1000000);	 // 64 ticks = 1us
-	uint32_t reload = SysTick->LOAD;
-	uint32_t now;
-	uint32_t elapsed = 0;
-	 SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
-
-	while (elapsed < ticks)
-	{
-		now = SysTick->VAL;
-
-		if (now <= start)
-			elapsed += start - now; 		 // 正常递减
-		else
-			elapsed += start + (reload - now); // SysTick 重装载
-
-		start = now;
-	}
-
-
-	#endif 
-
-    #if 1
-	
-	//void delay_us(uint32_t nus)
-	{
-		// 1. 获取当前频率下的 1us tick 数
+        // 1. 获取当前频率下的 1us tick 数
 		// G030 频率 64MHz 时，ticksPerUs = 64
-		uint32_t SystemCoreClock = 64000000UL;
 		uint32_t ticksPerUs = SystemCoreClock / 1000000;
 		uint32_t ticks = nus * ticksPerUs;
 		
@@ -116,7 +78,9 @@ void delay_us(uint32_t nus)
 				// 此时发生了 SysTick 重装载（可能是 ThreadX 的心跳中断触发了）
 				// 跨越零点流逝掉的 ticks = 当前值到0的距离 + 重装载值到新值的距离
 				// 简化公式：elapsed += start + (reload - now);
-				elapsed += (start + (reload - now));
+				//elapsed += (start + (reload - now));
+				
+			    elapsed += (start + (reload + 1 - now)); 
 			}
 			start = now;
 	
@@ -127,14 +91,7 @@ void delay_us(uint32_t nus)
 		}
 
 		
-	}
-
-
-
-	#endif 
 	
-  
-
 }
 
 /**
