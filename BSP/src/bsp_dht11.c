@@ -113,7 +113,7 @@ static void DHT11_Mode_OutPut(void)
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;//LL_GPIO_OUTPUT_PUSHPULL;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
@@ -126,36 +126,7 @@ static void DHT11_Mode_OutPut(void)
 static uint8_t DHT11_ReadByte ( void )
 {
 
-   #if 0
-	uint8_t i, temp=0;
-	
-	for(i=0;i<8;i++)    
-	{	 
-		/*?bit?50us???????,???????? ?50us ??? ??*/  
-		while(DHT11_Data_IN()==Bit_RESET);
-
-		/*DHT11 ?26~28us??????�?0�?,?70us?????�?1�?,
-		 *???? x us???????????? ,x ?????? 
-		 */
-		delay_us_dht11(40); //??x us ??????????0???????	   	  
-
-		if(DHT11_Data_IN()==Bit_SET)/* x us??????????�?1�? */
-		{
-			/* ????1?????? */
-			while(DHT11_Data_IN()==Bit_SET);
-
-			temp|=(uint8_t)(0x01<<(7-i));  //??7-i??1,MSB?? 
-		}
-		else	 // x us?????????�?0�?
-		{			   
-			temp&=(uint8_t)~(0x01<<(7-i)); //??7-i??0,MSB??
-		}
-	}
-	return temp;
-
-	#else 
-
-	uint8_t i,dat=0;
+      uint8_t i,dat=0;
 	 for(i=0;i<8;i++) 
 		  {
 			   	while(DHT11_Data_IN()==Bit_RESET);
@@ -175,9 +146,7 @@ static uint8_t DHT11_ReadByte ( void )
 					}
 			}
 		  return dat;
-
-
-	#endif 
+ 
 }
 
 /**
@@ -212,14 +181,14 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
 
     /* 4. 切换输入，等待 DHT11 响应 */
     DHT11_Mode_InPut();//DHT11_GPIO_Input();
-    delay_us(5);//delay_us_dht11(5);
+    delay_us(10);//delay_us_dht11(5);
 
     /* 等待 DHT11 拉低（80us） */
     timeout = 0;
     while (DHT11_Data_IN())
     {
-        if (++timeout > 30000) goto error_1;
-        delay_us(1);//delay_us_dht11(1);
+        if (++timeout > 100000) goto error_1;
+        delay_us(2);//delay_us_dht11(1);
     }
 
     /* 等待 DHT11 拉高（80us） */
