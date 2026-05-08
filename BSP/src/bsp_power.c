@@ -32,7 +32,7 @@ uint8_t send_wifi_power_on_state;
 	*Return Ref: NO
 	*
 **********************************************************************/
-void power_onoff_handler(uint8_t data)
+void power_on_off_handler(uint8_t data)
 {
   static uint8_t power_on_flag;
    switch(data){	
@@ -287,10 +287,7 @@ void power_on_run_handler(void)
 
 	 case 6:
    
-	 
-	
-		
-	     gl_run.process_on_step =7;
+	      gl_run.process_on_step =7;
 
 	 break;
 
@@ -332,33 +329,33 @@ void power_on_run_handler(void)
 	 case 12:
 	 	
 	 if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
-				g_pro.gTimer_display_adc_value=0;
-				send_net_state++;
-				  adc_detected_hundler();
-			 
-				   if(send_net_state > 2){
-					 send_net_state=0;
-					 if(g_wifi.gwifi_link_net_success==1) {
-						if(g_pro.disp_second_f ==1){
-							if(timer_expired(&t_xdp)){
-							   SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-							   tx_thread_sleep(10);
-							}
-						}
-					 }
-					 else{
-						 if(g_pro.disp_second_f ==1){
-							if(timer_expired(&t_xdp)){
-							   SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
-							   tx_thread_sleep(10);
-							}
-							}
-	 
-					 }
-					 
-					}
-				 
-			  }
+		g_pro.gTimer_display_adc_value=0;
+		send_net_state++;
+		adc_detected_hundler();
+
+		if(send_net_state > 2){
+			send_net_state=0;
+			if(g_wifi.gwifi_link_net_success==1) {
+				if(g_pro.disp_second_f ==1){
+				if(timer_expired(&t_xdp)){
+				SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+				tx_thread_sleep(10);
+				}
+				}
+			}
+			else{
+			if(g_pro.disp_second_f ==1){
+				if(timer_expired(&t_xdp)){
+				SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
+				tx_thread_sleep(10);
+				}
+			}
+
+			}
+
+		}
+
+		}
 	     gl_run.process_on_step =13;
 
 
@@ -369,28 +366,26 @@ void power_on_run_handler(void)
 	 	
 	 if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
-			   if(g_pro.disp_second_f == 1 || temp_second_displboard < 5){
+		if(g_pro.disp_second_f == 1 || temp_second_displboard < 5){
+
+		  if(temp_second_displboard < 8){
+				temp_second_displboard ++;
+		  }
+		}
 	 
-				  if(temp_second_displboard < 8){
-						temp_second_displboard ++;
-				  }
-				  
-			
-			   }
-	 
-			   if(send_wifi_power_on_state ==1){
-				   send_wifi_power_on_state++;
-				   g_pro.gset_temperture_value = 40;
-	 
-				   if(timer_expired(&t_mqtt_0)){
-					  MqttData_Publish_Update_Data();
-					//tx_thread_sleep(20);
-				   }
-	 
-	 
-			   }
+		if(send_wifi_power_on_state ==1){
+		   send_wifi_power_on_state++;
+		   g_pro.gset_temperture_value = 40;
+
+		   if(timer_expired(&t_mqtt_0)){
+			  MqttData_Publish_Update_Data();
+			//tx_thread_sleep(20);
+		   }
+
+
+		}
 		 
-			   gl_run.process_on_step =3; 
+	     gl_run.process_on_step =3; 
 	 }
 	 else{
 		   

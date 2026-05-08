@@ -13,7 +13,7 @@
 #define MIN_TIMER_HOURS 	0
 #define TIMER_SECONDS_PER_MINUTE 60
 
-#define CHECK_TIME_THRESHOLD_4S  3  // 4�????
+#define CHECK_TIME_THRESHOLD_2S  2  // 4�????
 #define CHECK_TIME_THRESHOLD_3S  150  // 3�????
 #define TEMPERATURE_HIGH_THRESHOLD  39  // 高温阈�??
 #define TEMPERATURE_LOW_THRESHOLD   38  // 低温阈�??
@@ -272,7 +272,7 @@ void set_temperature_value_handler(void)
 			   
 			}
 
-			
+			g_pro.gTimer_set_temp_counter = 10;
         } 
 		else if (g_pro.g_temperature_value < g_pro.gset_temperture_value){
 			if(g_pro.works_two_hours_interval_flag ==0){
@@ -299,12 +299,10 @@ void set_temperature_value_handler(void)
                 publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
 			    
 			}
+		   g_pro.gTimer_set_temp_counter = 10;
         }
 
-	   
-	
-		
-    }
+	}
     else {
 
       compare_temperature_value_hanlder();
@@ -320,7 +318,9 @@ void set_temperature_value_handler(void)
 */
 void compare_temperature_value_hanlder(void)
 {
-	 if( g_pro.gTimer_set_temp_counter >= CHECK_TIME_THRESHOLD_4S) { // 4�????
+    if(g_pro.g_manual_shutoff_dry_flag==1 || g_pro.key_set_temperature_flag ==1)return ;
+
+	 if( g_pro.gTimer_set_temp_counter >= CHECK_TIME_THRESHOLD_2S) { // 4�????
           g_pro.gTimer_set_temp_counter =0;
           CompareSetAndActualTemperature();
 	 }
@@ -347,8 +347,8 @@ uint8_t readTemperature(void)
 static void CompareSetAndActualTemperature(void)
 {
 
-  static uint8_t dry_on_counter = 0xff,dry_off_counter =0xff;
-	if(g_pro.works_two_hours_interval_flag ==1 || g_pro.g_manual_shutoff_dry_flag==1 || g_pro.key_set_temperature_flag ==1)return ;
+    static uint8_t dry_on_counter = 0xff,dry_off_counter =0xff;
+	
 	// 控制 PTC 加热器开关（带滞后控制）
 	uint8_t real_temp = g_pro.g_temperature_value;
 	int8_t target_temp;
@@ -374,7 +374,7 @@ static void CompareSetAndActualTemperature(void)
 				if(g_pro.disp_second_f ==1){
 					if(timer_expired(&t_xdp)){
 					SendData_Set_Command(0x22, 0x00); // close PTC
-					 tx_thread_sleep(10);
+					 //tx_thread_sleep(10);
 					}
 				}
 
@@ -400,7 +400,9 @@ static void CompareSetAndActualTemperature(void)
 
 				    g_pro.gDry = 0x01;
 					LED_DRY_ON();
-					DRY_OPEN();
+				    if(g_pro.works_two_hours_interval_flag ==0){ //WT.EDIT 2026-05-08
+					      DRY_OPEN();
+				    }
 
 
 				   
@@ -408,7 +410,7 @@ static void CompareSetAndActualTemperature(void)
 				   	if(timer_expired(&t_xdp)){
 				   	 SendData_Set_Command(0x22, 0x01); // open PTC
 
-				      tx_thread_sleep(10);
+				     // tx_thread_sleep(10);
 				   		}
 				   	}
 				   if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_on_counter != g_pro.set_temp_counter)){
@@ -431,12 +433,15 @@ static void CompareSetAndActualTemperature(void)
 
 					g_pro.gDry = 0x01;
 					LED_DRY_ON();
-					DRY_OPEN();
+					 if(g_pro.works_two_hours_interval_flag ==0){ //WT.EDIT 2026-05-08
+					    DRY_OPEN();
+
+					 }
 					if(g_pro.disp_second_f ==1){
 						if(timer_expired(&t_xdp)){
 						SendData_Set_Command(0x22, 0x01); // open PTC
 
-					    tx_thread_sleep(10);
+					   // tx_thread_sleep(10);
 							}
 						}
 
@@ -458,7 +463,7 @@ static void CompareSetAndActualTemperature(void)
 				if(g_pro.disp_second_f ==1){
 					if(timer_expired(&t_xdp)){
 					SendData_Set_Command(0x22, 0x00); // close PTC
-				     tx_thread_sleep(10);
+				     //tx_thread_sleep(10);
 						}
 					}
 

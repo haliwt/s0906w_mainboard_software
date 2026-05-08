@@ -20,7 +20,7 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI    768//1024//384//256
+#define STACK_SIZE_UI   1024 //768//1024//384//256
 #define STACK_SIZE_KEY  256
 #define STACK_SIZE_EVENT   512//256
 
@@ -360,7 +360,7 @@ static void vTaskUiPro(ULONG thread_input)
   while(1)
   {
 
-     power_onoff_handler(g_pro.gpower_on);
+     power_on_off_handler(g_pro.gpower_on);
     
 	if(g_wifi.wifi_led_fast_blink_flag==0 ){
 		wifi_communication_tnecent_handler();//

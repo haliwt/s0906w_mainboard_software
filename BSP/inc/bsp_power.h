@@ -19,7 +19,7 @@ typedef enum{
 
 
 
-void power_onoff_handler(uint8_t data);
+void power_on_off_handler(uint8_t data);
 
 
 void power_on_run_handler(void);

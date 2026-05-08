@@ -116,7 +116,7 @@ void mainboard_fun_handler(void)
 
 	}
 
-	if(g_pro.gMouse == 1){
+	if(g_pro.gMouse == 1 && g_pro.works_two_hours_interval_flag ==0){
 		LED_MOUSE_ON();
 		mouse_open();
 	}
@@ -125,7 +125,7 @@ void mainboard_fun_handler(void)
 		mouse_close();
 	}
 
-	if(g_pro.gPlasma == 1){
+	if(g_pro.gPlasma == 1 && g_pro.works_two_hours_interval_flag ==0){
 		LED_PLASMA_ON();
 		PLASMA_OPEN();
 	}
