@@ -536,7 +536,7 @@ void power_off_run_handler(void)
    case 8:
 	
       LED_Power_Breathing();
-
+      read_sensorData();
       gl_run.process_off_step = 9;
 
    break;

@@ -6,6 +6,8 @@
  *    Author: Administrator
  */
 #include "bsp.h"
+#include "core_cm0plus.h"
+
 
 void TIM17_Init_1MHz(void)
 {
@@ -31,14 +33,15 @@ void delay_init(void)
 //	  TIM16->CR1 |= TIM_CR1_CEN;
 
 }
-static inline void delay_us_dht11(uint32_t us)
-{
-    while (us--) {
-        for (volatile uint32_t i = 0; i < 64; i++) {
-            __NOP();
-        }
-    }
-}
+//static inline void delay_us_dht11(uint32_t us)
+//{
+//    while (us--) {
+//        for (volatile uint32_t i = 0; i < 25; i++) {
+//            __NOP();
+			
+//        }
+//    }
+//}
 
 
 /**
@@ -89,6 +92,7 @@ void delay_us(uint32_t nus)
 	{
 		// 1. 获取当前频率下的 1us tick 数
 		// G030 频率 64MHz 时，ticksPerUs = 64
+		uint32_t SystemCoreClock = 64000000UL;
 		uint32_t ticksPerUs = SystemCoreClock / 1000000;
 		uint32_t ticks = nus * ticksPerUs;
 		
@@ -119,12 +123,17 @@ void delay_us(uint32_t nus)
 			// 3. 安全兜底：如果 nus 输入过大导致逻辑错误，防止死循环
 			// 如果延时超过了 100ms，建议检查代码逻辑是否应改用 tx_thread_sleep
 			//if (elapsed > (SystemCoreClock / 10)) break; 
+			 
 		}
+
+		
 	}
 
 
 
 	#endif 
+	
+  
 
 }
 

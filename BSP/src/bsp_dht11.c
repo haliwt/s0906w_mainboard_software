@@ -5,13 +5,18 @@
 
 uint8_t read_flag;
 
-static void DHT11_Mode_IPU(void);
-static void DHT11_Mode_Out_PP(void);
+static void DHT11_Mode_InPut(void);
+static void DHT11_Mode_OutPut(void);
 static uint8_t DHT11_ReadByte_Fun(void);
+static void TIM17_Init_1MHz(void);
+
+
 DHT11_Data_TypeDef DHT11;
 void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11);
 
 uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp);
+
+
 
 uint8_t dht11_read_flag;
 
@@ -24,31 +29,51 @@ uint8_t dht11_read_flag;
 //			for(j=6;j>0;j--);
 //	}
 //}
-
-
-static inline void delay_us_TIM16(uint16_t us)
+void DHT11_Init(void)
 {
-    uint16_t start = TIM16->CNT;
-    while ((uint16_t)(TIM16->CNT - start) < us) {
-        ;
+    /* GPIO 默认配置为输出高电平 */
+   
+
+    DHT11_Mode_OutPut();//DHT11_GPIO_Output();
+    DHT11_Dout_HIGH();//DHT11_WritePin(1);
+
+    /* 初始化 TIM14 为 1MHz 计数 */
+   // TIM17_Init_1MHz();
+}
+
+/*---------------- TIM14 1MHz 延时 ----------------*/
+
+static void TIM17_Init_1MHz(void)
+{
+    /* 1. 开启 TIM16 时钟 */
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_TIM17);
+
+    /* 2. 配置计数器 */
+    LL_TIM_SetPrescaler(TIM17, 64 - 1);     // 64MHz / 64 = 1MHz
+    LL_TIM_SetAutoReload(TIM17, 0xFFFF);    // 最大周期
+    LL_TIM_SetCounterMode(TIM17, LL_TIM_COUNTERMODE_UP);
+    LL_TIM_SetClockDivision(TIM17, LL_TIM_CLOCKDIVISION_DIV1);
+
+    /* 3. 使能计数器 */
+    LL_TIM_EnableCounter(TIM17);
+
+    /* 4. 可选：允许更新事件 */
+    LL_TIM_GenerateEvent_UPDATE(TIM17);
+}
+
+
+static void delay_us_dht11(uint32_t us)
+{
+   uint16_t start = TIM17->CNT;
+
+    while ((uint16_t)(TIM17->CNT - start) < us)
+    {
+        /* busy wait */
     }
 }
 
 
-/**
-  * ????: DHT11 ?????
-  * ????: ?
-  * ? ? ?: ?
-  * ?    ?:?
-  */
-void DHT11_Init(void)
-{
 
-	//__HAL_RCC_GPIOA_CLK_ENABLE();
-	//DHT11_Mode_Out_PP();
-	
-	///DHT11_Dout_HIGH();  // ??GPIO
-}
 
 
 /**
@@ -57,7 +82,7 @@ void DHT11_Init(void)
   * ? ? ?: ?
   * ?    ?:?
   */
-static void DHT11_Mode_IPU(void)
+static void DHT11_Mode_InPut(void)
 {
 	LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
  	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
@@ -65,7 +90,7 @@ static void DHT11_Mode_IPU(void)
      /**/
 	  GPIO_InitStruct.Pin = TEMP_SENSOR_Pin;
 	  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
-	  GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
+	  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO; //DOWN;
 	  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
@@ -76,7 +101,7 @@ static void DHT11_Mode_IPU(void)
   * ? ? ?: ?
   * ?    ?:?
   */
-static void DHT11_Mode_Out_PP(void)
+static void DHT11_Mode_OutPut(void)
 {
 	
 
@@ -86,7 +111,7 @@ static void DHT11_Mode_Out_PP(void)
 	GPIO_InitStruct.Pin = TEMP_SENSOR_Pin ;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;//LL_GPIO_OUTPUT_PUSHPULL;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -100,6 +125,8 @@ static void DHT11_Mode_Out_PP(void)
   */
 static uint8_t DHT11_ReadByte ( void )
 {
+
+   #if 0
 	uint8_t i, temp=0;
 	
 	for(i=0;i<8;i++)    
@@ -110,7 +137,7 @@ static uint8_t DHT11_ReadByte ( void )
 		/*DHT11 ?26~28us??????�?0�?,?70us?????�?1�?,
 		 *???? x us???????????? ,x ?????? 
 		 */
-		delay_us(40); //??x us ??????????0???????	   	  
+		delay_us_dht11(40); //??x us ??????????0???????	   	  
 
 		if(DHT11_Data_IN()==Bit_SET)/* x us??????????�?1�? */
 		{
@@ -125,77 +152,34 @@ static uint8_t DHT11_ReadByte ( void )
 		}
 	}
 	return temp;
+
+	#else 
+
+	uint8_t i,dat=0;
+	 for(i=0;i<8;i++) 
+		  {
+			   	while(DHT11_Data_IN()==Bit_RESET);
+			
+				delay_us_dht11(40);
+				
+				  if(DHT11_Data_IN()==Bit_SET)
+					{
+						while(DHT11_Data_IN()==Bit_SET);
+					 
+						
+						dat|=(uint8_t)(0x01 << (7 - i)); // ����1
+					}
+					else
+					{
+						dat&=(uint8_t)~(0x01 << (7 - i)); // ����0
+					}
+			}
+		  return dat;
+
+
+	#endif 
 }
-#if 0
-/**
-  * ????: ??????????40bit,????
-  * ????: DHT11_Data:DHT11????
-  * ? ? ?: ERROR:  ????
-  *           SUCCESS:????
-  * ?    ?:8bit ???? + 8bit ???? + 8bit ???? + 8bit ???? + 8bit ??? 
-  */
-uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef *DHT11_Data)
-{  
-  uint8_t temp;
-  uint16_t humi_temp;
-  
-	/*????*/
-	DHT11_Mode_Out_PP();
-	/*????*/
-	DHT11_Dout_LOW();
-	/*??18ms*/
-	delay_ms(18);//HAL_Delay(20);//tx_thread_sleep(pdMS_TO_TICKS(20));//HAL_Delay(20);
 
-	/*???? ????30us*/
-	DHT11_Dout_HIGH(); 
-
-	delay_us(30);   //??30us
-
-	/*?????? ????????*/ 
-	DHT11_Mode_IPU();
-      delay_us(30);   //??30us
-	/*?????????????? ???????,???????*/   
-	if(DHT11_Data_IN()==Bit_RESET)     
-	{
-		/*???????? ?80us ??? ??????*/  
-		while(DHT11_Data_IN()==Bit_RESET);
-
-		/*????????? 80us ??? ??????*/
-		while(DHT11_Data_IN()==Bit_SET);
-
-		/*??????*/   
-		DHT11_Data->humi_high8bit= DHT11_ReadByte();
-		DHT11_Data->humi_low8bit = DHT11_ReadByte();
-		DHT11_Data->temp_high8bit= DHT11_ReadByte();
-		DHT11_Data->temp_low8bit = DHT11_ReadByte();
-		DHT11_Data->check_sum    = DHT11_ReadByte();
-
-		/*????,????????*/
-		DHT11_Mode_Out_PP();
-		/*????*/
-		DHT11_Dout_HIGH();
-		
-		/* ??????? */
-		humi_temp=DHT11_Data->humi_high8bit*100+DHT11_Data->humi_low8bit;
-		//DHT11_Data->humidity =(float)humi_temp/100;
-		
-		humi_temp=DHT11_Data->temp_high8bit*100+DHT11_Data->temp_low8bit;
-		//DHT11_Data->temperature=(float)humi_temp/100;    
-		
-		/*???????????*/
-		temp = DHT11_Data->humi_high8bit + DHT11_Data->humi_low8bit + 
-			DHT11_Data->temp_high8bit+ DHT11_Data->temp_low8bit;
-		if(DHT11_Data->check_sum==temp)
-		{ 
-		return SUCCESS;
-		}
-		else 
-		 return ERROR;
-	}	
-	else
-		return ERROR;
-}
-#endif 
 /**
  * @brief  读取 DHT11 温湿度
  * @param  humi: 湿度输出指针
@@ -218,47 +202,47 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
     __disable_irq();
 
     /* 2. 主机拉低 18ms */
-    DHT11_Mode_Out_PP();//DHT11_GPIO_Output();
+    DHT11_Mode_OutPut();//DHT11_GPIO_Output();
     DHT11_Dout_LOW();//DHT11_WritePin(0);
-    delay_us(18000);
+    delay_us(18000);//delay_us_dht11(18000);
 
     /* 3. 拉高 20~40us */
     DHT11_Dout_HIGH();//DHT11_WritePin(1);
-    delay_us(30);
+    delay_us(30);//delay_us_dht11(30);
 
     /* 4. 切换输入，等待 DHT11 响应 */
-    DHT11_Mode_IPU();//DHT11_GPIO_Input();
-    delay_us(5);
+    DHT11_Mode_InPut();//DHT11_GPIO_Input();
+    delay_us(5);//delay_us_dht11(5);
 
     /* 等待 DHT11 拉低（80us） */
     timeout = 0;
     while (DHT11_Data_IN())
     {
-        if (++timeout > 300) goto error;
-        delay_us(1);
+        if (++timeout > 30000) goto error_1;
+        delay_us(1);//delay_us_dht11(1);
     }
 
     /* 等待 DHT11 拉高（80us） */
     timeout = 0;
     while (!DHT11_Data_IN()	 )
     {
-        if (++timeout > 300) goto error;
-        delay_us(1);
+        if (++timeout > 300) goto error_2;
+        delay_us(1);//delay_us_dht11(1);
     }
 
     /* 等待 DHT11 再次拉低，开始传输数据 */
     timeout = 0;
     while (DHT11_Data_IN()	 )
     {
-        if (++timeout > 300) goto error;
-        delay_us(1);
+        if (++timeout > 300) goto error_3;
+        delay_us(1);//delay_us_dht11(1);
     }
 
     /* 5. 读取 5 字节（40bit） */
     for (uint8_t i = 0; i < 5; i++)
     {
         data[i] = DHT11_ReadByte();
-        if (data[i] == 0xFF) goto error;
+        if (data[i] == 0xFF) goto error_4;
     }
 
     /* 6. 恢复中断 & 调度 */
@@ -280,10 +264,26 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
 
     return 0;
 
-error:
+error_1:
+    __enable_irq();
+    tx_interrupt_control(old_post);
+    return 1;
+
+	error_2:
+		__enable_irq();
+		tx_interrupt_control(old_post);
+		return 2;
+
+		error_3:
     __enable_irq();
     tx_interrupt_control(old_post);
     return 3;
+    
+    	error_4:
+    __enable_irq();
+    tx_interrupt_control(old_post);
+    return 3;
+
 }
 
 
@@ -333,10 +333,11 @@ void static Dht11_Read_TempHumidity_Handler(DHT11_Data_TypeDef * pdth11)
 *@return:
 *
 */
+uint8_t dht11_f ;
 void updateDht11_sensorData_toDisp(void)
 {
 	
-	   DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
+	  dht11_f = DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
 	    if(g_pro.disp_second_f == 1){
 			if(timer_expired(&t_display)){
 			sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
@@ -363,7 +364,7 @@ void updateDht11_sensorData_toDisp(void)
 void read_sensorData(void)
 {
 	
-	   DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
+	dht11_f =  DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
 	    if(g_pro.disp_second_f == 1){
 			if(timer_expired(&t_display)){
 			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);

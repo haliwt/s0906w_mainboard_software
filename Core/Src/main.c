@@ -101,10 +101,10 @@ int main(void)
   MX_TIM17_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
-  MX_IWDG_Init();
+ // MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 	// ʹ��USART�����ж�
-   LL_IWDG_ReloadCounter(IWDG);
+ //  LL_IWDG_ReloadCounter(IWDG);
    bsp_init();
    LL_USART_EnableIT_RXNE(USART1); //WT.EDIT 2025.09.28
   

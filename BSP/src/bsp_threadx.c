@@ -19,10 +19,10 @@
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
-#define STACK_SIZE_ONE  256//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI  1024//384//256
+#define STACK_SIZE_DECODER  512//128//1792//3072//2048//1024//896//768
+#define STACK_SIZE_UI    768//1024//384//256
 #define STACK_SIZE_KEY  256
-#define STACK_SIZE_EVENT   256
+#define STACK_SIZE_EVENT   512//256
 
 
 
@@ -43,7 +43,7 @@ TX_SEMAPHORE decoder_semaphore;
 //static uint8_t uart1_rx_queue_buffer[UART1_RX_BUF_SIZE * sizeof(uint8_t)];
 
 
-static UCHAR stack_decoder_pro[STACK_SIZE_ONE];
+static UCHAR stack_decoder_pro[STACK_SIZE_DECODER];
 static UCHAR stack_ui_pro[STACK_SIZE_UI];
 
 static UCHAR stack_start_pro[STACK_SIZE_KEY];
@@ -72,8 +72,11 @@ static void debug_stack_key_check(void);
 
 static void debug_stack_decoder_check(void);
 
+static void debug_stack_key_event_check(void);
 
-ULONG unused,unused_key,unused_decoder ;
+
+
+ULONG unused,unused_key,unused_decoder,unused_event ;
 
 
 /**
@@ -94,6 +97,7 @@ void tx_application_define(void *first_unused_memory)
     memset(stack_ui_pro, 0xEF, sizeof(stack_ui_pro));
     memset(stack_start_pro, 0xEF, sizeof(stack_start_pro));
 	memset(stack_decoder_pro, 0xEF, sizeof(stack_decoder_pro));
+	memset(stack_key_event, 0xEF, sizeof(stack_key_event));
     #endif 
 
     /* 3. 注册堆栈错误回调（推荐保持） */
@@ -130,9 +134,9 @@ static void threadx_handler(void)
 					vTaskDecoderPro,   // 每个消息大小，这里用 1 字节
 					0,
 					stack_decoder_pro,
-					STACK_SIZE_ONE,
-					0,
-					0,
+					STACK_SIZE_DECODER,
+					1,
+					1,
 					TX_NO_TIME_SLICE,
 					TX_AUTO_START);
 				
@@ -154,8 +158,8 @@ static void threadx_handler(void)
                      0,                            /* 传递给任务的参数 */
                      stack_start_pro,              /* 堆栈基地址 */
                      STACK_SIZE_KEY,			   /* 堆栈空间大小 */  
-                     1, 						   /* 任务优先级*/
-                     1, 						   /* 任务抢占阀值 */
+                     0, 						   /* 任务优先级*/
+                     0, 						   /* 任务抢占阀值 */
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
   #endif 
@@ -333,7 +337,9 @@ static void vTaskKeyEvent(ULONG thread_input)
         else if(flags & KEY_UP_SHORT)    handle_up_key();
 	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
 	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
-
+        #if DEBUG_ENABLE
+              debug_stack_key_event_check();
+          #endif 
 	   
      }
     
@@ -480,7 +486,7 @@ static void debug_stack_decoder_check(void)
 
 
     // 从数组起始位置（栈底/低地址）开始数连续的 0xEF
-    for (i = 0; i < STACK_SIZE_ONE; i++)
+    for (i = 0; i < STACK_SIZE_DECODER; i++)
     {
         if (stack_decoder_pro[i] == 0xEF)
             temp_unused++;
@@ -492,6 +498,25 @@ static void debug_stack_decoder_check(void)
     // 如果 unused < 100 字节，你的 G030 就危险了！
 }
 
+static void debug_stack_key_event_check(void)
+{
+    ULONG i;
+   // ULONG unused = 0;
+   ULONG temp_unused = 0; // 使用局部变量进行统计
+
+
+    // 从数组起始位置（栈底/低地址）开始数连续的 0xEF
+    for (i = 0; i < STACK_SIZE_EVENT; i++)
+    {
+        if (stack_key_event[i] == 0xEF)
+            temp_unused++;
+        else
+            break; 
+    }
+    unused_event = temp_unused;  // 统计完后再赋值给全局变量，方便 Watch 窗口查看
+    // 剩下的 unused 就是你安全的“护城河”
+    // 如果 unused < 100 字节，你的 G030 就危险了！
+}
 
 
 #endif 
