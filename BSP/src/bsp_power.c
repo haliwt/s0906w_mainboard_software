@@ -67,13 +67,7 @@ void power_onoff_handler(uint8_t data)
       break;
 
 	  case power_off:
-         gl_run.process_on_step =0;
-		 g_pro.g_real_hours_counter=0;
-         if(power_on_flag==0){
-             power_on_flag ++;
-			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
-			 buzzer_sound();
-		 }
+        
          power_off_run_handler();
 
 	   break;
@@ -357,11 +351,14 @@ void power_on_run_handler(void)
 void power_off_run_handler(void)
 {
 
+  
    static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute;
+   static uint8_t power_on_flag = 0,switch_flag;
    switch(gl_run.process_off_step){
 
    case 0:
    	  gl_run.process_on_step =0;
+      g_pro.g_real_hours_counter=0;
 
    	  power_off_led();
       TM1639_Display_ON_OFF(0);
@@ -375,13 +372,7 @@ void power_off_run_handler(void)
 	  fan_run_one_minute = 1;
 	  g_pro.gTimer_fan_run_one_minute =0;
 
-	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
-            MqttData_Publish_SetOpen(0);  
-			vTaskDelay(100);//osDelay(50);
-	        MqttData_Publish_PowerOff_Ref() ;//
-	        vTaskDelay(100);//osDelay(100);
-           
-	  }
+	
 	 
 	   g_pro.g_fan_switch_gears_flag++;
       
@@ -398,8 +389,30 @@ void power_off_run_handler(void)
    break;
 
    case 1:
+   	   
+         if(power_on_flag==0){
+             power_on_flag ++;
+			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
+			 buzzer_sound();
+		 }
 
-     if(fan_flag == 0){
+		 
+	   LED_Power_Breathing();
+
+      gl_run.process_off_step = 2;
+
+   break;
+
+   case 2:
+       LED_Power_Breathing();
+      mainboard_close_all_fun();
+	   gl_run.process_off_step = 3;
+
+   break;
+
+   case 3:
+   	  LED_Power_Breathing();
+   	  if(fan_flag == 0){
 	 	fan_flag++;
 	    fan_run_one_minute =2;
      }
@@ -418,26 +431,38 @@ void power_off_run_handler(void)
 		   }
 	 
 	   }
-	
+        gl_run.process_off_step = 4;
+     break;
 
-     mainboard_close_all_fun();
-	
+	 case 4:
+	 
+	   LED_Power_Breathing();
 
-     LED_Power_Breathing();
-	 wifi_first_connect++;
+	    gl_run.process_off_step = 5;
 
-	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){
+
+     break; 
+
+	 case 5: //10ms 
+	    wifi_first_connect++;
+
+	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 99){ 
 	 	    wifi_first_connect=0;
-            MqttData_Publish_SetOpen(0);  
-			osDelay(100);
-	        MqttData_Publish_PowerOff_Ref() ;//
-	        osDelay(100);
+			switch_flag  = switch_flag ^ 0x01;
+	        if(switch_flag==1)
+             MqttData_Publish_SetOpen(0); 
+			else
+		     MqttData_Publish_PowerOff_Ref() ;//
+	       
            
 	 }
 
-   
+    gl_run.process_off_step = 3;
 
    break;
+
+
+ 
 
    
    	}
