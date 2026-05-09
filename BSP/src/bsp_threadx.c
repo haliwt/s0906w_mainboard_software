@@ -20,8 +20,8 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI   1024 //768//1024//384//256
-#define STACK_SIZE_KEY  256
+#define STACK_SIZE_UI    1536//1280//1024 //768//1024//384//256
+#define STACK_SIZE_KEY   512
 #define STACK_SIZE_EVENT   512//256
 
 
@@ -135,8 +135,8 @@ static void threadx_handler(void)
 					0,
 					stack_decoder_pro,
 					STACK_SIZE_DECODER,
-					1,
-					1,
+					3,
+					3,
 					TX_NO_TIME_SLICE,
 					TX_AUTO_START);
 				
@@ -146,8 +146,8 @@ static void threadx_handler(void)
                      0,                            /* 传递给任务的参数 */
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
-                     3,							   /* 任务优先级*/
-                     3,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     4,							   /* 任务优先级*/
+                     4,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -158,8 +158,8 @@ static void threadx_handler(void)
                      0,                            /* 传递给任务的参数 */
                      stack_start_pro,              /* 堆栈基地址 */
                      STACK_SIZE_KEY,			   /* 堆栈空间大小 */  
-                     0, 						   /* 任务优先级*/
-                     0, 						   /* 任务抢占阀值 */
+                     1, 						   /* 任务优先级*/
+                     1, 						   /* 任务抢占阀值 */
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
   #endif 
@@ -229,7 +229,7 @@ static void vTaskDecoderPro(ULONG thread_input)
    while(1)
    {
 
-     /* ================= MODE 键 ================= */
+   
         if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             mode_cnt++;
@@ -238,44 +238,38 @@ static void vTaskDecoderPro(ULONG thread_input)
                
             }
         }
-        else
+        else if(KEY_MODE_VALUE() == KEY_UP && mode_cnt > 0)
         {
             if(mode_cnt > 1 && mode_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
             mode_cnt = 0;
         }
-
-      /* ================= UP 键 ================= */
-        if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+        else if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             up_cnt++;
             if(up_cnt == LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_UP_LONG, TX_OR);
         }
-        else
+        else if(KEY_UP_VALUE() == KEY_UP && up_cnt > 0)
         {
             if(up_cnt > 1 && up_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_UP_SHORT, TX_OR);
 
             up_cnt = 0;
         }
-
-        /* ================= DOWN 键 ================= */
         if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             down_cnt++;
             if(down_cnt == LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_DOWN_LONG, TX_OR);
         }
-        else
+        else if(KEY_DOWN_VALUE() == KEY_UP && down_cnt > 0)
         {
             if(down_cnt > 1 && down_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_DOWN_SHORT, TX_OR);
 
             down_cnt = 0;
         }
-
-        /* ================= POWER 键 ================= */
         if(KEY_POWER_VALUE() == KEY_DOWN)
         {
             power_cnt++;
@@ -283,7 +277,7 @@ static void vTaskDecoderPro(ULONG thread_input)
                 tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
              }
         }
-        else
+        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 0)
         {
             if(power_cnt > 1 && power_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
