@@ -215,7 +215,7 @@ void works_run_two_hours_state(void)
 {
   
 
-   #if  TEST_UNIT
+   #if  DEBUG_ENABLE
 	if(g_pro.gTimer_two_hours_counter > 720 && g_pro.works_two_hours_interval_flag==0){ //five minutes 5x60=300s
 
 

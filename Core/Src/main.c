@@ -10,7 +10,8 @@
   *                 02.  data.2025.09.27
   *  modidyf 03. data.2025.10.22,
   *  modify  04. data.2025.11.07
-  *
+  *  version:03.DATA.2026-05-08
+  *          for mass 48pcs . be used to threadx .
   * 
   * 
   *
