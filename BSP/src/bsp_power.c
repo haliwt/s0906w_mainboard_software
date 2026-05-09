@@ -34,7 +34,7 @@ uint8_t send_wifi_power_on_state;
 **********************************************************************/
 void power_on_off_handler(uint8_t data)
 {
-  static uint8_t power_on_flag;
+  
    switch(data){	
 
 	   case power_on :
@@ -51,11 +51,7 @@ void power_on_off_handler(uint8_t data)
          gl_run.process_on_step =0;
 		 g_pro.g_real_hours_counter=0;
 	     
-	     if(power_on_flag==0){
-             power_on_flag ++;
-			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
-			 buzzer_sound();
-	     }
+	    
         
          power_off_run_handler();
 
@@ -156,20 +152,20 @@ void power_on_run_handler(void)
 	   if(g_wifi.app_timer_power_on_flag ==1){
 	      
 	   	  if(g_wifi.gwifi_link_net_success==wifi_link_success){
-		  	   if(timer_expired(&t_mqtt_0)){
+		  	  // if(timer_expired(&t_mqtt_0)){
                  MqttData_Publish_SetOpen(1);  
 		         tx_thread_sleep(20);
-		  	   	}
+		  	   //	}
 	   	  }
 		}
         else{
 		   
 		   	 if(g_wifi.gwifi_link_net_success == wifi_link_success && g_wifi.gwifi_normal_power_on_flag == 0){
-			   if(timer_expired(&t_mqtt_1)){
+			   //if(timer_expired(&t_mqtt_1)){
 
 			      MqttData_Publish_SetOpen(1);  
                    tx_thread_sleep(20);
-			   	}
+			   //	}
 		    }
         }
 		  gl_run.process_on_step =2;
@@ -251,17 +247,17 @@ void power_on_run_handler(void)
 		       switch_dht11 = switch_dht11 ^0x01;
 			   if(switch_dht11==1){
 			   	
-                   if(timer_expired(&t_mqtt_1)){
+                   //if(timer_expired(&t_mqtt_1)){
 				     Subscriber_Data_FromCloud_Handler();
 			       
                      //tx_thread_sleep(20);
-                   	}
+                   	//}
 			   	}
 			    else{
-					if(timer_expired(&t_mqtt_0)){
+					//if(timer_expired(&t_mqtt_0)){
 				       Update_Dht11_Totencent_Value()	;
 				        //tx_thread_sleep(20);
-						}
+						//}
 
 
 				}
@@ -337,18 +333,18 @@ void power_on_run_handler(void)
 			send_net_state=0;
 			if(g_wifi.gwifi_link_net_success==1) {
 				if(g_pro.disp_second_f ==1){
-				if(timer_expired(&t_xdp)){
+				//if(timer_expired(&t_xdp)){
 				SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
 				tx_thread_sleep(10);
-				}
+				//}
 				}
 			}
 			else{
 			if(g_pro.disp_second_f ==1){
-				if(timer_expired(&t_xdp)){
+				//if(timer_expired(&t_xdp)){
 				SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
 				tx_thread_sleep(10);
-				}
+				//}
 			}
 
 			}
@@ -377,10 +373,10 @@ void power_on_run_handler(void)
 		   send_wifi_power_on_state++;
 		   g_pro.gset_temperture_value = 40;
 
-		   if(timer_expired(&t_mqtt_0)){
+		   //if(timer_expired(&t_mqtt_0)){
 			  MqttData_Publish_Update_Data();
 			//tx_thread_sleep(20);
-		   }
+		   //}
 
 
 		}
@@ -418,6 +414,7 @@ void power_off_run_handler(void)
 {
 
    static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute,switch_f;
+   static uint8_t power_on_flag,counter_send;
    switch(gl_run.process_off_step){
 
    case 0:
@@ -429,6 +426,11 @@ void power_off_run_handler(void)
    break;
 
    case 1:
+   	  if(power_on_flag==0){
+             power_on_flag ++;
+			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
+			 buzzer_sound();
+	     }
    	  TM1639_Display_ON_OFF(0);
       gl_run.process_off_step = 2;
    break;
@@ -490,15 +492,18 @@ void power_off_run_handler(void)
 	       
         }
 
-
+       mainboard_close_all_fun();
       gl_run.process_off_step = 6;
   break;
 
   case 6:
-
-     mainboard_close_all_fun();
+     counter_send ++;
+    
+	 if(counter_send > 5){
+	 counter_send =0;	
 	 SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
 	 tx_thread_sleep(10);
+	 }
 
     gl_run.process_off_step = 7;
 

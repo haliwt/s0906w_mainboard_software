@@ -69,22 +69,14 @@ void power_off_led(void)
  ************************************************************************/
 void LED_Power_Breathing(void)
 {
-    static uint8_t breathing_time = 0;
-    static uint8_t led_state = 0;
+   
     
-    breathing_time++;
-    if(breathing_time > 39){ //10ms *39 = 390ms
-        breathing_time = 0;
-        led_state = !led_state;
+
+    if(g_pro.gTimer_to_disp_counter >= 1){ //10ms *39 = 390ms
+       g_pro.gTimer_to_disp_counter = 0;
+       LED_POWER_TOGGLE();
         
-        if(led_state)
-        {
-            LED_POWER_ON();
-        }
-        else
-        {
-            LED_POWER_OFF();
-        }
+      
     }
 }
 /************************************************************************

@@ -23,10 +23,10 @@ void smartphone_timer_power_handler(void)
 			
                
 				if(g_pro.disp_second_f ==1){
-                    if(timer_expired(&t_xdp)){
+                    //if(timer_expired(&t_xdp)){
 					SendWifiData_To_Cmd(0x03,0x01);
                      //tx_thread_sleep(10);
-                    }
+                    //}
 				}
                 
 			
@@ -36,11 +36,11 @@ void smartphone_timer_power_handler(void)
 				g_pro.gPlasma=0;//gctl_t.gPlasma =0;
 				
 				if(g_pro.disp_second_f ==1){
-					if(timer_expired(&t_display)){
+					//if(timer_expired(&t_display)){
 
 					SendWifiData_To_Cmd(0x03,0x0);
 				     ///tx_thread_sleep(10);
-					}
+					//}
 				}
 				
 			}
@@ -50,11 +50,11 @@ void smartphone_timer_power_handler(void)
 
              
 					if(g_pro.disp_second_f ==1){
-                        if(timer_expired(&t_display)){
+                       /// if(timer_expired(&t_display)){
 						SendWifiData_To_Cmd(0x04,0x01);
 					 //tx_thread_sleep(10);
                         	}
-						}
+						//}
                       	
 					 
 			}
@@ -63,10 +63,10 @@ void smartphone_timer_power_handler(void)
 					g_pro.g_manual_shutoff_dry_flag = 1;
 			
 					if(g_pro.disp_second_f ==1){
-						if(timer_expired(&t_display)){
+						//if(timer_expired(&t_display)){
 						SendWifiData_To_Cmd(0x04,0x0);
-					 //tx_thread_sleep(10);
-							}
+					    tx_thread_sleep(10);
+							//}
 						}
 					   	
 			}
@@ -76,10 +76,10 @@ void smartphone_timer_power_handler(void)
 			if(g_pro.gDry==1){//if(gctl_t.gDry==1 ||g_dry_open_flag ==1){
 				
 				if(g_pro.disp_second_f ==1){
-					if(timer_expired(&t_display)){
+					//if(timer_expired(&t_display)){
 					SendWifiData_To_Cmd(0x02,0x01);
-				 //tx_thread_sleep(10);
-						}
+				    tx_thread_sleep(10);
+						///}
 					}
 				   
 				
@@ -88,11 +88,11 @@ void smartphone_timer_power_handler(void)
 					g_pro.gDry=0;//gctl_t.gDry=0;
      	
 					if(g_pro.disp_second_f ==1){
-						if(timer_expired(&t_xdp)){
+						///if(timer_expired(&t_xdp)){
 							
 						SendWifiData_To_Cmd(0x02,0x0);
-						//tx_thread_sleep(10);
-						}
+						tx_thread_sleep(10);
+						//}
 						}
                      
 

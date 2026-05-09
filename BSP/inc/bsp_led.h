@@ -14,6 +14,8 @@
 
 #define LED_POWER_ON()           do{LED_POWER_GPIO_Port->BSRR =(uint32_t)LED_POWER_Pin <<16;}while(0)//HAL_GPIO_WritePin(LED_POWER_GPIO_Port, LED_POWER_Pin, GPIO_PIN_RESET)
 #define LED_POWER_OFF()          do{LED_POWER_GPIO_Port->BSRR =LED_POWER_Pin;}while(0)//sys_write_gpio_pin_value(LED_POWER_GPIO_Port,LED_POWER_Pin,GPIO_PIN_SET)//HAL_GPIO_WritePin(LED_POWER_GPIO_Port, LED_POWER_Pin, GPIO_PIN_SET)
+#define LED_POWER_TOGGLE()       do{LED_POWER_GPIO_Port->ODR ^= LED_POWER_Pin;}while(0)
+
 
 #define LED_AI_ON()              do{LED_AI_GPIO_Port->BSRR =(uint32_t)LED_AI_Pin<<16;}while(0)
 #define LED_AI_OFF()             do{LED_AI_GPIO_Port->BSRR =LED_AI_Pin;}while(0)

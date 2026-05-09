@@ -22,9 +22,9 @@ extern soft_timer_t t_dht11;
 
 
 
-void soft_timer_init(void);
+//void soft_timer_init(void);
 
-int timer_expired(soft_timer_t *t);
+//int timer_expired(soft_timer_t *t);
 
 
 #endif 

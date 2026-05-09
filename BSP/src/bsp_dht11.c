@@ -165,12 +165,12 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
 	
     old_post = tx_interrupt_control(TX_INT_DISABLE);
 
-    __disable_irq();
+   // __disable_irq();
 
     /* 2. 主机拉低 18ms */
     DHT11_Mode_OutPut();//DHT11_GPIO_Output();
     DHT11_Dout_LOW();//DHT11_WritePin(0);
-    delay_us(18000);//delay_us_dht11(18000);
+    delay_us(19000);//delay_us_dht11(18000);
 
     /* 3. 拉高 20~40us */
     DHT11_Dout_HIGH();//DHT11_WritePin(1);
@@ -178,14 +178,14 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
 
     /* 4. 切换输入，等待 DHT11 响应 */
     DHT11_Mode_InPut();//DHT11_GPIO_Input();
-    delay_us(5);//delay_us_dht11(5);
+    delay_us(10);//delay_us_dht11(5);
 
     /* 等待 DHT11 拉低（80us） */
     timeout = 0;
     while (DHT11_Data_IN())
     {
         if (++timeout > 3000) goto error_1;
-        delay_us(1);//delay_us_dht11(1);
+        delay_us(2);//delay_us_dht11(1);
     }
 
     /* 等待 DHT11 拉高（80us） */
@@ -193,7 +193,7 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
     while (!DHT11_Data_IN()	 )
     {
         if (++timeout > 9000) goto error_2;
-        delay_us(1);//delay_us_dht11(1);
+        delay_us(2);//delay_us_dht11(1);
     }
 
     /* 等待 DHT11 再次拉低，开始传输数据 */
@@ -201,7 +201,7 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
     while (DHT11_Data_IN()	 )
     {
         if (++timeout > 3000) goto error_3;
-        delay_us(1);//delay_us_dht11(1);
+        delay_us(2);//delay_us_dht11(1);
     }
 
     /* 5. 读取 5 字节（40bit） */
@@ -212,7 +212,7 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
     }
 
     /* 6. 恢复中断 & 调度 */
-    __enable_irq();
+   // __enable_irq();
     tx_interrupt_control(old_post);
 
 
@@ -231,22 +231,22 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
     return 0;
 
 error_1:
-    __enable_irq();
+   // __enable_irq();
     tx_interrupt_control(old_post);
     return 1;
 
 	error_2:
-		__enable_irq();
+		//__enable_irq();
 		tx_interrupt_control(old_post);
 		return 2;
 
 		error_3:
-    __enable_irq();
+   // __enable_irq();
     tx_interrupt_control(old_post);
     return 3;
     
     	error_4:
-    __enable_irq();
+   // __enable_irq();
     tx_interrupt_control(old_post);
     return 3;
 
@@ -289,10 +289,10 @@ void read_sensorData(void)
 	
 	dht11_f =  DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
 	    if(g_pro.disp_second_f == 1){
-			if(timer_expired(&t_display)){
+			//if(timer_expired(&t_display)){
 			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
 		     tx_thread_sleep(10);
-			}
+			//}
          }
 	
 }
@@ -309,10 +309,10 @@ void Update_Dht11_Totencent_Value(void)
 
   
 	DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);//Dht11_Read_TempHumidity_Handler(&DHT11);
-	if(timer_expired(&t_mqtt_0)){
+	//if(timer_expired(&t_mqtt_0)){
 	MqttData_Publis_ReadTempHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
    // tx_thread_sleep(20);//HAL_Delay(100);
-	}
+	//}
 
 }
 

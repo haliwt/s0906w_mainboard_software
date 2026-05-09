@@ -19,10 +19,10 @@
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
-#define STACK_SIZE_DECODER  512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI   1024 //768//1024//384//256
-#define STACK_SIZE_KEY  256
-#define STACK_SIZE_EVENT   512//256
+#define STACK_SIZE_DECODER  384//128//1792//3072//2048//1024//896//768
+#define STACK_SIZE_UI   1280//1536//1280//1024//384//256
+#define STACK_SIZE_KEY  512//512
+#define STACK_SIZE_EVENT   768//512//512//256
 
 
 
@@ -51,7 +51,7 @@ static UCHAR stack_key_event[STACK_SIZE_EVENT];
 
 
 
-TX_EVENT_FLAGS_GROUP key_event;
+//TX_EVENT_FLAGS_GROUP key_event;
 
 
 static void vTaskUiPro(ULONG thread_input);
@@ -78,6 +78,17 @@ static void debug_stack_key_event_check(void);
 
 ULONG unused,unused_key,unused_decoder,unused_event ;
 
+
+typedef struct{
+
+    uint8_t key_power_f;
+	uint8_t key_mode_f;
+	uint8_t key_up_f;
+	uint8_t key_down_f;
+
+}GL_KEY_STATE;
+
+GL_KEY_STATE gl_t;
 
 /**
  * @brief  :  static void vTaskStart(void *pvParameters
@@ -127,7 +138,7 @@ static void threadx_handler(void)
       /* 创建信号量 */
    tx_semaphore_create(&decoder_semaphore, "DecoderSemaphore", 0);
 
-   tx_event_flags_create(&key_event, "key_event");
+  // tx_event_flags_create(&key_event, "key_event");
    
 	tx_thread_create(&thread_decoder,
 					"DecoderPro",
@@ -135,8 +146,8 @@ static void threadx_handler(void)
 					0,
 					stack_decoder_pro,
 					STACK_SIZE_DECODER,
-					1,
-					1,
+					2,
+					2,
 					TX_NO_TIME_SLICE,
 					TX_AUTO_START);
 				
@@ -146,8 +157,8 @@ static void threadx_handler(void)
                      0,                            /* 传递给任务的参数 */
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
-                     3,							   /* 任务优先级*/
-                     3,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     4,							   /* 任务优先级*/
+                     4,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -158,8 +169,8 @@ static void threadx_handler(void)
                      0,                            /* 传递给任务的参数 */
                      stack_start_pro,              /* 堆栈基地址 */
                      STACK_SIZE_KEY,			   /* 堆栈空间大小 */  
-                     0, 						   /* 任务优先级*/
-                     0, 						   /* 任务抢占阀值 */
+                     1, 						   /* 任务优先级*/
+                     1, 						   /* 任务抢占阀值 */
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
   #endif 
@@ -169,8 +180,8 @@ static void threadx_handler(void)
 					  0,							/* 传递给任务的参数 */
 					  stack_key_event,				/* 堆栈基地址 */
 					  STACK_SIZE_EVENT,				/* 堆栈空间大小 */  
-					  2,							/* 任务优先级*/
-					  2,							/* 任务抢占阀值 */
+					  3,							/* 任务优先级*/
+					  3,							/* 任务抢占阀值 */
 					  TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
@@ -228,75 +239,71 @@ static void vTaskDecoderPro(ULONG thread_input)
   
    while(1)
    {
-
-     /* ================= MODE 键 ================= */
+         /* ================= MODE 键 ================= */
         if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             mode_cnt++;
             if(mode_cnt == LONG_PRESS_TIME){
-				tx_event_flags_set(&key_event, KEY_MODE_LONG, TX_OR);
+				gl_t.key_mode_f = 0x81;//tx_event_flags_set(&key_event, KEY_MODE_LONG, TX_OR);
                
             }
         }
-        else
+        else if(KEY_MODE_VALUE() == KEY_UP && mode_cnt > 0)
         {
             if(mode_cnt > 1 && mode_cnt < LONG_PRESS_TIME)
-                tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
+                gl_t.key_mode_f = 1;//tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
             mode_cnt = 0;
         }
-
-      /* ================= UP 键 ================= */
-        if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+        else if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)/* ================= UP 键 ================= */
         {
             up_cnt++;
-            if(up_cnt == LONG_PRESS_TIME)
-                tx_event_flags_set(&key_event, KEY_UP_LONG, TX_OR);
+            if(up_cnt == LONG_PRESS_TIME){
+                //tx_event_flags_set(&key_event, KEY_UP_LONG, TX_OR);
+            }
         }
-        else
+        else if(KEY_UP_VALUE() == KEY_UP && up_cnt > 0)
         {
             if(up_cnt > 1 && up_cnt < LONG_PRESS_TIME)
-                tx_event_flags_set(&key_event, KEY_UP_SHORT, TX_OR);
+                gl_t.key_up_f = 1;//tx_event_flags_set(&key_event, KEY_UP_SHORT, TX_OR);
 
             up_cnt = 0;
         }
-
-        /* ================= DOWN 键 ================= */
-        if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+        else if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on) /* ================= DOWN 键 ================= */
         {
             down_cnt++;
             if(down_cnt == LONG_PRESS_TIME)
-                tx_event_flags_set(&key_event, KEY_DOWN_LONG, TX_OR);
+                gl_t.key_down_f = 0x81;//tx_event_flags_set(&key_event, KEY_DOWN_LONG, TX_OR);
         }
-        else
+        else if(KEY_DOWN_VALUE() == KEY_UP && down_cnt >0)
         {
             if(down_cnt > 1 && down_cnt < LONG_PRESS_TIME)
-                tx_event_flags_set(&key_event, KEY_DOWN_SHORT, TX_OR);
+                gl_t.key_down_f = 1;//tx_event_flags_set(&key_event, KEY_DOWN_SHORT, TX_OR);
 
             down_cnt = 0;
         }
-
-        /* ================= POWER 键 ================= */
-        if(KEY_POWER_VALUE() == KEY_DOWN)
+        else if(KEY_POWER_VALUE() == KEY_DOWN) /* ================= POWER 键 ================= */
         {
             power_cnt++;
             if(power_cnt == LONG_PRESS_TIME && g_pro.gpower_on == power_on){
-                tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
+                gl_t.key_power_f = 0x81;//tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
              }
         }
-        else
+        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 0 )
         {
             if(power_cnt > 1 && power_cnt < LONG_PRESS_TIME)
-                tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
+                gl_t.key_power_f = 1;//tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
 
             power_cnt = 0;
         }
+
+      
 
     
    #if DEBUG_ENABLE
     debug_stack_key_check();
    #endif 
 
-     
+     //LL_IWDG_ReloadCounter(IWDG);
 
 	 tx_thread_sleep(2);//10ms *2 
 
@@ -321,7 +328,7 @@ static void vTaskKeyEvent(ULONG thread_input)
 
   while(1)
   {
-
+     #if 0
      status = tx_event_flags_get(&key_event,
                            0xFFFFFFFF,
                            TX_OR_CLEAR,
@@ -340,8 +347,42 @@ static void vTaskKeyEvent(ULONG thread_input)
         #if DEBUG_ENABLE
               debug_stack_key_event_check();
           #endif 
-	   
+	  // LL_IWDG_ReloadCounter(IWDG);
      }
+	 #else 
+	       if(gl_t.key_power_f == 1){
+		   	gl_t.key_power_f ++;
+		   	handle_power_key();
+
+	       	}
+		   else if(gl_t.key_power_f == 0x81){
+		   	gl_t.key_power_f++;
+		   	 key_power_longk_fun();//handle_power_long_key();
+		   }
+		   else if(gl_t.key_mode_f==1){
+		   	 gl_t.key_mode_f ++;
+		   	 handle_mode_key();
+		   }
+		   else if(gl_t.key_mode_f==0x81){
+		   	  gl_t.key_mode_f++;
+		   	key_mode_long_fun();
+		   	}
+		   else if(gl_t.key_up_f ==1){
+		   	gl_t.key_up_f ++;
+		   	handle_up_key();
+		   	}
+		   else if(gl_t.key_down_f == 1){
+		   	gl_t.key_down_f ++;
+		   	handle_down_key();
+		   	}
+		   else if(gl_t.key_down_f  ==0x81){
+		   	gl_t.key_down_f ++;
+		   	key_down_long_fun();//handle_down_long_key();
+		   	}
+
+
+      tx_thread_sleep(2);
+	 #endif 
     
   	}
    
@@ -378,13 +419,13 @@ static void vTaskUiPro(ULONG thread_input)
 		#endif 
 	}
 
-   LL_IWDG_ReloadCounter(IWDG);
+  LL_IWDG_ReloadCounter(IWDG);
 
    #if DEBUG_ENABLE
     debug_stack_ui_check();
    #endif 
-
-	tx_thread_sleep(1);//10ms *1
+   
+	tx_thread_sleep(3);//10ms *1
 
 	  
     }
