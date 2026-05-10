@@ -111,14 +111,16 @@ void LED_FUN_ON(void)
  * 参数:无
  * 返回值:无
  ************************************************************************/
+ 
 void wifi_led_fast_blink_handler(void)
 {
    static uint8_t flag_counter;
+   
    if(g_pro.gpower_on==power_on){
 
      
 
-   if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0){
+   if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0 ){
 
        
 	   if( g_pro.gTimer_led_wifi_bilnk_counter > 99){
@@ -146,8 +148,21 @@ void wifi_led_fast_blink_handler(void)
 
 void wifi_led_slowly_blink(void)
 {
- 
-    if(g_pro.gTimer_wifi_slowly_blink > 1)  // 1.5s // blink 周期1秒 =50 =3s
+
+    
+
+	if(g_pro.led_wiif_on_f == 0){
+		g_pro.led_wiif_on_f++;
+        LED_WIFI_ON();
+		g_pro.gTimer_wifi_slowly_blink=0;
+
+	}
+	else if(g_pro.led_wiif_on_f==1 && g_pro.gTimer_wifi_slowly_blink > 1){
+		 g_pro.gTimer_wifi_slowly_blink =0;
+	      g_pro.led_wiif_on_f++;
+	      LED_WIFI_ON();
+	}
+    else if(g_pro.gTimer_wifi_slowly_blink >= 1 && g_pro.led_wiif_on_f==2)  // 1.5s // blink 周期1秒 =50 =3s
     {
         g_pro.gTimer_wifi_slowly_blink = 0;
        

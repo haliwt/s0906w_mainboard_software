@@ -183,6 +183,7 @@ typedef struct _process{
    uint8_t fan_warning ;
    uint8_t led_bar ;
    uint8_t g_real_hours_counter;
+   uint8_t led_wiif_on_f;
 
 
    //timer

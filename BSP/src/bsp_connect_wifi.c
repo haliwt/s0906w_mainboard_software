@@ -92,8 +92,10 @@ void wifi_auto_detected_link_state(void)
   
 	   if(dc_power_on==1){
 	   	   dc_power_on ++;
-	       SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-		   osDelay(100);
+	       if(g_disp.g_second_disp_flag ==1){
+		   	SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
+		    osDelay(100);
+	       	}
         }
 	   
    
@@ -154,12 +156,17 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
 			//wifi_t.linking_tencent_cloud_doing =0;
 			g_wifi.linking_tencent_cloud_doing= 0;
             power_on_login_tencent_cloud_flag++;
+            if(g_disp.g_second_disp_flag ==1){
             SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-	}
+              osDelay(100);
+			}
+			}
     else if(g_wifi.gwifi_link_net_success ==0 && power_on_login_tencent_cloud_flag ==4){
        power_on_login_tencent_cloud_flag++;
+	    if(g_disp.g_second_disp_flag ==1){
         SendWifiData_To_Cmd(0x1F,0x00);
 	    osDelay(100);
+	    	}
     }
 }
 

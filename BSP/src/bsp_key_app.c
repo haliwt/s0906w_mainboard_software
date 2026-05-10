@@ -97,6 +97,7 @@ static void handle_power_key(void)
 		   g_pro.gpower_on  = power_on;
            g_pro.power_on_ref_f =1;
 		   DRY_OPEN();
+		   LED_WIFI_ON();
 		   power_on_init_ref();
 
 		}

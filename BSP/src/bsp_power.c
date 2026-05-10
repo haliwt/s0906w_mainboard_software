@@ -90,7 +90,7 @@ void power_on_init_ref(void)
 		   //display time timing value 
 		   g_pro.gdisp_hours_value =0;
 		   g_pro.gdisp_timer_hours_value =0; //设置定时时间�??
-
+           g_pro.led_wiif_on_f =0;
 		   g_pro.switch_disp_time_or_temp_item=temperature_mode; //
 		  // g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode;
 		
@@ -219,6 +219,8 @@ void power_on_run_handler(void)
 	   g_pro.gTimer_display_adc_value=0;
 	   g_pro.delay_run_adc_counter=0;
 	   g_pro.g_real_hours_counter =0;
+
+	   g_pro.led_wiif_on_f=0;
 	  
 
 	 
@@ -318,8 +320,11 @@ void power_on_run_handler(void)
 			         osDelay(100);
 				 }
 				 else{
-				     SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
-					  osDelay(100);
+
+					 if(g_disp.g_second_disp_flag==1){
+					 	SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
+					    osDelay(100);
+					 	}
 
 				 }
 				 
