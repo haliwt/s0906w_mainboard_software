@@ -21,7 +21,7 @@ void display_digital_3_numbers(void)
         return;
     }
 	
-	 if(g_pro.key_set_temperature_flag == 1){
+	 if(g_pro.key_set_temperature_flag == 1 || g_wifi.g_wifi_set_temp_flag==1){
 
 	       
 			if(g_pro.gAI ==0){
@@ -113,7 +113,7 @@ void display_digital_3_numbers(void)
           
                   
           if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD && g_key.key_mode_long_flag !=1){
-			  g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
+			  g_pro.gTimer_switch_temp_hum = 0; // 針置计时�??
 
 			  disp_temp_hum = disp_temp_hum ^ 0x01;
 
@@ -222,7 +222,7 @@ void set_timer_timing_value_handler(void)
 		       g_pro.gdisp_timer_minutes_value =59;
 
                g_pro.g_real_hours_counter++;
-		        // 只有当小时数 > 1 时才减小时2026.03.09 .WT.EDIT .
+		        // 坪有当尝时数 > 1 时扝凝尝时2026.03.09 .WT.EDIT .
 		        if (g_pro.gdisp_timer_hours_value > 1 &&  g_pro.gdisp_timer_hours_value !=1 ){
 
 				    dsip_timer_value = timerbuf[0] - g_pro.g_real_hours_counter +1;
