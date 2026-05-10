@@ -135,19 +135,20 @@ void key_power_longk_fun(void)
         if (g_key.power_on_key_counter > LONG_PRESS_THRESHOLD - 1)
         {
             g_key.power_on_key_counter = COUNTER_LOCK;
-           // g_key.key_long_power_flag = KEY_LONG_POWER;
-
-            g_wifi.gTimer_wifi_led_fast_blink = 0; //reset wifi led blink timer
+         
+           g_wifi.gTimer_wifi_led_fast_counter =0;
             g_wifi.gwifi_link_net_success = 0; //reset wifi link status
             g_wifi.wifi_led_fast_blink_flag = 1;//
             g_wifi.link_net_step = 0;//reset wifi link step
             g_pro.first_connect_wifi_flag = 0;//reset first connect wifi flag
 
             buzzer_sound();
-            wifi_led_fast_blink_handler();
-            SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
+           
+            if(g_disp.g_second_disp_flag ==1){
+				SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
             osDelay(100);
-            wifi_led_fast_blink_handler();
+            	}
+           
             
         }
     }

@@ -22,9 +22,10 @@
 
 #define LED_WIFI_ON()            do{LED_WIFI_GPIO_Port->BSRR =(uint32_t)LED_WIFI_Pin<< 16;}while(0)
 #define LED_WIFI_OFF()           do{LED_WIFI_GPIO_Port->BSRR =LED_WIFI_Pin;}while(0)
+#define LED_WIFI_TOGGLE()        do{LED_WIFI_GPIO_Port->ODR ^=LED_WIFI_Pin;}while(0)
 
 /* LED取反定义 */
-#define LED_WIFI_TOGGLE()        do{LED_WIFI_GPIO_Port->ODR ^= LED_WIFI_Pin;}while(0)      /* LED0 = !LED0 */
+
 
 
 

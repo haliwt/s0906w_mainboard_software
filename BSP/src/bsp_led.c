@@ -111,30 +111,42 @@ void LED_FUN_ON(void)
  * 参数:无
  * 返回值:无
  ************************************************************************/
- 
-void wifi_led_fast_blink_handler(void)
+ void wifi_led_fast_blink_handler(void)
 {
-   static uint8_t flag_counter;
-   
-   if(g_pro.gpower_on==power_on){
-
-     
-
-   if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0 ){
-
-       
-	   if( g_pro.gTimer_led_wifi_bilnk_counter > 99){
-
-	       g_pro.gTimer_led_wifi_bilnk_counter=0;
-	
-           flag_counter = flag_counter ^ 0x01;
-	       if(flag_counter == 1) LED_WIFI_ON();
-	       else LED_WIFI_OFF();
+  
+   volatile static uint8_t slowly_counter=0;
+   if(g_pro.gpower_on==power_on && g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0){
+	  if(++slowly_counter > 15){
+					slowly_counter =0;
+           LED_WIFI_TOGGLE();
 	  	}
-	   
+   }
+   else if(g_pro.gpower_on==power_on){
 
-	 }
-	 else if(g_wifi.gwifi_link_net_success==1){
+      if(g_wifi.gwifi_link_net_success==1){
+         
+			  LED_WIFI_ON();
+            
+	  }
+	  else if(g_wifi.gwifi_link_net_success ==0 ){
+             if(++slowly_counter > 100){
+			 	slowly_counter =0;
+			    LED_WIFI_TOGGLE();  
+             }
+	   }
+    }
+	   
+}
+
+  
+	
+
+
+#if 0
+void wifi_led_slowly_blink(void)
+{
+
+    if(g_wifi.gwifi_link_net_success==1){
 
        		LED_WIFI_ON();
 	}
@@ -143,13 +155,6 @@ void wifi_led_fast_blink_handler(void)
              wifi_led_slowly_blink();
      }
    	}
-}
-
-
-void wifi_led_slowly_blink(void)
-{
-
-    
 
 	if(g_pro.led_wiif_on_f == 0){
 		g_pro.led_wiif_on_f++;
@@ -175,7 +180,7 @@ void wifi_led_slowly_blink(void)
 
 
 
-
+#endif 
 
 
 

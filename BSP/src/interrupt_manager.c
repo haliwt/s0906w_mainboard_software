@@ -63,12 +63,20 @@ void callback_register_fun(void)
 static void tim17_isr_callback_handler(void)
 
 {
-   static  uint16_t tm0;
+    volatile  static  uint16_t tm0;
+	volatile static uint8_t c100cnt = 0;
+   
        tm0++;
+	    if(++c100cnt > 9){//10ms * 10 =100
+             wifi_led_fast_blink_handler();
+
+		}
 	  
 	   g_pro.gTimer_led_wifi_bilnk_counter++;
 	   if(tm0> 99){ //10ms
 	      tm0=0;
+         
+	   
 		   g_pro.gTimer_disp_time_second ++;
 		   g_pro.gTimer_timer_time_second ++ ;
 		   g_pro.gTimer_switch_temp_hum ++;
@@ -92,13 +100,15 @@ static void tim17_isr_callback_handler(void)
 
 		   //wifi timer 
 		   
-	       g_wifi.gTimer_wifi_led_fast_blink ++ ;
+	       g_wifi.gTimer_wifi_led_fast_counter ++ ;
 		   g_wifi.gTimer_get_data_from_tencent_data++; 
 		   g_wifi.gTimer_auto_link_net_time++;
 		   g_wifi.gTimer_auto_detected_net_state_times++;
 		   g_wifi.gTimer_link_net_timer_time++;
 		   g_wifi.gTimer_get_beijing_time++;
 		   g_wifi.gTimer_update_dht11_data++;
+
+		 
 		
 
    

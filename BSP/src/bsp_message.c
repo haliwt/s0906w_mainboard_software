@@ -215,7 +215,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
           buzzer_sound();
 		  
         
-	      g_wifi.gTimer_wifi_led_fast_blink = 0; //look for wifi information 120s,timer.
+	 
 	      g_wifi.gwifi_link_net_success=0 ; //clear wifi link net flag .repeat be detected wifi state.
 		  g_wifi.wifi_led_fast_blink_flag=1;   // led blink flag .
           g_wifi.link_net_step = 0; //WT.EIDT 2025.05.1;
@@ -646,7 +646,7 @@ static void copy_receive_data(uint8_t *pdata)
 	   	if(pdata[4] == 1){
 			buzzer_sound();
            // g_key.key_long_power_flag =  KEY_LONG_POWER; //wifi led blink fast .
-			g_wifi.gTimer_wifi_led_fast_blink = 0; //time start 120s ->look for wifi information 120s,timer.
+		
 			g_wifi.gwifi_link_net_success=0 ; //clear wifi link net flag .repeat be detected wifi state.
 			g_wifi.wifi_led_fast_blink_flag=1;   // led blink flag .
 
