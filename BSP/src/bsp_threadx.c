@@ -20,7 +20,7 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  128//512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI      896//1792//1664//1536//1280//1024 //768//
+#define STACK_SIZE_UI      1024//896//1792//1664//1536//1280//1024 //768//
 #define STACK_SIZE_KEY     256//512
 #define STACK_SIZE_EVENT   512//256
 
@@ -238,7 +238,7 @@ static void vTaskDecoderPro(ULONG thread_input)
                
             }
         }
-        else if(KEY_MODE_VALUE() == KEY_UP && mode_cnt > 3)
+        else if(KEY_MODE_VALUE() == KEY_UP && mode_cnt > 1)
         {
             if(mode_cnt > 1 && mode_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
@@ -250,7 +250,7 @@ static void vTaskDecoderPro(ULONG thread_input)
             if(up_cnt == LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_UP_LONG, TX_OR);
         }
-        else if(KEY_UP_VALUE() == KEY_UP && up_cnt > 3)
+        else if(KEY_UP_VALUE() == KEY_UP && up_cnt > 1)
         {
             if(up_cnt > 1 && up_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_UP_SHORT, TX_OR);
@@ -263,7 +263,7 @@ static void vTaskDecoderPro(ULONG thread_input)
             if(down_cnt == LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_DOWN_LONG, TX_OR);
         }
-        else if(KEY_DOWN_VALUE() == KEY_UP && down_cnt > 3)
+        else if(KEY_DOWN_VALUE() == KEY_UP && down_cnt > 1)
         {
             if(down_cnt > 1 && down_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_DOWN_SHORT, TX_OR);
@@ -277,7 +277,7 @@ static void vTaskDecoderPro(ULONG thread_input)
                 tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
              }
         }
-        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 3)
+        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 1)
         {
             if(power_cnt > 1 && power_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
