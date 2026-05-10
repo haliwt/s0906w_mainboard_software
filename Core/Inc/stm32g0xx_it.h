@@ -48,8 +48,8 @@ extern "C" {
 /* Exported functions prototypes ---------------------------------------------*/
 void NMI_Handler(void);
 void HardFault_Handler(void);
-void EXTI0_1_IRQHandler(void);
-void EXTI2_3_IRQHandler(void);
+//void EXTI0_1_IRQHandler(void);
+//void EXTI2_3_IRQHandler(void);
 void DMA1_Channel1_IRQHandler(void);
 void DMA1_Channel2_3_IRQHandler(void);
 void DMA1_Ch4_5_DMAMUX1_OVR_IRQHandler(void);

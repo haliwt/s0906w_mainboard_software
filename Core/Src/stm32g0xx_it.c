@@ -108,65 +108,12 @@ void HardFault_Handler(void)
 /**
   * @brief This function handles EXTI line 0 and line 1 interrupts.
   */
-void EXTI0_1_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI0_1_IRQn 0 */
 
-  /* USER CODE END EXTI0_1_IRQn 0 */
-  if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_0) != RESET)
-  {
-    LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_0);
-    /* USER CODE BEGIN LL_EXTI_LINE_0_RISING */
-	//ll_gpio_falling_callback(KEY_POWER_Pin);
-
-    /* USER CODE END LL_EXTI_LINE_0_RISING */
-  }
-  else if(LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_1) != RESET){
-
-      LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_1);
-	  /* USER CODE BEGIN LL_EXTI_LINE_0_RISING */
-	  //ll_gpio_falling_callback(KEY_MODE_Pin);
-
-
-  }
- 
-    /* USER CODE BEGIN LL_EXTI_LINE_1_RISING */
-
-    /* USER CODE END LL_EXTI_LINE_1_RISING */
-  
-  /* USER CODE BEGIN EXTI0_1_IRQn 1 */
-
-  /* USER CODE END EXTI0_1_IRQn 1 */
-}
 
 /**
   * @brief This function handles EXTI line 2 and line 3 interrupts.
   */
-void EXTI2_3_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI2_3_IRQn 0 */
 
-  /* USER CODE END EXTI2_3_IRQn 0 */
-  if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_2) != RESET)
-  {
-    LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_2);
-	//ll_gpio_falling_callback(KEY_UP_Pin);
-    /* USER CODE BEGIN LL_EXTI_LINE_2_RISING */
-
-    /* USER CODE END LL_EXTI_LINE_2_RISING */
-  }
-  //else if (LL_EXTI_IsActiveFallingFlag_0_31(LL_EXTI_LINE_3) != RESET)
-  //{
-   // LL_EXTI_ClearFallingFlag_0_31(LL_EXTI_LINE_3);
-	//ll_gpio_falling_callback(KEY_DOWN_Pin);
-    /* USER CODE BEGIN LL_EXTI_LINE_3_RISING */
-
-    /* USER CODE END LL_EXTI_LINE_3_RISING */
-  //}
-  /* USER CODE BEGIN EXTI2_3_IRQn 1 */
-
-  /* USER CODE END EXTI2_3_IRQn 1 */
-}
 
 /**
   * @brief This function handles DMA1 channel 1 interrupt.
