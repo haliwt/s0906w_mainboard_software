@@ -47,7 +47,7 @@ static StackType_t xTaskDecoderProStack[128];
 
 /* vTaskMsgPro 任务 */
 static StaticTask_t xTaskRunProTCB;
-static StackType_t xTaskRunProStack[384];
+static StackType_t xTaskRunProStack[512];//384
 
 /* vTaskStart 任务 */
 static StaticTask_t xTaskStartTCB;
@@ -177,7 +177,7 @@ static void vTaskRunPro(void *pvParameters)
 
   while(1){
     
-	key_handler();
+	//key_handler();
 
     power_onoff_handler(g_pro.gpower_on);
     
@@ -262,7 +262,7 @@ static void vTaskStart(void *pvParameters)
      }
 
 
-	//key_handler();
+	key_handler();
 	
 	 vTaskDelay(pdMS_TO_TICKS(20));
 
@@ -317,7 +317,7 @@ void AppTaskCreate (void)
 	xHandleTaskRunPro = xTaskCreateStatic(
 			vTaskRunPro,			/* 任务函数 */
 			"vTaskRunPro",			/* 任务名 */
-			384,					/* 栈大小（word） */
+			512,					/* 栈大小（word） */
 			NULL,					/* 参数 */
 			1,						/* 优先级 */
 			xTaskRunProStack,		/* 栈数组 */
