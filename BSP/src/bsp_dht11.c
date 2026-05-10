@@ -311,7 +311,7 @@ void Update_Dht11_Totencent_Value(void)
 	DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);//Dht11_Read_TempHumidity_Handler(&DHT11);
 	if(timer_expired(&t_mqtt_0)){
 	MqttData_Publis_ReadTempHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-   // tx_thread_sleep(20);//HAL_Delay(100);
+    tx_thread_sleep(20);//HAL_Delay(100);
 	}
 
 }
