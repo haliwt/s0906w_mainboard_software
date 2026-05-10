@@ -391,6 +391,7 @@ void power_off_run_handler(void)
    	     power_off_led();
          TM1639_Display_ON_OFF(0);
 	      mainboard_close_all_fun();
+		   power_off_led();
 	  }
 	 //g_key.key_long_power_flag  = 0;
 	  g_key.key_long_mode_flag = 0;
@@ -425,6 +426,10 @@ void power_off_run_handler(void)
 			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
 			 buzzer_sound();
 		 }
+		  power_off_led();
+         TM1639_Display_ON_OFF(0);
+	      mainboard_close_all_fun();
+		   power_off_led();
 
 		 
 
