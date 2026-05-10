@@ -35,9 +35,9 @@ uint8_t send_wifi_power_on_state;
 void power_onoff_handler(uint8_t data)
 {
   static uint8_t power_on_flag;
-   switch(data){	
+  // switch(data){	
 
-	   case power_on :
+	   if(g_pro.gpower_on == power_on ){
 
           power_on_run_handler();
 
@@ -59,18 +59,16 @@ void power_onoff_handler(uint8_t data)
 
 			works_run_two_hours_state();
 
-			
-	    }
+		    }
 
         }
 			
-      break;
-
-	  case power_off:
+	   }
+	   else{
         
          power_off_run_handler();
 
-	   break;
+	   	}
   
       }
 	}
