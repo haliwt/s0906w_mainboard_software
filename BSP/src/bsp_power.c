@@ -150,13 +150,26 @@ void power_on_run_handler(void)
 		   
 		   
       if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
-	      
-		   power_on_init_ref();
+           if(g_pro.power_on_ref_f == 1){
+		     g_pro.power_on_ref_f ++;
+
+		   }
+           else{
+		   	power_on_init_ref();
+           	}
+		      
 
        }
 	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
-		  
-		   power_on_init_ref();
+		  if(g_pro.power_on_ref_f == 1){
+		     g_pro.power_on_ref_f ++;
+
+		   }
+           else{
+		   	power_on_init_ref();
+           	}
+		      
+		    
 		
 		  
 		  updateDht11_toDisplayBoard_value();
@@ -359,7 +372,7 @@ void power_off_run_handler(void)
    case 0:
    	  gl_run.process_on_step =0;
       g_pro.g_real_hours_counter=0;
-
+      g_pro.power_on_ref_f = 0;
    	  power_off_led();
       TM1639_Display_ON_OFF(0);
 	 // g_key.key_long_power_flag  = 0;

@@ -93,6 +93,20 @@ static void handle_power_key(void)
         buzzer_sound();
 
         g_pro.gpower_on = (g_pro.gpower_on == power_off) ? power_on : power_off;
+        if(g_pro.gpower_on==power_on){
+           g_pro.power_on_ref_f =1;
+		   DRY_OPEN();
+		   power_on_init_ref();
+
+		}
+		else{
+			 DRY_CLOSE();
+             LED_TAPE_CTL_OFF();
+		     power_off_led();
+             TM1639_Display_ON_OFF(0);
+
+		}
+		
         g_wifi.gwifi_normal_power_on_flag = 0;
         SendData_Set_Command(CMD_POWER,(g_pro.gpower_on == power_on) ? open : close);
         osDelay(100);

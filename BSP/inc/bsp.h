@@ -140,7 +140,7 @@ typedef struct _process{
    uint8_t first_set_ptc_on;
    uint8_t first_rcoder_ptc_on_flag ;
    uint8_t one_minutes_fan_flag;
-  
+   uint8_t power_on_ref_f ;
 
  
 
