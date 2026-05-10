@@ -391,9 +391,9 @@ void power_off_run_handler(void)
    	     power_off_led();
          TM1639_Display_ON_OFF(0);
 	      mainboard_close_all_fun();
-		   power_off_led();
+		  power_off_led();
 	  }
-	 //g_key.key_long_power_flag  = 0;
+	  TM1639_Display_ON_OFF(0);
 	  g_key.key_long_mode_flag = 0;
 	
 	  g_pro.switch_disp_time_or_temp_item = temperature_mode;
@@ -427,7 +427,7 @@ void power_off_run_handler(void)
 			 buzzer_sound();
 		 }
 		  power_off_led();
-         TM1639_Display_ON_OFF(0);
+         
 	      mainboard_close_all_fun();
 		   power_off_led();
 
@@ -440,7 +440,10 @@ void power_off_run_handler(void)
 
    case 2:
        LED_Power_Breathing();
- 
+ 		power_off_led();
+         
+	    mainboard_close_all_fun();
+		power_off_led();
 	   gl_run.process_off_step = 3;
 
    break;
