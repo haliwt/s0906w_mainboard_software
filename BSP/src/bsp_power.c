@@ -70,8 +70,8 @@ void power_onoff_handler(uint8_t data)
 
 	   	}
   
-      }
-	}
+   }
+	
 /**********************************************************************
 	*
 	*Function Name: void power_on_init_ref(void)
@@ -371,9 +371,22 @@ void power_off_run_handler(void)
    	  gl_run.process_on_step =0;
       g_pro.g_real_hours_counter=0;
       g_pro.power_on_ref_f = 0;
-   	  power_off_led();
-      TM1639_Display_ON_OFF(0);
-	 // g_key.key_long_power_flag  = 0;
+	  if(g_pro.power_on_ref_f  ==4){
+          g_pro.power_on_ref_f++; 
+		 
+	     mouse_close();
+
+	     PLASMA_CLOSE();
+      
+	      power_off_led();
+
+	  }
+	  else{
+   	     power_off_led();
+         TM1639_Display_ON_OFF(0);
+	      mainboard_close_all_fun();
+	  }
+	 //g_key.key_long_power_flag  = 0;
 	  g_key.key_long_mode_flag = 0;
 	
 	  g_pro.switch_disp_time_or_temp_item = temperature_mode;
@@ -408,7 +421,7 @@ void power_off_run_handler(void)
 		 }
 
 		 
-	   LED_Power_Breathing();
+
 
       gl_run.process_off_step = 2;
 
@@ -416,7 +429,7 @@ void power_off_run_handler(void)
 
    case 2:
        LED_Power_Breathing();
-      mainboard_close_all_fun();
+ 
 	   gl_run.process_off_step = 3;
 
    break;

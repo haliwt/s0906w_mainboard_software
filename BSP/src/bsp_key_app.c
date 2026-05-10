@@ -102,9 +102,12 @@ static void handle_power_key(void)
 		}
 		else {
 			g_pro.gpower_on=power_off;// DRY_CLOSE();
-             LED_TAPE_CTL_OFF();
-		     power_off_led();
-             TM1639_Display_ON_OFF(0);
+			g_pro.power_on_ref_f =4;
+		  
+            LED_TAPE_CTL_OFF();
+		    power_off_led();
+            TM1639_Display_ON_OFF(0);
+			vTaskDelay(100);
 
 		}
 		

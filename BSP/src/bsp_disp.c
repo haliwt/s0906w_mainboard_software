@@ -22,6 +22,15 @@ void display_digital_3_numbers(void)
     }
 	
 	 if(g_pro.key_set_temperature_flag == 1){
+
+	       
+			if(g_pro.gAI ==0){
+				LED_AI_OFF(); 
+			}
+			else{
+				LED_AI_ON(); 
+			
+			}
 	 
 			TM1639_Display_Temperature(g_pro.gset_temperture_value);
 		    return ;
@@ -36,50 +45,55 @@ void display_digital_3_numbers(void)
 	  
 
     	 if(g_pro.gTimer_switch_set_timer_times < 2){
-    	           g_pro.gAI=0;
+    	           //g_pro.gAI=0;
+    	           g_pro.gTimer_mainboard_fun_counter =0;
     	 		   LED_AI_OFF();
 		           HUMIDITY_ICON_OFF();
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
 		           if((g_pro.set_timing_or_timer_time_flag == TIMER_TIME || g_key.key_mode_long_flag ==1) && g_pro.key_add_dec_be_pressed_flag == 1){
+  						 if(g_pro.gdisp_timer_hours_value > 0){
+						    g_pro.gAI=0;
+							LED_AI_OFF();
+
+						 }
 						 TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
 
 				   }
 		           else if((g_pro.set_timing_or_timer_time_flag == TIMER_TIME || g_key.key_mode_long_flag ==1) && (g_pro.key_add_dec_be_pressed_flag == 0 || g_pro.key_add_dec_be_pressed_flag == 2)){
-				   	   if(g_pro.gdisp_timer_hours_value >0)
+				   	   if(g_pro.gdisp_timer_hours_value >0){
+					   	 
 			               TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
+				   	   }
 					   else
 					   	   TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);
 		           }
 				   else if(g_pro.set_timing_or_timer_time_flag == WORKS_TIME){//g_key.key_mode_long_flag !=1 &&
 					   g_pro.gdisp_timer_hours_value=0;
 					   g_pro.gdisp_timer_minutes_value=0;
+	
 
 				       TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);//TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 
 				   }
-		          
+		        g_pro.gTimer_mainboard_fun_counter =0;  
     	 }
 		 else{
-
-			 g_pro.switch_disp_time_or_temp_item = temperature_mode;// g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode; //WT.EDIT 2025.010.06
-             //at once display "temperature_mode" //WT.EDIT 2025.10.17
+            g_pro.gTimer_mainboard_fun_counter =0; 
+		
              g_pro.gTimer_switch_temp_hum=5;
 		     if(g_pro.set_timing_or_timer_time_flag ==WORKS_TIME){ // && g_key.key_mode_long_flag != 1){
                   g_pro.gAI=1;
     	 		  LED_AI_ON(); 
-			   #if DEBUG_ENABLE
-			      printf("gAI = 1 \r\n");
-			   #endif 
+			   
 			 }
 			 else if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
 			    g_pro.gAI=0;
 				LED_AI_OFF(); 
-			 #if DEBUG_ENABLE
-			    printf("gAI = 0 \r\n");
-			 #endif 
+			
 
             }
-		
+		     g_pro.switch_disp_time_or_temp_item = temperature_mode;
+			 g_pro.gTimer_mainboard_fun_counter =0;
         }
        break;
 
@@ -87,12 +101,12 @@ void display_digital_3_numbers(void)
 
 	     if(g_key.key_mode_long_flag == 1) return ;
 
-         if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
+         if(g_pro.gAI ==1){
 			         
-		     LED_AI_OFF(); 
+		     LED_AI_ON(); 
 		   }
 		  else{
-		     LED_AI_ON(); 
+		     LED_AI_OFF(); 
 
 		   }
 

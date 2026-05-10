@@ -12,7 +12,7 @@ process_t g_pro;
  uint16_t mainboard_time;
 
  static void mainboard_special_fun(void);
-uint8_t counter_flag ;
+
 /******************************************************************************
 	*
 	*Function Name:void bsp_init(void)
@@ -54,20 +54,16 @@ void mainboard_fun_handler(void)
   if(g_pro.gTimer_mainboard_fun_counter > 4){// 2s  //300 ~= 6s, 50 ~=1s
        g_pro.gTimer_mainboard_fun_counter=0;
 
-
-  if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
-	  g_pro.gAI = 0;
-  
-      LED_AI_OFF();
-      counter_flag ++;
-
+  if(g_pro.gAI == 0){
+  	    
+	     LED_AI_OFF();
    }
    else{
 	
-	   g_pro.gAI = 1;
        LED_AI_ON();
 
 	}
+   
    
    	
 
