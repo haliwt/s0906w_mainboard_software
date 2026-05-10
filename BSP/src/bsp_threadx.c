@@ -20,11 +20,20 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  128//512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI      1024//896//1792//1664//1536//1280//1024 //768//
+#define STACK_SIZE_UI      1536//1024//896//1792//1664//1536//1280//1024 //768//
 #define STACK_SIZE_KEY     256//512
 #define STACK_SIZE_EVENT   512//256
 
+__attribute__((aligned(8))) static UCHAR stack_ui_pro[STACK_SIZE_UI];
+__attribute__((aligned(8))) static UCHAR stack_decoder_pro[STACK_SIZE_DECODER];
+__attribute__((aligned(8))) static UCHAR stack_start_pro[STACK_SIZE_KEY];
+__attribute__((aligned(8))) static UCHAR stack_key_event[STACK_SIZE_EVENT];
 
+//static UCHAR stack_decoder_pro[STACK_SIZE_DECODER];
+//static UCHAR stack_ui_pro[STACK_SIZE_UI];
+
+//static UCHAR stack_start_pro[STACK_SIZE_KEY];
+//static UCHAR stack_key_event[STACK_SIZE_EVENT];
 
 
 
@@ -229,8 +238,21 @@ static void vTaskDecoderPro(ULONG thread_input)
    while(1)
    {
 
-   
-        if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+        if(KEY_POWER_VALUE() == KEY_DOWN)
+        {
+            power_cnt++;
+            if(power_cnt == LONG_PRESS_TIME && g_pro.gpower_on == power_on){
+                tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
+             }
+        }
+        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 1)
+        {
+            if(power_cnt > 1 && power_cnt < LONG_PRESS_TIME)
+                tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
+
+            power_cnt = 0;
+        }
+        else if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             mode_cnt++;
             if(mode_cnt == LONG_PRESS_TIME){
@@ -257,7 +279,7 @@ static void vTaskDecoderPro(ULONG thread_input)
 
             up_cnt = 0;
         }
-        if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+        else if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             down_cnt++;
             if(down_cnt == LONG_PRESS_TIME)
@@ -270,20 +292,7 @@ static void vTaskDecoderPro(ULONG thread_input)
 
             down_cnt = 0;
         }
-        if(KEY_POWER_VALUE() == KEY_DOWN)
-        {
-            power_cnt++;
-            if(power_cnt == LONG_PRESS_TIME && g_pro.gpower_on == power_on){
-                tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
-             }
-        }
-        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 1)
-        {
-            if(power_cnt > 1 && power_cnt < LONG_PRESS_TIME)
-                tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
-
-            power_cnt = 0;
-        }
+       
 
     
    #if DEBUG_ENABLE

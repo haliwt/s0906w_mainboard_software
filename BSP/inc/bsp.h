@@ -146,6 +146,7 @@ typedef struct _process{
    uint8_t first_set_ptc_on;
    uint8_t first_rcoder_ptc_on_flag ;
    uint8_t one_minutes_fan_flag;
+   uint8_t process_off_step;
  
    
    uint8_t g_humidity_value;

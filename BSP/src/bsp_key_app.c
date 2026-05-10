@@ -90,8 +90,8 @@ void handle_power_key(void)
 {
     
    
-        g_key.key_power_flag = 0;
-        g_key.power_on_key_counter = 0;
+       // g_key.key_power_flag = 0;
+       /// g_key.power_on_key_counter = 0;
         buzzer_sound();
 
         //g_pro.gpower_on = (g_pro.gpower_on == power_off) ? power_on : power_off;
@@ -101,8 +101,9 @@ void handle_power_key(void)
 			 power_on_init_ref();
             
 		}
-		else{
+		else if(g_pro.gpower_on == power_on){
           g_pro.gpower_on = power_off;
+		  g_pro.process_off_step = 0;
 		  TM1639_Display_ON_OFF(0);
 		  power_off_led();
 		  DRY_CLOSE();

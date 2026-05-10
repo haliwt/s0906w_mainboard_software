@@ -34,28 +34,23 @@ uint8_t send_wifi_power_on_state;
 **********************************************************************/
 void power_on_off_handler(uint8_t data)
 {
-  static uint8_t power_on_flag;
-   switch(data){	
+  
 
-	   case power_on :
+  if(g_pro.gpower_on == power_on){
 
           power_on_run_handler();
          
         if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1 && gl_run.process_on_step !=2){ //logically rigorous
               display_digital_3_numbers();
 	    }
+  	}
+    else{
 			
-      break;
+      power_off_run_handler();
 
-	  case power_off:
-        
-        
-         power_off_run_handler();
-
-	   break;
   
       }
-	}
+}
 /**********************************************************************
 	*
 	*Function Name: void power_on_init_ref(void)
@@ -118,7 +113,7 @@ void power_on_run_handler(void)
 
 
      case 0:  //initial reference 
-       gl_run.process_off_step =0 ; //clear power off process step .
+       g_pro.process_off_step =0 ; //clear power off process step .
 
 	   if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	       read_sensorData();//updateDht11_toDisplayBoard_value();
@@ -175,7 +170,7 @@ void power_on_run_handler(void)
        
 	   
 	   g_pro.g_fan_switch_gears_flag++;
-	   gl_run.process_off_step=0;
+	   g_pro.process_off_step=0;
 	   //reset wifi 
 	   g_wifi.wifi_led_fast_blink_flag=0;
 
@@ -412,10 +407,10 @@ void power_off_run_handler(void)
 
    static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute,switch_f;
    static uint8_t power_on_flag=0, counter_send=0;
-   switch(gl_run.process_off_step){
+   switch(g_pro.process_off_step){
 
    case 0:
-
+       LL_IWDG_ReloadCounter(IWDG);
        if(power_on_flag==0){
              power_on_flag ++;
 			 buzzer_power_sound();
@@ -424,19 +419,20 @@ void power_off_run_handler(void)
       g_pro.gpower_on_key_f = 0;
       gl_run.process_on_step =0;
 	  g_pro.g_real_hours_counter=0;
+	  
       power_off_led();
       DRY_CLOSE();
 
 	   
 	     
 	   
-      gl_run.process_off_step = 1;
+      g_pro.process_off_step = 1;
    break;
 
    case 1:
-   	 
+   	 LL_IWDG_ReloadCounter(IWDG);
    	  TM1639_Display_ON_OFF(0);
-      gl_run.process_off_step = 2;
+      g_pro.process_off_step = 2;
    break;
 
    case 2:
@@ -462,29 +458,29 @@ void power_off_run_handler(void)
 	 
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
         mainboard_close_all_fun();
-        gl_run.process_off_step = 3;
+        g_pro.process_off_step = 3;
 
    break;
 
    case 3:
-
+     LL_IWDG_ReloadCounter(IWDG);
      if(fan_flag == 0){
 	 	fan_flag++;
 	    fan_run_one_minute =2;
      }
-      gl_run.process_off_step = 4;
+      g_pro.process_off_step = 4;
 
    break;
 
 
    case 4:
-   	
+   	LL_IWDG_ReloadCounter(IWDG);
 	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
             MqttData_Publish_SetOpen(0);  
 			
            
 	  }
-     gl_run.process_off_step = 5;
+     g_pro.process_off_step = 5;
 
   break;
 
@@ -497,20 +493,21 @@ void power_off_run_handler(void)
         }
 
 
-      gl_run.process_off_step = 6;
+      g_pro.process_off_step = 6;
   break;
 
   case 6:
      counter_send ++ ;
     
-     if(counter_send > 6){
+     if(counter_send > 200){//10ms * 100
 	 	counter_send=0;
-	 SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
-	 tx_thread_sleep(10);
+	   
+	 	  SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
+	      tx_thread_sleep(10);
 
      	}
-
-    gl_run.process_off_step = 7;
+     	
+    g_pro.process_off_step = 7;
 
   break;
 	 
@@ -529,18 +526,18 @@ void power_off_run_handler(void)
 		   }
 	 
 	   }
-	   gl_run.process_off_step = 8;
+	   g_pro.process_off_step = 8;
    break;
 
    case 8:
-	
+	 
       LED_Power_Breathing();
 
       if(g_pro.gTimer_to_disp_counter > 2){//10ms*200 =2000ms =2s
 			g_pro.gTimer_to_disp_counter=0;
          read_sensorData();
       }
-      gl_run.process_off_step = 9;
+      g_pro.process_off_step = 9;
 
    break;
 
@@ -560,7 +557,7 @@ void power_off_run_handler(void)
            
 	 }
 
-    gl_run.process_off_step = 6;
+    g_pro.process_off_step = 6;
 
    break;
 
