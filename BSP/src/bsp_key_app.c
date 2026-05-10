@@ -89,8 +89,7 @@ void key_handler(void)
 void handle_power_key(void)
 {
     
-    if (KEY_POWER_VALUE() == KEY_UP)
-    {
+   
         g_key.key_power_flag = 0;
         g_key.power_on_key_counter = 0;
         buzzer_sound();
@@ -116,7 +115,7 @@ void handle_power_key(void)
 			SendData_Set_Command(CMD_POWER,(g_pro.gpower_on == power_on) ? open : close);
             tx_thread_sleep(10);
         }
-    }
+    
 }
 /*
 	*@brief: key power be pressed long time.
