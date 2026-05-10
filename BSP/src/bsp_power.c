@@ -449,6 +449,7 @@ void power_off_run_handler(void)
    break;
 
    case 3:
+   	power_off_led();
    	  LED_Power_Breathing();
    	  if(fan_flag == 0){
 	 	fan_flag++;
@@ -473,7 +474,7 @@ void power_off_run_handler(void)
      break;
 
 	 case 4:
-	 
+	   power_off_led();
 	   LED_Power_Breathing();
 
 	    gl_run.process_off_step = 5;
@@ -494,7 +495,7 @@ void power_off_run_handler(void)
 	       
            
 	 }
-
+    power_off_led();
     gl_run.process_off_step = 3;
 
    break;
