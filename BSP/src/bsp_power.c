@@ -431,10 +431,7 @@ void power_off_run_handler(void)
 	      mainboard_close_all_fun();
 		   power_off_led();
 
-		 
-
-
-      gl_run.process_off_step = 2;
+		gl_run.process_off_step = 2;
 
    break;
 

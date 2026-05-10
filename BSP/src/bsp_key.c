@@ -111,15 +111,12 @@ uint8_t sys_read_gpio_pin_value(GPIO_TypeDef *p_gpiox, uint16_t pinx)
 static void adjust_temperature(int8_t delta) 
 {
 
-   //static uint8_t temperature_init_value ;
-	if (g_pro.temperature_init_value == 0) {
-        g_pro.temperature_init_value++;
-        g_pro.gset_temperture_value = (delta > 0) ? 40 : 20;
-    } else {
-        g_pro.gset_temperture_value += delta;
-        if (g_pro.gset_temperture_value > MAX_TEMPERATURE) g_pro.gset_temperture_value = MAX_TEMPERATURE;
-        if (g_pro.gset_temperture_value < MIN_TEMPERATURE) g_pro.gset_temperture_value = MIN_TEMPERATURE;
-    }
+
+
+    g_pro.gset_temperture_value += delta;
+    if (g_pro.gset_temperture_value > MAX_TEMPERATURE) g_pro.gset_temperture_value = MAX_TEMPERATURE;
+    if (g_pro.gset_temperture_value < MIN_TEMPERATURE) g_pro.gset_temperture_value = MIN_TEMPERATURE;
+    
 	g_pro.gTimer_input_set_temp_timer=0;
     g_pro.g_manual_shutoff_dry_flag = 0;
  
@@ -164,6 +161,7 @@ static void adjust_timer(int8_t delta)
  */
 void key_dwon_fun(void)
 {
+
      if(g_key.key_mode_long_flag !=1)g_pro.switch_disp_time_or_temp_item =temperature_mode;
 	 switch (g_pro.switch_disp_time_or_temp_item) {
         case temperature_mode:
