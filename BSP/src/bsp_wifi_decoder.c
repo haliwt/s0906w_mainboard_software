@@ -562,6 +562,7 @@ void Json_Parse_Command_Fun(void)
 		 g_disp.g_second_disp_flag = 1;
 	     g_wifi.gwifi_link_net_success =1;
           g_wifi.gwifi_normal_power_on_flag= 1;
+		
           SendData_Set_Command(0x20,open);
 		  osDelay(100);
 
@@ -613,6 +614,7 @@ void Json_Parse_Command_Fun(void)
          }
          }
 		 buzzer_temp_on=0;
+	      g_pro.set_temp_counter ++;
          gl_msg.response_wifi_signal_label=0xff;
 	  	
        
@@ -635,6 +637,7 @@ void Json_Parse_Command_Fun(void)
 		  }
          }
 		buzzer_temp_on=0;
+		  g_pro.set_temp_counter ++;
 	     gl_msg.response_wifi_signal_label = 0xff;
 
 	  	

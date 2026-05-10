@@ -74,10 +74,10 @@ void mainboard_fun_handler(void)
 //	    	sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
 //	    	osDelay(100);
 //	    }
-        if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
-			 ptc_on_default = g_pro.gDry;
+        if(g_wifi.gwifi_link_net_success==1 && ptc_on_default !=  g_pro.set_temp_counter ){
+			   ptc_on_default  =g_pro.set_temp_counter;
 			 MqttData_Publish_SetPtc(0x01);
-		  	 osDelay(200);
+		  	
 		 
          }
 	}
@@ -90,10 +90,10 @@ void mainboard_fun_handler(void)
 //		    osDelay(100);
 //	    }
 
-		if(g_wifi.gwifi_link_net_success==1 && ptc_off_default != g_pro.gDry){
-			ptc_off_default = g_pro.gDry;
+		if(g_wifi.gwifi_link_net_success==1 && ptc_off_default !=g_pro.set_temp_counter ){
+			ptc_off_default = g_pro.set_temp_counter;
 		 	MqttData_Publish_SetPtc(0x0);
-	  		 osDelay(200);
+	  		
 		 
          }
 

@@ -306,11 +306,11 @@ void power_on_run_handler(void)
 			   if(switch_dht11==1){
 	         	   Subscriber_Data_FromCloud_Handler();
 			
-                   vTaskDelay(200);
+                   //vTaskDelay(200);
 			   	}
 			    else{
 				Update_Dht11_Totencent_Value()	;
-				 vTaskDelay(200);
+				 //vTaskDelay(200);
 
 
 				}

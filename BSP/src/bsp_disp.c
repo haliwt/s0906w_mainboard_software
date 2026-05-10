@@ -6,7 +6,7 @@
  */
 #include "bsp.h"
 
-#define SWITCH_THRESHOLD 3 //10
+#define SWITCH_THRESHOLD 2 //10
 
 uint8_t disp_temp_hum,dsip_timer_value;
 uint8_t timerbuf[1];
