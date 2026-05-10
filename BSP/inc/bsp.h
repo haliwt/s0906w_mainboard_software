@@ -63,7 +63,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "wwdg.h"
+
 
 //freeRtos
 #include "FreeRTOS.h"
@@ -205,6 +205,7 @@ typedef struct _process{
  //  uint8_t gTimer_key_long_counter;
    uint8_t  gTimer_to_disp_counter;
    uint8_t gTimer_mainboard_fun_counter;
+ 
    
 }process_t;
 

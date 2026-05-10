@@ -67,7 +67,7 @@ static void tim17_isr_callback_handler(void)
        tm0++;
 	  
 	   g_pro.gTimer_led_wifi_bilnk_counter++;
-	   if(tm0> 999){ //1s
+	   if(tm0> 99){ //10ms
 	      tm0=0;
 		   g_pro.gTimer_disp_time_second ++;
 		   g_pro.gTimer_timer_time_second ++ ;
@@ -87,7 +87,7 @@ static void tim17_isr_callback_handler(void)
 		  //g_pro.gTimer_key_long_counter++;
 		  g_pro.gTimer_to_disp_counter++;
 		  g_pro.gTimer_mainboard_fun_counter++;
-		   
+	
 		  
 
 		   //wifi timer 

@@ -41,7 +41,7 @@ void power_onoff_handler(uint8_t data)
 
           power_on_run_handler();
 
-	    if(gl_run.process_on_step > 5)gl_run.process_on_step=1;
+	    if(gl_run.process_on_step > 50)gl_run.process_on_step=4;
 		if(g_pro.fan_warning > 1 || g_pro.ptc_warning >1){
            if(g_pro.fan_warning > 1) g_pro.fan_warning =0;
 		   if(g_pro.ptc_warning >1)  g_pro.ptc_warning =0;
@@ -49,16 +49,11 @@ void power_onoff_handler(uint8_t data)
         if(gl_run.process_on_step !=0){ //logically rigorous
 
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
-			display_digital_3_numbers();
-			wifi_led_fast_blink_handler();
-		    smart_phone_timer_power_on_handler();
-	        
-			link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
+	
 			
-			set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
-			set_timer_timing_value_handler();
-
-			works_run_two_hours_state();
+			 display_digital_3_numbers();
+			
+		
 
 		    }
 
@@ -131,57 +126,6 @@ void power_on_run_handler(void)
      case 0:  //initial reference 
        gl_run.process_off_step =0 ; //clear power off process step .
 
-	   if(g_wifi.app_timer_power_on_flag ==1){
-	      
-	   	  g_wifi.gwifi_link_net_success=wifi_link_success;
-          MqttData_Publish_SetOpen(1);  
-		  vTaskDelay(100);
-		}
-        else{
-		   
-		   	 if(g_wifi.gwifi_link_net_success == wifi_link_success && g_wifi.gwifi_normal_power_on_flag == 0){
-		       MqttData_Publish_SetOpen(1);  
-		       vTaskDelay(100);
-		    }
-        }
-		updateDht11_toDisplayBoard_value();
-			 
-		   
-		   
-      if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
-           if(g_pro.power_on_ref_f == 1){
-		     g_pro.power_on_ref_f ++;
-
-		   }
-           else{
-		   	power_on_init_ref();
-           	}
-		      
-
-       }
-	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
-		  if(g_pro.power_on_ref_f == 1){
-		     g_pro.power_on_ref_f ++;
-
-		   }
-           else{
-		   	power_on_init_ref();
-           	}
-		      
-		    
-		
-		  
-		  updateDht11_toDisplayBoard_value();
-	      vTaskDelay(100);
-		   	
-	        send_wifi_power_on_state = 1;
-		
-	   }
-	   else{
-
-		    power_on_smart_app_led();
-
-	   }
 	   key_referen_init();
 	   
 	 
@@ -232,11 +176,86 @@ void power_on_run_handler(void)
 	   gl_run.process_on_step =1;
 	 break;
 
+
 	 case 1:
+
+	   updateDht11_toDisplayBoard_value();
+
+	     gl_run.process_on_step =2;
+
+	 break;
+
+
+	 case 2:
+
+	 
+       if(g_wifi.app_timer_power_on_flag ==1 ){
+	       g_wifi.gwifi_link_net_success=wifi_link_success;
+	   	 
+          MqttData_Publish_SetOpen(1);  
+		  //vTaskDelay(100);
+		}
+        else{
+		   
+		   	 if(g_wifi.gwifi_link_net_success == wifi_link_success && g_wifi.gwifi_normal_power_on_flag == 0){
+		       MqttData_Publish_SetOpen(1);  
+		      /// vTaskDelay(100);
+		    }
+        }
+	
+			 
+		   
+		   
+      if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
+           if(g_pro.power_on_ref_f == 1){
+		     g_pro.power_on_ref_f ++;
+
+		   }
+           else{
+		   	  power_on_init_ref();
+           	}
+		      
+
+       }
+	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
+		  if(g_pro.power_on_ref_f == 1){
+		     g_pro.power_on_ref_f ++;
+
+		   }
+           else{
+		   	power_on_init_ref();
+           	}
+	   	}
+	    else{
+		    power_on_smart_app_led();
+
+		}
+	  gl_run.process_on_step =3;
+
+	  break;
+
+	  case 3:
+		      
+		    
+
+
+		   
+	  // updateDht11_toDisplayBoard_value();
+
+	   
+	   gl_run.process_on_step =4;
+
+	 break;
+
+
+
+	 
+
+	 case 4:
 
       if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 	
-		  if(g_disp.g_second_disp_flag == 1 || temp_second_displboard < 5){
+		  if(temp_second_displboard < 5){
 
 		     if(temp_second_displboard < 8){
                    temp_second_displboard ++;
@@ -253,12 +272,12 @@ void power_on_run_handler(void)
 		      send_wifi_power_on_state++;
 		      g_pro.gset_temperture_value = 40;
 			   MqttData_Publish_Update_Data();
-			   vTaskDelay(200);
+			  // vTaskDelay(200);
 
 
 		  }
 	
-		  gl_run.process_on_step =2; 
+		  gl_run.process_on_step =5; 
       }
 	  else{
 	  
@@ -267,14 +286,14 @@ void power_on_run_handler(void)
 	  }
 
 
-	case 2: //DISPAY 3 digital numbers . process .
+	case 5: //DISPAY 3 digital numbers . process .
     
-	//  display_digital_3_numbers();
-	  gl_run.process_on_step =3; 
+
+	  gl_run.process_on_step =6; 
 
 	 break;
 
-	 case 3: //WIFI link process
+	 case 6: //WIFI link process
 	  
          if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
@@ -299,15 +318,15 @@ void power_on_run_handler(void)
 		   	}
 
           }
-		     gl_run.process_on_step =4;
+		     gl_run.process_on_step =7;
 
          }
 		    
-	     gl_run.process_on_step =4;
+	     gl_run.process_on_step =7;
 
 	 break;
 
-	 case 4: // wifi function
+	 case 7: // wifi function
 	  
          if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
 		 	g_pro.gTimer_display_adc_value=0;
@@ -333,11 +352,11 @@ void power_on_run_handler(void)
 			 
 		  }
 
-      gl_run.process_on_step =5;
+      gl_run.process_on_step =8;
 
 	 break;
 
-	 case 5:
+	 case 8:
      
 	    if(g_pro.gTimer_to_disp_counter > 3){    
 			 g_pro.gTimer_to_disp_counter=0;
@@ -345,9 +364,43 @@ void power_on_run_handler(void)
 		
 		}
 		
-	     gl_run.process_on_step =1;
+	     gl_run.process_on_step =9;
 
 	 break;
+
+	 case 9:
+	   smart_phone_timer_power_on_handler();
+	   gl_run.process_on_step =10;
+
+	 break;
+
+	 case 10:
+	    link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
+        gl_run.process_on_step =11;
+	 break;
+
+	 case 11:
+	    set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
+	    gl_run.process_on_step =12;
+
+	 break;
+
+	 case 12:
+
+	 set_timer_timing_value_handler();
+      gl_run.process_on_step =13;
+	 break;
+
+	 case 13:
+	 
+	    works_run_two_hours_state();    
+		gl_run.process_on_step =4;
+
+
+	 break;
+
+
+	 
 
 	 default :
 

@@ -203,7 +203,7 @@ static void vTaskRunPro(void *pvParameters)
          wifi_led_fast_blink_handler();
 	}
 	
-   // LL_IWDG_ReloadCounter(IWDG);
+    LL_IWDG_ReloadCounter(IWDG);
 
 	vTaskDelay(pdMS_TO_TICKS(10));
 
