@@ -264,7 +264,7 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
   LL_GPIO_Init(KEY_DOWN_GPIO_Port, &GPIO_InitStruct);
-
+}
 
   #if 0
 
@@ -341,7 +341,7 @@ void MX_GPIO_Init(void)
   NVIC_SetPriority(EXTI2_3_IRQn, 3);
   NVIC_EnableIRQ(EXTI2_3_IRQn);
  #endif 
-}
+
 
 /* USER CODE BEGIN 2 */
 

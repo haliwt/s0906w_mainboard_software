@@ -19,9 +19,9 @@
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
-#define STACK_SIZE_DECODER  512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI    1536//1280//1024 //768//1024//384//256
-#define STACK_SIZE_KEY   512
+#define STACK_SIZE_DECODER  256//512//128//1792//3072//2048//1024//896//768
+#define STACK_SIZE_UI      1792//1664//1536//1280//1024 //768//
+#define STACK_SIZE_KEY    256//512
 #define STACK_SIZE_EVENT   512//256
 
 
@@ -223,7 +223,7 @@ static void vTaskDecoderPro(ULONG thread_input)
     static uint16_t down_cnt = 0;
     static uint16_t power_cnt = 0;
 
-    const uint16_t LONG_PRESS_TIME = 90;   // 300 * 10ms = 3000ms
+    const uint16_t LONG_PRESS_TIME = 70;   // 300 * 10ms = 3000ms
   
   
    while(1)
@@ -378,7 +378,7 @@ static void vTaskUiPro(ULONG thread_input)
     debug_stack_ui_check();
    #endif 
 
-	tx_thread_sleep(1);//10ms *1
+	tx_thread_sleep(10);//10ms *1
 
 	  
     }

@@ -48,14 +48,7 @@ void power_on_off_handler(uint8_t data)
       break;
 
 	  case power_off:
-         gl_run.process_on_step =0;
-		 g_pro.g_real_hours_counter=0;
-	     
-	     if(power_on_flag==0){
-             power_on_flag ++;
-			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
-			 buzzer_sound();
-	     }
+        
         
          power_off_run_handler();
 
@@ -418,17 +411,29 @@ void power_off_run_handler(void)
 {
 
    static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute,switch_f;
+   static uint8_t power_on_flag=0, counter_send=0;
    switch(gl_run.process_off_step){
 
    case 0:
    	  gl_run.process_on_step =0;
       g_pro.gpower_on_key_f = 0;
+      gl_run.process_on_step =0;
+	  g_pro.g_real_hours_counter=0;
       power_off_led();
       DRY_CLOSE();
+
+	   
+	     
+	   
       gl_run.process_off_step = 1;
    break;
 
    case 1:
+   	  if(power_on_flag==0){
+             power_on_flag ++;
+			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
+			 buzzer_sound();
+	     }
    	  TM1639_Display_ON_OFF(0);
       gl_run.process_off_step = 2;
    break;
@@ -455,7 +460,7 @@ void power_off_run_handler(void)
 	   g_pro.disp_second_f =0;
 	 
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
-
+        mainboard_close_all_fun();
         gl_run.process_off_step = 3;
 
    break;
@@ -495,10 +500,14 @@ void power_off_run_handler(void)
   break;
 
   case 6:
-
-     mainboard_close_all_fun();
+     counter_send ++ ;
+    
+     if(counter_send > 6){
+	 	counter_send=0;
 	 SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
 	 tx_thread_sleep(10);
+
+     	}
 
     gl_run.process_off_step = 7;
 
