@@ -381,7 +381,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
     case 6:
 
   
-       //confirm_wifi_link_net_state(); //WT.EDIT 2026.03.09
+       confirm_wifi_link_net_state(); //WT.EDIT 2026.03.09
        //vTaskDelay(1000);
 
        g_wifi.gTimer_auto_detected_net_state_times=0;  
@@ -531,7 +531,8 @@ static void confirm_wifi_link_net_state(void)
 {
 
    //HAL_UART_Transmit(&huart2, "AT+TCMQTTSTATE?\r\n", strlen("AT+TCMQTTSTATE?\r\n"), 5000);
-   // at_send_data("AT+TCMQTTSTATE?\r\n", strlen("AT+TCMQTTSTATE?\r\n"));
+    at_send_data("AT+TCMQTTSTATE?\r\n", strlen("AT+TCMQTTSTATE?\r\n"));
+    vTaskDelay(1000);
 
 }
 
