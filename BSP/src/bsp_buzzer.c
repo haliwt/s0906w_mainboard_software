@@ -36,6 +36,14 @@ void buzzer_sound(void)
 
 }
 
+void buzzer_power_sound(void)
+{
+	tim3_buzzer_sound_config();//HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
+    tx_thread_sleep(2);//tx_thread_sleep(20);
+   tim3_stop_buzzer_sound_config();// HAL_TIM_PWM_Stop(&htim3,TIM_CHANNEL_4);
+
+
+}
 
 
 /*********************************************************************************************************

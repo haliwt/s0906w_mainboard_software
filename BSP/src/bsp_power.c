@@ -415,6 +415,11 @@ void power_off_run_handler(void)
    switch(gl_run.process_off_step){
 
    case 0:
+
+       if(power_on_flag==0){
+             power_on_flag ++;
+			 buzzer_power_sound();
+	   }
    	  gl_run.process_on_step =0;
       g_pro.gpower_on_key_f = 0;
       gl_run.process_on_step =0;
@@ -429,11 +434,7 @@ void power_off_run_handler(void)
    break;
 
    case 1:
-   	  if(power_on_flag==0){
-             power_on_flag ++;
-			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
-			 buzzer_sound();
-	     }
+   	 
    	  TM1639_Display_ON_OFF(0);
       gl_run.process_off_step = 2;
    break;

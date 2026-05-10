@@ -165,7 +165,7 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
 	
     old_post = tx_interrupt_control(TX_INT_DISABLE);
 
-    __disable_irq();
+   // __disable_irq();
 
     /* 2. 主机拉低 18ms */
     DHT11_Mode_OutPut();//DHT11_GPIO_Output();
@@ -212,7 +212,7 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
     }
 
     /* 6. 恢复中断 & 调度 */
-    __enable_irq();
+    ///__enable_irq();
     tx_interrupt_control(old_post);
 
 
@@ -231,22 +231,22 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
     return 0;
 
 error_1:
-    __enable_irq();
+   // __enable_irq();
     tx_interrupt_control(old_post);
     return 1;
 
 	error_2:
-		__enable_irq();
+		//__enable_irq();
 		tx_interrupt_control(old_post);
 		return 2;
 
 		error_3:
-    __enable_irq();
+    //__enable_irq();
     tx_interrupt_control(old_post);
     return 3;
     
     	error_4:
-    __enable_irq();
+    //__enable_irq();
     tx_interrupt_control(old_post);
     return 3;
 

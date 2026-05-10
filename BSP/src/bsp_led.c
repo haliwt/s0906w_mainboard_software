@@ -69,23 +69,12 @@ void power_off_led(void)
  ************************************************************************/
 void LED_Power_Breathing(void)
 {
-    static uint8_t breathing_time = 0;
-    static uint8_t led_state = 0;
-    
-  
-    if(breathing_time > 39){ //10ms *39 = 390ms
-        breathing_time = 0;
-        led_state = !led_state;
-        
-        if(led_state)
-        {
-            LED_POWER_ON();
-        }
-        else
-        {
-            LED_POWER_OFF();
-        }
-    }
+     if(g_pro.gTimer_read_dth11_sensor >=1){
+          g_pro.gTimer_read_dth11_sensor =0;
+            LED_POWER_TOGGLE();
+
+     	}
+     
 }
 /************************************************************************
  * Function Name: LED_Power_Breathing(void)
