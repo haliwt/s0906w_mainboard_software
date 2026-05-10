@@ -108,7 +108,7 @@ static void handle_power_key(void)
             LED_TAPE_CTL_OFF();
 		    power_off_led();
             TM1639_Display_ON_OFF(0);
-			vTaskDelay(100);
+			vTaskDelay(200);
 
 		}
 		

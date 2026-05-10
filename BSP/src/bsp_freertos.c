@@ -39,6 +39,9 @@ static void vTaskDecoderPro(void *pvParameters);
 static void vTaskStart(void *pvParameters);
 #else 
 /*------------------ 静态任务内存定义 ------------------*/
+#define STACK_SIZE_UI   512 
+#define STACK_SIZE_KEY  256
+
 
 /* vTaskDecoderPro 任务 */
 static StaticTask_t xTaskDecoderProTCB;
@@ -46,12 +49,12 @@ static StackType_t xTaskDecoderProStack[128];
 
 
 /* vTaskMsgPro 任务 */
+static StackType_t xTaskRunProStack[STACK_SIZE_UI];//384
 static StaticTask_t xTaskRunProTCB;
-static StackType_t xTaskRunProStack[512];//384
 
 /* vTaskStart 任务 */
 static StaticTask_t xTaskStartTCB;
-static StackType_t xTaskStartStack[256];
+static StackType_t xTaskStartStack[STACK_SIZE_KEY];
 
 
 #endif 
@@ -317,7 +320,7 @@ void AppTaskCreate (void)
 	xHandleTaskRunPro = xTaskCreateStatic(
 			vTaskRunPro,			/* 任务函数 */
 			"vTaskRunPro",			/* 任务名 */
-			512,					/* 栈大小（word） */
+			STACK_SIZE_UI,					/* 栈大小（word） */
 			NULL,					/* 参数 */
 			1,						/* 优先级 */
 			xTaskRunProStack,		/* 栈数组 */
@@ -327,7 +330,7 @@ void AppTaskCreate (void)
 	xHandleTaskStart = xTaskCreateStatic(
 			vTaskStart, 			/* 任务函数 */
 			"vTaskStart",			/* 任务名 */
-			256,					/* 栈大小（word） */
+			STACK_SIZE_KEY,					/* 栈大小（word） */
 			NULL,					/* 参数 */
 			2,						/* 优先级 */
 			xTaskStartStack,		/* 栈数组 */

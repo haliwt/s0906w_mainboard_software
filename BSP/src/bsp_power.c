@@ -49,6 +49,7 @@ void power_onoff_handler(uint8_t data)
         if(gl_run.process_on_step !=0){ //logically rigorous
 
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
+			display_digital_3_numbers();
 			wifi_led_fast_blink_handler();
 		    smart_phone_timer_power_on_handler();
 	        
@@ -268,7 +269,7 @@ void power_on_run_handler(void)
 
 	case 2: //DISPAY 3 digital numbers . process .
     
-	  display_digital_3_numbers();
+	//  display_digital_3_numbers();
 	  gl_run.process_on_step =3; 
 
 	 break;
