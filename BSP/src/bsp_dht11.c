@@ -123,7 +123,7 @@ static void DHT11_Mode_OutPut(void)
 static uint8_t DHT11_ReadByte ( void )
 {
 
-      uint8_t i,dat=0;
+     uint8_t i,dat=0;
 	 for(i=0;i<8;i++) 
 		  {
 			   	while(DHT11_Data_IN()==Bit_RESET);

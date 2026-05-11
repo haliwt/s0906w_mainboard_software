@@ -26,4 +26,7 @@ void SMG_Display_Hour(void);  // 显示0-24小时时间
 
 void SMG_Display_Err(uint8_t idata);
 
+void disp_all_sumg_led(void);
+
+
 #endif /* BSP_INC_BSP_SMG_H_ */

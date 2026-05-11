@@ -42,6 +42,9 @@ void power_on_off_handler(uint8_t data)
          
         if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1 && gl_run.process_on_step !=2){ //logically rigorous
               display_digital_3_numbers();
+			  if(g_wifi.wifi_led_fast_blink_flag==1){
+			    link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
+			  }
 	    }
   	}
     else{
@@ -294,7 +297,7 @@ void power_on_run_handler(void)
 	 break;
 
 	 case 9:
-	    link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
+	  //  link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
 
 	 
       gl_run.process_on_step =10;

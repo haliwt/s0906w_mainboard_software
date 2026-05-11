@@ -53,7 +53,8 @@ void delay_init(void)
  */
 void delay_us(uint32_t nus)
 {
-        // 1. 获取当前频率下的 1us tick 数
+   #if 0
+    // 1. 获取当前频率下的 1us tick 数
 		// G030 频率 64MHz 时，ticksPerUs = 64
 		uint32_t ticksPerUs = SystemCoreClock / 1000000;
 		uint32_t ticks = nus * ticksPerUs;
@@ -90,7 +91,14 @@ void delay_us(uint32_t nus)
 			 
 		}
 
-		
+	#else 
+	uint32_t loops = nus * 16;  // 1us ≈ 16 loops @64MHz
+    while (loops--)
+    {
+        __NOP();
+    }
+
+	#endif 
 	
 }
 
