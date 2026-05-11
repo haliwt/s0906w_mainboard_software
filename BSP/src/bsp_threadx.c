@@ -308,16 +308,7 @@ static void vTaskDecoderPro(ULONG thread_input)
 			}
             power_cnt = 0;
         }
-//		else{
-             
-//              switch_cnt ++;
-//			  if(switch_cnt > 300 && g_pro.gpower_on == power_on){
-//			  	 switch_cnt =0;
-//			    disp_all_sumg_led();
 
-//			  }
-
-//		}
 
       
 
@@ -326,7 +317,7 @@ static void vTaskDecoderPro(ULONG thread_input)
     debug_stack_key_check();
    #endif 
 
-     //LL_IWDG_ReloadCounter(IWDG);
+   
 
 	 tx_thread_sleep(2);//10ms *2 
 
@@ -445,7 +436,7 @@ static void vTaskUiPro(ULONG thread_input)
 	}
 	
 
-  LL_IWDG_ReloadCounter(IWDG);
+   LL_IWDG_ReloadCounter(IWDG);
 
    #if DEBUG_ENABLE
     debug_stack_ui_check();

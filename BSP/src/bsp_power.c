@@ -39,11 +39,16 @@ void power_on_off_handler(uint8_t data)
 
 	   case power_on :
 
-          power_on_run_handler();
-         
-        if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1 && gl_run.process_on_step !=2){ //logically rigorous
-            //  display_digital_3_numbers();
-	    }
+         power_on_run_handler();
+         if(gl_run.process_on_step > 20){
+           gl_run.process_on_step =3;
+		   display_digital_3_numbers();
+		   disp_all_sumg_led();
+         }
+		 else{
+            active_error_handler();
+		 }
+	
 			
       break;
 
@@ -174,9 +179,6 @@ void power_on_run_handler(void)
 	   case 2:
 	   
 	 
-	 
-       
-	   
 	   g_pro.g_fan_switch_gears_flag++;
 	   gl_run.process_off_step=0;
 	   //reset wifi 
@@ -414,7 +416,8 @@ void power_off_run_handler(void)
 {
 
    static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute,switch_f;
-   static uint8_t power_on_flag,counter_send;
+   static uint8_t power_on_flag;
+   static uint16_t    counter_send;
    switch(gl_run.process_off_step){
 
    case 0:
@@ -499,7 +502,7 @@ void power_off_run_handler(void)
   case 6:
      counter_send ++;
     
-	 if(counter_send > 5){
+	 if(counter_send > 300){
 	 counter_send =0;	
 	 SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
 	 tx_thread_sleep(10);

@@ -18,6 +18,7 @@
 
 
 
+void active_error_handler(void);
 
 
 
