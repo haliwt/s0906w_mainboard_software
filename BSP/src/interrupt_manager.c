@@ -55,7 +55,7 @@ void callback_register_fun(void)
 /********************************************************************************
 	**
 	*Function Name:
-	*Function : 回调函数实现的逻辑
+	*Function : 10
 	*Input Ref: 
 	*Return Ref:NO
 	*
@@ -67,7 +67,7 @@ static void tim17_isr_callback_handler(void)
        tm0++;
 	  
 	   g_pro.gTimer_led_wifi_bilnk_counter++;
-	   if(tm0> 999){ //1s
+	   if(tm0> 99){ //10ms * 100 =1s
 	      tm0=0;
 		   g_pro.gTimer_disp_time_second ++;
 		   g_pro.gTimer_timer_time_second ++ ;

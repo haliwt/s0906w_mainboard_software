@@ -132,7 +132,7 @@ void wifi_led_fast_blink_handler(void)
    if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0){
 
        
-	   if( g_pro.gTimer_led_wifi_bilnk_counter > 99){
+	   if( g_pro.gTimer_led_wifi_bilnk_counter > 9){//10ms
 
 	       g_pro.gTimer_led_wifi_bilnk_counter=0;
 	
