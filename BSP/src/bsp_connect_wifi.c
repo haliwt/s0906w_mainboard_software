@@ -179,8 +179,11 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
 ********************************************************************************/
 void getBeijingTime_cofirmLinkNetState_handler(void)
 {
-   static uint8_t flag_switch,beijing_step,auto_link_net_flag;
+   static uint8_t beijing_step,auto_link_net_flag;
    uint8_t real_hours,real_minutes,real_seconds;
+    
+   static uint16_t flag_switch;
+    
     switch(g_wifi.wifi_get_beijing_step){
 
      case 0: //WT.EDIT .2024.08.10
@@ -192,7 +195,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
        
 
-        if(flag_switch > 4 && g_pro.gpower_on == power_on){
+        if(flag_switch > 400 && g_pro.gpower_on == power_on){//20ms
              flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Subscriber_Data_FromCloud_Handler();
@@ -201,7 +204,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
             
         }
-        else if(g_pro.gpower_on == power_off && flag_switch > 4){ //9*4 =36s.
+        else if(g_pro.gpower_on == power_off && flag_switch > 400){ //9*4 =36s.
             flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Update_Dht11_Totencent_Value();
@@ -212,7 +215,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
         }
         else{ //WT.EDIT 2024.08.10 ADD ITEM
-              if(flag_switch > 5){
+              if(flag_switch > 500){
                  flag_switch=0;
               }
               g_wifi.get_rx_beijing_time_enable=0; 
@@ -238,14 +241,18 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
 				g_wifi.wifi_get_beijing_step = 2;
            		g_wifi.linking_tencent_cloud_doing  =0; //receive from tencent command state .
-                SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x01); //connect net flag 1: connect .0: don't connect.
+                if(g_pro.disp_second_f ==1){
+					SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x01); //connect net flag 1: connect .0: don't connect.
                 tx_thread_sleep(10);
+                	}
 
          }
          else{
               
-               SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x0); //0x1F: 0x1=wifi link net is succes ,0x0 = wifi link net is fail
+                if(g_pro.disp_second_f ==1){
+					SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x0); //0x1F: 0x1=wifi link net is succes ,0x0 = wifi link net is fail
                tx_thread_sleep(10);
+                	}
 		       g_wifi.wifi_get_beijing_step = 10;
                g_wifi.linking_tencent_cloud_doing  =1; //receive from tencent command state .
              
@@ -506,8 +513,10 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
             Subscriber_Data_FromCloud_Handler();
             tx_thread_sleep(20);//HAL_Delay(200);
 
-            SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x01); //0x1F: wifi link net is succes 
+             if(g_pro.disp_second_f ==1){
+			 	SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x01); //0x1F: wifi link net is succes 
             tx_thread_sleep(10);
+             	}
              g_wifi.wifi_get_beijing_step = 0;
 		
          }

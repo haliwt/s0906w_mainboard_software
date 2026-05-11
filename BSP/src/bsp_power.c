@@ -42,7 +42,7 @@ void power_on_off_handler(uint8_t data)
           power_on_run_handler();
          
         if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1 && gl_run.process_on_step !=2){ //logically rigorous
-              display_digital_3_numbers();
+            //  display_digital_3_numbers();
 	    }
 			
       break;
@@ -282,7 +282,7 @@ void power_on_run_handler(void)
 	 break;
 
 	 case 6:
-   
+           display_digital_3_numbers();
 	      gl_run.process_on_step =7;
 
 	 break;

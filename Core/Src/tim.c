@@ -222,7 +222,7 @@ void MX_TIM17_Init(void)
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_TIM17);
 
   /* TIM17 interrupt Init */
-  NVIC_SetPriority(TIM17_IRQn, 2);
+  NVIC_SetPriority(TIM17_IRQn, 1);
   NVIC_EnableIRQ(TIM17_IRQn);
 
   /* USER CODE BEGIN TIM17_Init 1 */
@@ -230,7 +230,7 @@ void MX_TIM17_Init(void)
   /* USER CODE END TIM17_Init 1 */
   TIM_InitStruct.Prescaler = 63;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-  TIM_InitStruct.Autoreload = 999;
+  TIM_InitStruct.Autoreload = 9999;
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
   TIM_InitStruct.RepetitionCounter = 0;
   LL_TIM_Init(TIM17, &TIM_InitStruct);

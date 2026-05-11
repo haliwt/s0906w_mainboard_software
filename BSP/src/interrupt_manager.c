@@ -68,12 +68,12 @@ static void tim17_isr_callback_handler(void)
        tm0++;
 	   c100mscnt++;
 
-       if(++c100mscnt ==200){
+       if(++c100mscnt ==20){
 	   	    c100mscnt  =0;
 	       wifi_led_fast_blink_handler();
 
        }
-	   if(tm0> 999){ //1s
+	   if(tm0> 99){ //1s
 	      tm0=0;
 		   g_pro.gTimer_disp_time_second ++;
 		   g_pro.gTimer_timer_time_second ++ ;

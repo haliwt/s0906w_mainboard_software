@@ -107,3 +107,46 @@ void SMG_Display_Err(uint8_t idata)
 
 }
 
+/************************************************************************
+ * Function Name: LED_Power_Breathing(void)
+ * 功能:
+ * 参数:无
+ * 返回值:无
+ ************************************************************************/
+void disp_all_sumg_led(void)
+{
+  //smg 
+
+ 
+
+   #if 0
+	   	     
+       TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L,0xF3  );
+       
+      // 显示个位
+       TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, 0xF3 | 0x08);
+        
+        // 显示度数符号
+       //TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, TM1639_CHAR_DEGREE);
+        //显示小数点�?��?��?? 显示数字�?0�?
+       TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, 0xF3);
+
+	 #endif 
+
+   
+
+     //streamlinght led
+   TM1639_Write_Digit_Full(TM1639_ADDR_GRID4_H, TM1639_ADDR_GRID4_L,0xFF); //
+   TM1639_Write_Digit_Full(TM1639_ADDR_GRID5_H, TM1639_ADDR_GRID5_L,0xFF); //
+   TM1639_Write_Digit_Full(TM1639_ADDR_GRID6_H, TM1639_ADDR_GRID6_L,0xFF); //
+   TM1639_Write_Digit_Full(TM1639_ADDR_GRID7_H, TM1639_ADDR_GRID7_L,0xFF); //
+    TM1639_Write_Digit_Full(TM1639_ADDR_GRID8_H, TM1639_ADDR_GRID8_L,0xFF); //
+
+      
+
+
+   TM1639_Display_ON_OFF(1);
+
+}
+
+
