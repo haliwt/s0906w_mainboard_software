@@ -120,6 +120,7 @@ void power_on_run_handler(void)
 {
 
    static uint8_t temp_second_displboard,switch_dht11,send_net_state;
+   static uint16_t smg_counter =0;
 	switch(gl_run.process_on_step){
 
 
@@ -239,8 +240,7 @@ void power_on_run_handler(void)
 		    
 
 
-		   
-	  // updateDht11_toDisplayBoard_value();
+		  
 
 	   
 	   gl_run.process_on_step =4;
@@ -287,8 +287,11 @@ void power_on_run_handler(void)
 
 
 	case 5: //DISPAY 3 digital numbers . process .
-    
-
+       smg_counter++;
+	   if(smg_counter > 500){
+	   	smg_counter=0;
+       disp_all_sumg_led();
+	   	}
 	  gl_run.process_on_step =6; 
 
 	 break;

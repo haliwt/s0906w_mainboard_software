@@ -45,7 +45,9 @@ void delay_init(uint16_t sysclk)
  */
 void delay_us(uint32_t nus)
 {
-    uint32_t ticks = nus * (SystemCoreClock / 1000000); // 计算需要的tick数
+    #if 0
+
+	uint32_t ticks = nus * (SystemCoreClock / 1000000); // 计算需要的tick数
     uint32_t start = SysTick->VAL;                     // 当前计数值
     uint32_t reload = SysTick->LOAD + 1;               // 重装值
 
@@ -59,6 +61,14 @@ void delay_us(uint32_t nus)
             elapsed += start + (reload - now);
         start = now;
     }
+	#else 
+	uint32_t loops = nus * 16;  // 1us ≈ 16 loops @64MHz
+    while (loops--)
+    {
+        __NOP();
+    }
+
+	#endif 
 
 }
 
