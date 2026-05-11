@@ -204,10 +204,7 @@ void power_on_run_handler(void)
 		    }
         }
 	
-			 
-		   
-		   
-      if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
+		if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
            if(g_pro.power_on_ref_f == 1){
 		     g_pro.power_on_ref_f ++;
 
@@ -237,13 +234,7 @@ void power_on_run_handler(void)
 
 	  case 3:
 		      
-		    
-
-
-		  
-
-	   
-	   gl_run.process_on_step =4;
+		  gl_run.process_on_step =4;
 
 	 break;
 
@@ -290,7 +281,7 @@ void power_on_run_handler(void)
        smg_counter++;
 	   if(smg_counter > 500){
 	   	smg_counter=0;
-       disp_all_sumg_led();
+         disp_all_sumg_led();
 	   	}
 	  gl_run.process_on_step =6; 
 
