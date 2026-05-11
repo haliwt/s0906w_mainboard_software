@@ -55,7 +55,7 @@ void callback_register_fun(void)
 /********************************************************************************
 	**
 	*Function Name:
-	*Function : 回调函数实现的逻辑
+	*Function : 10ms 
 	*Input Ref: 
 	*Return Ref:NO
 	*
