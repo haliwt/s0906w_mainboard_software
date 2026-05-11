@@ -42,16 +42,21 @@ static void vTaskStart(void *pvParameters);
 
 /* vTaskDecoderPro 任务 */
 static StaticTask_t xTaskDecoderProTCB;
-static StackType_t xTaskDecoderProStack[128];
+//static StackType_t xTaskDecoderProStack[128];
 
 
 /* vTaskMsgPro 任务 */
 static StaticTask_t xTaskRunProTCB;
-static StackType_t xTaskRunProStack[512];
+//static StackType_t xTaskRunProStack[512];
 
 /* vTaskStart 任务 */
 static StaticTask_t xTaskStartTCB;
-static StackType_t xTaskStartStack[256];
+//static StackType_t xTaskStartStack[256];
+
+__attribute__((aligned(8))) static StackType_t xTaskDecoderProStack[128];
+__attribute__((aligned(8))) static StackType_t xTaskRunProStack[512];
+__attribute__((aligned(8))) static StackType_t xTaskStartStack[256];
+
 
 
 #endif 
@@ -200,7 +205,7 @@ static void vTaskRunPro(void *pvParameters)
          wifi_led_fast_blink_handler();
 	}
 	
-   // LL_IWDG_ReloadCounter(IWDG);
+    LL_IWDG_ReloadCounter(IWDG);
 
 	vTaskDelay(pdMS_TO_TICKS(100));
 

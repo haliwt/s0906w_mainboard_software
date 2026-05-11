@@ -1,13 +1,13 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    wwdg.h
+  * @file    iwdg.h
   * @brief   This file contains all the function prototypes for
-  *          the wwdg.c file
+  *          the iwdg.c file
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -18,8 +18,8 @@
   */
 /* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __WWDG_H__
-#define __WWDG_H__
+#ifndef __IWDG_H__
+#define __IWDG_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,11 +42,9 @@ void MX_IWDG_Init(void);
 
 /* USER CODE END Prototypes */
 
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __WWDG_H__ */
-
+#endif /* __IWDG_H__ */
 

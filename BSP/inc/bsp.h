@@ -63,7 +63,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "wwdg.h"
+
 
 //freeRtos
 #include "FreeRTOS.h"

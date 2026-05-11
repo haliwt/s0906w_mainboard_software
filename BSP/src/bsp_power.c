@@ -41,12 +41,13 @@ void power_onoff_handler(uint8_t data)
 
           power_on_run_handler();
 
-	    if(gl_run.process_on_step > 5)gl_run.process_on_step=1;
+	    if(gl_run.process_on_step > 20)gl_run.process_on_step=1;
 		if(g_pro.fan_warning > 1 || g_pro.ptc_warning >1){
            if(g_pro.fan_warning > 1) g_pro.fan_warning =0;
 		   if(g_pro.ptc_warning >1)  g_pro.ptc_warning =0;
 		}
         if(gl_run.process_on_step !=0){ //logically rigorous
+
 
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			wifi_led_fast_blink_handler();
