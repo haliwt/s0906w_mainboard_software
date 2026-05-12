@@ -339,9 +339,7 @@ void TM1639_Display_Temperature(int8_t temp)
         // 显示个位
        TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L,TM1639_Number_Table[unit_num] );
         
-        // 显示度数符号
-       //TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, TM1639_CHAR_DEGREE);
-        //显示小数点�?��?��?? 显示数字�?0�?
+       
       TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,0xF3 | TM1639_DOT);
 }
 /**

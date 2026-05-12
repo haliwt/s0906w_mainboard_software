@@ -143,16 +143,17 @@ void disp_all_sumg_led(void)
 	 #else 
 
 	  
-	 TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L,0xF3);
+	 //TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L,0xF3);
        	
         
         // 显示个位
-      TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L,0XF3 );
+     // TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L,0XF3 );
         
       //显示小数点⿜㿂⿿ 显示数字‿0‿
-      TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, 0XF3 | 0X08);
-
-	  
+     // TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, 0XF3 | 0X08);
+      LED_TEMP_ICON_ON();
+      LED_HUM_ICON_OFF();
+	  DHT11_Display_Data(DISPLAY_TEMP); // ćžç¤şć¸ŠĺşŚ
 
 	 #endif 
 
