@@ -17,22 +17,22 @@ static uint32_t g_fac_us = 0;       /* us延时倍乘数 */
  */
 void delay_init(uint16_t sysclk)
 {
-#if SYS_SUPPORT_OS                          /* 如果需要支持OS. */
-    uint32_t reload;
-#endif
-    SysTick->CTRL |= (1 << 2);              /* SYSTICK使用内部时钟源,频率为HCLK*/
-    g_fac_us = sysclk;                      /* 不论是否使用OS,g_fac_us都需要使用 */
-    SysTick->CTRL |= 1 << 0;                /* 使能Systick */
-    SysTick->LOAD = 0X0FFFFFFF;             /* 注意systick计数器24位，所以这里设置最大重装载值 */
-#if SYS_SUPPORT_OS                          /* 如果需要支持OS. */
-    reload = sysclk;                        /* 每秒钟的计数次数 单位为M */
-    reload *= 1000000 / delay_ostickspersec;/* 根据delay_ostickspersec设定溢出时间
-                                             * reload为24位寄存器,最大值:16777216,在72M下,约合0.233s左右
-                                             */
-    g_fac_ms = 1000 / delay_ostickspersec;  /* 代表OS可以延时的最少单位 */
-    SysTick->CTRL |= 1 << 1;                /* 开启SYSTICK中断 */
-    SysTick->LOAD = reload;                 /* 每1/delay_ostickspersec秒中断一次 */
-#endif
+//#if SYS_SUPPORT_OS                          /* 如果需要支持OS. */
+//    uint32_t reload;
+//#endif
+//    SysTick->CTRL |= (1 << 2);              /* SYSTICK使用内部时钟源,频率为HCLK*/
+//    g_fac_us = sysclk;                      /* 不论是否使用OS,g_fac_us都需要使用 */
+//    SysTick->CTRL |= 1 << 0;                /* 使能Systick */
+//    SysTick->LOAD = 0X0FFFFFFF;             /* 注意systick计数器24位，所以这里设置最大重装载值 */
+//#if SYS_SUPPORT_OS                          /* 如果需要支持OS. */
+//    reload = sysclk;                        /* 每秒钟的计数次数 单位为M */
+//    reload *= 1000000 / delay_ostickspersec;/* 根据delay_ostickspersec设定溢出时间
+//                                             * reload为24位寄存器,最大值:16777216,在72M下,约合0.233s左右
+//                                             */
+//    g_fac_ms = 1000 / delay_ostickspersec;  /* 代表OS可以延时的最少单位 */
+//    SysTick->CTRL |= 1 << 1;                /* 开启SYSTICK中断 */
+//    SysTick->LOAD = reload;                 /* 每1/delay_ostickspersec秒中断一次 */
+//#endif
 }
 
 
@@ -45,7 +45,8 @@ void delay_init(uint16_t sysclk)
  */
 void delay_us(uint32_t nus)
 {
-    uint32_t ticks = nus * (SystemCoreClock / 1000000); // 计算需要的tick数
+   #if 0
+	uint32_t ticks = nus * (SystemCoreClock / 1000000); // 计算需要的tick数
     uint32_t start = SysTick->VAL;                     // 当前计数值
     uint32_t reload = SysTick->LOAD + 1;               // 重装值
 
@@ -59,7 +60,15 @@ void delay_us(uint32_t nus)
             elapsed += start + (reload - now);
         start = now;
     }
+   #else 
+   
+	uint32_t loops = nus * 16;	// 1us ≈ 16 loops @64MHz
+		while (loops--)
+		{
+			__NOP();
+		}
 
+   #endif 
 }
 
 /**

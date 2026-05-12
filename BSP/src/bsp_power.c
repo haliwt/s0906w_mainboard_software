@@ -179,6 +179,12 @@ void power_on_run_handler(void)
 
 	   }
 	   key_referen_init();
+	   gl_run.process_on_step =1;
+
+	   break;
+
+
+	   case 1:
 	   
 	 
 	   g_pro.gTimer_send_dht11_disp=5;
@@ -224,10 +230,10 @@ void power_on_run_handler(void)
 	   
 	   temp_second_displboard=0;
 
-	   gl_run.process_on_step =1;
+	   gl_run.process_on_step =2;
 	 break;
 
-	 case 1:
+	 case 2:
 
       if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 	
@@ -253,24 +259,24 @@ void power_on_run_handler(void)
 
 		  }
 	
-		  gl_run.process_on_step =2; 
+		  gl_run.process_on_step =3; 
       }
 	  else{
 	  
 	     fault_handler();
-         gl_run.process_on_step =4; 
+         gl_run.process_on_step =2; 
 	  }
 
 
-	case 2: //DISPAY 3 digital numbers . process .
+	case 3: //DISPAY 3 digital numbers . process .
     
 	 // display_digital_3_numbers();
-	  gl_run.process_on_step =3; 
+	  gl_run.process_on_step =4; 
 	
 
 	 break;
 
-	 case 3: //WIFI link process
+	 case 4: //WIFI link process
 	  
          if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
@@ -295,15 +301,15 @@ void power_on_run_handler(void)
 		   	}
 
           }
-		     gl_run.process_on_step =4;
+		    
 
          }
 		    
-	     gl_run.process_on_step =4;
+	     gl_run.process_on_step =5;
 
 	 break;
 
-	 case 4: // wifi function
+	 case 5: // wifi function
 	  
          if(g_pro.gTimer_display_adc_value > 5 && g_pro.works_two_hours_interval_flag==0){
 		 	g_pro.gTimer_display_adc_value=0;
@@ -326,11 +332,11 @@ void power_on_run_handler(void)
 			 
 		  }
 
-      gl_run.process_on_step =5;
+      gl_run.process_on_step =6;
 
 	 break;
 
-	 case 5:
+	 case 6:
      
 	    if(g_pro.gTimer_to_disp_counter > 3){    
 			 g_pro.gTimer_to_disp_counter=0;
@@ -338,35 +344,35 @@ void power_on_run_handler(void)
 		
 		}
 		
-	     gl_run.process_on_step =6;
-
-	 break;
-
-	 case 6:
-
-        works_run_two_hours_state();
 	     gl_run.process_on_step =7;
 
 	 break;
 
 	 case 7:
-	 	
-	    set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
-		 gl_run.process_on_step =8;		
+
+        works_run_two_hours_state();
+	     gl_run.process_on_step =8;
+
 	 break;
 
 	 case 8:
-	      set_timer_timing_value_handler();
-          gl_run.process_on_step =9;
+	 	
+	    set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
+		 gl_run.process_on_step =9;		
 	 break;
 
 	 case 9:
+	      set_timer_timing_value_handler();
+          gl_run.process_on_step =10;
+	 break;
+
+	 case 10:
 	 	 smart_phone_timer_power_on_handler();
-		 gl_run.process_on_step =10;
+		 gl_run.process_on_step =11;
 	        
 	break;
 
-	 case 10:
+	 case 11:
 	     link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
          gl_run.process_on_step =2;
 	 break;
