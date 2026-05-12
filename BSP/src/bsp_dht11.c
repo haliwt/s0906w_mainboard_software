@@ -227,8 +227,10 @@ uint8_t read_sensor_dht11_data(void)
 DHT11_Status DHT11_Display_Data(uint8_t mode)
 {
 
-    static uint8_t  copy_temp_value, copy_humidity_value;
-    uint8_t  status;
+  //  static uint8_t  copy_temp_value, copy_humidity_value;
+  //  uint8_t  status;
+
+	#if 0
    
     // 读取DHT11数据
     status = dht11_read_data(&dht11_data.temperature,&dht11_data.humidity);
@@ -250,7 +252,10 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
 	        TM1639_Display_Humidity(copy_humidity_value);
 		}
     }
-	else if(status==0){
+	else 
+	#endif 
+
+  if(status==0){
    
     // 根据模式显示温度或湿�??
     if(mode == 0)
@@ -260,9 +265,9 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
         	LED_TEMP_ICON_ON();
         	LED_HUM_ICON_OFF();
            
-            TM1639_Display_Temperature(dht11_data.temperature);
-			g_pro.current_temperature = dht11_data.temperature;
-		    copy_temp_value = dht11_data.temperature;
+            TM1639_Display_Temperature(g_pro.g_temperature_value);
+			g_pro.current_temperature = g_pro.g_temperature_value;
+		   
 				
         
     }
@@ -271,8 +276,8 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
         // 显示湿度
     	LED_TEMP_ICON_OFF();
     	LED_HUM_ICON_ON();
-        TM1639_Display_Humidity(dht11_data.humidity);
-		copy_humidity_value = dht11_data.humidity;
+        TM1639_Display_Humidity(g_pro.g_humidity_value);
+		
     }
 	}
     
@@ -380,7 +385,7 @@ void Update_Dht11_Totencent_Value(void)
 	 g_pro.g_humidity_value= dht11_data.humidity;
 
 	MqttData_Publis_ReadTempHum(dht11_data.temperature,dht11_data.humidity);
-    osDelay(200);//HAL_Delay(100);
+    //osDelay(200);//HAL_Delay(100);
 
     }
 
@@ -394,6 +399,7 @@ void Update_Dht11_toDisplayBoard_Value(void)
 	//Dht11_Read_TempHumidity_Handler(&DHT11);
 	if(error_flag == 0){
 	 g_pro.g_temperature_value = dht11_data.temperature;
+	 g_pro.current_temperature = g_pro.g_temperature_value;
 	 g_pro.g_humidity_value= dht11_data.humidity;
 
     if(g_disp.g_second_disp_flag == 1){ 

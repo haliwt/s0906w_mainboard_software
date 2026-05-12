@@ -136,6 +136,7 @@ void power_on_run_handler(void)
 
      case 0:  //initial reference 
        gl_run.process_off_step =0 ; //clear power off process step .
+       Update_Dht11_toDisplayBoard_Value();
 	   display_digital_3_numbers();
 
 	   if(g_wifi.app_timer_power_on_flag ==1){

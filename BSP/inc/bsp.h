@@ -110,6 +110,7 @@ typedef enum{
 typedef enum{
 	temperature_mode,
 	timer_time_mode=1,
+	timer_time_disp_mode,
 	beijing_time_mode=2,
 	disp_timer_mode=3,
 	disp_temp_hum_mode=4,

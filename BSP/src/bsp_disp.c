@@ -31,6 +31,9 @@ void display_digital_3_numbers(void)
 
      switch(g_pro.switch_disp_time_or_temp_item){
 
+
+	   case timer_time_disp_mode:
+
        case timer_time_mode:
 	  
 

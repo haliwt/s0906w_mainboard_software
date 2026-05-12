@@ -112,6 +112,7 @@ static void adjust_temperature(int8_t delta)
 {
     if(g_key.key_mode_long_flag != 1)g_pro.switch_disp_time_or_temp_item = temperature_mode;
       
+	g_pro.key_set_temperature_flag=1;
 	
     g_pro.gset_temperture_value += delta;
     if (g_pro.gset_temperture_value > MAX_TEMPERATURE) g_pro.gset_temperture_value = MAX_TEMPERATURE;
@@ -120,7 +121,7 @@ static void adjust_temperature(int8_t delta)
 	g_pro.gTimer_input_set_temp_timer=0;
     g_pro.g_manual_shutoff_dry_flag = 0;
  
-	g_pro.key_set_temperature_flag=1;
+	
 
 	
     g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
@@ -171,6 +172,12 @@ void key_dwon_fun(void)
                adjust_timer(-1);
             }
             break;
+
+	    case timer_time_disp_mode:
+		   adjust_temperature(-1);
+		   g_pro.first_set_ptc_on  = 0;
+
+		break;
         default:
             break;
     }
@@ -192,6 +199,12 @@ void key_dwon_fun(void)
                 adjust_timer(1);
             }
             break;
+
+		case timer_time_disp_mode:
+            adjust_temperature(1);
+	        g_pro.first_set_ptc_on  = 0;
+
+		break;
         default:
             break;
     }
@@ -235,7 +248,7 @@ void set_temperature_value_handler(void)
 
 			if(g_wifi.gwifi_link_net_success==wifi_link_success){
                publishMqttData(DRY_STATE_OFF, g_pro.gset_temperture_value);
-			   osDelay(200);
+			   
 			}
         } 
 		else if (g_pro.current_temperature < g_pro.gset_temperture_value){
@@ -260,7 +273,7 @@ void set_temperature_value_handler(void)
 
 			if(g_wifi.gwifi_link_net_success==wifi_link_success){
             publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
-			osDelay(200);
+			
 			}
         }
 
@@ -566,7 +579,7 @@ void sendDisplayCommand(uint8_t command,uint8_t data)
 void mode_short_key_fun(void)
 {
 	g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
-	g_pro.switch_disp_time_or_temp_item = timer_time_mode; //WT.EDIT 2025.10.17
+	g_pro.switch_disp_time_or_temp_item = timer_time_disp_mode ;//timer_time_mode; //WT.EDIT 2025.10.17
 
 	//g_pro.gAI = 0; //WT.EDIT 2026-05-12
     LED_AI_OFF();
