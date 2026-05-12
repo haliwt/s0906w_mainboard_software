@@ -26,7 +26,7 @@ uint8_t send_wifi_power_on_state;
 
 /**********************************************************************
 	*
-	*Function Name: void power_on_init_ref(void)
+	*Function Name: 
 	*Function : 
 	*Input Ref: NO
 	*Return Ref: NO
@@ -41,7 +41,7 @@ void power_onoff_handler(uint8_t data)
 
           power_on_run_handler();
 
-	    if(gl_run.process_on_step > 20)gl_run.process_on_step=1;
+	    if(gl_run.process_on_step > 30)gl_run.process_on_step=1;
 		if(g_pro.fan_warning > 1 || g_pro.ptc_warning >1){
            if(g_pro.fan_warning > 1) g_pro.fan_warning =0;
 		   if(g_pro.ptc_warning >1)  g_pro.ptc_warning =0;
@@ -96,19 +96,19 @@ void power_on_init_ref(void)
 		   g_pro.gPlasma =1;
 		   g_pro.gMouse = 1;
 		   g_pro.gTemp_value = 40;
-		   //display time timing value 
+		 
 		   g_pro.gdisp_hours_value =0;
 		   g_pro.gdisp_timer_hours_value =0; //设置定时时间�??
 
 		   g_pro.switch_disp_time_or_temp_item=temperature_mode; //
-		  // g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode;
+		   
 		
 		 
 		   // function led is turn on 
             power_on_led();
 		   //display smg led turn on
 		    Fan_Full_Speed();
-		    DHT11_Display_Data(0); //display temperature value 
+		   
 		    DRY_OPEN();
 			PLASMA_OPEN();
 			mouse_open();
@@ -138,6 +138,7 @@ void power_on_run_handler(void)
 
      case 0:  //initial reference 
        gl_run.process_off_step =0 ; //clear power off process step .
+	   display_digital_3_numbers();
 
 	   if(g_wifi.app_timer_power_on_flag ==1){
 	      
@@ -152,7 +153,9 @@ void power_on_run_handler(void)
 		       //vTaskDelay(100);
 		    }
         }
-		updateDht11_toDisplayBoard_value();
+		if(g_disp.g_second_disp_flag ==1){
+		     updateDht11_toDisplayBoard_value();
+		}
 			 
 		   
 		   
@@ -264,6 +267,7 @@ void power_on_run_handler(void)
     
 	  display_digital_3_numbers();
 	  gl_run.process_on_step =3; 
+	//updateDht11_toDisplayBoard_value();
 
 	 break;
 

@@ -29,4 +29,7 @@ void SMG_Display_Err(uint8_t idata);
 void disp_all_sumg_led(void);
 
 
+
+
+
 #endif /* BSP_INC_BSP_SMG_H_ */

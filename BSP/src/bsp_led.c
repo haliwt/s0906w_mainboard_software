@@ -23,9 +23,6 @@ void power_on_led(void)
     LED_PLASMA_ON();
     LED_HUM_ICON_ON();
     LED_MOUSE_ON();
-    LED_FUN_ON();
-	//TEMP_ICON_ON() ;
-	//HUMIDITY_ICON_ON();
 }
 
 void power_on_smart_app_led(void)
@@ -35,8 +32,8 @@ void power_on_smart_app_led(void)
     LED_AI_ON();
     LED_WIFI_ON();
     LED_TEMP_ICON_ON();
-	LED_FUN_ON();
-	DHT11_Display_Data(0); //display temperature value 
+    disp_all_sumg_led() ;
+	//DHT11_Display_Data(0); //display temperature value 
    
 }
 
@@ -93,29 +90,7 @@ void LED_Power_Breathing(void)
  * 参数:无
  * 返回值:无
  ************************************************************************/
-void LED_FUN_ON(void)
-{
-  //smg 
 
-   TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L,0xFF); // 
-   TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L,0xFF); // 
-   TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,0xFF); //
-
-   //streamlinght led
-   TM1639_Write_Digit_Full(TM1639_ADDR_GRID4_H, TM1639_ADDR_GRID4_L,0xFF); //
-   TM1639_Write_Digit_Full(TM1639_ADDR_GRID5_H, TM1639_ADDR_GRID5_L,0xFF); //
-   TM1639_Write_Digit_Full(TM1639_ADDR_GRID6_H, TM1639_ADDR_GRID6_L,0xFF); //
-   TM1639_Write_Digit_Full(TM1639_ADDR_GRID7_H, TM1639_ADDR_GRID7_L,0xFF); //
-
-   TM1639_Write_Digit_Full(TM1639_ADDR_GRID8_H, TM1639_ADDR_GRID8_L,0xFF); //
-
-   //key led
-   
-  // TM1639_Write_Digit_Full(TM1639_ADDR_GRID8_H, TM1639_ADDR_GRID8_L,0xCF); // 0xCF :
-
-   TM1639_Display_ON_OFF(1);
-
-}
 /************************************************************************
  * Function Name: void wifi_led_fast_blink_handler(void)
  * 功能:
