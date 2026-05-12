@@ -358,7 +358,7 @@ void power_on_run_handler(void)
 void power_off_run_handler(void)
 {
 
-   static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute;
+   static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute,switch_f;
    switch(gl_run.process_off_step){
 
    case 0:
@@ -376,14 +376,6 @@ void power_off_run_handler(void)
 	  fan_run_one_minute = 1;
 	  g_pro.gTimer_fan_run_one_minute =0;
 
-	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
-            MqttData_Publish_SetOpen(0);  
-			vTaskDelay(100);//osDelay(50);
-	        MqttData_Publish_PowerOff_Ref() ;//
-	        vTaskDelay(100);//osDelay(100);
-           
-	  }
-	 
 	   g_pro.g_fan_switch_gears_flag++;
       
 	   g_pro.set_temperature_success_flag=0;
@@ -399,6 +391,44 @@ void power_off_run_handler(void)
    break;
 
    case 1:
+
+     power_off_led();
+      TM1639_Display_ON_OFF(0);
+	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
+            MqttData_Publish_SetOpen(0);  
+			//vTaskDelay(100);//osDelay(50);
+	        MqttData_Publish_PowerOff_Ref() ;//
+	        //vTaskDelay(100);//osDelay(100);
+           
+	  }
+	 
+   power_off_led();
+		TM1639_Display_ON_OFF(0);
+
+   gl_run.process_off_step = 2;
+
+
+   break;
+
+   case 2:
+
+     power_off_led();
+      TM1639_Display_ON_OFF(0);
+   if(g_wifi.gwifi_link_net_success == wifi_link_success){
+
+		 MqttData_Publish_PowerOff_Ref() ;//
+		 //vTaskDelay(100);//osDelay(100);
+		
+   }
+    power_off_led();
+      TM1639_Display_ON_OFF(0);
+   gl_run.process_off_step = 3;
+
+   break;
+
+   case 3:
+	 power_off_led();
+  
 
      if(fan_flag == 0){
 	 	fan_flag++;
@@ -429,10 +459,12 @@ void power_off_run_handler(void)
 
 	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){
 	 	    wifi_first_connect=0;
-            MqttData_Publish_SetOpen(0);  
-			osDelay(100);
-	        MqttData_Publish_PowerOff_Ref() ;//
-	        osDelay(100);
+			switch_f = switch_f ^ 0x01;
+	        if(switch_f==1)
+              MqttData_Publish_SetOpen(0);  
+		    else
+	          MqttData_Publish_PowerOff_Ref() ;//
+	      
            
 	 }
 

@@ -97,10 +97,12 @@ static void handle_power_key(void)
 			g_pro.gpower_on = power_on;
             power_on_led();
             disp_all_sumg_led();
+			DRY_OPEN();
 
 		}
 		else{
            g_pro.gpower_on =power_off;
+		   DRY_CLOSE();
 		    power_off_led();
             TM1639_Display_ON_OFF(0);
 
