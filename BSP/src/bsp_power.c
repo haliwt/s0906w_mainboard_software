@@ -143,13 +143,13 @@ void power_on_run_handler(void)
 	      
 	   	  g_wifi.gwifi_link_net_success=wifi_link_success;
           MqttData_Publish_SetOpen(1);  
-		  vTaskDelay(100);
+		  //vTaskDelay(100);
 		}
         else{
 		   
 		   	 if(g_wifi.gwifi_link_net_success == wifi_link_success && g_wifi.gwifi_normal_power_on_flag == 0){
 		       MqttData_Publish_SetOpen(1);  
-		       vTaskDelay(100);
+		       //vTaskDelay(100);
 		    }
         }
 		updateDht11_toDisplayBoard_value();
@@ -167,7 +167,7 @@ void power_on_run_handler(void)
 		
 		  
 		  updateDht11_toDisplayBoard_value();
-	      vTaskDelay(100);
+	     // vTaskDelay(100);
 		   	
 	        send_wifi_power_on_state = 1;
 		

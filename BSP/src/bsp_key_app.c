@@ -92,7 +92,22 @@ static void handle_power_key(void)
         g_key.power_on_key_counter = 0;
         buzzer_sound();
 
-        g_pro.gpower_on = (g_pro.gpower_on == power_off) ? power_on : power_off;
+        //g_pro.gpower_on = (g_pro.gpower_on == power_off) ? power_on : power_off;
+        if(g_pro.gpower_on == power_off){
+			g_pro.gpower_on = power_on;
+            power_on_led();
+            disp_all_sumg_led();
+
+		}
+		else{
+           g_pro.gpower_on =power_off;
+		    power_off_led();
+            TM1639_Display_ON_OFF(0);
+
+		}
+
+
+		
         g_wifi.gwifi_normal_power_on_flag = 0;
         if(g_disp.g_second_disp_flag ==1){
 			SendData_Set_Command(CMD_POWER,(g_pro.gpower_on == power_on) ? open : close);
