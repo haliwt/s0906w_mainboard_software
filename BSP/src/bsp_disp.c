@@ -8,7 +8,7 @@
 
 #define SWITCH_THRESHOLD 2
 
-uint8_t disp_temp_hum,dsip_timer_value;
+uint8_t disp_temp_hum,dsip_timer_value,disp_timer_time_f=0;
 uint8_t timerbuf[1];
 
 void display_digital_3_numbers(void)
@@ -21,6 +21,9 @@ void display_digital_3_numbers(void)
     
 	
 	 if(g_pro.key_set_temperature_flag == 1){
+
+	    if(g_pro.gAI ==1)LED_AI_ON();
+		else LED_AI_OFF();
 	 
 	    TM1639_Display_Temperature(g_pro.gset_temperture_value);
 		 return ;
@@ -33,6 +36,7 @@ void display_digital_3_numbers(void)
 
 
 	   case timer_time_disp_mode:
+	     disp_timer_time_f = 1;
 
        case timer_time_mode:
 	  
@@ -42,11 +46,11 @@ void display_digital_3_numbers(void)
     	 		   LED_AI_OFF();
 		           HUMIDITY_ICON_OFF();
 		           TEMP_ICON_OFF();//WT.EDIT 2025.04.28
-		           if((g_key.key_mode_long_flag ==1) && g_pro.key_add_dec_be_pressed_flag == 1){
+		           if((g_key.key_mode_long_flag ==1 || disp_timer_time_f ==1) && g_pro.key_add_dec_be_pressed_flag == 1){
 						 TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
 
 				   }
-		           else if(g_key.key_mode_long_flag ==1 && (g_pro.key_add_dec_be_pressed_flag == 0 || g_pro.key_add_dec_be_pressed_flag == 2)){
+		           else if((g_key.key_mode_long_flag ==1 || disp_timer_time_f ==1) && (g_pro.key_add_dec_be_pressed_flag == 0 || g_pro.key_add_dec_be_pressed_flag == 2)){
 				   	   if(g_pro.gdisp_timer_hours_value >0)
 			               TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
 					   else
@@ -62,8 +66,8 @@ void display_digital_3_numbers(void)
 		          
     	 }
 		 else{
-
-			 g_pro.switch_disp_time_or_temp_item = temperature_mode;// g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode; //WT.EDIT 2025.010.06
+			 disp_timer_time_f =0;
+             g_pro.switch_disp_time_or_temp_item = temperature_mode;// g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode; //WT.EDIT 2025.010.06
              //at once display "temperature_mode" //WT.EDIT 2025.10.17
              g_pro.gTimer_switch_temp_hum=5;
 		     if(g_pro.gAI ==1){ // && g_key.key_mode_long_flag != 1){

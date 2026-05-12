@@ -55,7 +55,7 @@ void callback_register_fun(void)
 /********************************************************************************
 	**
 	*Function Name:
-	*Function : 10
+	*Function : 10ms
 	*Input Ref: 
 	*Return Ref:NO
 	*
@@ -63,10 +63,14 @@ void callback_register_fun(void)
 static void tim17_isr_callback_handler(void)
 
 {
-   static  uint16_t tm0;
+   static  uint8_t tm0,c20ms;
        tm0++;
 	  
 	   g_pro.gTimer_led_wifi_bilnk_counter++;
+	   if(++c20ms == 3){
+	   	  c20ms = 0;
+	      g_pro.disp_3_numbers_f =1;
+	   }
 	   if(tm0> 99){ //10ms * 100 =1s
 	      tm0=0;
 		   g_pro.gTimer_disp_time_second ++;

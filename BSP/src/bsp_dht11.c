@@ -267,7 +267,7 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
            
             TM1639_Display_Temperature(g_pro.g_temperature_value);
 			g_pro.current_temperature = g_pro.g_temperature_value;
-		   
+		    vTaskDelay(100);//WT.EDIT2026-05-12
 				
         
     }
@@ -277,7 +277,7 @@ DHT11_Status DHT11_Display_Data(uint8_t mode)
     	LED_TEMP_ICON_OFF();
     	LED_HUM_ICON_ON();
         TM1639_Display_Humidity(g_pro.g_humidity_value);
-		
+		vTaskDelay(100);
     }
 	}
     
@@ -395,7 +395,7 @@ void Update_Dht11_toDisplayBoard_Value(void)
 {
     static uint8_t error_flag;
     error_flag= dht11_read_data(&dht11_data.temperature, &dht11_data.humidity);
-
+    
 	//Dht11_Read_TempHumidity_Handler(&DHT11);
 	if(error_flag == 0){
 	 g_pro.g_temperature_value = dht11_data.temperature;

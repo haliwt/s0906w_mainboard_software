@@ -46,8 +46,10 @@ void power_onoff_handler(uint8_t data)
            if(g_pro.fan_warning > 1) g_pro.fan_warning =0;
 		   if(g_pro.ptc_warning >1)  g_pro.ptc_warning =0;
 		}
-        if(gl_run.process_on_step !=0){ //logically rigorous
-          display_digital_3_numbers();
+         if(g_pro.disp_3_numbers_f ==1){
+		 	g_pro.disp_3_numbers_f=0;
+            display_digital_3_numbers();
+         }
 
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			wifi_led_fast_blink_handler();
@@ -55,15 +57,9 @@ void power_onoff_handler(uint8_t data)
 	        
 			//link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
 			
-			
-			
+			}
 
-			
-	    }
-
-        }
-			
-      break;
+        break;
 
 	  case power_off:
          gl_run.process_on_step =0;
