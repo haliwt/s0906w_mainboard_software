@@ -15,14 +15,15 @@
 void power_on_led(void)
 {
     LED_POWER_ON();
-    LED_TAPE_CTL_ON();
+    //LED_TAPE_CTL_ON();
     LED_AI_ON();
     LED_WIFI_ON();
-    LED_TEMP_ICON_ON();
+    LED_MOUSE_ON();
     LED_DRY_ON();
     LED_PLASMA_ON();
+	LED_TEMP_ICON_ON();
     LED_HUM_ICON_ON();
-    LED_MOUSE_ON();
+    
 }
 
 void power_on_smart_app_led(void)

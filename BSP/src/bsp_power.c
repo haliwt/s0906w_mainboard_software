@@ -184,8 +184,9 @@ void power_on_run_handler(void)
 
 	   case 1:
 	   
-	    disp_all_sumg_led();
-		power_on_led();
+	   // disp_all_sumg_led();
+		//power_on_led();
+	   
 	   g_pro.gTimer_send_dht11_disp=5;
        
 	   
@@ -233,8 +234,10 @@ void power_on_run_handler(void)
 	 break;
 
 	 case 2:
+	 	//DRY_OPEN();
         disp_all_sumg_led();
 		power_on_led();
+		
 	    gl_run.process_on_step =3;
 
 	 break;

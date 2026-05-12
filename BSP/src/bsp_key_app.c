@@ -95,10 +95,22 @@ static void handle_power_key(void)
         //g_pro.gpower_on = (g_pro.gpower_on == power_off) ? power_on : power_off;
         if(g_pro.gpower_on == power_off){
 			g_pro.gpower_on = power_on;
-           
+			DRY_OPEN();
+		   
+            LED_TAPE_CTL_ON();
+		    vTaskDelay(10);
+			LED_TAPE_CTL_OFF();
+			vTaskDelay(10);
+			LED_TAPE_CTL_ON();
+			vTaskDelay(10);
+			LED_TAPE_CTL_OFF();
+			vTaskDelay(10);
+			LED_TAPE_CTL_ON();
+			vTaskDelay(100);
+			
             disp_all_sumg_led();
 		    power_on_led();
-			DRY_OPEN();
+			//DRY_OPEN();
 
 		}
 		else{
