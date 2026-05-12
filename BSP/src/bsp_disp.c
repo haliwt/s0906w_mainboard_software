@@ -103,9 +103,7 @@ void display_digital_3_numbers(void)
 
 		   }
 
-          
-                  
-          if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD && g_key.key_mode_long_flag !=1){
+         if (g_pro.gTimer_switch_temp_hum > SWITCH_THRESHOLD ){
 			  g_pro.gTimer_switch_temp_hum = 0; // 針置计时�??
 
 			  disp_temp_hum = disp_temp_hum ^ 0x01;
@@ -115,16 +113,16 @@ void display_digital_3_numbers(void)
 					LED_TEMP_ICON_ON();
 					LED_HUM_ICON_OFF();
 
-					read_error_flag =DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
-					if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
+					DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
+					vTaskDelay(100);
 				}
 				else {
                     LED_TEMP_ICON_OFF();
 					LED_HUM_ICON_ON();
 					
-				    read_error_flag =DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
-					if(read_error_flag == 0)DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
+				    DHT11_Display_Data(DISPLAY_HUM);  // 显示湿度
 					
+					vTaskDelay(100);
                 }
        
 
