@@ -487,17 +487,14 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		        g_disp.g_second_disp_flag=1;
 
 			    if(pdata[5] > 0){
-				g_pro.gAI = 0;
+				g_pro.gAI = 0;//timer timing is success.
 				LED_AI_OFF();
                 g_pro.gdisp_timer_hours_value = pdata[5];
 			
 		
 				g_pro.gTimer_switch_set_timer_times = 0;
-			 
-				
-
-				g_pro.switch_disp_time_or_temp_item = temperature_mode; //define UP and down key is set temperature value 
-			    g_pro.set_timing_or_timer_time_flag=TIMER_TIME;
+			    g_pro.switch_disp_time_or_temp_item = temperature_mode; //define UP and down key is set temperature value 
+			    //g_pro.set_timing_or_timer_time_flag=TIMER_TIME;
 			    g_pro.gTimer_timer_time_second=0;
 				g_pro.gdisp_timer_minutes_value=0;
 				  
@@ -512,7 +509,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 			else{
 	           
 
-			    g_pro.gAI = 1;
+			    g_pro.gAI = 1;//g_pro.set_timing_or_timer_time_flag = WORKS_TIME;
 				LED_AI_ON();
 
 				g_pro.key_add_dec_be_pressed_flag=0xf0;
@@ -526,10 +523,6 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 				g_pro.gTimer_timer_time_second=0;
 				
-				
-				g_pro.set_timing_or_timer_time_flag = WORKS_TIME;
-				
-
 				if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){
 					//TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
 					TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);

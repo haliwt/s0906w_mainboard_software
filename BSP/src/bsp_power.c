@@ -58,7 +58,7 @@ void power_onoff_handler(uint8_t data)
 			set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
 			set_timer_timing_value_handler();
 
-			works_run_two_hours_state();
+			
 
 			
 	    }
@@ -193,7 +193,8 @@ void power_on_run_handler(void)
 
 	   //reset temperature value and ptc 
 	   g_pro.set_temperature_success_flag=0;
-	   g_pro.temperature_init_value=0;
+	   g_pro.gset_temperture_value =40; 	//WT.EDIT 2026-05-12
+	  
 	   g_pro.g_manual_shutoff_dry_flag = 0;
 
 	   g_pro.first_set_ptc_on=0;
@@ -205,7 +206,7 @@ void power_on_run_handler(void)
 		g_pro.gdisp_timer_hours_value =0;
 		g_pro.gdisp_timer_minutes_value =0;
 		g_pro.gTimer_timer_time_second=0;
-
+        
 		
 	   //two hours works timing
 	    g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
@@ -218,10 +219,10 @@ void power_on_run_handler(void)
 	   g_pro.gTimer_display_adc_value=0;
 	   g_pro.delay_run_adc_counter=0;
 	   g_pro.g_real_hours_counter =0;
-	  
+	   g_pro.gAI =1;//g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
 
 	 
-	   g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
+	   
 	   
 	   temp_second_displboard=0;
 
@@ -284,11 +285,11 @@ void power_on_run_handler(void)
 			   if(switch_dht11==1){
 	         	   Subscriber_Data_FromCloud_Handler();
 			
-                   vTaskDelay(200);
+                   
 			   	}
 			    else{
 				Update_Dht11_Totencent_Value()	;
-				 vTaskDelay(200);
+				
 
 
 				}
@@ -339,7 +340,14 @@ void power_on_run_handler(void)
 		
 		}
 		
-	     gl_run.process_on_step =1;
+	     gl_run.process_on_step =6;
+
+	 break;
+
+	 case 6:
+
+        works_run_two_hours_state();
+	     gl_run.process_on_step =2;
 
 	 break;
 

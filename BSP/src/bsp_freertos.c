@@ -20,10 +20,7 @@
 #define DECODER_BIT_9          (1<< 9)
 
 // 定义EXTI线，根据实际GPIO引脚对应的EXTI线号修改
-#define KEY_POWER_EXTI_LINE    LL_EXTI_LINE_0
-#define KEY_MODE_EXTI_LINE     LL_EXTI_LINE_1  
-#define KEY_DOWN_EXTI_LINE     LL_EXTI_LINE_2
-#define KEY_UP_EXTI_LINE       LL_EXTI_LINE_3
+
 
 
 

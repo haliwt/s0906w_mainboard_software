@@ -196,7 +196,7 @@ void key_mode_long_fun(void)
 		LED_AI_OFF();
         HUMIDITY_ICON_OFF();
         TEMP_ICON_OFF();
-		if(g_pro.set_timing_or_timer_time_flag == TIMER_TIME){
+		if(g_pro.gAI ==0){
 		    if(g_pro.gdisp_timer_hours_value >0)
 	          TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
 		    else 
