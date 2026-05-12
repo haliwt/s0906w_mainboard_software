@@ -179,8 +179,6 @@ static void vTaskRunPro(void *pvParameters)
 
   while(1){
     
-	//key_handler();
-
     power_onoff_handler(g_pro.gpower_on);
     
 	if(g_wifi.wifi_led_fast_blink_flag==0 ){

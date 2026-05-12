@@ -47,17 +47,15 @@ void power_onoff_handler(uint8_t data)
 		   if(g_pro.ptc_warning >1)  g_pro.ptc_warning =0;
 		}
         if(gl_run.process_on_step !=0){ //logically rigorous
-
+          display_digital_3_numbers();
 
 	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 			wifi_led_fast_blink_handler();
-		    smart_phone_timer_power_on_handler();
+		    //smart_phone_timer_power_on_handler();
 	        
-			link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
+			//link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
 			
-			set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
-			set_timer_timing_value_handler();
-
+			
 			
 
 			
@@ -266,7 +264,7 @@ void power_on_run_handler(void)
 
 	case 2: //DISPAY 3 digital numbers . process .
     
-	  display_digital_3_numbers();
+	 // display_digital_3_numbers();
 	  gl_run.process_on_step =3; 
 	
 
@@ -347,8 +345,30 @@ void power_on_run_handler(void)
 	 case 6:
 
         works_run_two_hours_state();
-	     gl_run.process_on_step =2;
+	     gl_run.process_on_step =7;
 
+	 break;
+
+	 case 7:
+	 	
+	    set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
+		 gl_run.process_on_step =8;		
+	 break;
+
+	 case 8:
+	      set_timer_timing_value_handler();
+          gl_run.process_on_step =9;
+	 break;
+
+	 case 9:
+	 	 smart_phone_timer_power_on_handler();
+		 gl_run.process_on_step =10;
+	        
+	break;
+
+	 case 10:
+	     link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
+         gl_run.process_on_step =2;
 	 break;
 
 	 default :

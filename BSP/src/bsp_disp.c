@@ -22,8 +22,8 @@ void display_digital_3_numbers(void)
 	
 	 if(g_pro.key_set_temperature_flag == 1){
 	 
-			TM1639_Display_Temperature(g_pro.gset_temperture_value);
-		    return ;
+	    TM1639_Display_Temperature(g_pro.gset_temperture_value);
+		 return ;
 	 
 	}
 
