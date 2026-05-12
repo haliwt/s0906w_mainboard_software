@@ -249,7 +249,7 @@ void power_on_run_handler(void)
 		      send_wifi_power_on_state++;
 		      g_pro.gset_temperture_value = 40;
 			   MqttData_Publish_Update_Data();
-			   vTaskDelay(200);
+			  // vTaskDelay(200);
 
 
 		  }
@@ -267,7 +267,7 @@ void power_on_run_handler(void)
     
 	  display_digital_3_numbers();
 	  gl_run.process_on_step =3; 
-	//updateDht11_toDisplayBoard_value();
+	
 
 	 break;
 
