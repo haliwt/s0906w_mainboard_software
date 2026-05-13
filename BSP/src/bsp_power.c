@@ -405,7 +405,7 @@ void power_off_run_handler(void)
    switch(g_pro.process_off_step){
 
    case 0:
-       LL_IWDG_ReloadCounter(IWDG);
+    
        if(power_on_flag==0){
              power_on_flag ++;
 			 buzzer_power_sound();
