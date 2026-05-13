@@ -50,8 +50,10 @@ void link_wifi_to_tencent_handler(uint8_t data)
     }
     }
         
+   if(g_wifi.gwifi_link_net_success==1){
+	   send_connect_wifi_init();
 
-	send_connect_wifi_init();
+    }
        
   
 }
@@ -244,7 +246,7 @@ static void send_connect_wifi_init(void)
           case 1:
            g_wifi.wifi_led_fast_blink_flag=0; //WT.EDIT 2025.05.12
            Subscriber_Data_FromCloud_Handler();
-			tx_thread_sleep(10);
+
 		     g_pro.first_connect_wifi_flag = 2;
 		  break;
 
@@ -254,14 +256,14 @@ static void send_connect_wifi_init(void)
 			 
 				 MqttData_Publish_SetOpen(0x01);
 		         
-		         tx_thread_sleep(10);
+		   
 				 g_pro.first_connect_wifi_flag = 3;
 		    break;
 
 			case 3:
 		         Publish_Data_ToTencent_Initial_Data();
 				
-                  tx_thread_sleep(10);
+            
 			g_pro.first_connect_wifi_flag = 4;
 
 			break;
@@ -270,7 +272,7 @@ static void send_connect_wifi_init(void)
 
 				Subscriber_Data_FromCloud_Handler();
 				
-	             tx_thread_sleep(10);
+
 
 				 g_pro.first_connect_wifi_flag = 0xff;
 			break;
