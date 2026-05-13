@@ -78,6 +78,7 @@ void power_on_init_ref(void)
 		 
 		   // function led is turn on 
             power_on_led();
+		    disp_all_sumg_led();
 		   //display smg led turn on
 		    Fan_Full_Speed();
 		  
@@ -86,8 +87,8 @@ void power_on_init_ref(void)
 			mouse_open();
 			TEMP_ICON_ON() ;
 	        HUMIDITY_ICON_ON();
-			TM1639_Display_Temperature(g_pro.g_temperature_value);  //DHT11_Display_Data(0); //display temperature value 
-		   
+			//TM1639_Display_Temperature(g_pro.g_temperature_value);  //DHT11_Display_Data(0); //display temperature value 
+		    
            //timer 
            g_pro.g_manual_shutoff_dry_flag = 0;
 		   g_pro.gTimer_disp_time_second= 0;
@@ -107,8 +108,7 @@ void power_on_init_ref(void)
 uint8_t read_dht11_f;
 void power_on_run_handler(void)
 {
-
-   static uint8_t temp_second_displboard,switch_dht11,send_net_state;
+	static uint8_t temp_second_displboard,switch_dht11,send_net_state;
  
 	switch(gl_run.process_on_step){
 
@@ -116,10 +116,12 @@ void power_on_run_handler(void)
      case 0:  //initial reference 
        g_pro.process_off_step =0 ; //clear power off process step .
 
-	   if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
+	   if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	       read_sensorData();//updateDht11_toDisplayBoard_value();
 	       if(g_pro.gpower_on_key_f != 1){
-		      power_on_init_ref();
+		      if(g_pro.disp_three_numbers_f==1){
+			  	g_pro.disp_three_numbers_f=0;
+			  	power_on_init_ref();
 	       	}
 	      
 
@@ -135,6 +137,7 @@ void power_on_run_handler(void)
 	   else{
 
 		    power_on_smart_app_led();
+			
 
 	   }
          gl_run.process_on_step =1;
@@ -166,11 +169,9 @@ void power_on_run_handler(void)
 
 	   case 2:
 	   
+	   g_pro.gset_temperture_value=40;
 	 
-	 
-       
-	   
-	   g_pro.g_fan_switch_gears_flag++;
+       g_pro.g_fan_switch_gears_flag++;
 	   g_pro.process_off_step=0;
 	   //reset wifi 
 	   g_wifi.wifi_led_fast_blink_flag=0;
@@ -385,9 +386,8 @@ void power_on_run_handler(void)
 	  break;
 
 	}
-   
  }
-
+}
 /**********************************************************************
 	*
 	*Functin Name: void power_off_run_handler(void)
@@ -400,7 +400,8 @@ void power_off_run_handler(void)
 {
 
    static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute,switch_f;
-   static uint8_t power_on_flag=0, counter_send=0;
+   static uint8_t power_on_flag=0;
+   static uint16_t counter_send=0;
    switch(g_pro.process_off_step){
 
    case 0:
@@ -493,7 +494,7 @@ void power_off_run_handler(void)
   case 6:
      counter_send ++ ;
     
-     if(counter_send > 200){//10ms * 100
+     if(counter_send > 300){//10ms * 100
 	 	counter_send=0;
 	   
 	 	  SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
@@ -527,7 +528,7 @@ void power_off_run_handler(void)
 	 
       LED_Power_Breathing();
 
-      if(g_pro.gTimer_to_disp_counter > 2){//10ms*200 =2000ms =2s
+      if(g_pro.gTimer_to_disp_counter > 9){//10ms*200 =2000ms =2s
 			g_pro.gTimer_to_disp_counter=0;
          read_sensorData();
       }

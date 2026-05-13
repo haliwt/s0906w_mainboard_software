@@ -56,22 +56,26 @@ void callback_register_fun(void)
 	**
 	*Function Name:
 	*Function : 回调函数实现的逻辑
-	*Input Ref:  100ms 
+	*Input Ref:  10ms 
 	*Return Ref:NO
 	*
 *******************************************************************************/
 static void tim17_isr_callback_handler(void)
 
 {
-   static volatile  uint16_t tm0;
+   static volatile  uint8_t tm0,c10mscnt;
    static volatile uint8_t c100mscnt;
        tm0++;
-	   c100mscnt++;
-	   if(++c100mscnt ==20){//10*20 =200ms
-				 c100mscnt	=0;
-				wifi_led_fast_blink_handler();
+
+	   if(++c10mscnt == 2){
+           c10mscnt = 0;
+           g_pro.disp_three_numbers_f = 1;
+	   }
 	   
-			}
+	   if(++c100mscnt ==10){//10*20 =200ms
+		    c100mscnt	=0;
+			wifi_led_fast_blink_handler();
+	   }
 
      
 	   if(tm0> 99){ //10ms * 100 =1s .

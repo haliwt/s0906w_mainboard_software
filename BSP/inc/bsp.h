@@ -81,7 +81,7 @@
   
 #define TEST_UNIT         1
 
-#define DEBUG_ENABLE       1 //Enable_EventRecorder 
+#define DEBUG_ENABLE       0 //Enable_EventRecorder 
 
 
 #if USE_THREADX == 1
@@ -147,7 +147,7 @@ typedef struct _process{
    uint8_t first_rcoder_ptc_on_flag ;
    uint8_t one_minutes_fan_flag;
    uint8_t process_off_step;
- 
+   uint8_t disp_three_numbers_f;
    
    uint8_t g_humidity_value;
    uint8_t g_temperature_value;

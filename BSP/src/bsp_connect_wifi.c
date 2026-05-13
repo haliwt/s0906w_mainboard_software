@@ -193,7 +193,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
        
 
-        if(flag_switch > 4 && g_pro.gpower_on == power_on){
+        if(flag_switch > 60 && g_pro.gpower_on == power_on){ //100ms
              flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Subscriber_Data_FromCloud_Handler();
@@ -202,7 +202,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
             
         }
-        else if(g_pro.gpower_on == power_off && flag_switch > 4){ //9*4 =36s.
+        else if(g_pro.gpower_on == power_off && flag_switch > 60){ //9*4 =36s.
             flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Update_Dht11_Totencent_Value();
@@ -213,7 +213,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
         }
         else{ //WT.EDIT 2024.08.10 ADD ITEM
-              if(flag_switch > 5){
+              if(flag_switch > 50){
                  flag_switch=0;
               }
               g_wifi.get_rx_beijing_time_enable=0; 

@@ -133,7 +133,9 @@ void disp_all_sumg_led(void)
 
 	 #endif 
 
-   
+    LED_TEMP_ICON_ON();
+    LED_HUM_ICON_OFF();
+	TM1639_Display_Temperature(g_pro.g_temperature_value);
 
      //streamlinght led
    TM1639_Write_Digit_Full(TM1639_ADDR_GRID4_H, TM1639_ADDR_GRID4_L,0xFF); //

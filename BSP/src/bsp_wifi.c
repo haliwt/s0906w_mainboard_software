@@ -79,20 +79,20 @@ static void link_wifi_net_handler(void)
             case 0: //one step
 
          
-				 tx_thread_sleep(100);
+				 //tx_thread_sleep(100);
 			
         		at_send_data((const uint8_t *)"AT+RST\r\n", strlen("AT+RST\r\n"));
 				
-        		 tx_thread_sleep(300);//3s //HAL_Delay(1000);
+        		 tx_thread_sleep(100);//3s //HAL_Delay(1000);
         		 
-				
+				 tx_thread_sleep(100);//3s //HAL_Delay(1000);
 				 g_wifi.gTimer_link_net_timer_time = 0;
                  g_wifi.link_net_step = 1;
 
             break;
 
             case 1:
-               // WIFI_IC_ENABLE();
+                tx_thread_sleep(100);
               //  HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
 				  at_send_data((uint8_t *)"AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"));
                   //USART2_DMA_Send((const uint8_t *)"AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"));

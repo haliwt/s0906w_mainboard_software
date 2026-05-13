@@ -163,7 +163,7 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
 
     /* 1. 禁止 ThreadX 调度 + 全局中断（关键时序区） */
 	
-    old_post = tx_interrupt_control(TX_INT_DISABLE);
+   // old_post = tx_interrupt_control(TX_INT_DISABLE);
 
    // __disable_irq();
 
@@ -213,7 +213,7 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
 
     /* 6. 恢复中断 & 调度 */
     ///__enable_irq();
-    tx_interrupt_control(old_post);
+    //tx_interrupt_control(old_post);
 
 
     /* 7. 校验 */
@@ -232,22 +232,22 @@ uint8_t DHT11_ReadData(uint8_t *humi, uint8_t *temp)
 
 error_1:
    // __enable_irq();
-    tx_interrupt_control(old_post);
+   /// tx_interrupt_control(old_post);
     return 1;
 
 	error_2:
 		//__enable_irq();
-		tx_interrupt_control(old_post);
+		//tx_interrupt_control(old_post);
 		return 2;
 
 		error_3:
     //__enable_irq();
-    tx_interrupt_control(old_post);
+   // tx_interrupt_control(old_post);
     return 3;
     
     	error_4:
     //__enable_irq();
-    tx_interrupt_control(old_post);
+    //tx_interrupt_control(old_post);
     return 3;
 
 }
