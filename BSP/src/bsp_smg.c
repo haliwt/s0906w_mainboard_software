@@ -153,7 +153,7 @@ void disp_all_sumg_led(void)
      // TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, 0XF3 | 0X08);
       LED_TEMP_ICON_ON();
       LED_HUM_ICON_OFF();
-	  DHT11_Display_Data(DISPLAY_TEMP); // ćžç¤şć¸ŠĺşŚ
+	  DHT11_Display_Data(0); // ćžç¤şć¸ŠĺşŚ
 
 	 #endif 
 

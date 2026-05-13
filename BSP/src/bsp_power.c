@@ -120,6 +120,9 @@ void power_on_run_handler(void)
 
      case 0:  //initial reference 
        gl_run.process_off_step =0 ; //clear power off process step .
+       LED_WIFI_ON();
+       LED_TEMP_ICON_ON();
+       LED_HUM_ICON_OFF();
        Update_Dht11_toDisplayBoard_Value();
 	   disp_all_sumg_led();
 	   power_on_led();
@@ -171,9 +174,9 @@ void power_on_run_handler(void)
 
 
 	   case 1:
-	   
-	   // disp_all_sumg_led();
-		//power_on_led();
+	  LED_WIFI_ON();
+	  LED_TEMP_ICON_ON();
+      LED_HUM_ICON_OFF();
 	   
 	   g_pro.gTimer_send_dht11_disp=5;
        
@@ -222,7 +225,9 @@ void power_on_run_handler(void)
 	 break;
 
 	 case 2:
-	 	//DRY_OPEN();
+	 	LED_TEMP_ICON_ON();
+        LED_HUM_ICON_OFF();
+	    LED_WIFI_ON();
         disp_all_sumg_led();
 		power_on_led();
 		
