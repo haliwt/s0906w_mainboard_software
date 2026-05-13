@@ -51,24 +51,12 @@ void power_onoff_handler(uint8_t data)
             display_digital_3_numbers();
          }
 
-	    if(g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
-			wifi_led_fast_blink_handler();
-		    //smart_phone_timer_power_on_handler();
-	        
-			//link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
-			
-			}
+	   
 
         break;
 
 	  case power_off:
-         gl_run.process_on_step =0;
-		 g_pro.g_real_hours_counter=0;
-         if(power_on_flag==0){
-             power_on_flag ++;
-			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
-			 buzzer_sound();
-		 }
+        
          power_off_run_handler();
 
 	   break;
@@ -382,6 +370,7 @@ void power_on_run_handler(void)
 	break;
 
 	 case 12:
+	 	 led_wifi_connected_net();
 	     link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag); //detected ADC of value 
          gl_run.process_on_step =3;
 	 break;
@@ -406,10 +395,13 @@ void power_off_run_handler(void)
 {
 
    static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute,switch_f;
+   static uint8_t dc_on_f;
    switch(gl_run.process_off_step){
 
    case 0:
    	  gl_run.process_on_step =0;
+	
+	  g_pro.g_real_hours_counter=0;
 
    	  power_off_led();
       TM1639_Display_ON_OFF(0);
@@ -438,6 +430,17 @@ void power_off_run_handler(void)
    break;
 
    case 1:
+  
+         if(dc_on_f==0){
+             dc_on_f ++;
+			 LL_GPIO_ResetOutputPin(LED_POWER_GPIO_Port, LED_POWER_Pin);
+			 buzzer_sound();
+		 }
+      gl_run.process_off_step = 2;
+
+   break;
+
+   case 2:
 
      power_off_led();
       TM1639_Display_ON_OFF(0);
@@ -452,12 +455,12 @@ void power_off_run_handler(void)
    power_off_led();
 		TM1639_Display_ON_OFF(0);
 
-   gl_run.process_off_step = 2;
+   gl_run.process_off_step = 3;
 
 
    break;
 
-   case 2:
+   case 3:
 
      power_off_led();
       TM1639_Display_ON_OFF(0);
@@ -469,11 +472,11 @@ void power_off_run_handler(void)
    }
     power_off_led();
       TM1639_Display_ON_OFF(0);
-   gl_run.process_off_step = 3;
+   gl_run.process_off_step = 4;
 
    break;
 
-   case 3:
+   case 4:
 	 power_off_led();
   
 
@@ -501,7 +504,6 @@ void power_off_run_handler(void)
      mainboard_close_all_fun();
 	
 
-     LED_Power_Breathing();
 	 wifi_first_connect++;
 
 	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){

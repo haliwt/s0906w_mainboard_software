@@ -155,12 +155,12 @@ void key_power_longk_fun(void)
             g_pro.first_connect_wifi_flag = 0;//reset first connect wifi flag
 
             buzzer_sound();
-            wifi_led_fast_blink_handler();
+     
             if(g_disp.g_second_disp_flag ==1){
 				SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
                 osDelay(100);
             }
-            wifi_led_fast_blink_handler();
+         
             
         }
     }

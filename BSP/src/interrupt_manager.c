@@ -63,14 +63,23 @@ void callback_register_fun(void)
 static void tim17_isr_callback_handler(void)
 
 {
-   static  uint8_t tm0,c20ms;
+   static  uint8_t tm0,c20ms,c100ms;
        tm0++;
 	  
-	   g_pro.gTimer_led_wifi_bilnk_counter++;
+       
 	   if(++c20ms == 3){
 	   	  c20ms = 0;
 	      g_pro.disp_3_numbers_f =1;
 	   }
+
+	   if(++c100ms == 10){//10ms *10 =100ms 
+	   	   c100ms = 0;
+		   wifi_led_fast_blink_handler();
+
+	   }
+
+
+	   
 	   if(tm0> 99){ //10ms * 100 =1s
 	      tm0=0;
 		   g_pro.gTimer_disp_time_second ++;
@@ -87,7 +96,7 @@ static void tim17_isr_callback_handler(void)
 		   g_pro.gTimer_wifi_slowly_blink ++;
 		   g_pro.gTimer_send_dht11_disp++;
 		  g_pro.gTimer_set_temp_counter++;
-		  g_pro.gTimer_led_wifi_bilnk_counter++;
+	
 		  //g_pro.gTimer_key_long_counter++;
 		  g_pro.gTimer_to_disp_counter++;
 		  g_pro.gTimer_mainboard_fun_counter++;

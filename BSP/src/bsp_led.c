@@ -100,36 +100,36 @@ void LED_Power_Breathing(void)
  ************************************************************************/
 void wifi_led_fast_blink_handler(void)
 {
-   static uint8_t flag_counter;
-   if(g_pro.gpower_on==power_on){
+    static uint8_t c1scnt=0; //100ms
+    if(g_pro.gpower_on==power_on &&g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0){
 
-     
-
-   if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0){
-
-       
-	   if( g_pro.gTimer_led_wifi_bilnk_counter > 9){//10ms
-
-	       g_pro.gTimer_led_wifi_bilnk_counter=0;
-	
-           flag_counter = flag_counter ^ 0x01;
-	       if(flag_counter == 1) LED_WIFI_ON();
-	       else LED_WIFI_OFF();
-	  	}
-	   
-
-	 }
-	 else if(g_wifi.gwifi_link_net_success==1){
-
-       		LED_WIFI_ON();
+           LED_WIFI_TOGGLE();
+	  	
 	}
-	else if(g_wifi.gwifi_link_net_success ==0){
-
-             wifi_led_slowly_blink();
+	else if(g_pro.gpower_on==power_on && g_wifi.gwifi_link_net_success ==0 && g_wifi.wifi_led_fast_blink_flag==0){
+             if(++c1scnt > 9){ //10ms * 100 =1s.
+			 	c1scnt = 0;
+                LED_WIFI_TOGGLE();
+             }
      }
-   	}
+    else if(g_pro.gpower_on==power_off){
+
+	           if(++c1scnt > 9){ //10ms * 100 =1s.
+				  c1scnt = 0;
+				  LED_POWER_TOGGLE();
+			   }
+
+
+	}
 }
 
+void led_wifi_connected_net(void)
+{
+   if(g_wifi.gwifi_link_net_success==1 && g_wifi.wifi_led_fast_blink_flag !=1){
+
+		   LED_WIFI_ON();
+ }
+}
 
 void wifi_led_slowly_blink(void)
 {
