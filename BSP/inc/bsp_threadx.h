@@ -12,6 +12,7 @@
 
 
 void vtask_isq_handler(void);
+void vtask_key_power(void);
 
 
 

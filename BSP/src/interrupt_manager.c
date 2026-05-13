@@ -72,7 +72,7 @@ static void tim17_isr_callback_handler(void)
            g_pro.disp_three_numbers_f = 1;
 	   }
 	   
-	   if(++c100mscnt ==10){//10*20 =200ms
+	   if(++c100mscnt ==10){//10*10 =100ms
 		    c100mscnt	=0;
 			wifi_led_fast_blink_handler();
 	   }
@@ -91,7 +91,7 @@ static void tim17_isr_callback_handler(void)
 		   g_pro.gTimer_two_hours_counter++;
 		   g_pro.gTimer_disp_temp_humidity_vlaue++;
 		   g_pro.gTimer_display_adc_value++;
-		   g_pro.gTimer_wifi_slowly_blink ++;
+	
 		
 		  g_pro.gTimer_set_temp_counter++;
 	

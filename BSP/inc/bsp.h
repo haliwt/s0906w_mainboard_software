@@ -204,7 +204,7 @@ typedef struct _process{
    uint8_t   gTimer_input_set_temp_timer;
    uint8_t gTimer_disp_temp_humidity_vlaue;
    uint8_t gTimer_display_adc_value;
-   uint8_t  gTimer_wifi_slowly_blink ;
+
    uint8_t gTimer_send_dht11_disp;
    uint8_t gTimer_set_temp_counter;
 

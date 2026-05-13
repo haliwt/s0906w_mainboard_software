@@ -138,14 +138,14 @@ static void threadx_handler(void)
 
    tx_event_flags_create(&key_event, "key_event");
    
-	tx_thread_create(&thread_decoder,
-					"DecoderPro",
-					vTaskDecoderPro,   // 每个消息大小，这里用 1 字节
+	tx_thread_create(&thread_decoder,       /* 任务控制块地址 */ 
+					"DecoderPro",           /* 任务名 */
+					vTaskDecoderPro,       // 每个消息大小，这里用 1 字节
+					0,                       /* 传递给任务的参数 */
+					stack_decoder_pro,      /* 堆栈基地址 */
+					STACK_SIZE_DECODER,       /* 堆栈空间大小 */ 
+					3,
 					0,
-					stack_decoder_pro,
-					STACK_SIZE_DECODER,
-					3,
-					3,
 					TX_NO_TIME_SLICE,
 					TX_AUTO_START);
 				
@@ -156,7 +156,7 @@ static void threadx_handler(void)
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
                      4,							   /* 任务优先级*/
-                     4,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     0,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -168,7 +168,7 @@ static void threadx_handler(void)
                      stack_start_pro,              /* 堆栈基地址 */
                      STACK_SIZE_KEY,			   /* 堆栈空间大小 */  
                      1, 						   /* 任务优先级*/
-                     1, 						   /* 任务抢占阀值 */
+                     0, 						   /* 任务抢占阀值 */
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
   #endif 
@@ -179,7 +179,7 @@ static void threadx_handler(void)
 					  stack_key_event,				/* 堆栈基地址 */
 					  STACK_SIZE_EVENT,				/* 堆栈空间大小 */  
 					  2,							/* 任务优先级*/
-					  2,							/* 任务抢占阀值 */
+					  0,							/* 任务抢占阀值 */
 					  TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
@@ -388,7 +388,7 @@ static void vTaskUiPro(ULONG thread_input)
     debug_stack_ui_check();
    #endif 
 
-	tx_thread_sleep(2);//10ms *1
+	tx_thread_sleep(1);//10ms *2
 
 	  
     }
@@ -435,6 +435,11 @@ void tx_thread_stack_error_handler(TX_THREAD *thread_ptr)
 void vtask_isq_handler(void)
 {
     tx_semaphore_put(&decoder_semaphore);
+}
+
+void vtask_key_power(void)
+{
+  tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
 }
 
 

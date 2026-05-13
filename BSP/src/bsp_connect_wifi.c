@@ -79,13 +79,13 @@ void wifi_auto_detected_link_state(void)
         
           if(g_pro.gpower_on == power_off){
 		     MqttData_Publish_PowerOff_Ref();
-            
+             tx_thread_sleep(20);
 
           }
 		  
           
           Subscriber_Data_FromCloud_Handler();
-        
+           tx_thread_sleep(20);
          
      }
 
@@ -147,8 +147,7 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
    if(power_on_login_tencent_cloud_flag==3 ){
 	 power_on_login_tencent_cloud_flag++;
 	   g_wifi.gTimer_link_net_timer_time=0;
-      // HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//�?
-       // tx_thread_sleep(100);//HAL_Delay(1000);
+       at_send_data((const uint8_t *)"AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
 	  
 	}
    
@@ -165,7 +164,7 @@ static void Auto_SmartPhone_TryToLink_TencentCloud(void)
        power_on_login_tencent_cloud_flag++;
         if(g_pro.disp_second_f ==1){
 			SendWifiData_To_Cmd(0x1F,0x00);
-	    tx_thread_sleep(10);
+	    	tx_thread_sleep(10);
         	}
     }
 }

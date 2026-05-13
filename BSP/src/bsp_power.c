@@ -10,7 +10,7 @@
 typedef struct{
 
   uint8_t process_on_step;
-  uint8_t process_off_step;
+ // uint8_t process_off_step;
 
 
 }POWER_RUN_STATE;
@@ -414,7 +414,7 @@ void power_off_run_handler(void)
       g_pro.gpower_on_key_f = 0;
       gl_run.process_on_step =0;
 	  g_pro.g_real_hours_counter=0;
-	  
+	  TM1639_Display_ON_OFF(0);
       power_off_led();
       DRY_CLOSE();
 
@@ -425,8 +425,8 @@ void power_off_run_handler(void)
    break;
 
    case 1:
-   	 LL_IWDG_ReloadCounter(IWDG);
-   	  TM1639_Display_ON_OFF(0);
+
+   	  
       g_pro.process_off_step = 2;
    break;
 
@@ -458,7 +458,7 @@ void power_off_run_handler(void)
    break;
 
    case 3:
-     LL_IWDG_ReloadCounter(IWDG);
+    
      if(fan_flag == 0){
 	 	fan_flag++;
 	    fan_run_one_minute =2;
@@ -469,7 +469,7 @@ void power_off_run_handler(void)
 
 
    case 4:
-   	LL_IWDG_ReloadCounter(IWDG);
+   	
 	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
             MqttData_Publish_SetOpen(0);  
 			

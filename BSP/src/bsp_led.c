@@ -115,40 +115,33 @@ void LED_FUN_ON(void)
  ************************************************************************/
 void wifi_led_fast_blink_handler(void)
 {
-   
-   if(g_pro.gpower_on==power_on && g_wifi.wifi_led_fast_blink_flag==1){
+   volatile static uint8_t slowly_led_cnt; //100ms
+   if(g_pro.gpower_on==power_on && g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0){
 
         LED_WIFI_TOGGLE() ;
+	}
+    else if(g_wifi.gwifi_link_net_success ==0 && g_pro.gpower_on==power_on && g_wifi.wifi_led_fast_blink_flag==0){
+	    if(++slowly_led_cnt > 9){ //10ms * 100 
+	      slowly_led_cnt=0;
+		   LED_WIFI_TOGGLE();
+	    }
 	}
 }
 
 
-void wifi_led_slowly_blink(void)
-{
- 
-    if(g_pro.gTimer_wifi_slowly_blink > 1)  // 1.5s // blink 周期1秒 =50 =3s
-    {
-        g_pro.gTimer_wifi_slowly_blink = 0;
-       
-        LED_WIFI_TOGGLE();
-        
-    }
-}
+
 
 void wifi_led_slowly_blink_handler(void)
 {
 
-   if(g_wifi.wifi_led_fast_blink_flag==1) return ;
+   if(g_wifi.wifi_led_fast_blink_flag==1 && g_wifi.gwifi_link_net_success==0) return ;
    
 
 	if(g_wifi.gwifi_link_net_success==1){
 	
 		  LED_WIFI_ON();
 	}
-	else if(g_wifi.gwifi_link_net_success ==0){
 	
-		wifi_led_slowly_blink();
-	}
 
 }
 

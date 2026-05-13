@@ -552,28 +552,30 @@ void Json_Parse_Command_Fun(void)
   
 	case OPEN_ON_ITEM:
 	
-       //if(timer_expired(&t_mqtt_0)){
+       if(timer_expired(&t_mqtt_0)){
 		MqttData_Publish_SetOpen(1);  
 		//tx_thread_sleep(20);//HAL_Delay(100);//tx_thread_sleep(100);//HAL_Delay(100);
-       	//}
-		 g_pro.gpower_on = power_on;
-		 g_pro.disp_second_f = 1;
+       	}
+	   
+		  
+		
 	     g_wifi.gwifi_link_net_success =1;
           g_wifi.gwifi_normal_power_on_flag= 1;
           if(g_pro.disp_second_f ==1){
-		  	 if(timer_expired(&t_xdp)){
-		  	    SendData_Set_Command(0x20,open);
-		        //tx_thread_sleep(10);
-		  	 	}
+		  	if(timer_expired(&t_xdp)){
+		  	   SendData_Set_Command(0x20,open);
+		    //tx_thread_sleep(10);
+             }
+		  	 	
           }
 
-		//  if(timer_expired(&t_mqtt_1)){
+	     if(timer_expired(&t_mqtt_1)){
 
         Publish_Data_ToTencent_Initial_Data();
-	    //tx_thread_sleep(30);//HAL_Delay(300);
-		//}
+	    //tx_thread_sleep(20);//HAL_Delay(300);
+		}
 
-       
+        vtask_key_power();//g_pro.gpower_on = power_on;
 		buzzer_temp_on=0;
 		gl_msg.response_wifi_signal_label = 0xff;
 
@@ -584,9 +586,7 @@ void Json_Parse_Command_Fun(void)
 
            MqttData_Publish_SetOpen(0);  
 			
-             	
-            
-            g_pro.gpower_on = power_off;
+       
 	        g_wifi.gwifi_link_net_success =1;
             g_pro.disp_second_f = 1;
 			if(g_pro.disp_second_f ==1){
@@ -597,7 +597,7 @@ void Json_Parse_Command_Fun(void)
 				}
           
 			buzzer_temp_on=0;
-	
+	     vtask_key_power(); // g_pro.gpower_on = power_off;
          
         gl_msg.response_wifi_signal_label = 0xff;
         
