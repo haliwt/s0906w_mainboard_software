@@ -132,7 +132,8 @@ static void power_on_initial(void)
        }
 	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
 		   read_sensorData();//updateDht11_toDisplayBoard_value();
-	       if(g_pro.gpower_on_key_f != 1){  
+           g_pro.first_connect_wifi_flag =1;
+		   if(g_pro.gpower_on_key_f != 1){  
 		        power_on_init_ref();
 	        }
 		
