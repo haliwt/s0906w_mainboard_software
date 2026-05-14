@@ -158,8 +158,7 @@ void key_power_longk_fun(void)
 */
 void handle_mode_key(void)
 {
-    g_pro.gTimer_switch_set_timer_times = 0;
-	g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
+   
     buzzer_sound();
     mode_short_key_fun();
     

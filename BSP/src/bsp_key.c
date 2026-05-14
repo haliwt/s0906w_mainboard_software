@@ -534,6 +534,8 @@ void sendDisplayCommand(uint8_t command,uint8_t data)
 **/
 void mode_short_key_fun(void)
 {
+    g_pro.gTimer_switch_set_timer_times = 0;
+	g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
 	g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
 	g_pro.switch_disp_time_or_temp_item = timer_disp_mode; //WT.EDIT 2025.10.17
 	

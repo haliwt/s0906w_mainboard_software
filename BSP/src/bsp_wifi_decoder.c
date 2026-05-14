@@ -503,17 +503,14 @@ void Tencent_Cloud_Rx_Handler(void)
 	
     if(strstr((char *)g_wifi.wifi_rx_data_array,"state\":1")){
            if(g_pro.gpower_on ==power_on){
-            g_pro.gAI=1;
-			LED_AI_ON();
+          
 			gl_msg.response_wifi_signal_label = STATE_AI_MODEL_ITEM;
         	}
 		  
     }
     else if(strstr((char *)g_wifi.wifi_rx_data_array,"state\":2")){
             if(g_pro.gpower_on ==power_on){
-            g_pro.gAI=2;
-			g_pro.gAI = 0;
-			LED_AI_OFF();
+        
 			gl_msg.response_wifi_signal_label = STATE_TIMER_MODEL_ITEM;
             }
 			
@@ -752,17 +749,26 @@ void Json_Parse_Command_Fun(void)
 	  if(g_pro.gpower_on ==power_on){
 
       
-             g_pro.gAI=2;
-			 LED_AI_OFF();
-	       if(timer_expired(&t_mqtt_1)){
-             MqttData_Publish_SetState(2);
-    	     //tx_thread_sleep(30);//HAL_Delay(350);
-	   	    }
+             //g_pro.gAI=2;
+			// LED_AI_OFF();
+			mode_short_key_fun();
+	       if(g_pro.gAI ==1){
+		    
+              MqttData_Publish_SetState(1);
+    		  //tx_thread_sleep(30);//HAL_Delay(350);
+		  	
+		  	}
+		   else{
+		     MqttData_Publish_SetState(2);
+						
+		   }
+
+		   
             if(g_pro.disp_second_f ==1){
-				if(timer_expired(&t_xdp)){
+				
     	        SendWifiData_To_Cmd(0x27,0x02);
-				//tx_thread_sleep(10);
-				  }
+				tx_thread_sleep(10);
+				  
             }
 
            
@@ -775,12 +781,23 @@ void Json_Parse_Command_Fun(void)
 	  case STATE_AI_MODEL_ITEM: // beijing timing 0x09
 	  	 if(g_pro.gpower_on ==power_on){
 		
-              g_pro.gAI=1;
-			  LED_AI_ON();
-		  if(timer_expired(&t_mqtt_1)){
+             // g_pro.gAI=1;
+			 /// LED_AI_ON();
+			 mode_short_key_fun();
+		  if(g_pro.gAI ==1){
+		    if(timer_expired(&t_mqtt_1)){
               MqttData_Publish_SetState(1);
     		  //tx_thread_sleep(30);//HAL_Delay(350);
 		  	}
+		  	}
+		   else{
+		      if(timer_expired(&t_mqtt_1)){
+					MqttData_Publish_SetState(2);
+						//tx_thread_sleep(30);//HAL_Delay(350);
+				 }
+
+
+		   }
               if(g_pro.disp_second_f ==1){
 			  	  if(timer_expired(&t_xdp)){
     		   SendWifiData_To_Cmd(0x27,0x01);
@@ -895,10 +912,7 @@ void Json_Parse_Command_Fun(void)
 			   g_wifi.gwifi_normal_power_on_flag =0;
 
 				buzzer_temp_on=0;
-   
-
-		         
-           }
+   		   }
 		   else if(strstr((char *)TCMQTTRCVPUB,"open\":0")){
 		   
 		   

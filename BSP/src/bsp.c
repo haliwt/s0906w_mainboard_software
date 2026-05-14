@@ -58,9 +58,7 @@ void mainboard_fun_handler(void)
 
    if(g_pro.switch_disp_time_or_temp_item == temperature_mode){
 	   if(g_pro.gAI ==0){//if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
-
-	  
-	      LED_AI_OFF();
+           LED_AI_OFF();
 	    
 	   }
 	   else{

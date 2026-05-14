@@ -81,16 +81,12 @@ void display_digital_3_numbers(void)
 		     if(g_pro.gAI ==1){//if(g_pro.set_timing_or_timer_time_flag ==WORKS_TIME){ // && g_key.key_mode_long_flag != 1){
                   
     	 		  LED_AI_ON(); 
-			   #if 0
-			      printf("gAI = 1 \r\n");
-			   #endif 
+			 
 			 }
 			 else{
-			    g_pro.gAI=0;
+			   
 				LED_AI_OFF(); 
-			 #if 0
-			    printf("gAI = 0 \r\n");
-			 #endif 
+		
 
             }
 		
