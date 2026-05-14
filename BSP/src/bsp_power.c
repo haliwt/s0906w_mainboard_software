@@ -21,7 +21,6 @@ POWER_RUN_STATE gl_run;
 
 //DisplayMode disp_temp_hum = DISPLAY_TEMP;  // 默认显示温度
 
-uint8_t send_wifi_power_on_state;
 
 
 /**********************************************************************
@@ -136,7 +135,7 @@ static void power_on_initial(void)
 	       if(g_pro.gpower_on_key_f != 1){  
 		        power_on_init_ref();
 	        }
-		   send_wifi_power_on_state = 1;
+		
 		
 	   }
 	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 1){
@@ -653,40 +652,29 @@ void power_on_handler(void)
 
 
 		case 6: //20ms *6 =120ms
-             if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
-		 
-		   if(send_wifi_power_on_state ==1){
-		   send_wifi_power_on_state++;
-		   g_pro.gset_temperture_value = 40;
-
-		     MqttData_Publish_Update_Data();
-			 
-		  }
-		 break;
-
-
-		case 7: //20ms*7 = 140ms.
+           
          fault_handler();
 		 wifi_led_slowly_blink_handler();
 
 		break;
 
-		case 8://180ms 
+		case 7://180ms 
 			works_run_two_hours_state();
 		break;
 
           }
 
-		}
+		
 		 #if DEBUG_ENABLE
 		debug_stack_ui_check();
 		#endif 
 		  
          // ==================== 4. 时间片轮转维护 ====================
            time_slot++;
-           if (time_slot >8 ) time_slot = 0; 
-	}
-	
+           if (time_slot >7 ) time_slot = 0; 
+      }
 }
+	
+
 
 

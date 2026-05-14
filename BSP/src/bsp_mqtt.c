@@ -95,15 +95,10 @@ static void Mqtt_Value_update_data(void)
 
     sg_info.find = 100;//gctl_t.set_wind_speed_value;
     
+     sg_info.set_temperature = g_pro.gset_temperture_value;
 
-      if(g_pro.gset_temperture_value==40)
-	  	sg_info.set_temperature = 40;
-	  else{
-	     sg_info.set_temperature = g_pro.gset_temperture_value;
+	  
 
-	  }
-
-	//}
 
 }
 /********************************************************************************

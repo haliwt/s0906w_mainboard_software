@@ -82,11 +82,16 @@ void wifi_auto_detected_link_state(void)
              tx_thread_sleep(20);
 
           }
+		  else if(g_pro.gpower_on == power_on){
+            MqttData_Publish_SetOpen(1);  
+		    tx_thread_sleep(20);
+
+		  }
 		  
-          
-          Subscriber_Data_FromCloud_Handler();
-           tx_thread_sleep(20);
          
+          Subscriber_Data_FromCloud_Handler();
+          tx_thread_sleep(20);
+          g_pro.first_connect_wifi_flag =1;
      }
 
   
