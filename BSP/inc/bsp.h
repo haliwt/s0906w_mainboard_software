@@ -116,14 +116,15 @@ typedef enum{
 typedef enum{
 	temperature_mode,
 	timer_time_mode=1,
-	beijing_time_mode=2,
-	disp_timer_mode=3,
-	disp_temp_hum_mode=4,
-	input_set_temperature_mode=5, //WT.EDIT 2025.04.23
-	input_set_null=6,
-	input_set_timer_mode_null=7,
-	input_set_normal_time_mode=8,
-	input_normal_null=9,
+	timer_disp_mode =2,
+	beijing_time_mode=3,
+	disp_timer_mode=4,
+	disp_temp_hum_mode=5,
+	input_set_temperature_mode=6, //WT.EDIT 2025.04.23
+	input_set_null=7,
+	input_set_timer_mode_null=8,
+	input_set_normal_time_mode=9,
+	input_normal_null=10,
 	disp_works_mode
 	
 }time_state;
@@ -141,7 +142,7 @@ typedef struct _process{
    uint8_t works_two_hours_interval_flag;
    uint8_t g_manual_shutoff_dry_flag;
    uint8_t key_add_dec_be_pressed_flag;
-   uint8_t set_timing_or_timer_time_flag;
+
 
    uint8_t first_set_ptc_on;
    uint8_t first_rcoder_ptc_on_flag ;

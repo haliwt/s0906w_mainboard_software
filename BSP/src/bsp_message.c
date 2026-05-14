@@ -505,7 +505,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				
 
 				g_pro.switch_disp_time_or_temp_item = temperature_mode; //define UP and down key is set temperature value 
-			    g_pro.set_timing_or_timer_time_flag=TIMER_TIME;
+			    //g_pro.set_timing_or_timer_time_flag=TIMER_TIME;
 			    g_pro.gTimer_timer_time_second=0;
 				g_pro.gdisp_timer_minutes_value=0;
 				  
@@ -535,7 +535,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 				g_pro.gTimer_timer_time_second=0;
 				
 				
-				g_pro.set_timing_or_timer_time_flag = WORKS_TIME;
+				//g_pro.set_timing_or_timer_time_flag = WORKS_TIME;
 				
 
 				if(g_pro.fan_warning ==0 && g_pro.ptc_warning==0){

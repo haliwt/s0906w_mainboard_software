@@ -56,21 +56,20 @@ void mainboard_fun_handler(void)
        g_pro.gTimer_mainboard_fun_counter=0;
 
 
-  if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
-	  g_pro.gAI = 0;
-  
-      LED_AI_OFF();
-      counter_flag ++;
+   if(g_pro.switch_disp_time_or_temp_item == temperature_mode){
+	   if(g_pro.gAI ==0){//if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
 
-   }
-   else{
-	
-	   g_pro.gAI = 1;
-       LED_AI_ON();
+	  
+	      LED_AI_OFF();
+	    
+	   }
+	   else{
+		
+	       LED_AI_ON();
 
-	}
+		}
    
-   	
+   }
 
 	if(g_pro.gDry == 1 && g_pro.g_manual_shutoff_dry_flag ==0 && g_pro.works_two_hours_interval_flag ==0){
 		DRY_OPEN();

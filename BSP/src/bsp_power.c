@@ -200,14 +200,10 @@ static void power_on_initial(void)
 	   g_pro.delay_run_adc_counter=0;
 	   g_pro.g_real_hours_counter =0;
 	   
-	 
-
-	 
-	   g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
+	    g_pro.gAI =1 ;//g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
 	   
-	 
-
-	   g_pro.gTimer_to_disp_counter= 20;
+	    g_pro.gTimer_to_disp_counter= 20;
+		g_pro.gset_temperture_value =40;
 
 	   gl_run.process_on_step =3;
 	 break;
@@ -216,11 +212,10 @@ static void power_on_initial(void)
       
 
 	case 3: //DISPAY 3 digital numbers . process .
-    if(g_pro.gTimer_to_disp_counter > 4){//10ms*200 =2000ms =2s
-			g_pro.gTimer_to_disp_counter=0;
-		    read_sensorData();//Update_Dht11_toDisplayBoard_Value();
+   
+	   read_sensorData();//Update_Dht11_toDisplayBoard_Value();
 
-		}
+		
 	  gl_run.process_on_step =0xff; 
 
 	 break;

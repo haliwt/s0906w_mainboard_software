@@ -512,6 +512,7 @@ void Tencent_Cloud_Rx_Handler(void)
     else if(strstr((char *)g_wifi.wifi_rx_data_array,"state\":2")){
             if(g_pro.gpower_on ==power_on){
             g_pro.gAI=2;
+			g_pro.gAI = 0;
 			LED_AI_OFF();
 			gl_msg.response_wifi_signal_label = STATE_TIMER_MODEL_ITEM;
             }

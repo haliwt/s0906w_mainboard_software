@@ -46,7 +46,7 @@ static void adjust_timer(int8_t delta) ;
 static void setDryState(uint8_t state);
 static void publishMqttData(DryState state, uint8_t temperature);
 
-static void disp_set_timer_mode(void);
+
 static void CompareSetAndActualTemperature(void);
 
 
@@ -63,7 +63,7 @@ void key_referen_init(void)
 
   g_pro.key_set_temperature_flag=0;
   g_pro.key_add_dec_be_pressed_flag=0;
-  g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
+  g_pro.gAI =1;//g_pro.set_timing_or_timer_time_flag=WORKS_TIME; //WT.EDIT 2025.10.18
  
   
 }
@@ -122,14 +122,11 @@ static void adjust_temperature(int8_t delta)
 {
 
    //static uint8_t temperature_init_value ;
-	if (g_pro.temperature_init_value == 0) {
-        g_pro.temperature_init_value++;
-        g_pro.gset_temperture_value = (delta > 0) ? 40 : 20;
-    } else {
-        g_pro.gset_temperture_value += delta;
-        if (g_pro.gset_temperture_value > MAX_TEMPERATURE) g_pro.gset_temperture_value = MAX_TEMPERATURE;
+
+     g_pro.gset_temperture_value += delta;
+         if (g_pro.gset_temperture_value > MAX_TEMPERATURE) g_pro.gset_temperture_value = MAX_TEMPERATURE;
         if (g_pro.gset_temperture_value < MIN_TEMPERATURE) g_pro.gset_temperture_value = MIN_TEMPERATURE;
-    }
+    
 	g_pro.gTimer_input_set_temp_timer=0;
     g_pro.g_manual_shutoff_dry_flag = 0;
  
@@ -538,9 +535,12 @@ void sendDisplayCommand(uint8_t command,uint8_t data)
 void mode_short_key_fun(void)
 {
 	g_pro.key_set_temperature_flag=0;//WT.EDIT 2025.10.17
-	g_pro.switch_disp_time_or_temp_item = timer_time_mode; //WT.EDIT 2025.10.17
+	g_pro.switch_disp_time_or_temp_item = timer_disp_mode; //WT.EDIT 2025.10.17
 	
-	disp_set_timer_mode();
+	//g_pro.gAI = 0;
+    LED_AI_OFF();
+    HUMIDITY_ICON_OFF();
+    TEMP_ICON_OFF();
 }
 
 /**
@@ -549,32 +549,5 @@ void mode_short_key_fun(void)
 *@param:
 *
 **/
-static void disp_set_timer_mode(void)
-{
-    g_pro.gAI = 0;
-    LED_AI_OFF();
-    HUMIDITY_ICON_OFF();
-    TEMP_ICON_OFF();
 
-   switch(g_pro.set_timing_or_timer_time_flag){
-
-     case TIMER_TIME:
-	
-//	    if(g_pro.gdisp_timer_hours_value >0)
-//	         TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
-//		else 
-//		   TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value); //display "0 0 n"
-
-		
-	break;
-
-	case WORKS_TIME:
-	  // g_pro.gdisp_timer_hours_value=0;
-       //TM1639_Display_3_Digit(g_pro.gdisp_timer_hours_value);
-     //  TM1639_Display_setTimerHours_3_Digit(g_pro.gdisp_timer_hours_value);
-
-	break;
-   	}
-	
-}
 
