@@ -71,7 +71,7 @@ void display_digital_3_numbers(void)
 					   else
 					   	   TM1639_Display_setTimerMinutes_3_Digit(g_pro.gdisp_timer_minutes_value);
 		           }
-				   else if(timer_disp_f  == 1){//g_key.key_mode_long_flag !=1 &&
+				   else if(timer_disp_f  == 1 && g_pro.gAI==1){//g_key.key_mode_long_flag !=1 &&
 					   g_pro.gdisp_timer_hours_value=0;
 					   g_pro.gdisp_timer_minutes_value=0;
                       
@@ -205,7 +205,7 @@ static void timer_timing_handler(void)
        
 
         // 3. 状态触发动作 (避免在逻辑中硬编码 HW 操作)
-        if (g_pro.gdisp_timer_hours_value < 0) {
+        if (g_pro.gdisp_timer_hours_value < 0 ) {
             execute_system_shutdown(); // 抽离关机动作
         }
     }

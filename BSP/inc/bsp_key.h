@@ -136,7 +136,7 @@ void set_temperature_value_handler(void);
 void sendDisplayCommand(uint8_t command,uint8_t data) ;
 void mode_short_key_fun(void);
 
-void compare_temperature_value_hanlder(void);
+
 
 
 #endif /* BSP_INC_BSP_KEY_H_ */

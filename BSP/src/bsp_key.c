@@ -41,13 +41,14 @@ uint8_t ptc_on_flag =0xff,ptc_off_flag=0xff;
 
 static void adjust_temperature(int8_t delta) ;
 static void adjust_timer(int8_t delta) ;
-//static void handleSetTemperatureControl(void) ;
-//static void handleDefaultTemperatureControl(void);
+
 static void setDryState(uint8_t state);
 static void publishMqttData(DryState state, uint8_t temperature);
 
 
-static void CompareSetAndActualTemperature(void);
+static void compare_temperature_value_hanlder(void);
+static void Compare_temp_value(void);
+
 
 
 
@@ -302,10 +303,10 @@ void set_temperature_value_handler(void)
 	}
     else {
 
-      compare_temperature_value_hanlder();
+     compare_temperature_value_hanlder();
     }
                 
-  }
+ }
 /*
 * @brief:
 * @note:
@@ -313,27 +314,31 @@ void set_temperature_value_handler(void)
 * @retrval:
 *
 */
-void compare_temperature_value_hanlder(void)
+
+
+
+
+/*
+* @brief:
+* @note:
+* @param:
+* @retrval:
+*
+*/
+static void compare_temperature_value_hanlder(void)
 {
-    if(g_pro.g_manual_shutoff_dry_flag==1 || g_pro.key_set_temperature_flag ==1)return ;
+    //if(g_pro.g_manual_shutoff_dry_flag==1 || g_pro.key_set_temperature_flag ==1)return ;
+
+     if(g_pro.fan_warning ==1 || g_pro.ptc_warning ==1 ||  g_pro.works_two_hours_interval_flag==1 || g_pro.g_manual_shutoff_dry_flag == 1\
+			|| g_pro.key_set_temperature_flag==1)return ;
 
 	 if( g_pro.gTimer_set_temp_counter >= CHECK_TIME_THRESHOLD_2S) { // 4�????
           g_pro.gTimer_set_temp_counter =0;
-          CompareSetAndActualTemperature();
+          Compare_temp_value();
+         
 	 }
 	   
 }
-
-
-
-// 读取温度�????
-uint8_t readTemperature(void) 
-{
-    return g_pro.g_temperature_value;
-}
-
-
- 
 /**
 *@brief:
 *@notice
@@ -341,7 +346,7 @@ uint8_t readTemperature(void)
 *
 *
 **/
-static void CompareSetAndActualTemperature(void)
+static void Compare_temp_value(void)
 {
 
     static uint8_t dry_on_counter = 0xff,dry_off_counter =0xff;
