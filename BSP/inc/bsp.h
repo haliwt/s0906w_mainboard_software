@@ -147,7 +147,7 @@ typedef struct _process{
    uint8_t first_rcoder_ptc_on_flag ;
    uint8_t one_minutes_fan_flag;
    uint8_t process_off_step;
-   uint8_t disp_three_numbers_f;
+   
    
    uint8_t g_humidity_value;
    uint8_t g_temperature_value;
@@ -207,11 +207,13 @@ typedef struct _process{
 
    uint8_t gTimer_send_dht11_disp;
    uint8_t gTimer_set_temp_counter;
+   uint8_t gTime_50ms_f;
 
 
    uint8_t  gTimer_to_disp_counter;
    uint8_t gTimer_mainboard_fun_counter;
    uint8_t gTimer_read_dth11_sensor;
+   uint8_t gTime_20ms_f;
    
 }process_t;
 

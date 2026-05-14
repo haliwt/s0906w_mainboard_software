@@ -136,7 +136,7 @@ static void threadx_handler(void)
 					stack_decoder_pro,      /* 堆栈基地址 */
 					STACK_SIZE_DECODER,       /* 堆栈空间大小 */ 
 					3,
-					3,
+					0,
 					TX_NO_TIME_SLICE,
 					TX_AUTO_START);
 				
@@ -147,7 +147,7 @@ static void threadx_handler(void)
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
                      4,							   /* 任务优先级*/
-                     4,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     0,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -159,7 +159,7 @@ static void threadx_handler(void)
                      stack_start_pro,              /* 堆栈基地址 */
                      STACK_SIZE_KEY,			   /* 堆栈空间大小 */  
                      1, 						   /* 任务优先级*/
-                     1, 						   /* 任务抢占阀值 */
+                     0, 						   /* 任务抢占阀值 */
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
   #endif 
@@ -170,7 +170,7 @@ static void threadx_handler(void)
 					  stack_key_event,				/* 堆栈基地址 */
 					  STACK_SIZE_EVENT,				/* 堆栈空间大小 */  
 					  2,							/* 任务优先级*/
-					  2,							/* 任务抢占阀值 */
+					  0,							/* 任务抢占阀值 */
 					  TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
@@ -357,10 +357,15 @@ static void vTaskUiPro(ULONG thread_input)
 
      power_on_off_handler(g_pro.gpower_on);
     
-	if(g_wifi.wifi_led_fast_blink_flag==0 ){
+	if(g_wifi.wifi_led_fast_blink_flag==0){
 
-		wifi_communication_tnecent_handler();//
-		getBeijingTime_cofirmLinkNetState_handler();
+        if(g_pro.gTime_50ms_f ==1){
+			g_pro.gTime_50ms_f =0;
+		    wifi_communication_tnecent_handler();//
+        }
+      
+	     getBeijingTime_cofirmLinkNetState_handler();
+		
 		wifi_auto_detected_link_state();
 		#if 0
 		if(gl_tMsg.ucMessageID ==1){

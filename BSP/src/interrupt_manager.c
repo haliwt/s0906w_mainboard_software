@@ -63,13 +63,17 @@ void callback_register_fun(void)
 static void tim17_isr_callback_handler(void)
 
 {
-   static volatile  uint8_t tm0,c10mscnt;
+   static volatile  uint8_t tm0,c10mscnt,c50ms;
    static volatile uint8_t c100mscnt;
        tm0++;
 
-	   if(++c10mscnt == 2){
+	   if(++c10mscnt == 2){//20
            c10mscnt = 0;
-           g_pro.disp_three_numbers_f = 1;
+           g_pro.gTime_20ms_f =1;
+	   }
+	   if(++c50ms > 4){
+	   	  c50ms =0;
+          g_pro.gTime_50ms_f = 1;
 	   }
 	   
 	   if(++c100mscnt ==10){//10*10 =100ms

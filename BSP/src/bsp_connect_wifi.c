@@ -192,7 +192,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
        
 
-        if(flag_switch > 60 && g_pro.gpower_on == power_on){ //100ms
+        if(flag_switch > 5 && g_pro.gpower_on == power_on){ //100ms
              flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Subscriber_Data_FromCloud_Handler();
@@ -201,7 +201,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
             
         }
-        else if(g_pro.gpower_on == power_off && flag_switch > 60){ //9*4 =36s.
+        else if(g_pro.gpower_on == power_off && flag_switch > 4){ //9*4 =36s.
             flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Update_Dht11_Totencent_Value();
@@ -212,14 +212,12 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
         }
         else{ //WT.EDIT 2024.08.10 ADD ITEM
-              if(flag_switch > 50){
+              if(flag_switch > 0){
                  flag_switch=0;
               }
               g_wifi.get_rx_beijing_time_enable=0; 
-              //gpro_t.get_beijing_flag = 1;
              
-
-         }
+          }
        
     }
     else
@@ -247,12 +245,12 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
          else{
               
                 if(g_pro.disp_second_f ==1){
-					SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x0); //0x1F: 0x1=wifi link net is succes ,0x0 = wifi link net is fail
+					SendWifiData_To_Cmd(0x1F,0x0);//SendWifiData_One_Data(0x1F,0x0); //0x1F: 0x1=wifi link net is succes ,0x0 = wifi link net is fail
                tx_thread_sleep(10);
                 	}
-		       g_wifi.wifi_get_beijing_step = 10;
+		    
                g_wifi.linking_tencent_cloud_doing  =1; //receive from tencent command state .
-             
+               g_wifi.wifi_get_beijing_step = 10;
          }
 	
        }
@@ -381,7 +379,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
   
        confirm_wifi_link_net_state(); //WT.EDIT 2026.03.09
-       #if 1
+       #if 0
          printf("check wifi state !!! \r\n");
 	   #endif 
 
@@ -431,11 +429,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
          if(g_wifi.gwifi_link_net_success==0 && g_wifi.wifi_led_fast_blink_flag==0){
 
            g_wifi.linking_tencent_cloud_doing =1;
-        
-
-          //  WIFI_IC_ENABLE();
-       
-    		at_send_data((const uint8_t *)"AT+RST\r\n", strlen("AT+RST\r\n"));
+           at_send_data((const uint8_t *)"AT+RST\r\n", strlen("AT+RST\r\n"));
             tx_thread_sleep(100);//HAL_Delay(1000);
             g_wifi.gTimer_auto_link_net_time =0;
             auto_link_net_flag=1;
@@ -464,10 +458,8 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
             g_wifi.wifi_rx_data_counter=0;
 	      
              auto_link_net_flag =2;
-   
-	       // HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//�?始连�?
-          at_send_data((const uint8_t *)"AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
-          tx_thread_sleep(100);//HAL_Delay(1000);
+             at_send_data((const uint8_t *)"AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"));
+             tx_thread_sleep(100);//HAL_Delay(1000);
           
          
            
@@ -497,7 +489,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
 
           if(g_pro.gpower_on == power_on){
                 MqttData_Publish_Update_Data();//Publish_Data_ToTencent_Initial_Data();
-                tx_thread_sleep(20);//HAL_Delay(200);
+               // tx_thread_sleep(20);//HAL_Delay(200);
 
             }
             else if(g_pro.gpower_on == power_off){

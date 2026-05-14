@@ -38,10 +38,13 @@ void power_on_off_handler(uint8_t data)
 
   if(g_pro.gpower_on == power_on){
 
-          power_on_run_handler();
+        power_on_run_handler();
          
         if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1 && gl_run.process_on_step !=2){ //logically rigorous
-              display_digital_3_numbers();
+              if( g_pro.gTime_20ms_f == 1){
+			  	   g_pro.gTime_20ms_f =0;
+			       display_digital_3_numbers();
+              }
 			 
 	    }
   	}
@@ -119,11 +122,9 @@ void power_on_run_handler(void)
 	   if(g_wifi.gwifi_link_net_success == wifi_no_link){//逻辑不严�??//if(g_wifi.gwifi_link_net_success == wifi_no_link || g_wifi.app_timer_power_on_flag == 0)
 	       read_sensorData();//updateDht11_toDisplayBoard_value();
 	       if(g_pro.gpower_on_key_f != 1){
-		      if(g_pro.disp_three_numbers_f==1){
-			  	g_pro.disp_three_numbers_f=0;
-			  	power_on_init_ref();
-	       	}
-	      
+		      power_on_init_ref();
+	       	
+	       }
 
        }
 	   else if(g_wifi.gwifi_link_net_success == wifi_link_success &&  g_wifi.app_timer_power_on_flag == 0){ //has wifi net initial
@@ -387,7 +388,7 @@ void power_on_run_handler(void)
 
 	}
  }
-}
+
 /**********************************************************************
 	*
 	*Functin Name: void power_off_run_handler(void)
