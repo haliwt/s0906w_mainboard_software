@@ -22,7 +22,7 @@
 #define STACK_SIZE_DECODER  256//512//128//1792//3072//2048//1024//896//768
 #define STACK_SIZE_UI      1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
 #define STACK_SIZE_KEY     256//512
-#define STACK_SIZE_EVENT   1024//768//256
+#define STACK_SIZE_EVENT   512//768//256
 
 __attribute__((aligned(8))) static UCHAR stack_ui_pro[STACK_SIZE_UI];
 __attribute__((aligned(8))) static UCHAR stack_decoder_pro[STACK_SIZE_DECODER];
@@ -243,7 +243,9 @@ static void vTaskDecoderPro(ULONG thread_input)
 
             power_cnt = 0;
         }
-        else if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+
+		
+        if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             mode_cnt++;
             if(mode_cnt == LONG_PRESS_TIME){
@@ -257,7 +259,9 @@ static void vTaskDecoderPro(ULONG thread_input)
                 tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
             mode_cnt = 0;
         }
-        else if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+		
+		
+        if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             up_cnt++;
             if(up_cnt == LONG_PRESS_TIME)
@@ -270,7 +274,8 @@ static void vTaskDecoderPro(ULONG thread_input)
 
             up_cnt = 0;
         }
-        else if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+		
+        if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             down_cnt++;
             if(down_cnt == LONG_PRESS_TIME)
@@ -325,12 +330,12 @@ static void vTaskKeyEvent(ULONG thread_input)
      if(status == TX_SUCCESS){
 
 	    if(flags & KEY_POWER_SHORT) handle_power_key();
-	    else if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
-        else if(flags & KEY_MODE_SHORT)  handle_mode_key();
-	    else if(flags & KEY_MODE_LONG)   key_mode_long_fun();
-        else if(flags & KEY_UP_SHORT)    handle_up_key();
-	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
-	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
+	    if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
+        if(flags & KEY_MODE_SHORT)  handle_mode_key();
+	    if(flags & KEY_MODE_LONG)   key_mode_long_fun();
+        if(flags & KEY_UP_SHORT)    handle_up_key();
+	    if(flags & KEY_DOWN_SHORT)  handle_down_key();
+	    if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
         #if DEBUG_ENABLE
               debug_stack_key_event_check();
           #endif 
