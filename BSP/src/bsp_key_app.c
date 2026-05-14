@@ -129,7 +129,7 @@ void handle_power_key(void)
 void key_power_longk_fun(void)
 {
 
-
+    if(g_pro.fan_warning ==1 || g_pro.ptc_warning ==1) return ;
 	g_wifi.gTimer_wifi_led_fast_blink = 0; //reset wifi led blink timer
 	g_wifi.gwifi_link_net_success = 0; //reset wifi link status
 	g_wifi.wifi_led_fast_blink_flag = 1;//
@@ -137,6 +137,7 @@ void key_power_longk_fun(void)
 	g_pro.first_connect_wifi_flag = 0;//reset first connect wifi flag
 
 	buzzer_sound();
+	
 	
 	if(g_pro.disp_second_f ==1){
 		SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
@@ -159,8 +160,9 @@ void key_power_longk_fun(void)
 void handle_mode_key(void)
 {
    
-    buzzer_sound();
-    mode_short_key_fun();
+   buzzer_sound();
+   if(g_pro.fan_warning ==1 || g_pro.ptc_warning ==1) return ;
+   mode_short_key_fun();
     
      
 }
@@ -176,6 +178,7 @@ void key_mode_long_fun(void)
 {
   
         buzzer_sound();
+		if(g_pro.fan_warning ==1 || g_pro.ptc_warning ==1) return ;
         g_pro.switch_disp_time_or_temp_item = timer_time_mode;
         g_key.key_mode_long_flag = 1;
 		g_pro.g_real_hours_counter =0;
@@ -212,9 +215,10 @@ void key_mode_long_fun(void)
 void handle_down_key(void)
 {
  
-  
+       
        g_key.down_key_long_counter =0;
        buzzer_sound();
+	   if(g_pro.fan_warning ==1 || g_pro.ptc_warning ==1) return ;
        key_dwon_fun();
             
        
@@ -254,7 +258,8 @@ void handle_up_key(void)
    
       g_key.key_up_flag = KEY_NULL;
       buzzer_sound();
-       key_up_fun();
+	  if(g_pro.fan_warning ==1 || g_pro.ptc_warning ==1) return ;
+      key_up_fun();
         
     
 }

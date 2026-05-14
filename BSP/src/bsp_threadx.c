@@ -20,7 +20,7 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  128//512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI      1536//1280//1024//1536//1024//896//1792//1664//1280
+#define STACK_SIZE_UI      1792//1536//1280//1024//1536//1024//896//1792//1664//1280
 #define STACK_SIZE_KEY     256//512
 #define STACK_SIZE_EVENT   512//256
 
@@ -368,12 +368,9 @@ static void vTaskUiPro(ULONG thread_input)
 	  
 
 	  // ==================== 3. WiFi 通讯状态异步轮询 ====================
-       
-            getBeijingTime_cofirmLinkNetState_handler();
-            wifi_auto_detected_link_state();
-        
-
-	  }
+          getBeijingTime_cofirmLinkNetState_handler();
+          wifi_auto_detected_link_state();
+      }
       tx_thread_sleep(1);
   }
 	  
