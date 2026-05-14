@@ -66,6 +66,8 @@ static void threadx_handler(void);
 /* 创建任务通信机制 */
 static void tx_thread_stack_error_handler(TX_THREAD *thread_ptr);
 
+#if DEBUG_ENABLE
+
 static void debug_stack_ui_check(void);
 
 static void debug_stack_key_check(void);
@@ -74,10 +76,8 @@ static void debug_stack_decoder_check(void);
 
 static void debug_stack_key_event_check(void);
 
-
-
 ULONG unused,unused_key,unused_decoder,unused_event ;
-
+#endif 
 
 /**
  * @brief  :  static void vTaskStart(void *pvParameters
@@ -136,7 +136,7 @@ static void threadx_handler(void)
 					stack_decoder_pro,      /* 堆栈基地址 */
 					STACK_SIZE_DECODER,       /* 堆栈空间大小 */ 
 					3,
-					0,
+					3,
 					TX_NO_TIME_SLICE,
 					TX_AUTO_START);
 				
@@ -147,7 +147,7 @@ static void threadx_handler(void)
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
                      4,							   /* 任务优先级*/
-                     0,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     4,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -159,7 +159,7 @@ static void threadx_handler(void)
                      stack_start_pro,              /* 堆栈基地址 */
                      STACK_SIZE_KEY,			   /* 堆栈空间大小 */  
                      1, 						   /* 任务优先级*/
-                     0, 						   /* 任务抢占阀值 */
+                     1, 						   /* 任务抢占阀值 */
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
   #endif 
@@ -170,7 +170,7 @@ static void threadx_handler(void)
 					  stack_key_event,				/* 堆栈基地址 */
 					  STACK_SIZE_EVENT,				/* 堆栈空间大小 */  
 					  2,							/* 任务优先级*/
-					  0,							/* 任务抢占阀值 */
+					  2,							/* 任务抢占阀值 */
 					  TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
