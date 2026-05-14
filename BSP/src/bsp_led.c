@@ -14,17 +14,25 @@
  ************************************************************************/
 void power_on_led(void)
 {
-    LED_POWER_ON();
+
+   if(g_wifi.app_timer_power_on_flag ==0){
+	LED_POWER_ON();
     LED_TAPE_CTL_ON();
     LED_AI_ON();
     LED_WIFI_ON();
    
     LED_DRY_ON();
     LED_PLASMA_ON();
-    
     LED_MOUSE_ON();
 	 LED_TEMP_ICON_ON();
-	disp_all_sumg_led();
+   }
+   else{
+       LED_POWER_ON();
+	   LED_TAPE_CTL_ON();
+	   LED_AI_ON();
+	   LED_WIFI_ON();
+	   LED_TEMP_ICON_ON();
+    }
 
 	
 }
@@ -37,9 +45,8 @@ void power_on_smart_app_led(void)
     LED_WIFI_ON();
     LED_TEMP_ICON_ON();
 	
-	TEMP_ICON_ON() ;
-	HUMIDITY_ICON_ON();
-	TM1639_Display_Temperature(g_pro.g_temperature_value);//DHT11_Display_Data(0); //display temperature value 
+	//HUMIDITY_ICON_ON();
+	//TM1639_Display_Temperature(g_pro.g_temperature_value);//DHT11_Display_Data(0); //display temperature value 
    
 }
 

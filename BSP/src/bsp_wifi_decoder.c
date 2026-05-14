@@ -889,10 +889,11 @@ void Json_Parse_Command_Fun(void)
 					}
 			   	}
 			    g_wifi.gwifi_link_net_success =1;
-			   g_pro.gpower_on = power_on; //WT.EDIT 
+			   vtask_key_power();//g_pro.gpower_on = power_on;//g_pro.gpower_on = power_on; //WT.EDIT 
 			   g_wifi.link_net_step = 0; //WT.EDIT 2025.05.12
 			   g_wifi.gwifi_normal_power_on_flag =0;
-			    buzzer_temp_on=0;
+
+				buzzer_temp_on=0;
    
 
 		         
@@ -907,7 +908,7 @@ void Json_Parse_Command_Fun(void)
 			      // tx_thread_sleep(30);//HAL_Delay(350);
                   	}
 	
-	            g_pro.gpower_on = power_off;
+	       
            
 			if(g_pro.disp_second_f ==1){
                 if(timer_expired(&t_xdp)){
@@ -915,7 +916,7 @@ void Json_Parse_Command_Fun(void)
 			     //tx_thread_sleep(10);//HAL_Delay(10);
                 }
 				}
-            
+             vtask_key_power();//g_pro.gpower_on = power_off;
 		      buzzer_temp_on=0;
 				
 			}

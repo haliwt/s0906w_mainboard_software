@@ -99,6 +99,7 @@ void handle_power_key(void)
 			 g_pro.gpower_on = power_on;
 			 g_pro.gpower_on_key_f = 1;
 			 power_on_init_ref();
+			 
             
 		}
 		else if(g_pro.gpower_on == power_on){

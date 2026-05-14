@@ -350,44 +350,32 @@ static void vTaskKeyEvent(ULONG thread_input)
 static void vTaskUiPro(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
-
+	
   while(1)
   {
+      if(g_pro.gpower_on == power_on){
 
-     power_on_off_handler(g_pro.gpower_on);
-    
-	if(g_wifi.wifi_led_fast_blink_flag==0){
+          power_on_handler();
+	  }
+	  else if(g_pro.gpower_on == power_off){
+          power_off_handler();
 
-        if(g_pro.gTime_50ms_f ==1){
-			g_pro.gTime_50ms_f =0;
-		    wifi_communication_tnecent_handler();//
-        }
-      
-	     getBeijingTime_cofirmLinkNetState_handler();
-		
-		wifi_auto_detected_link_state();
-		#if 0
-		if(gl_tMsg.ucMessageID ==1){
-			gl_tMsg.ucMessageID = 0; //display command head
-			strcpy((char*)tx_buffer, "has IAP Update \r\n");//tx_buffer[]="has NOT IAP Update \r\n";
-			tx_len = strlen((char*)tx_buffer);//tx_len = tx_buffer[]/tx_buffer[0];
-			//HAL_UART_Transmit(&huart1,tx_buffer,tx_len, 0xffff);
-			JumpToBootloader();
+	  }
 
-		}
-		#endif 
-	}
-
-   LL_IWDG_ReloadCounter(IWDG);
-
-   #if DEBUG_ENABLE
-    debug_stack_ui_check();
-   #endif 
-
-	tx_thread_sleep(2);//10ms *2
-
+	  if(g_pro.time_50ms_f ==1 && g_wifi.wifi_led_fast_blink_flag==0){
+		  g_pro.time_50ms_f =0;
+		  wifi_communication_tnecent_handler();//
 	  
-    }
+
+	  // ==================== 3. WiFi 通讯状态异步轮询 ====================
+       
+            getBeijingTime_cofirmLinkNetState_handler();
+            wifi_auto_detected_link_state();
+        
+
+	  }
+      tx_thread_sleep(1);
+  }
 	  
 }
 

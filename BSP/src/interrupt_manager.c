@@ -69,11 +69,11 @@ static void tim17_isr_callback_handler(void)
 
 	   if(++c10mscnt == 2){//20
            c10mscnt = 0;
-           g_pro.gTime_20ms_f =1;
+           g_pro.time_20ms_f =1;
 	   }
 	   if(++c50ms > 4){
 	   	  c50ms =0;
-          g_pro.gTime_50ms_f = 1;
+          g_pro.time_50ms_f = 1;
 	   }
 	   
 	   if(++c100mscnt ==10){//10*10 =100ms

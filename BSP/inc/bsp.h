@@ -162,7 +162,7 @@ typedef struct _process{
    uint8_t key_set_temperature_flag;
    
 
-   uint8_t gTemp_value;
+   
    uint8_t gset_temperture_value;
    uint8_t temperature_init_value;
 
@@ -179,6 +179,7 @@ typedef struct _process{
    uint8_t DMA_txComplete;
    uint8_t timer_powerOff_oneHour_flag;
    uint8_t gpower_on_key_f;
+   uint8_t g_immediate_heat_f;
 
    
 
@@ -207,13 +208,13 @@ typedef struct _process{
 
    uint8_t gTimer_send_dht11_disp;
    uint8_t gTimer_set_temp_counter;
-   uint8_t gTime_50ms_f;
+   uint8_t time_50ms_f;
 
 
    uint8_t  gTimer_to_disp_counter;
    uint8_t gTimer_mainboard_fun_counter;
    uint8_t gTimer_read_dth11_sensor;
-   uint8_t gTime_20ms_f;
+   uint8_t time_20ms_f;
    
 }process_t;
 

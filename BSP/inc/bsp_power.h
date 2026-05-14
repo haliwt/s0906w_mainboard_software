@@ -19,16 +19,19 @@ typedef enum{
 
 
 
-void power_on_off_handler(uint8_t data);
+//void power_on_off_handler(uint8_t data);
 
 
-void power_on_run_handler(void);
+//void power_on_run_handler(void);
 
-void power_off_run_handler(void);
+//void power_off_run_handler(void);
+
+void power_off_handler(void);
 
 
 void power_on_init_ref(void);
 
+void power_on_handler(void);
 
 
 #endif /* BSP_INC_BSP_POWER_H_ */
