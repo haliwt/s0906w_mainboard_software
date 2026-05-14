@@ -316,7 +316,6 @@ static void vTaskKeyEvent(ULONG thread_input)
   while(1)
   {
 
-     tx_thread_sleep(1);
      status = tx_event_flags_get(&key_event,
                            0xFFFFFFFF,
                            TX_OR_CLEAR,
