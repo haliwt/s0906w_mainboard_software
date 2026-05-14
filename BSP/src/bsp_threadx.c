@@ -19,10 +19,10 @@
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
-#define STACK_SIZE_DECODER  128//512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI      1792//1536//1280//1024//1536//1024//896//1792//1664//1280
+#define STACK_SIZE_DECODER  256//512//128//1792//3072//2048//1024//896//768
+#define STACK_SIZE_UI      1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
 #define STACK_SIZE_KEY     256//512
-#define STACK_SIZE_EVENT   512//256
+#define STACK_SIZE_EVENT   1024//768//256
 
 __attribute__((aligned(8))) static UCHAR stack_ui_pro[STACK_SIZE_UI];
 __attribute__((aligned(8))) static UCHAR stack_decoder_pro[STACK_SIZE_DECODER];
@@ -347,6 +347,7 @@ static void vTaskKeyEvent(ULONG thread_input)
 *	Return Ref:
 *   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
 **********************************************************************************************************/
+uint16_t pw_counter;
 static void vTaskUiPro(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
@@ -354,7 +355,7 @@ static void vTaskUiPro(ULONG thread_input)
   while(1)
   {
       if(g_pro.gpower_on == power_on){
-
+          pw_counter++;
           power_on_handler();
 	  }
 	  else if(g_pro.gpower_on == power_off){
@@ -371,7 +372,13 @@ static void vTaskUiPro(ULONG thread_input)
           getBeijingTime_cofirmLinkNetState_handler();
           wifi_auto_detected_link_state();
       }
-      tx_thread_sleep(1);
+
+	  
+	  #if DEBUG_ENABLE
+		    debug_stack_ui_check();
+	  #endif 
+	  LL_IWDG_ReloadCounter(IWDG);
+      tx_thread_sleep(2);
   }
 	  
 }

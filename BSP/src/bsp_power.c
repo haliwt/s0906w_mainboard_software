@@ -541,7 +541,7 @@ void power_off_handler(void)
 	       
            
 	 }
-    LL_IWDG_ReloadCounter(IWDG);
+
     g_pro.process_off_step = 6;
 
    break;
@@ -558,16 +558,17 @@ void power_off_handler(void)
 	*Return Ref: NO
 	*
 **********************************************************************/
+uint8_t time_slot = 0;
+
 void power_on_handler(void)
 {
     static uint8_t  switch_dht11 =0;
-    static uint8_t time_slot = 0;
-	static uint8_t blink_200ms_flip = 0;
-	static uint8_t wifi_500ms_counter = 0;
+  
+
    if(g_pro.time_20ms_f ==1){
 		g_pro.time_20ms_f =0;
 		power_on_initial();
-		LL_IWDG_ReloadCounter(IWDG);
+		
 
 	 // ✨【新增：紧急事件拦截响应】✨
         // 如果按键任务设置完温度，将 g_pro.g_immediate_heat_f 置为 1
@@ -666,9 +667,6 @@ void power_on_handler(void)
           }
 
 		
-		 #if DEBUG_ENABLE
-		debug_stack_ui_check();
-		#endif 
 		  
          // ==================== 4. 时间片轮转维护 ====================
            time_slot++;
