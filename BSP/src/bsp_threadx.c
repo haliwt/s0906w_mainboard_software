@@ -47,11 +47,9 @@ TX_SEMAPHORE decoder_semaphore;
 //static TX_QUEUE uart1_rx_queue;
 //static uint8_t uart1_rx_queue_buffer[UART1_RX_BUF_SIZE * sizeof(uint8_t)];
 
-
-
-
-
 TX_EVENT_FLAGS_GROUP key_event;
+
+TX_TIMER beep_timer;
 
 
 static void vTaskUiPro(ULONG thread_input);
@@ -60,6 +58,7 @@ static void vTaskKeyEvent(ULONG thread_input);
 
 
 static void vTaskDecoderPro(ULONG thread_input);
+static void beep_timer_callback(ULONG input);
 
 
 static void threadx_handler(void);
@@ -174,7 +173,13 @@ static void threadx_handler(void)
 					  TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
-
+   tx_timer_create(&beep_timer,     /* timer of  block */
+				   "20msTimer",
+				   beep_timer_callback, /*callback function */
+   				   0,
+				   2,                    /* 第一次延迟 20ms*/
+				   2,                    /*周期 20 ticks*/
+				   TX_AUTO_ACTIVATE);
 
  
 }
@@ -442,6 +447,17 @@ void vtask_isq_handler(void)
 void vtask_key_power(void)
 {
   tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
+}
+
+static void beep_timer_callback(ULONG input)
+{
+  (void)input;
+  buzzer_sound_close();
+}
+
+void open_beep_sound(void)
+{
+  tx_timer_activate(&beep_timer);
 }
 
 
