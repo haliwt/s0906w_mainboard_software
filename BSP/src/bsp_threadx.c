@@ -21,8 +21,8 @@
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  256//512//128//1792//3072//2048//1024//896//768
 #define STACK_SIZE_UI      1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
-#define STACK_SIZE_KEY     256//512
-#define STACK_SIZE_EVENT   512//768//256
+#define STACK_SIZE_KEY     512//512
+#define STACK_SIZE_EVENT   640//768//256
 
 __attribute__((aligned(8))) static UCHAR stack_ui_pro[STACK_SIZE_UI];
 __attribute__((aligned(8))) static UCHAR stack_decoder_pro[STACK_SIZE_DECODER];
@@ -147,7 +147,7 @@ static void threadx_handler(void)
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
                      4,							   /* 任务优先级*/
-                     4,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     2,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -303,7 +303,7 @@ static void vTaskDecoderPro(ULONG thread_input)
 	
  } 
 
-
+uint8_t  event_error_counter;
 /**********************************************************************************************************
 *	Function Name: static void vTaskRunPro(void *pvParameters)
 *	Function:
@@ -325,22 +325,31 @@ static void vTaskKeyEvent(ULONG thread_input)
                            0xFFFFFFFF,
                            TX_OR_CLEAR,
                            &flags,
-                           TX_WAIT_FOREVER);//TX_NO_WAIT);//TX_WAIT_FOREVER);//
+                           TX_WAIT_FOREVER);//50);//(200));//TX_NO_WAIT);//TX_WAIT_FOREVER);//
                            
      if(status == TX_SUCCESS){
 
 	    if(flags & KEY_POWER_SHORT) handle_power_key();
-	    if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
-        if(flags & KEY_MODE_SHORT)  handle_mode_key();
-	    if(flags & KEY_MODE_LONG)   key_mode_long_fun();
-        if(flags & KEY_UP_SHORT)    handle_up_key();
-	    if(flags & KEY_DOWN_SHORT)  handle_down_key();
-	    if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
+	    else if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
+        else if(flags & KEY_MODE_SHORT)  handle_mode_key();
+	    else if(flags & KEY_MODE_LONG)   key_mode_long_fun();
+        else if(flags & KEY_UP_SHORT)    handle_up_key();
+	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
+	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
+        tx_thread_sleep(1); //WT.EDIT 2026-05-15
+         //LL_IWDG_ReloadCounter(IWDG);
         #if DEBUG_ENABLE
-              debug_stack_key_event_check();
+             // debug_stack_key_event_check();
           #endif 
 	   
      }
+     else if (status == TX_NO_INSTANCE)
+      {
+            // ==================== ⏰ 分支 B：3 秒内无任何操作 ====================
+         
+            event_error_counter++;
+            // 超时醒来处理完后，直接回到顶部挂起，不需要加 sleep
+      }
     
   	}
    

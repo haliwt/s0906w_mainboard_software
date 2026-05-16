@@ -261,7 +261,7 @@ static void send_connect_wifi_init(void)
 		    break;
 
 			case 3:
-		         Publish_Data_ToTencent_Initial_Data();
+		        // Publish_Data_ToTencent_Initial_Data();
 				
             
 			g_pro.first_connect_wifi_flag = 4;
