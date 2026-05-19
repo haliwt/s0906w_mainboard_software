@@ -578,7 +578,7 @@ void power_on_handler(void)
             
             // 强制、立刻执行一次加热控制函数
             // 确保底层硬件（如继电器、PWM、PTC）在 20ms 内得到响应
-            set_temperature_value_handler(); 
+            immediatley_temp_comare_value();//set_temperature_value_handler(); 
         }
 
 		switch(time_slot){

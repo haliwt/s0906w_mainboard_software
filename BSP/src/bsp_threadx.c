@@ -370,6 +370,8 @@ uint16_t pw_counter;
 static void vTaskUiPro(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
+  static uint8_t wifi_check_counter = 0;
+  static uint8_t beijing_time_counter = 0;
 	
   while(1)
   {
@@ -382,17 +384,26 @@ static void vTaskUiPro(ULONG thread_input)
 
 	  }
 
-	  if(g_pro.time_50ms_f ==1 && g_wifi.wifi_led_fast_blink_flag==0){
-		  g_pro.time_50ms_f =0;
-		  wifi_communication_tnecent_handler();//
-	  
+	  // 限制WiFi通信处理频率，避免长时间阻塞
+      if(g_pro.time_50ms_f ==1 && g_wifi.wifi_led_fast_blink_flag==0){
+	  	  g_pro.time_50ms_f =0;
+	  	  wifi_communication_tnecent_handler();
+	  }
 
-	  // ==================== 3. WiFi 通讯状态异步轮询 ====================
-          getBeijingTime_cofirmLinkNetState_handler();
+	  // WiFi状态检查：每200ms执行一次（约每10个循环）
+      wifi_check_counter++;
+      if(wifi_check_counter >= 10 && g_wifi.wifi_led_fast_blink_flag==0){
+          wifi_check_counter = 0;
           wifi_auto_detected_link_state();
       }
 
-	  
+      // 北京时获取：每500ms执行一次（约每25个循环）
+      beijing_time_counter++;
+      if(beijing_time_counter >= 25 && g_wifi.wifi_led_fast_blink_flag==0){
+          beijing_time_counter = 0;
+          getBeijingTime_cofirmLinkNetState_handler();
+      }
+
 	  #if DEBUG_ENABLE
 		    debug_stack_ui_check();
 	  #endif 

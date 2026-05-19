@@ -75,13 +75,13 @@
 
 
 
-#define USE_THREADX       1  // ??? ThreadX
+#define USE_THREADX       1 // ??? ThreadX
 
 #define Enable_EventRecorder          0
   
-#define TEST_UNIT         1
+#define TEST_UNIT         0
 
-#define DEBUG_ENABLE       1 //Enable_EventRecorder 
+#define DEBUG_ENABLE       0 //Enable_EventRecorder 
 
 
 #if USE_THREADX == 1

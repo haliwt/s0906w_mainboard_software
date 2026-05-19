@@ -133,14 +133,14 @@ static void adjust_temperature(int8_t delta)
  
 	g_pro.key_set_temperature_flag=1;
 
-	
-    g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
-		
+	g_pro.gTimer_mainboard_fun_counter=0; //WT.EDIT 2025.11.07
+	g_pro.g_immediate_heat_f = 1; //WT.EDIT 2026-05-19	
     TM1639_Display_Temperature(g_pro.gset_temperture_value);
     g_pro.gTimer_input_set_temp_times = 0;
     g_pro.gTimer_switch_temp_hum = 0;
 	g_pro.set_temp_counter ++ ;
 	g_pro.first_set_ptc_on  = 0;
+	
 	
 }
 
@@ -282,14 +282,14 @@ void set_temperature_value_handler(void)
 			  if(g_pro.disp_second_f ==1){ 
 			  	if(timer_expired(&t_xdp)){
 			   	   SendWifiData_One_Data(0x2A,g_pro.gset_temperture_value);
-	            //tx_thread_sleep(10);
+	              tx_thread_sleep(10);
 			  	}
 			   	}
 				
                 if(g_pro.disp_second_f ==1){
 					if(timer_expired(&t_xdp)){
 					  sendDisplayCommand(0x02,0x01); // 打开干燥功能
-                    //tx_thread_sleep(10);
+                      tx_thread_sleep(10);
 					}
                 }
 				
