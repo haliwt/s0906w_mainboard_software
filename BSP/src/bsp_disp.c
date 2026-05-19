@@ -120,6 +120,7 @@ void display_digital_3_numbers(void)
 			  g_pro.gTimer_switch_temp_hum = 0; // 重置计时�??
 
 			  disp_temp_hum = disp_temp_hum ^ 0x01;
+           }
 
 			    if(disp_temp_hum==1){
 				
@@ -139,7 +140,7 @@ void display_digital_3_numbers(void)
                 }
        
 
-          }
+          
          break;
      	}
 

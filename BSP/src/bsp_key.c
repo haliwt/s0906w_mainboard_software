@@ -314,6 +314,30 @@ void set_temperature_value_handler(void)
 * @retrval:
 *
 */
+void immediatley_temp_comare_value(void)
+{
+
+
+		if (g_pro.g_temperature_value >= g_pro.gset_temperture_value){
+			g_pro.g_manual_shutoff_dry_flag =0;
+
+			g_pro.gDry= DRY_STATE_OFF;
+		    setDryState(g_pro.gDry);
+		
+			
+        } 
+		else if (g_pro.g_temperature_value < g_pro.gset_temperture_value){
+			
+               g_pro.g_manual_shutoff_dry_flag =0;
+			   g_pro.gDry = DRY_STATE_ON;
+			   setDryState(g_pro.gDry);
+        }
+			
+			
+ }
+
+	
+
 
 
 
