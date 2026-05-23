@@ -224,32 +224,12 @@ void Wifi_SoftAP_Config_Handler(void)
 
 /****************************************************************************************************
 **
-*Function Name:void Wifi_Link_SmartPhone_Fun(void)
+*Function Name:
 *Function: dy
 *Input Ref: 
 *Return Ref:NO
 *
 ****************************************************************************************************/
-void SmartPhone_LinkTencent_Cloud(void)
-{
-   
-    if(g_wifi.soft_ap_config_success==1){
-
-       g_wifi.soft_ap_config_success=0;
-	 //  HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
-       tx_thread_sleep(200);//HAL_Delay(1000);
-       //tx_thread_sleep(200);//HAL_Delay(1000);
-       ///HAL_Delay(1000);
-       
-	 
-     }
-	
- 	
-
-}
-
-
-
 void wifi_Disconnect_Fun(void)
 {
 
@@ -259,7 +239,6 @@ void wifi_Disconnect_Fun(void)
 
 void Get_BeiJing_Time_Cmd(void)
 {
-
 
 //   HAL_UART_Transmit(&huart2, "AT+CIPSNTPCFG=1,8\r\n", strlen("AT+CIPSNTPCFG=1,8\r\n"), 0xffff);//开
 }
@@ -277,10 +256,6 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
 
 	uint8_t auto_link_cloud_flag=0;
     
-
-    //device_massage = (uint8_t *)malloc(128);
-
-
    switch (auto_link_cloud_flag)
   {
 

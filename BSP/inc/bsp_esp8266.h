@@ -56,7 +56,7 @@ void InitWifiModule(void);
 
 void Wifi_Link_SmartConfig_Handler(void);
 
-void SmartPhone_LinkTencent_Cloud(void);
+
 
 uint8_t at_send_data(const uint8_t *pdata, uint16_t len);
 void Wifi_Rx_InputInfo_Handler(void);
