@@ -78,7 +78,7 @@ void adc_detected_hundler(void)
 	 }
 	 else if(g_pro.fan_warning==1){
    	  
-         Judge_Fan_State();
+        // Judge_Fan_State();
 		  g_pro.gDry =0;
 		  DRY_CLOSE();
       	
