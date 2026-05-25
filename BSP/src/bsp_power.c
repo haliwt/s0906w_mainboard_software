@@ -586,28 +586,31 @@ void power_on_handler(void)
 		case 0://20ms
 
            display_digital_3_numbers();
+		break;
+
+		case 1:
 		   smart_phone_timer_power_on_handler();
 
 		break;
 
 
-		case 1://20ms*1 =20
+		case 2://20ms*1 =20
 
             link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
 		break;
 
 
-		case 2://20ms*2=40
+		case 3://20ms*2=40
             set_temperature_value_handler();
 
 		break;
 
-		case 3: //20ms* 3 =60ms
+		case 4: //20ms* 3 =60ms
             set_timer_timing_value_handler();
 
 		break;
 
-		case 4: //20ms* 4=80ms
+		case 5: //20ms* 4=80ms
 
 	        if(g_pro.gTimer_to_disp_counter > 4){//10ms*200 =2000ms =2s
 				g_pro.gTimer_to_disp_counter=0;
@@ -616,7 +619,7 @@ void power_on_handler(void)
 			}
 		break;
 
-		case 5: //100ms
+		case 6: //100ms
 			
         if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
@@ -653,14 +656,14 @@ void power_on_handler(void)
 		break;
 
 
-		case 6: //20ms *6 =120ms
+		case 7: //20ms *6 =120ms
            
          fault_handler();
 		 wifi_led_slowly_blink_handler();
 
 		break;
 
-		case 7://180ms 
+		case 8://180ms 
 			works_run_two_hours_state();
 		break;
 
@@ -670,7 +673,7 @@ void power_on_handler(void)
 		  
          // ==================== 4. 时间片轮转维护 ====================
            time_slot++;
-           if (time_slot >7 ) time_slot = 0; 
+           if (time_slot >8 ) time_slot = 0; 
       }
 }
 	

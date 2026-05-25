@@ -240,33 +240,15 @@ void works_run_two_hours_state(void)
 
     case 1:
 
-   
-
-     #if TEST_UNIT 
-	 if(g_pro.gTimer_two_hours_counter  > 600){ //2minutes x 60s = 120s
-           
-         g_pro.gTimer_two_hours_counter =0;  
-		 g_pro.delay_run_adc_counter =0;
-         g_pro.works_two_hours_interval_flag=0;
-           
-     
-
-         mainboard_special_fun();
-            
-      }
-     #else 
-
       if(g_pro.gTimer_two_hours_counter  > 600){ // 10 minutes *60=  minutes =
          g_pro.gTimer_two_hours_counter =0; 
 		 
 		 g_pro.delay_run_adc_counter=0;
          g_pro.works_two_hours_interval_flag=0;
          mainboard_special_fun();
-              
       }
 
-
-      #endif 
+       
 
 	 if(g_pro.one_minutes_fan_flag ==1){
 

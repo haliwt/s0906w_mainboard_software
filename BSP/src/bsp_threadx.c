@@ -146,7 +146,7 @@ static void threadx_handler(void)
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
                      4,							   /* 任务优先级*/
-                     2,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     0,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -179,7 +179,7 @@ static void threadx_handler(void)
    				   0,
 				   2,                    /* 第一次延迟 20ms*/
 				   2,                    /*周期 20 ticks*/
-				   TX_AUTO_ACTIVATE);
+				   TX_AUTO_ACTIVATE);    
 
  
 }
@@ -348,13 +348,7 @@ static void vTaskKeyEvent(ULONG thread_input)
           #endif 
 	   
      }
-     else if (status == TX_NO_INSTANCE)
-      {
-            // ==================== ⏰ 分支 B：3 秒内无任何操作 ====================
-         
-            event_error_counter++;
-            // 超时醒来处理完后，直接回到顶部挂起，不需要加 sleep
-      }
+    
     
   	}
    
@@ -366,7 +360,6 @@ static void vTaskKeyEvent(ULONG thread_input)
 *	Return Ref:
 *   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
 **********************************************************************************************************/
-uint16_t pw_counter;
 static void vTaskUiPro(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
@@ -376,7 +369,7 @@ static void vTaskUiPro(ULONG thread_input)
   while(1)
   {
       if(g_pro.gpower_on == power_on){
-          pw_counter++;
+          //pw_counter++;
           power_on_handler();
 	  }
 	  else if(g_pro.gpower_on == power_off){
