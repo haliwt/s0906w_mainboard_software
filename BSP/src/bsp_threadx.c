@@ -20,9 +20,9 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  256//512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI      1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
+#define STACK_SIZE_UI      1280//1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
 #define STACK_SIZE_KEY     512//512
-#define STACK_SIZE_EVENT   640//768//256
+#define STACK_SIZE_EVENT   512//640//768//256
 
 __attribute__((aligned(8))) static UCHAR stack_ui_pro[STACK_SIZE_UI];
 __attribute__((aligned(8))) static UCHAR stack_decoder_pro[STACK_SIZE_DECODER];
@@ -134,8 +134,8 @@ static void threadx_handler(void)
 					0,                       /* 传递给任务的参数 */
 					stack_decoder_pro,      /* 堆栈基地址 */
 					STACK_SIZE_DECODER,       /* 堆栈空间大小 */ 
-					3,
-					3,
+					2,
+					2,
 					TX_NO_TIME_SLICE,
 					TX_AUTO_START);
 				
@@ -145,7 +145,7 @@ static void threadx_handler(void)
                      0,                            /* 传递给任务的参数 */
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
-                     4,							   /* 任务优先级*/
+                     3,							   /* 任务优先级*/
                      0,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
@@ -157,8 +157,8 @@ static void threadx_handler(void)
                      0,                            /* 传递给任务的参数 */
                      stack_start_pro,              /* 堆栈基地址 */
                      STACK_SIZE_KEY,			   /* 堆栈空间大小 */  
-                     1, 						   /* 任务优先级*/
-                     1, 						   /* 任务抢占阀值 */
+                     0, 						   /* 任务优先级*/
+                     0, 						   /* 任务抢占阀值 */
                      TX_NO_TIME_SLICE, 			   /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
   #endif 
@@ -168,8 +168,8 @@ static void threadx_handler(void)
 					  0,							/* 传递给任务的参数 */
 					  stack_key_event,				/* 堆栈基地址 */
 					  STACK_SIZE_EVENT,				/* 堆栈空间大小 */  
-					  2,							/* 任务优先级*/
-					  2,							/* 任务抢占阀值 */
+					  1,							/* 任务优先级*/
+					  1,							/* 任务抢占阀值 */
 					  TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
@@ -341,7 +341,7 @@ static void vTaskKeyEvent(ULONG thread_input)
         else if(flags & KEY_UP_SHORT)    handle_up_key();
 	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
 	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
-        tx_thread_sleep(2); //WT.EDIT 2026-05-23
+        tx_thread_sleep(1); //WT.EDIT 2026-05-23
          //LL_IWDG_ReloadCounter(IWDG);
         #if DEBUG_ENABLE
              // debug_stack_key_event_check();
@@ -389,9 +389,10 @@ static void vTaskUiPro(ULONG thread_input)
           wifi_check_counter = 0;
           wifi_auto_detected_link_state();
       }
-
+      else{
       // 北京时获取：每9s执行一次（约每25个循环）
        getBeijingTime_cofirmLinkNetState_handler();
+      }
       
 
 	  #if DEBUG_ENABLE

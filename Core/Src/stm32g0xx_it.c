@@ -227,6 +227,7 @@ void USART1_IRQHandler(void)
 
   /* USER CODE END USART1_IRQn 0 */
   /* USER CODE BEGIN USART1_IRQn 1 */
+  LL_USART_ClearFlag_ORE(USART1);
 
   /* USER CODE END USART1_IRQn 1 */
 }

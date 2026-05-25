@@ -31,7 +31,7 @@ void MX_IWDG_Init(void)
   /* USER CODE BEGIN IWDG_Init 0 */
 
   /* USER CODE END IWDG_Init 0 */
- // 32KHZ 
+ // T-over = (PRESCALE * Reload)/32KHZ= 256* 1999/32KHZ = 15992ms = 16s.
   /* USER CODE BEGIN IWDG_Init 1 */
 
   /* USER CODE END IWDG_Init 1 */
