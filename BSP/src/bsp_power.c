@@ -565,10 +565,8 @@ void power_on_handler(void)
     static uint8_t  switch_dht11 =0;
   
 
-   if(g_pro.time_20ms_f ==1){
-		g_pro.time_20ms_f =0;
-		power_on_initial();
-		
+	   power_on_initial();
+   		
 
 	 // ✨【新增：紧急事件拦截响应】✨
         // 如果按键任务设置完温度，将 g_pro.g_immediate_heat_f 置为 1
@@ -659,11 +657,15 @@ void power_on_handler(void)
 		case 7: //20ms *6 =120ms
            
          fault_handler();
+		break;
+
+		case 8:
+
 		 wifi_led_slowly_blink_handler();
 
 		break;
 
-		case 8://180ms 
+		case 9://180ms 
 			works_run_two_hours_state();
 		break;
 
@@ -673,7 +675,7 @@ void power_on_handler(void)
 		  
          // ==================== 4. 时间片轮转维护 ====================
            time_slot++;
-           if (time_slot >8 ) time_slot = 0; 
+           if (time_slot >9 ) time_slot = 0; //20ms * 10 = 200ms.
       }
 }
 	

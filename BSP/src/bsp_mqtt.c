@@ -187,7 +187,7 @@ void property_topic_publish(void)
 ********************************************************************************/
 static void property_report_state(void)
 {
-    char       message[256]    = {0};
+    char       message[200]    = {0};
     int        message_len     = 0;
 
     Mqtt_Value_Init();
@@ -203,7 +203,7 @@ static void property_report_state(void)
 
 void property_report_update_data(void)
 {
-	char  message[256]    = {0};
+	char  message[200]    = {0};
 	int   message_len	   = 0;
 	
 	 Mqtt_Value_update_data();
@@ -219,7 +219,7 @@ void property_report_update_data(void)
 
 void property_report_phone_timer_on_data(void)
 {
-	char  message[256]    = {0};
+	char  message[200]    = {0};
 	int   message_len	   = 0;
 	
 	 Mqtt_phone_timer_on_update_data();
@@ -237,7 +237,7 @@ void property_report_phone_timer_on_data(void)
 static void property_report_power_off_state(void)
 {
 
-	char       message[256]    = {0};
+	char       message[200]    = {0};
     int        message_len     = 0;
 
    Mqtt_power_off_Value();

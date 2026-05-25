@@ -215,7 +215,7 @@ typedef struct _process{
    uint8_t  gTimer_to_disp_counter;
    uint8_t gTimer_mainboard_fun_counter;
    uint8_t gTimer_read_dth11_sensor;
-   uint8_t time_20ms_f;
+
    
 }process_t;
 
