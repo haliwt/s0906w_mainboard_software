@@ -384,18 +384,15 @@ static void vTaskUiPro(ULONG thread_input)
 	  }
 
 	  // WiFi状态检查：每200ms执行一次（约每10个循环）
-      wifi_check_counter++;
-      if(wifi_check_counter >= 10 && g_wifi.wifi_led_fast_blink_flag==0){
+      wifi_check_counter++;//20ms * 50 = 1000ms =1s
+      if(wifi_check_counter >= 50 && g_wifi.wifi_led_fast_blink_flag==0){
           wifi_check_counter = 0;
           wifi_auto_detected_link_state();
       }
 
-      // 北京时获取：每500ms执行一次（约每25个循环）
-      beijing_time_counter++;
-      if(beijing_time_counter >= 25 && g_wifi.wifi_led_fast_blink_flag==0){
-          beijing_time_counter = 0;
-          getBeijingTime_cofirmLinkNetState_handler();
-      }
+      // 北京时获取：每9s执行一次（约每25个循环）
+       getBeijingTime_cofirmLinkNetState_handler();
+      
 
 	  #if DEBUG_ENABLE
 		    debug_stack_ui_check();

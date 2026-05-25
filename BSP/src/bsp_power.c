@@ -676,8 +676,8 @@ void power_on_handler(void)
          // ==================== 4. 时间片轮转维护 ====================
            time_slot++;
            if (time_slot >9 ) time_slot = 0; //20ms * 10 = 200ms.
-      }
 }
+
 	
 
 
