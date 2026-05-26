@@ -47,7 +47,7 @@ TX_SEMAPHORE decoder_semaphore;
 //static TX_QUEUE uart1_rx_queue;
 //static uint8_t uart1_rx_queue_buffer[UART1_RX_BUF_SIZE * sizeof(uint8_t)];
 
-//TX_EVENT_FLAGS_GROUP key_event;
+TX_EVENT_FLAGS_GROUP key_event;
 
 TX_TIMER beep_timer;
 
@@ -77,24 +77,6 @@ static void debug_stack_key_event_check(void);
 
 ULONG unused,unused_key,unused_decoder,unused_event ;
 #endif 
-
-typedef struct{
-
-   uint8_t power_key_long_f;
-   uint8_t power_key_short_f;
-
-   uint8_t mode_key_long_f;
-   uint8_t mode_key_short_f;
-
-   uint8_t down_key_long_f;
-   uint8_t down_key_short_f;
-
-   uint8_t up_key_short_f;
-
-
-}local_key_t;
-
-local_key_t gl_t;
 
 /**
  * @brief  :  static void vTaskStart(void *pvParameters
@@ -144,7 +126,7 @@ static void threadx_handler(void)
       /* 创建信号量 */
    tx_semaphore_create(&decoder_semaphore, "DecoderSemaphore", 0);
 
-   //tx_event_flags_create(&key_event, "key_event");
+   tx_event_flags_create(&key_event, "key_event");
    
 	tx_thread_create(&thread_decoder,       /* 任务控制块地址 */ 
 					"DecoderPro",           /* 任务名 */
@@ -164,7 +146,7 @@ static void threadx_handler(void)
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
                      3,							   /* 任务优先级*/
-                     3,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     0,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -256,58 +238,62 @@ static void vTaskDecoderPro(ULONG thread_input)
         {
             power_cnt++;
             if(power_cnt == LONG_PRESS_TIME && g_pro.gpower_on == power_on){
-                gl_t.down_key_long_f = KEY_POWER_LONG ;//tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
+                tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
              }
         }
-        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 0)
+        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 2)
         {
             if(power_cnt > 1 && power_cnt < LONG_PRESS_TIME)
-                gl_t.power_key_short_f= KEY_POWER_SHORT ;//tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
+                tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
 
             power_cnt = 0;
         }
-        else if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+
+		
+        if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             mode_cnt++;
             if(mode_cnt == LONG_PRESS_TIME){
-				gl_t.mode_key_long_f = KEY_MODE_LONG ;//tx_event_flags_set(&key_event, KEY_MODE_LONG, TX_OR);
+				tx_event_flags_set(&key_event, KEY_MODE_LONG, TX_OR);
                
             }
         }
-        else if(KEY_MODE_VALUE() == KEY_UP && mode_cnt > 0)
+        else if(KEY_MODE_VALUE() == KEY_UP && mode_cnt > 2)
         {
             if(mode_cnt > 1 && mode_cnt < LONG_PRESS_TIME)
-                gl_t.mode_key_short_f = KEY_MODE_SHORT ;//tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
+                tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
             mode_cnt = 0;
         }
-		else if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+		
+		
+        if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             up_cnt++;
-            if(up_cnt == LONG_PRESS_TIME){
-                //tx_event_flags_set(&key_event, KEY_UP_LONG, TX_OR);
-            }
+            if(up_cnt == LONG_PRESS_TIME)
+                tx_event_flags_set(&key_event, KEY_UP_LONG, TX_OR);
         }
-        else if(KEY_UP_VALUE() == KEY_UP && up_cnt > 0)
+        else if(KEY_UP_VALUE() == KEY_UP && up_cnt > 2)
         {
             if(up_cnt > 1 && up_cnt < LONG_PRESS_TIME)
-              gl_t.up_key_short_f = KEY_UP_SHORT ; // tx_event_flags_set(&key_event, KEY_UP_SHORT, TX_OR);
+                tx_event_flags_set(&key_event, KEY_UP_SHORT, TX_OR);
 
             up_cnt = 0;
         }
-		else if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+		
+        if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             down_cnt++;
             if(down_cnt == LONG_PRESS_TIME)
-                gl_t.down_key_long_f = KEY_DOWN_LONG ;//tx_event_flags_set(&key_event, KEY_DOWN_LONG, TX_OR);
+                tx_event_flags_set(&key_event, KEY_DOWN_LONG, TX_OR);
         }
-        else if(KEY_DOWN_VALUE() == KEY_UP && down_cnt > 0)
+        else if(KEY_DOWN_VALUE() == KEY_UP && down_cnt > 2)
         {
             if(down_cnt > 1 && down_cnt < LONG_PRESS_TIME)
-                gl_t.down_key_short_f = KEY_DOWN_SHORT ;//tx_event_flags_set(&key_event, KEY_DOWN_SHORT, TX_OR);
+                tx_event_flags_set(&key_event, KEY_DOWN_SHORT, TX_OR);
 
             down_cnt = 0;
         }
-        LL_IWDG_ReloadCounter(IWDG);
+       
 
     
    #if DEBUG_ENABLE
@@ -316,7 +302,7 @@ static void vTaskDecoderPro(ULONG thread_input)
 
      
 
-	 tx_thread_sleep(3);//10ms *2 
+	 tx_thread_sleep(2);//10ms *2 
 
    }
 	
@@ -333,14 +319,13 @@ uint8_t  event_error_counter;
 static void vTaskKeyEvent(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
-  //ULONG flags;
- // UINT status;
-   static uint8_t wifi_check_counter = 0;
-  static uint8_t beijing_time_counter = 0;
+  ULONG flags;
+  UINT status;
+ 
 
   while(1)
   {
-     #if 0
+
      status = tx_event_flags_get(&key_event,
                            0xFFFFFFFF,
                            TX_OR_CLEAR,
@@ -356,73 +341,13 @@ static void vTaskKeyEvent(ULONG thread_input)
         else if(flags & KEY_UP_SHORT)    handle_up_key();
 	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
 	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
-        tx_thread_sleep(2); //WT.EDIT 2026-05-23
+        tx_thread_sleep(1); //WT.EDIT 2026-05-23
          //LL_IWDG_ReloadCounter(IWDG);
         #if DEBUG_ENABLE
              // debug_stack_key_event_check();
           #endif 
 	   
      }
-	 #else 
-	  if(gl_t.power_key_short_f== KEY_POWER_SHORT){
-	  	   gl_t.power_key_short_f =0xff;
-	  	    handle_power_key();
-	  	}
-	    else if(gl_t.power_key_long_f == KEY_POWER_LONG){
-			gl_t.power_key_long_f =0xff;
-			key_power_longk_fun();//handle_power_long_key();
-
-	    }
-        else if(gl_t.mode_key_short_f== KEY_MODE_SHORT){
-			gl_t.mode_key_short_f =0xff;
-			handle_mode_key();
-        	}
-	    else if(gl_t.mode_key_long_f == KEY_MODE_LONG){
-			gl_t.mode_key_long_f = 0xff;
-			key_mode_long_fun();
-	    	}
-        else if(gl_t.up_key_short_f == KEY_UP_SHORT){
-			gl_t.up_key_short_f =0xff;
-			handle_up_key();
-        	}
-	    else if(gl_t.down_key_short_f ==  KEY_DOWN_SHORT){
-			gl_t.down_key_short_f = 0xff;
-			handle_down_key();
-	    	}
-	    else if(gl_t.down_key_long_f == KEY_DOWN_LONG){
-			gl_t.down_key_long_f =0xff;
-			key_down_long_fun();//handle_down_long_key();
-	    	}
-	    else{
-
-            // 限制WiFi通信处理频率，避免长时间阻塞
-      if(g_pro.time_50ms_f ==1 && g_wifi.wifi_led_fast_blink_flag==0){
-	  	  g_pro.time_50ms_f =0;
-	  	  wifi_communication_tnecent_handler();
-	  }
-
-	  // WiFi状态检查：每200ms执行一次（约每10个循环）
-       wifi_check_counter++;//20ms * 50 = 1000ms =1s
-      if(wifi_check_counter >= 50 && g_wifi.wifi_led_fast_blink_flag==0){
-          wifi_check_counter = 0;
-          wifi_auto_detected_link_state();
-      }
-	  
-     // 4. 北京时获取：真正实现每 9 秒执行一次 (450 * 20ms = 9000ms)
-        // 彻底切断它与 wifi_check_counter 的捆绑关系！
-        beijing_time_counter++;
-        if(beijing_time_counter >=50)
-        {
-            beijing_time_counter = 0;
-            if(g_wifi.wifi_led_fast_blink_flag == 0){ // 确保在非配网期间才去获取
-                getBeijingTime_cofirmLinkNetState_handler();
-            }
-        }
-
-		}
-
-       tx_thread_sleep(1);
-	 #endif 
     
     
   	}
@@ -438,7 +363,8 @@ static void vTaskKeyEvent(ULONG thread_input)
 static void vTaskUiPro(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
-
+  static uint8_t wifi_check_counter = 0;
+  static uint8_t beijing_time_counter = 0;
 	
   while(1)
   {
@@ -451,7 +377,22 @@ static void vTaskUiPro(ULONG thread_input)
 
 	  }
 
-	 
+	  // 限制WiFi通信处理频率，避免长时间阻塞
+      if(g_pro.time_50ms_f ==1 && g_wifi.wifi_led_fast_blink_flag==0){
+	  	  g_pro.time_50ms_f =0;
+	  	  wifi_communication_tnecent_handler();
+	  }
+
+	  // WiFi状态检查：每200ms执行一次（约每10个循环）
+      wifi_check_counter++;//20ms * 50 = 1000ms =1s
+      if(wifi_check_counter >= 50 && g_wifi.wifi_led_fast_blink_flag==0){
+          wifi_check_counter = 0;
+          wifi_auto_detected_link_state();
+      }
+      else{
+      // 北京时获取：每9s执行一次（约每25个循环）
+       getBeijingTime_cofirmLinkNetState_handler();
+      }
       
 
 	  #if DEBUG_ENABLE
@@ -507,8 +448,7 @@ void vtask_isq_handler(void)
 
 void vtask_key_power(void)
 {
-  //tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
-    gl_t.power_key_short_f = KEY_POWER_SHORT;
+  tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
 }
 
 static void beep_timer_callback(ULONG input)
