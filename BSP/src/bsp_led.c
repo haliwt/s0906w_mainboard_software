@@ -22,7 +22,7 @@ void power_on_led(void)
     LED_DRY_ON();
     LED_PLASMA_ON();
 	LED_TEMP_ICON_ON();
-    LED_HUM_ICON_ON();
+   // LED_HUM_ICON_ON();
     
 }
 
