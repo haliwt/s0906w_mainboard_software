@@ -114,7 +114,8 @@ void power_on_init_ref(void)
 void power_on_run_handler(void)
 {
 
-   static uint8_t temp_second_displboard,switch_dht11,send_net_state;
+    static uint8_t temp_second_displboard,switch_dht11,send_net_state,ptc_counter;
+	volatile uint16_t ptc_teperature_value;
 	switch(gl_run.process_on_step){
 
 
@@ -272,8 +273,14 @@ void power_on_run_handler(void)
 
 	case 4: //DISPAY 3 digital numbers . process .
     
-	 // display_digital_3_numbers();
-	  gl_run.process_on_step =5; 
+	      ptc_counter ++ ;
+		 if(ptc_counter > 10){//100ms *10 = 1000ms =1s
+		     ptc_counter =0;
+		 	 ptc_teperature_value = ADC_PTC_GetValues();
+	         Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
+		 }
+	    
+	    gl_run.process_on_step =5; 
 	
 
 	 break;
@@ -380,6 +387,8 @@ void power_on_run_handler(void)
          gl_run.process_on_step =3;
 	 break;
 
+
+	
 	 default :
 
 	  break;

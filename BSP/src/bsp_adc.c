@@ -12,6 +12,8 @@ static void ADC_GetValues(void);
 static uint16_t compute_voltage(uint16_t raw_value) ;
 
 static uint8_t ADC_StartConversion(void);
+
+
 // ADC相关变量定义
 #define SAMPLE_COUNT 6
 
@@ -25,10 +27,19 @@ volatile uint8_t adc_conversion_complete = 0;
 
 uint16_t ptc_temp_voltage;
 uint16_t fan_detect_voltage = 1000;
+/**********************************************************************
+	*
+	*Functin Name: void adc_detected_hundler(void)
+	*Function :
+	*Input Ref:  key of value
+	*Return Ref: NO
+	*
+**********************************************************************/
+void adc_ptc_detected_temperature_handler(void)
+{
+  
 
-
-
-
+}
 /**********************************************************************
 	*
 	*Functin Name: void adc_detected_hundler(void)
@@ -157,36 +168,32 @@ static uint8_t ADC_StartConversion(void)
 // 获取ADC转换结果
 static void ADC_GetValues(void)
 {
-  //   static uint8_t ptc_counter;
-	// uint8_t i;
-	
-//	uint32_t sum =0;
-        
-   
-	   
-	   //mean_fan_buf[fan_counter] = compute_voltage(adc_buffer[0]);//(adc_buffer[0] * 3300 )/4095;//compute_voltage(adc_buffer[0]) ;
-	  // mean_fan_buf[fan_counter]
+  
 	   fan_detect_voltage= (adc_buffer[0] * 3300 )/4095;
        vTaskDelay(pdMS_TO_TICKS(10));
 	   #if DEBUG_ENABLE
           printf("fan_voltale = %d \r\n",fan_detect_voltage);
 	   #endif 
-//	    fan_counter++;
-//	    if(fan_counter >=6){
 
-//            for (i = 1; i < SAMPLE_COUNT; i++) {
-//                sum += mean_fan_buf[i];
-//            }
-		   
-//		  fan_detect_voltage = sum/5;
-//		  fan_counter =0;
-	
+	  
 
-
-//		}
-		
   
 }
+
+uint16_t  ADC_PTC_GetValues(void)
+{
+  
+	   ptc_temp_voltage= (adc_buffer[1] * 3300 )/4095;
+       vTaskDelay(pdMS_TO_TICKS(10));
+	   #if DEBUG_ENABLE
+          printf("fan_voltale = %d \r\n",fan_detect_voltage);
+	   #endif 
+
+	   return ptc_temp_voltage;
+
+  
+}
+
 
 /*****************************************************************
 	*
