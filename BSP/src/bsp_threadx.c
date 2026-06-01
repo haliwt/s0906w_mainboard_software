@@ -228,7 +228,7 @@ static void vTaskDecoderPro(ULONG thread_input)
     static uint16_t down_cnt = 0;
     static uint16_t power_cnt = 0;
 
-    const uint16_t LONG_PRESS_TIME = 100;   // 300 * 10ms = 3000ms
+    const uint16_t LONG_PRESS_TIME = 40;   // 300 * 10ms = 3000ms
   
   
    while(1)
@@ -302,7 +302,7 @@ static void vTaskDecoderPro(ULONG thread_input)
 
      
 
-	 tx_thread_sleep(6);//10ms *2 
+	 tx_thread_sleep(7);//10ms *2 
 
    }
 	
