@@ -328,7 +328,7 @@ static void vTaskKeyEvent(ULONG thread_input)
                            TX_WAIT_FOREVER);//50);//(200));//TX_NO_WAIT);//TX_WAIT_FOREVER);//
                            
      if(status == TX_SUCCESS){
-
+q
 	    if(flags & KEY_POWER_SHORT) handle_power_key();
 	    else if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
         else if(flags & KEY_MODE_SHORT)  handle_mode_key();
