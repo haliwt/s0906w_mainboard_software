@@ -21,7 +21,7 @@
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  256//512//128//1792//3072//2048//1024//896//768
 #define STACK_SIZE_UI      1280//1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
-#define STACK_SIZE_KEY     512//512
+#define STACK_SIZE_KEY     256//512
 #define STACK_SIZE_EVENT   512//640//768//256
 
 __attribute__((aligned(8))) static UCHAR stack_ui_pro[STACK_SIZE_UI];
@@ -49,7 +49,7 @@ TX_SEMAPHORE decoder_semaphore;
 
 TX_EVENT_FLAGS_GROUP key_event;
 
-TX_TIMER beep_timer;
+//TX_TIMER beep_timer;
 
 
 static void vTaskUiPro(ULONG thread_input);
@@ -58,7 +58,7 @@ static void vTaskKeyEvent(ULONG thread_input);
 
 
 static void vTaskDecoderPro(ULONG thread_input);
-static void beep_timer_callback(ULONG input);
+//static void beep_timer_callback(ULONG input);
 
 
 static void threadx_handler(void);
@@ -146,7 +146,7 @@ static void threadx_handler(void)
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
                      3,							   /* 任务优先级*/
-                     0,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     3,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -173,13 +173,13 @@ static void threadx_handler(void)
 					  TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
-   tx_timer_create(&beep_timer,     /* timer of  block */
-				   "20msTimer",
-				   beep_timer_callback, /*callback function */
-   				   0,
-				   2,                    /* 第一次延迟 20ms*/
-				   2,                    /*周期 20 ticks*/
-				   TX_AUTO_ACTIVATE);    
+//   tx_timer_create(&beep_timer,     /* timer of  block */
+//				   "20msTimer",
+//				   beep_timer_callback, /*callback function */
+//   				   0,
+//				   2,                    /* 第一次延迟 20ms*/
+//				   2,                    /*周期 20 ticks*/
+//				   TX_AUTO_ACTIVATE);    
 
  
 }
@@ -399,7 +399,7 @@ static void vTaskUiPro(ULONG thread_input)
 		    debug_stack_ui_check();
 	  #endif 
 	  LL_IWDG_ReloadCounter(IWDG);
-      tx_thread_sleep(2);
+      tx_thread_sleep(1);
   }
 	  
 }
@@ -451,16 +451,16 @@ void vtask_key_power(void)
   tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
 }
 
-static void beep_timer_callback(ULONG input)
-{
-  (void)input;
-  buzzer_sound_close();
-}
+//static void beep_timer_callback(ULONG input)
+//{
+//  (void)input;
+//  buzzer_sound_close();
+//}
 
-void open_beep_sound(void)
-{
-  tx_timer_activate(&beep_timer);
-}
+//void open_beep_sound(void)
+//{
+//  tx_timer_activate(&beep_timer);
+//}
 
 
 #if DEBUG_ENABLE

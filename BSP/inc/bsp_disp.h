@@ -16,6 +16,7 @@ typedef enum {
 	DISPLAY_TIME = 2
 } DisplayMode;
 
+void direct_display_digital_3_numbers(void);
 
 
 void display_digital_3_numbers(void);

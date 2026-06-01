@@ -14,7 +14,7 @@
 void vtask_isq_handler(void);
 void vtask_key_power(void);
 
-void open_beep_sound(void);
+//void open_beep_sound(void);
 
 
 #endif /* BSP_INC_BSP_FREERTOS_H_ */

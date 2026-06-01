@@ -18,7 +18,7 @@ static void execute_system_shutdown(void);
 static void timer_timing_handler(void);
 
 
-void display_digital_3_numbers(void)
+void direct_display_digital_3_numbers(void)
 {
     
 	 static uint8_t read_error_flag,timer_disp_f;
@@ -83,7 +83,7 @@ void display_digital_3_numbers(void)
 		 else{
 			 timer_disp_f =0;
              g_pro.switch_disp_time_or_temp_item = temperature_mode;// g_pro.g_disp_smg_timer_or_temp_hours_item = temperature_mode; //WT.EDIT 2025.010.06
-             //at once display "temperature_mode" //WT.EDIT 2025.10.17
+             g_key.key_mode_long_flag = 0;//at once display "temperature_mode" //WT.EDIT 2025.10.17
              g_pro.gTimer_switch_temp_hum=5;
 		     if(g_pro.gAI ==1){//if(g_pro.set_timing_or_timer_time_flag ==WORKS_TIME){ // && g_key.key_mode_long_flag != 1){
                   
@@ -100,12 +100,22 @@ void display_digital_3_numbers(void)
         }
        break;
 
-	   case temperature_mode :
-		  timer_disp_f =0;
+	   default:
 
-	     if(g_key.key_mode_long_flag == 1) return ;
+	   break;
 
-          if(g_pro.gAI == 0){//if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
+     	}
+}
+
+
+	 
+void display_digital_3_numbers(void)
+{
+
+	if(g_key.key_mode_long_flag == 1 || g_pro.switch_disp_time_or_temp_item ==1 || g_pro.switch_disp_time_or_temp_item ==2) return ;
+
+
+		  if(g_pro.gAI == 0){//if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){
 			         
 		     LED_AI_OFF(); 
 		  }
@@ -141,9 +151,7 @@ void display_digital_3_numbers(void)
        
 
           
-         break;
-     	}
-
+    
 
 	   	
   

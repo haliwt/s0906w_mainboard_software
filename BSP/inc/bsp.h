@@ -55,6 +55,8 @@
 
 //second display board
 #include "bsp_second_display.h"
+#include "bsp_ntc.h"
+
 
 
 //mainboard
@@ -181,6 +183,7 @@ typedef struct _process{
    uint8_t timer_powerOff_oneHour_flag;
    uint8_t gpower_on_key_f;
    uint8_t g_immediate_heat_f;
+   uint8_t read_ntc_temperature_value;
 
    
 

@@ -124,15 +124,41 @@ static uint8_t DHT11_ReadByte ( void )
 {
 
      uint8_t i,dat=0;
+	 uint16_t timeout; // 引入超时计数器
 	 for(i=0;i<8;i++) 
 		  {
-			   	while(DHT11_Data_IN()==Bit_RESET);
+                
+				while(DHT11_Data_IN()==Bit_RESET){
+
+				   timeout++;
+						delay_us_dht11(1); // 每次等待 1us
+						if(timeout > 1000)  // 超过 100us 未响应，直接判定超时
+						{
+							return 0; // 或者返回 0xFF 作为错误标志
+						}
+
+				}
 			
 				delay_us_dht11(40);
 				
 				  if(DHT11_Data_IN()==Bit_SET)
 					{
-						while(DHT11_Data_IN()==Bit_SET);
+
+                        timeout = 0;
+						while(DHT11_Data_IN()==Bit_SET){
+
+						
+				            timeout++;
+				            delay_us_dht11(1); // 每次等待 1us
+				            if(timeout > 1000)  // 超过 100us 未响应，直接判定超时
+				            {
+				                return 0; 
+				            }
+				        }
+
+
+
+						
 					 
 						
 						dat|=(uint8_t)(0x01 << (7 - i)); // ����1

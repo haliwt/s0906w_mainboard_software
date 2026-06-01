@@ -190,6 +190,21 @@ static void ADC_GetValues(void)
   
 }
 
+uint16_t  ADC_PTC_GetValues(void)
+{
+  
+	   ptc_temp_voltage= (adc_buffer[1] * 3300 )/4095;
+      // vTaskDelay(pdMS_TO_TICKS(10));
+	   #if DEBUG_ENABLE
+          printf("fan_voltale = %d \r\n",fan_detect_voltage);
+	   #endif 
+
+	   return ptc_temp_voltage;
+
+  
+}
+
+
 /*****************************************************************
 	*
 	*Function Name: 
