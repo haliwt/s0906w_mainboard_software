@@ -17,9 +17,15 @@ typedef struct{
 
 POWER_RUN_STATE gl_run;
 
+static void power_off_init_handler(void);
+
+static void power_off_cycle_handler(void);
 
 
-//DisplayMode disp_temp_hum = DISPLAY_TEMP;  // 默认显示温度
+uint8_t dc_power_fan_flag ;
+uint8_t fan_run_one_minute;
+uint8_t off_time_slot;
+
 
 
 
@@ -388,18 +394,45 @@ static void power_on_initial(void)
 **********************************************************************/
 void power_off_handler(void)
 {
+    
+	if(g_pro.process_off_step <20){
+	power_off_init_handler();
+	}
+    else{
 
-   static uint8_t fan_flag,wifi_first_connect,fan_run_one_minute,switch_f;
+	
+	  power_off_cycle_handler();
+    }
+
+
+	
+
+	
+	off_time_slot ++;
+	if(off_time_slot > 4) off_time_slot = 0;
+}
+
+static void power_off_init_handler(void)
+{
+
+
    static uint8_t power_on_flag=0;
-   static uint16_t counter_send=0;
+ 
+   
    switch(g_pro.process_off_step){
 
    case 0:
     
        if(power_on_flag==0){
              power_on_flag ++;
+			
 			 buzzer_power_sound();
+	       
+	   
 	   }
+
+
+   case 1:
    	  gl_run.process_on_step =0;
       g_pro.gpower_on_key_f = 0;
       gl_run.process_on_step =0;
@@ -409,16 +442,19 @@ void power_off_handler(void)
       DRY_CLOSE();
 
 	   
-	     
+	   if(dc_power_fan_flag ==0){
+	   	dc_power_fan_flag =1;
+		
+	    }
+	   else{
+	   	fan_run_one_minute = 1;
+	   	dc_power_fan_flag =2;
+	 
+	   	}
 	   
-      g_pro.process_off_step = 1;
-   break;
-
-   case 1:
-
-   	  
       g_pro.process_off_step = 2;
    break;
+
 
    case 2:
 	 // g_key.key_long_power_flag  = 0;
@@ -428,7 +464,7 @@ void power_off_handler(void)
 	
 	  g_pro.led_bar =0;
 
-	  fan_run_one_minute = 1;
+	
 	  g_pro.gTimer_fan_run_one_minute =0;
 
 	 
@@ -442,27 +478,22 @@ void power_off_handler(void)
 	   g_pro.disp_second_f =0;
 	 
 	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
-        mainboard_close_all_fun();
-        g_pro.process_off_step = 3;
+	   g_pro.process_off_step = 3;
 
    break;
-
+   
    case 3:
-    
-     if(fan_flag == 0){
-	 	fan_flag++;
-	    fan_run_one_minute =2;
-     }
-      g_pro.process_off_step = 4;
+        mainboard_close_all_fun();
+        g_pro.process_off_step = 4;
 
    break;
-
 
    case 4:
+    
    	
 	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
             MqttData_Publish_SetOpen(0);  
-			
+			tx_thread_sleep(20);
            
 	  }
      g_pro.process_off_step = 5;
@@ -474,14 +505,27 @@ void power_off_handler(void)
    if(g_wifi.gwifi_link_net_success == wifi_link_success){
           
 	        MqttData_Publish_PowerOff_Ref() ;//
-	       
+	        tx_thread_sleep(20);
         }
 
 
-      g_pro.process_off_step = 6;
+      g_pro.process_off_step = 0xff;
   break;
 
-  case 6:
+   	}
+}
+
+
+
+static void power_off_cycle_handler(void)
+{
+  volatile uint8_t time_slot =0;
+  static uint16_t counter_send=0;
+  static uint8_t fan_flag,wifi_first_connect,switch_f;
+
+  switch(off_time_slot)
+  {
+  case 0:
      counter_send ++ ;
     
      if(counter_send > 300){//10ms * 100
@@ -492,11 +536,12 @@ void power_off_handler(void)
 
      	}
      	
-    g_pro.process_off_step = 7;
+  
 
   break;
 	 
-  case 7:
+  case 1:
+  	
 	 if(fan_run_one_minute ==1){
 	 
 		   if(g_pro.gTimer_fan_run_one_minute  < 61){
@@ -511,22 +556,24 @@ void power_off_handler(void)
 		   }
 	 
 	   }
-	   g_pro.process_off_step = 8;
+	
    break;
 
-   case 8:
+   case 2:
 	 
-      LED_Power_Breathing();
+     LED_Power_Breathing();
+
+   case 3:
 
       if(g_pro.gTimer_to_disp_counter > 9){//10ms*200 =2000ms =2s
 			g_pro.gTimer_to_disp_counter=0;
          read_sensorData();
       }
-      g_pro.process_off_step = 9;
+     
 
    break;
 
-   case 9:
+   case 4:
 	 wifi_first_connect++;
 
 	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){//10ms * 
@@ -534,21 +581,23 @@ void power_off_handler(void)
 			switch_f = switch_f ^ 0x01;
 	        if(switch_f ==1){
              MqttData_Publish_SetOpen(0);  
+			 tx_thread_sleep(10);
 	        }
 		    else{
 	         MqttData_Publish_PowerOff_Ref() ;//
+	          tx_thread_sleep(10);
 		    }
 	       
            
 	 }
 
-    g_pro.process_off_step = 6;
+
 
    break;
 
    
    	}
-
+ 
 }
 /**********************************************************************
 	*

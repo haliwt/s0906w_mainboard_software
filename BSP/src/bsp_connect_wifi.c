@@ -201,7 +201,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
              flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Subscriber_Data_FromCloud_Handler();
-           
+            tx_thread_sleep(10);
              g_wifi.wifi_get_beijing_step = 1; //g_wifi.get_beijing_flag = 1;
 
             
@@ -210,7 +210,7 @@ void getBeijingTime_cofirmLinkNetState_handler(void)
             flag_switch=0;
             g_wifi.get_rx_beijing_time_enable=0;
             Update_Dht11_Totencent_Value();
-          
+            tx_thread_sleep(10);
             
             // gpro_t.get_beijing_flag = 1;
             g_wifi.wifi_get_beijing_step = 1;

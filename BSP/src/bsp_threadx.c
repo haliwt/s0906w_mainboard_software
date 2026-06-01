@@ -343,6 +343,11 @@ static void vTaskKeyEvent(ULONG thread_input)
           #endif 
 	   
      }
+	 else{
+
+	   tx_thread_sleep(30); 
+
+	 }
     
     
   	}

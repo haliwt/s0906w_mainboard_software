@@ -122,17 +122,34 @@ static void DHT11_Mode_OutPut(void)
   */
 static uint8_t DHT11_ReadByte ( void )
 {
-
+     static uint16_t time_out;
      uint8_t i,dat=0;
 	 for(i=0;i<8;i++) 
 		  {
-			   	while(DHT11_Data_IN()==Bit_RESET);
+                time_out = 0;
+				while(DHT11_Data_IN()==Bit_RESET){
+
+				 time_out++ ;
+				 if(time_out > 1000){
+
+                   return 0;
+				 }
+
+
+				}
 			
 				delay_us_dht11(40);
 				
 				  if(DHT11_Data_IN()==Bit_SET)
 					{
-						while(DHT11_Data_IN()==Bit_SET);
+                        time_out = 0;
+						while(DHT11_Data_IN()==Bit_SET){
+						time_out++ ;
+						if(time_out > 1000){
+						
+										return 0;
+								}
+                        }
 					 
 						
 						dat|=(uint8_t)(0x01 << (7 - i)); // ����1
