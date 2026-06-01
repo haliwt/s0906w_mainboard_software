@@ -561,7 +561,7 @@ static void power_off_cycle_handler(void)
 
    case 2:
 	 
-     LED_Power_Breathing();
+    // LED_Power_Breathing();
 
    case 3:
 

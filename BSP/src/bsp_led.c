@@ -79,11 +79,11 @@ void power_off_led(void)
 void LED_Power_Breathing(void)
 {
 
-	 if(g_pro.gTimer_read_dth11_sensor >=1){
-          g_pro.gTimer_read_dth11_sensor =0;
+	 if(g_pro.gpower_on == power_off){
+          
             LED_POWER_TOGGLE();
 
-     	}
+     }
      
 }
 /************************************************************************

@@ -111,6 +111,7 @@ static void tim17_isr_callback_handler(void)
 		   g_wifi.gTimer_link_net_timer_time++;
 		   g_wifi.gTimer_get_beijing_time++;
 		   g_wifi.gTimer_update_dht11_data++;
+		   LED_Power_Breathing();
 		
        }
 }
