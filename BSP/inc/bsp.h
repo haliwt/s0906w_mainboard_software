@@ -55,8 +55,6 @@
 
 //second display board
 #include "bsp_second_display.h"
-#include "bsp_ntc.h"
-
 
 
 //mainboard

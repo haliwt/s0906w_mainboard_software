@@ -562,9 +562,8 @@ uint8_t time_slot = 0;
 
 void power_on_handler(void)
 {
-    static uint8_t  switch_dht11 =0,ptc_counter,err_counter;
-	volatile static uint8_t  switch_disp_counter; 
-    volatile uint16_t ptc_teperature_value;
+    static uint8_t  switch_dht11 =0;
+  
 
 	   power_on_initial();
    		
@@ -579,17 +578,12 @@ void power_on_handler(void)
             // 确保底层硬件（如继电器、PWM、PTC）在 20ms 内得到响应
             immediatley_temp_comare_value();//set_temperature_value_handler(); 
         }
-		
-		direct_display_digital_3_numbers();
 
 		switch(time_slot){
 
-	     case 0://20ms
-		switch_disp_counter++;
-           if(switch_disp_counter > 10 ){
-		   	switch_disp_counter =0;
+		case 0://20ms
+
            display_digital_3_numbers();
-           	}
 		break;
 
 		case 1:
@@ -675,39 +669,16 @@ void power_on_handler(void)
 			works_run_two_hours_state();
 		break;
 
-		case 10:
-			 ptc_counter ++ ;
-		 if(ptc_counter > 10){//100ms *10 = 1000ms =1s
-		     ptc_counter =0;
-		 	 ptc_teperature_value = ADC_PTC_GetValues();
-	         Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
-
-			 if(g_pro.read_ntc_temperature_value > 110 ){
-                   err_counter++;
-				  if(err_counter > 1){
-				  	 err_counter =0;
-			        g_pro.ptc_warning = 1;
-
-				  }
-
-              }
-			  else{
-			     err_counter =0;
-
-			  }
-
-		break;
-
           }
 
 		
 		  
          // ==================== 4. 时间片轮转维护 ====================
            time_slot++;
-           if (time_slot >10 ) time_slot = 0; //20ms * 10 = 200ms.
-        }
+           if (time_slot >9 ) time_slot = 0; //20ms * 10 = 200ms.
+}
 
-	}
+	
 
 
 

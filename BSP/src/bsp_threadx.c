@@ -21,7 +21,7 @@
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  256//512//128//1792//3072//2048//1024//896//768
 #define STACK_SIZE_UI      1280//1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
-#define STACK_SIZE_KEY     256//512
+#define STACK_SIZE_KEY     512//512
 #define STACK_SIZE_EVENT   512//640//768//256
 
 __attribute__((aligned(8))) static UCHAR stack_ui_pro[STACK_SIZE_UI];
@@ -241,9 +241,9 @@ static void vTaskDecoderPro(ULONG thread_input)
                 tx_event_flags_set(&key_event, KEY_POWER_LONG, TX_OR);
              }
         }
-        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 2)
+        else if(KEY_POWER_VALUE() == KEY_UP && power_cnt > 0)
         {
-            if(power_cnt > 1 && power_cnt < LONG_PRESS_TIME)
+            if(power_cnt > 0 && power_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
 
             power_cnt = 0;
@@ -258,9 +258,9 @@ static void vTaskDecoderPro(ULONG thread_input)
                
             }
         }
-        else if(KEY_MODE_VALUE() == KEY_UP && mode_cnt > 2)
+        else if(KEY_MODE_VALUE() == KEY_UP && mode_cnt > 0)
         {
-            if(mode_cnt > 1 && mode_cnt < LONG_PRESS_TIME)
+            if(mode_cnt > 0 && mode_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
             mode_cnt = 0;
         }
@@ -272,9 +272,9 @@ static void vTaskDecoderPro(ULONG thread_input)
             if(up_cnt == LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_UP_LONG, TX_OR);
         }
-        else if(KEY_UP_VALUE() == KEY_UP && up_cnt > 2)
+        else if(KEY_UP_VALUE() == KEY_UP && up_cnt > 0)
         {
-            if(up_cnt > 1 && up_cnt < LONG_PRESS_TIME)
+            if(up_cnt > 0 && up_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_UP_SHORT, TX_OR);
 
             up_cnt = 0;
@@ -286,9 +286,9 @@ static void vTaskDecoderPro(ULONG thread_input)
             if(down_cnt == LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_DOWN_LONG, TX_OR);
         }
-        else if(KEY_DOWN_VALUE() == KEY_UP && down_cnt > 2)
+        else if(KEY_DOWN_VALUE() == KEY_UP && down_cnt > 0)
         {
-            if(down_cnt > 1 && down_cnt < LONG_PRESS_TIME)
+            if(down_cnt > 0 && down_cnt < LONG_PRESS_TIME)
                 tx_event_flags_set(&key_event, KEY_DOWN_SHORT, TX_OR);
 
             down_cnt = 0;
@@ -302,7 +302,7 @@ static void vTaskDecoderPro(ULONG thread_input)
 
      
 
-	 tx_thread_sleep(2);//10ms *2 
+	 tx_thread_sleep(6);//10ms *2 
 
    }
 	
@@ -399,7 +399,7 @@ static void vTaskUiPro(ULONG thread_input)
 		    debug_stack_ui_check();
 	  #endif 
 	  LL_IWDG_ReloadCounter(IWDG);
-      tx_thread_sleep(1);
+      tx_thread_sleep(2);
   }
 	  
 }
