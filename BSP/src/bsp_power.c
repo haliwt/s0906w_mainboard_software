@@ -521,7 +521,7 @@ static void power_off_cycle_handler(void)
 {
   volatile uint8_t time_slot =0;
   static uint16_t counter_send=0;
-  static uint8_t fan_flag,wifi_first_connect,switch_f;
+  static uint16_t fan_flag,wifi_first_connect,switch_f;
 
   switch(off_time_slot)
   {
@@ -531,8 +531,8 @@ static void power_off_cycle_handler(void)
      if(counter_send > 300){//10ms * 100
 	 	counter_send=0;
 	   
-	 	  SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
-	      tx_thread_sleep(10);
+	 	 //// SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
+	      //tx_thread_sleep(10);
 
      	}
      	
@@ -576,7 +576,7 @@ static void power_off_cycle_handler(void)
    case 4:
 	 wifi_first_connect++;
 
-	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 250){//10ms * 
+	 if(g_wifi.gwifi_link_net_success == wifi_link_success && wifi_first_connect > 350){//10ms * 
 	 	    wifi_first_connect=0;
 			switch_f = switch_f ^ 0x01;
 	        if(switch_f ==1){

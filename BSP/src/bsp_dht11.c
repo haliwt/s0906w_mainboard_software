@@ -130,7 +130,7 @@ static uint8_t DHT11_ReadByte ( void )
 				while(DHT11_Data_IN()==Bit_RESET){
 
 				 time_out++ ;
-				 if(time_out > 1000){
+				 if(time_out > 3000){
 
                    return 0;
 				 }
@@ -145,7 +145,7 @@ static uint8_t DHT11_ReadByte ( void )
                         time_out = 0;
 						while(DHT11_Data_IN()==Bit_SET){
 						time_out++ ;
-						if(time_out > 1000){
+						if(time_out > 3000){
 						
 										return 0;
 								}

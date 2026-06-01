@@ -134,8 +134,8 @@ static void threadx_handler(void)
 					0,                       /* 传递给任务的参数 */
 					stack_decoder_pro,      /* 堆栈基地址 */
 					STACK_SIZE_DECODER,       /* 堆栈空间大小 */ 
-					2,
-					2,
+					3,
+					3,
 					TX_NO_TIME_SLICE,
 					TX_AUTO_START);
 				
@@ -145,8 +145,8 @@ static void threadx_handler(void)
                      0,                            /* 传递给任务的参数 */
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
-                     3,							   /* 任务优先级*/
-                     0,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
+                     2,							   /* 任务优先级*/
+                     2,							   /* 任务抢占阀值 , 允许它不被优先级 1-0 之间的任务抢占，除非是中断 */
                      TX_NO_TIME_SLICE,             /* 不开启时间片 */
                      TX_AUTO_START);               /* 创建后立即启动 */
  #if 1
@@ -170,7 +170,7 @@ static void threadx_handler(void)
 					  STACK_SIZE_EVENT,				/* 堆栈空间大小 */  
 					  1,							/* 任务优先级*/
 					  1,							/* 任务抢占阀值 */
-					  TX_NO_TIME_SLICE, 			/* 不开启时间片 */
+					   TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
 //   tx_timer_create(&beep_timer,     /* timer of  block */
@@ -248,7 +248,8 @@ static void vTaskDecoderPro(ULONG thread_input)
 
             power_cnt = 0;
         }
-        else if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+		
+        if(KEY_MODE_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             mode_cnt++;
             if(mode_cnt == LONG_PRESS_TIME){
@@ -262,7 +263,8 @@ static void vTaskDecoderPro(ULONG thread_input)
                 tx_event_flags_set(&key_event, KEY_MODE_SHORT, TX_OR);
             mode_cnt = 0;
         }
-		else if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+		
+		if(KEY_UP_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             up_cnt++;
             if(up_cnt == LONG_PRESS_TIME)
@@ -275,7 +277,8 @@ static void vTaskDecoderPro(ULONG thread_input)
 
             up_cnt = 0;
         }
-		else if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
+		
+		if(KEY_DOWN_VALUE() == KEY_DOWN && g_pro.gpower_on == power_on)
         {
             down_cnt++;
             if(down_cnt == LONG_PRESS_TIME)
@@ -330,12 +333,12 @@ static void vTaskKeyEvent(ULONG thread_input)
      if(status == TX_SUCCESS){
 
 	    if(flags & KEY_POWER_SHORT) handle_power_key();
-	    else if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
-        else if(flags & KEY_MODE_SHORT)  handle_mode_key();
-	    else if(flags & KEY_MODE_LONG)   key_mode_long_fun();
-        else if(flags & KEY_UP_SHORT)    handle_up_key();
-	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
-	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
+	    if(flags & KEY_POWER_LONG)  key_power_longk_fun();//handle_power_long_key();
+        if(flags & KEY_MODE_SHORT)  handle_mode_key();
+	    if(flags & KEY_MODE_LONG)   key_mode_long_fun();
+        if(flags & KEY_UP_SHORT)    handle_up_key();
+	    if(flags & KEY_DOWN_SHORT)  handle_down_key();
+	    if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
         tx_thread_sleep(20); //WT.EDIT 2026-05-23
          //LL_IWDG_ReloadCounter(IWDG);
         #if DEBUG_ENABLE
@@ -376,7 +379,7 @@ static void vTaskUiPro(ULONG thread_input)
           power_off_handler();
 
 	  }
-
+    
 	  // 限制WiFi通信处理频率，避免长时间阻塞
       if(g_pro.time_50ms_f ==1 && g_wifi.wifi_led_fast_blink_flag==0){
 	  	  g_pro.time_50ms_f =0;
@@ -399,7 +402,7 @@ static void vTaskUiPro(ULONG thread_input)
 		    debug_stack_ui_check();
 	  #endif 
 	  LL_IWDG_ReloadCounter(IWDG);
-      tx_thread_sleep(2);
+      tx_thread_sleep(1);
   }
 	  
 }
@@ -427,9 +430,9 @@ void tx_thread_stack_error_handler(TX_THREAD *thread_ptr)
     // Log_Fault(FAULT_STACK_OVERFLOW, thread_ptr->tx_thread_name);
 
     /* 4. 触发系统复位（汽车级） */
-    NVIC_SystemReset();
-
-    while(1);  // 调试阶段可以卡住
+    //NVIC_SystemReset();
+    tx_thread_sleep(20);
+    //while(1);  // 调试阶段可以卡住
 }
 
 
