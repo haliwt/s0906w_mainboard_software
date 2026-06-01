@@ -230,7 +230,7 @@ void key_dwon_fun(void)
 ******************************************************************************/
 void set_temperature_value_handler(void)
 {
-
+   static uint8_t ptc_on_f = 0xff,ptc_off_f = 0xff;
    if((g_pro.key_set_temperature_flag==1 || g_wifi.g_wifi_set_temp_flag==1) && g_pro.gTimer_input_set_temp_timer >1)
    {
         g_pro.key_set_temperature_flag++;
@@ -241,7 +241,7 @@ void set_temperature_value_handler(void)
 		g_pro.first_set_ptc_on=0;
 		
 		if (g_pro.g_temperature_value >= g_pro.gset_temperture_value){
-
+           
 			g_pro.gDry= DRY_STATE_OFF;
 		    setDryState(g_pro.gDry);
 		
@@ -263,16 +263,19 @@ void set_temperature_value_handler(void)
 				    
 			
 
-			if(g_wifi.gwifi_link_net_success==wifi_link_success){
-				
-                 publishMqttData(DRY_STATE_OFF, g_pro.gset_temperture_value);
-				
+			if(g_wifi.gwifi_link_net_success==wifi_link_success &&  ptc_off_f  !=g_pro.gset_temperture_value){
+				  ptc_off_f  = g_pro.gset_temperture_value;
+                 //publishMqttData(DRY_STATE_OFF, g_pro.gset_temperture_value);
+				  MqttData_Publish_SetPtc( g_pro.gDry);
 			   
 			}
+
+			
 
 			g_pro.gTimer_set_temp_counter = 10;
         } 
 		else if (g_pro.g_temperature_value < g_pro.gset_temperture_value){
+
 			if(g_pro.works_two_hours_interval_flag ==0){
 
 			   g_pro.gDry = DRY_STATE_ON;
@@ -293,18 +296,24 @@ void set_temperature_value_handler(void)
 					}
                 }
 				
-           if(g_wifi.gwifi_link_net_success==wifi_link_success){
-                publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
+           if(g_wifi.gwifi_link_net_success==wifi_link_success && ptc_on_f !=g_pro.gset_temperture_value ){
+		   	    ptc_on_f =g_pro.gset_temperture_value;
+                //publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
+                MqttData_Publish_SetPtc( g_pro.gDry);
 			    
 			}
 		   g_pro.gTimer_set_temp_counter = 10;
         }
 
 	}
-    else {
-
-     compare_temperature_value_hanlder();
+   else {
+ 
+       compare_temperature_value_hanlder();
     }
+
+   
+
+ 
                 
  }
 /*
@@ -405,11 +414,11 @@ static void Compare_temp_value(void)
 					}
 				}
 
-				if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_off_counter != g_pro.set_temp_counter)){
-					 g_pro.set_temp_counter ++;
-					 dry_off_counter =g_pro.set_temp_counter;
-                     MqttData_Publish_SetPtc(g_pro.gDry);
-			   
+				if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_off_counter != g_pro.gset_temperture_value)){
+					// g_pro.set_temp_counter ++;
+					 dry_off_counter =g_pro.gset_temperture_value;
+                     //publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
+			        MqttData_Publish_SetPtc( g_pro.gDry);
 			      }
 			
 			    
@@ -441,12 +450,14 @@ static void Compare_temp_value(void)
 				     // tx_thread_sleep(10);
 				   		}
 				   	}
-				   if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_on_counter != g_pro.set_temp_counter)){
-				   	  dry_on_counter = g_pro.set_temp_counter;
-                       MqttData_Publish_SetPtc(g_pro.gDry);
+				   if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_on_counter !=g_pro.gset_temperture_value)){
+				   	  //dry_on_counter = g_pro.set_temp_counter;
+					 dry_on_counter = g_pro.gset_temperture_value;
+					   //publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
+                      MqttData_Publish_SetPtc( g_pro.gDry); 
 			       }
 				  
-
+                    
 
 				}
 			}
@@ -471,10 +482,11 @@ static void Compare_temp_value(void)
 							}
 						}
 
-					if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_on_counter != g_pro.set_temp_counter)){
-						 dry_on_counter = g_pro.set_temp_counter;
-                         MqttData_Publish_SetPtc(g_pro.gDry);
-       
+					if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_on_counter != g_pro.gset_temperture_value)){
+						 dry_on_counter = g_pro.gset_temperture_value;
+                        // MqttData_Publish_SetPtc(g_pro.gDry);
+                         //publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
+       						MqttData_Publish_SetPtc( g_pro.gDry);
 	                    }
 			   
 			          
@@ -495,17 +507,31 @@ static void Compare_temp_value(void)
 						}
 					}
 
-				if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_off_counter != g_pro.set_temp_counter)){
-					 g_pro.set_temp_counter ++;
-					 dry_off_counter = g_pro.set_temp_counter;
-                     MqttData_Publish_SetPtc(g_pro.gDry);
-			   
+				if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_off_counter != g_pro.gset_temperture_value)){
+					// g_pro.set_temp_counter ++;
+					 dry_off_counter = g_pro.gset_temperture_value;
+                    //publishMqttData(DRY_STATE_ON, g_pro.gset_temperture_value);
+			          MqttData_Publish_SetPtc( g_pro.gDry);
 			      }
 			}
-		}
-        
+       }
+       
 }
 
+
+void send_wifi_set_temperature(void)
+{
+  uint8_t dry_onoff_counter =0xff;
+	if(g_wifi.gwifi_link_net_success==wifi_link_success && (dry_onoff_counter !=g_pro.gset_temperture_value)){
+					 //dry_on_counter = g_pro.set_temp_counter;
+				   dry_onoff_counter = g_pro.gset_temperture_value;
+			   
+				  MqttData_Publis_SetTemp(g_pro.gset_temperture_value); 
+				 
+		   }  
+
+
+}
 /******************************************************************************
 	*
 	*Function Name:static void setDryState(uint8_t state)
@@ -532,7 +558,9 @@ void publishMqttData(DryState state, uint8_t temperature)
 {
     if (g_wifi.gwifi_link_net_success == 1) {
 	
-	      MqttData_Publish_SetPtc(state);
+	    MqttData_Publis_SetTemp(temperature);
+        
+        MqttData_Publish_SetPtc(state);
        
 	}
     

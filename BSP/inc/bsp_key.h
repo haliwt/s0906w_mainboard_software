@@ -138,6 +138,9 @@ void mode_short_key_fun(void);
 
 void immediatley_temp_comare_value(void);
 
+void send_wifi_set_temperature(void);
+
+
 
 
 #endif /* BSP_INC_BSP_KEY_H_ */

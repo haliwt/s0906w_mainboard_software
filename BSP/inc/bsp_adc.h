@@ -10,5 +10,7 @@
 //id Get_Fan_Adc_Fun(uint32_t channel,uint8_t times);
 
 void adc_detected_hundler(void);
+uint16_t  ADC_PTC_GetValues(void);
+
 
 #endif

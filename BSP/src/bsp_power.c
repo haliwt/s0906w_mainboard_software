@@ -562,9 +562,10 @@ uint8_t time_slot = 0;
 
 void power_on_handler(void)
 {
-    static uint8_t  switch_dht11 =0;
-  
-
+    static uint8_t  switch_dht11 =0,temp_counter=0;
+    volatile uint16_t ptc_teperature_value;
+    uint8_t err_counter,ptc_counter;
+	
 	   power_on_initial();
    		
 
@@ -669,13 +670,48 @@ void power_on_handler(void)
 			works_run_two_hours_state();
 		break;
 
+		
+        
+		case 10:
+			#if 0
+		 ptc_counter ++ ;
+		 if(ptc_counter > 100){//20ms *100 = 2000ms =2s
+		     ptc_counter =0;
+		 	 ptc_teperature_value = ADC_PTC_GetValues();
+	         Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
+
+			 if(g_pro.read_ntc_temperature_value > 111 ){
+                   err_counter++;
+				  if(err_counter > 1){
+				  	 err_counter =0;
+			        g_pro.ptc_warning = 1;
+
+				  }
+
+              }
+			  else{
+			     err_counter =0;
+
+			  }
+		 }
+        #endif 
+		   temp_counter++;
+		   if(temp_counter > 50){ //20ms * 50 = 1000ms = 1s.
+		   	  temp_counter = 0;
+             send_wifi_set_temperature();
+
+		   	}
+		break;
+
+	
+
           }
 
 		
 		  
          // ==================== 4. 时间片轮转维护 ====================
            time_slot++;
-           if (time_slot >9 ) time_slot = 0; //20ms * 10 = 200ms.
+           if (time_slot >10 ) time_slot = 0; //20ms * 10 = 200ms.
 }
 
 	

@@ -51,6 +51,7 @@
 
 #include "bsp_connect_wifi.h"
 #include "bsp_soft_timer.h"
+#include "bsp_ntc.h"
 
 
 //second display board
