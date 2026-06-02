@@ -671,7 +671,7 @@ void power_on_handler(void)
 			
         if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
-		if(g_wifi.gTimer_update_dht11_data > 20 && g_wifi.gwifi_link_net_success ==wifi_link_success){
+		if(g_wifi.gTimer_update_dht11_data > 6 && g_wifi.gwifi_link_net_success ==wifi_link_success){
 		   g_wifi.gTimer_update_dht11_data=0;
 
 		   if(g_wifi.gwifi_link_net_success ==1){
@@ -679,17 +679,16 @@ void power_on_handler(void)
 		       switch_dht11 = switch_dht11 ^0x01;
 			   if(switch_dht11==1){
 			   	
-                   if(timer_expired(&t_mqtt_1)){
-				     Subscriber_Data_FromCloud_Handler();
+                  Subscriber_Data_FromCloud_Handler();
 			       
-                     //tx_thread_sleep(20);
-                   	}
+                   
+                   	
 			   	}
 			    else{
-					if(timer_expired(&t_mqtt_0)){
-				       Update_Dht11_Totencent_Value()	;
-				        //tx_thread_sleep(20);
-						}
+					
+				     Update_Dht11_Totencent_Value()	;
+				       
+						
 
 
 				}
