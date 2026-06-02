@@ -714,16 +714,15 @@ void power_on_handler(void)
 
 		break;
 
-		case 9://180ms 
+		case 9://90ms 
 			works_run_two_hours_state();
 		break;
 
 		
         
-		case 10:
-			#if 0
+		case 10://100ms
 		 ptc_counter ++ ;
-		 if(ptc_counter > 100){//20ms *100 = 2000ms =2s
+		 if(ptc_counter > 4){//10ms *11 *6 = 2000ms =6s
 		     ptc_counter =0;
 		 	 ptc_teperature_value = ADC_PTC_GetValues();
 	         Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
@@ -742,13 +741,19 @@ void power_on_handler(void)
 
 			  }
 		 }
-        #endif 
+       break;
+
+        case 11 :
 		   temp_counter++;
-		   if(temp_counter > 50){ //20ms * 50 = 1000ms = 1s.
+		   if(temp_counter > 60){ //10ms * 11 *30= 110 * 60= 6.6s.
 		   	  temp_counter = 0;
              send_wifi_set_temperature();
 
 		   	}
+		break;
+
+		default:
+
 		break;
 
 	
@@ -759,7 +764,7 @@ void power_on_handler(void)
 		  
          // ==================== 4. 时间片轮转维护 ====================
            time_slot++;
-           if (time_slot >10 ) time_slot = 0; //20ms * 10 = 200ms.
+           if (time_slot >11) time_slot = 0; //10ms * 11 = 110ms.
 }
 
 	
