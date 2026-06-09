@@ -336,7 +336,7 @@ static void vTaskKeyEvent(ULONG thread_input)
         else if(flags & KEY_UP_SHORT)    handle_up_key();
 	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
 	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
-        tx_thread_sleep(20); //WT.EDIT 2026-05-23
+        tx_thread_sleep(2); //WT.EDIT 2026-05-23
          //LL_IWDG_ReloadCounter(IWDG);
         #if DEBUG_ENABLE
              // debug_stack_key_event_check();
@@ -365,6 +365,7 @@ static void vTaskUiPro(ULONG thread_input)
   (void)thread_input;  /* 消除未使用的参数警告 */
   static uint8_t wifi_check_counter = 0;
   static uint8_t beijing_time_counter = 0;
+  static uint8_t time_slot;
 	
   while(1)
   {
@@ -376,25 +377,38 @@ static void vTaskUiPro(ULONG thread_input)
           power_off_handler();
 
 	  }
-    
+
+	  switch(time_slot){
+
+	  case 0:
 	  // 限制WiFi通信处理频率，避免长时间阻塞
       if(g_pro.time_50ms_f ==1 && g_wifi.wifi_led_fast_blink_flag==0){
 	  	  g_pro.time_50ms_f =0;
 	  	  wifi_communication_tnecent_handler();
 	  }
+      break;
 
+	  case 1:
 	  // WiFi状态检查：每200ms执行一次（约每10个循环）
       wifi_check_counter++;//20ms * 50 = 1000ms =1s
       if(wifi_check_counter >= 50 && g_wifi.wifi_led_fast_blink_flag==0){
           wifi_check_counter = 0;
           wifi_auto_detected_link_state();
       }
-      else{
+	  break;
+
+	  case 2:
+   
       // 北京时获取：每9s执行一次（约每25个循环）
        getBeijingTime_cofirmLinkNetState_handler();
-      }
+      break;
+	  default:
+	  	break;
       
+	  }
 
+	  time_slot ++;
+	  if(time_slot > 2) time_slot = 0;
 	  #if DEBUG_ENABLE
 		    debug_stack_ui_check();
 	  #endif 
