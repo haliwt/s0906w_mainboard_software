@@ -31,14 +31,14 @@ void MX_IWDG_Init(void)
   /* USER CODE BEGIN IWDG_Init 0 */
 
   /* USER CODE END IWDG_Init 0 */
- // T-over = (PRESCALE * Reload)/32KHZ= 256* 1999/32KHZ = 15992ms = 16s.
+ // T-over = (PRESCALE * Reload)/32KHZ= (3999+1)* 64/32000 HZ = 15992ms = 8s.
   /* USER CODE BEGIN IWDG_Init 1 */
 
   /* USER CODE END IWDG_Init 1 */
   LL_IWDG_Enable(IWDG);
   LL_IWDG_EnableWriteAccess(IWDG);
-  LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_256);
-  LL_IWDG_SetReloadCounter(IWDG, 1999); //16s
+  LL_IWDG_SetPrescaler(IWDG, LL_IWDG_PRESCALER_64);
+  LL_IWDG_SetReloadCounter(IWDG, 3999); //8s//4096
   while (LL_IWDG_IsReady(IWDG) != 1)
   {
   }

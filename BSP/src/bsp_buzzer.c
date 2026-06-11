@@ -29,10 +29,20 @@ static void tim3_stop_buzzer_sound_config(void)
 
 void buzzer_sound(void)
 {
+   #if 0
 	tim3_buzzer_sound_config();//HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
     tx_thread_sleep(2);//tx_thread_sleep(20);
     //open_beep_sound();//tim3_stop_buzzer_sound_config();// HAL_TIM_PWM_Stop(&htim3,TIM_CHANNEL_4);
 	tim3_stop_buzzer_sound_config();
+   #else
+   tim3_stop_buzzer_sound_config();
+
+   tim3_buzzer_sound_config();//HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
+   tx_set_once_timer();
+   open_beep_sound();//tim3_stop_buzzer_sound_config();// HAL_TIM_PWM_Stop(&htim3,TIM_CHANNEL_4);
+	
+
+	#endif 
 
 
 }
