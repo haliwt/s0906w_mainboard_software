@@ -304,11 +304,11 @@ uint8_t dht11_f ;
 void read_sensorData(void)
 {
 	
-	dht11_f =  DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
+	dht11_f =  DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.real_temperature_value);// Dht11_Read_TempHumidity_Handler(&DHT11);
 	    if(g_pro.disp_second_f == 1){
 			if(timer_expired(&t_display)){
-			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.g_temperature_value);
-		     tx_thread_sleep(10);
+			 sendData_Real_TimeHum(g_pro.g_humidity_value, g_pro.real_temperature_value);
+		     tx_thread_sleep(1);
 			}
          }
 	
@@ -325,9 +325,9 @@ void Update_Dht11_Totencent_Value(void)
 {
 
   
-	DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.g_temperature_value);//Dht11_Read_TempHumidity_Handler(&DHT11);
+	DHT11_ReadData(&g_pro.g_humidity_value,&g_pro.real_temperature_value);//Dht11_Read_TempHumidity_Handler(&DHT11);
 	if(timer_expired(&t_mqtt_0)){
-	MqttData_Publis_ReadTempHum(g_pro.g_temperature_value,g_pro.g_humidity_value);
+	MqttData_Publis_ReadTempHum(g_pro.real_temperature_value,g_pro.g_humidity_value);
     tx_thread_sleep(20);//HAL_Delay(100);
 	}
 

@@ -46,7 +46,7 @@ void power_on_smart_app_led(void)
     LED_TEMP_ICON_ON();
 	
 	//HUMIDITY_ICON_ON();
-	//TM1639_Display_Temperature(g_pro.g_temperature_value);//DHT11_Display_Data(0); //display temperature value 
+	//TM1639_Display_Temperature(g_pro.real_temperature_value);//DHT11_Display_Data(0); //display temperature value 
    
 }
 

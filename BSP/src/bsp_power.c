@@ -7,6 +7,68 @@
 #include "bsp.h"
 
 
+// --- 1. 定义任务的时间周期（单位：毫秒，假设基础Tick为1ms） ---
+#define PERIOD_DISP_NUMBERS     3    // 10ms*3
+#define PERIOD_SMART_PHONE     50    // 10ms* = 2000ms = 2s
+#define PERIOD_WORKS_HOURS     400    //  10ms*150 = 1500ms = 1.5s
+#define PERIOD_LINK_WIFI       10    //  10ms*250 = 2500ms = 2.5s
+#define PERIOD_SET_TEMP        130    //   10ms * 500 = 50000ms = 5s 
+#define PERIOD_READ_DHT11      200    //   10ms * 100 = 1000ms = 1s
+#define PERIOD_SET_TIMER       4    //   10ms * 130 = 1300ms = 1.3s
+#define PERIOD_PERIPHERAL      100     //   10ms* 50 = 500ms
+#define PERIOD_TX_WIFI_REF     200
+#define PERIOD_READ_PTC       300
+
+// --- 2. 定义分时任务控制结构体 ---
+typedef struct {
+    uint32_t last_tick;        // 记录上一次真正运行时的系统绝对时间戳
+    //uint32_t counter;       // 时间计数器
+    uint32_t period;        // 任务运行周期
+    void (*task_handler)(void); // 任务函数指针
+} TimeSharingTask_t;
+
+static void handler_disp_threee_numbers(void);
+
+static void handler_smart_phone(void);
+
+static void handler_link_wifi(void)	;	
+
+static void handler_set_temperature(void);
+
+static void handler_set_timer(void);
+static void handler_read_dht11(void);
+static void handler_tx_wifi_ref(void);
+
+static void handler_wifi_led(void);
+static void handler_works_hours(void);;
+static void handler_read_ptc(void);
+static void handler_main_module(void);
+
+
+// --- 4. 初始化分时任务表 ---
+TimeSharingTask_t g_tasks[] = {
+    {0, PERIOD_DISP_NUMBERS,       	handler_disp_threee_numbers},
+    {0, PERIOD_SMART_PHONE,      	handler_smart_phone},
+    {0, PERIOD_WORKS_HOURS,      	handler_works_hours},
+    {0, PERIOD_LINK_WIFI,          	handler_link_wifi},
+    {0, PERIOD_SET_TEMP,        	handler_set_temperature},
+    {0, PERIOD_READ_DHT11,       	handler_read_dht11},
+    {0, PERIOD_SET_TIMER,        	handler_set_timer},
+    {0, PERIOD_TX_WIFI_REF,        	handler_tx_wifi_ref},
+    {0, PERIOD_LINK_WIFI,         	handler_wifi_led},
+    {0, PERIOD_READ_PTC,       		handler_read_ptc},
+    {0, PERIOD_PERIPHERAL,       	handler_main_module}
+   
+    
+	
+};
+
+#define TASK_NUM (sizeof(g_tasks) / sizeof(TimeSharingTask_t))
+
+static void handler_fault(void);
+static void power_on_cycle_handler(void);
+
+
 typedef struct{
 
   uint8_t process_on_step;
@@ -14,6 +76,12 @@ typedef struct{
 
 
 }POWER_RUN_STATE;
+
+
+
+
+
+
 
 POWER_RUN_STATE gl_run;
 
@@ -29,37 +97,7 @@ uint8_t off_time_slot;
 
 
 
-/**********************************************************************
-	*
-	*Function Name: 
-	*Function : 
-	*Input Ref: NO
-	*Return Ref: NO
-	*
-**********************************************************************/
-//void power_on_off_handler(uint8_t data)
-//{
-//  
 
-//  if(g_pro.gpower_on == power_on){
-
-//        power_on_run_handler();
-//         
-//        if(gl_run.process_on_step !=0  && gl_run.process_on_step !=1 && gl_run.process_on_step !=2){ //logically rigorous
-//              if( g_pro.time_20ms_f == 1){
-//			  	   g_pro.time_20ms_f =0;
-//			       display_digital_3_numbers();
-//              }
-//			 
-//	    }
-//  	}
-//    else{
-//			
-//      power_off_handler();
-
-//  
-//      }
-//}
 /**********************************************************************
 	*
 	*Function Name: void power_on_init_ref(void)
@@ -99,7 +137,7 @@ void power_on_init_ref(void)
 				TEMP_ICON_ON() ;
 	        //HUMIDITY_ICON_ON();
 		    }
-			//TM1639_Display_Temperature(g_pro.g_temperature_value);  //DHT11_Display_Data(0); //display temperature value 
+			//TM1639_Display_Temperature(g_pro.real_temperature_value);  //DHT11_Display_Data(0); //display temperature value 
 		    
            //timer 
            g_pro.g_manual_shutoff_dry_flag = 0;
@@ -120,7 +158,8 @@ void power_on_init_ref(void)
 uint8_t read_dht11_f;
 static void power_on_initial(void)
 {
-	//static uint8_t temp_second_displboard,switch_dht11,send_net_state;
+	uint32_t boot_tick=0;
+	uint8_t i;
  
 	switch(gl_run.process_on_step){
 
@@ -179,7 +218,7 @@ static void power_on_initial(void)
 	   g_wifi.wifi_led_fast_blink_flag=0;
 
 	   //reset temperature value and ptc 
-	   g_pro.set_temperature_success_flag=0;
+	  
 	   g_pro.temperature_init_value=0;
 	   g_pro.g_manual_shutoff_dry_flag = 0;
 
@@ -195,8 +234,9 @@ static void power_on_initial(void)
 
 		
 	   //two hours works timing
-	    g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
+	    g_pro.two_hours_interval_f=0; //WT.EDIT 2025.05.07
 		g_pro.gTimer_two_hours_counter = 0;
+		g_pro.gTimer_two_minutes=0;
 	   //reset fan wind
 		g_wifi.set_wind_speed_value = 100;
 	 
@@ -221,8 +261,14 @@ static void power_on_initial(void)
    
 	   read_sensorData();//Update_Dht11_toDisplayBoard_Value();
 
-		
-	  gl_run.process_on_step =0xff; 
+	  #if 1	
+        boot_tick = tx_time_get();
+		for(i=0;i < TASK_NUM;i ++){
+
+		     g_tasks[i].last_tick = boot_tick;
+		}
+#endif 
+	  gl_run.process_on_step =0xfe; 
 
 	 break;
 
@@ -232,158 +278,7 @@ static void power_on_initial(void)
 
 }
 	
-#if 0
-	 case 4: //WIFI link process
-	  
-         if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
-		 
-		if(g_wifi.gTimer_update_dht11_data > 20 && g_wifi.gwifi_link_net_success ==wifi_link_success){
-		   g_wifi.gTimer_update_dht11_data=0;
 
-		   if(g_wifi.gwifi_link_net_success ==1){
-
-		       switch_dht11 = switch_dht11 ^0x01;
-			   if(switch_dht11==1){
-			   	
-                   if(timer_expired(&t_mqtt_1)){
-				     Subscriber_Data_FromCloud_Handler();
-			       
-                     //tx_thread_sleep(20);
-                   	}
-			   	}
-			    else{
-					if(timer_expired(&t_mqtt_0)){
-				       Update_Dht11_Totencent_Value()	;
-				        //tx_thread_sleep(20);
-						}
-
-
-				}
-			   
-		   	}
-
-          }
-		    
-
-         }
-		    
-	     gl_run.process_on_step =5;
-
-	 break;
-
-	 case 5: // wifi function
-	  
-       wifi_led_slowly_blink_handler();
-	
-      gl_run.process_on_step =6;
-
-	 break;
-
-	 case 6:
-   
-	      gl_run.process_on_step =7;
-
-	 break;
-
-
-	 case 7:
-	 	  	works_run_two_hours_state();
-	        gl_run.process_on_step =8;
-
-	 break;
-
-     case 8:
-	 	 smart_phone_timer_power_on_handler();
-	        
-		gl_run.process_on_step =9;
-
-	 break;
-
-	 case 9:
-	    link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
-
-	 
-      gl_run.process_on_step =10;
-
-	 break;
-
-	 case 10:
-	   set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
-				 
-	 gl_run.process_on_step =11;
-
-	 break;
-
-	 case 11:
-	 set_timer_timing_value_handler();
-	 gl_run.process_on_step =12;
-
-	 break;
-
-	 case 12:
-	 	
-	 if(g_pro.gTimer_display_adc_value > 6 && g_pro.works_two_hours_interval_flag==0){
-		g_pro.gTimer_display_adc_value=0;
-		send_net_state++;
-		adc_detected_hundler();
-
-		if(send_net_state > 1){
-			send_net_state=0;
-			if(g_wifi.gwifi_link_net_success==1) {
-				if(g_pro.disp_second_f ==1){
-				
-				SendWifiData_To_Cmd(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-				tx_thread_sleep(10);
-				
-				}
-			}
-			else{
-			if(g_pro.disp_second_f ==1){
-				
-				SendWifiData_To_Cmd(0x1F,0); //link wifi order 1 --link wifi net is success.
-				tx_thread_sleep(10);
-				
-			}
-
-			}
-
-		}
-
-		}
-	     gl_run.process_on_step =13;
-
-
-	 break;
-
-
-	 case 13:
-	 	
-	 if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
-		 
-		   if(send_wifi_power_on_state ==1){
-		   send_wifi_power_on_state++;
-		   g_pro.gset_temperture_value = 40;
-
-		 
-			  MqttData_Publish_Update_Data();
-			  tx_thread_sleep(10);
-		   
-
-
-		}
-		 
-	     gl_run.process_on_step =3; 
-	 }
-	 else{
-		   
-	     fault_handler();
-		 wifi_led_slowly_blink_handler();
-		 gl_run.process_on_step =13; 
-	  }
-      
-	 break;
-
-#endif 	 
 /**********************************************************************
 	*
 	*Functin Name: void power_off_run_handler(void)
@@ -404,12 +299,8 @@ void power_off_handler(void)
 	  power_off_cycle_handler();
     }
 
-
-	
-
-	
-	off_time_slot ++;
-	if(off_time_slot > 4) off_time_slot = 0;
+  off_time_slot ++;
+  if(off_time_slot > 4) off_time_slot = 0;
 }
 
 static void power_off_init_handler(void)
@@ -426,16 +317,16 @@ static void power_off_init_handler(void)
        if(power_on_flag==0){
              power_on_flag ++;
 			
-			 buzzer_power_sound();
+		 buzzer_power_sound();
 	       
-	   
 	   }
+      g_pro.process_off_step =1;
 
 
    case 1:
    	  gl_run.process_on_step =0;
       g_pro.gpower_on_key_f = 0;
-      gl_run.process_on_step =0;
+    
 	  g_pro.g_real_hours_counter=0;
 	  TM1639_Display_ON_OFF(0);
       power_off_led();
@@ -471,13 +362,13 @@ static void power_off_init_handler(void)
 	 
 	   g_pro.g_fan_switch_gears_flag++;
       
-	   g_pro.set_temperature_success_flag=0;
+	 
 	   g_wifi.app_timer_power_on_flag =0;
 	   g_pro.fan_warning =0 ;
 	   g_pro.ptc_warning =0;
 	   g_pro.disp_second_f =0;
 	 
-	   g_pro.works_two_hours_interval_flag=0; //WT.EDIT 2025.05.07
+	   g_pro.two_hours_interval_f=0; //WT.EDIT 2025.05.07
 	   g_pro.process_off_step = 3;
 
    break;
@@ -509,7 +400,7 @@ static void power_off_init_handler(void)
         }
 
 
-      g_pro.process_off_step = 0xff;
+      g_pro.process_off_step = 0xfe;
   break;
 
    	}
@@ -519,25 +410,15 @@ static void power_off_init_handler(void)
 
 static void power_off_cycle_handler(void)
 {
-  volatile uint8_t time_slot =0;
+  
   static uint16_t counter_send=0;
   static uint16_t fan_flag,wifi_first_connect,switch_f;
 
   switch(off_time_slot)
   {
   case 0:
-     counter_send ++ ;
     
-     if(counter_send > 300){//10ms * 100
-	 	counter_send=0;
-	   
-	 	 //// SendWifiData_To_Cmd(0x11,0); //主板发送询问指令,是否有外接显示板?
-	      //tx_thread_sleep(10);
-
-     	}
      	
-  
-
   break;
 	 
   case 1:
@@ -581,11 +462,11 @@ static void power_off_cycle_handler(void)
 			switch_f = switch_f ^ 0x01;
 	        if(switch_f ==1){
              MqttData_Publish_SetOpen(0);  
-			 tx_thread_sleep(10);
+			 tx_thread_sleep(1);
 	        }
 		    else{
 	         MqttData_Publish_PowerOff_Ref() ;//
-	          tx_thread_sleep(10);
+	          tx_thread_sleep(1);
 		    }
 	       
            
@@ -597,6 +478,8 @@ static void power_off_cycle_handler(void)
 
    
    	}
+
+ 
  
 }
 /**********************************************************************
@@ -607,68 +490,121 @@ static void power_off_cycle_handler(void)
 	*Return Ref: NO
 	*
 **********************************************************************/
-uint8_t time_slot = 0;
-
 void power_on_handler(void)
 {
-    static uint8_t  switch_dht11 =0,temp_counter=0;
-    volatile uint16_t ptc_teperature_value;
-    uint8_t err_counter,ptc_counter;
-	
-	   power_on_initial();
-   		
+   if(gl_run.process_on_step < 20){
+        power_on_initial();
 
-	 // ✨【新增：紧急事件拦截响应】✨
-        // 如果按键任务设置完温度，将 g_pro.g_immediate_heat_f 置为 1
-        if (g_pro.g_immediate_heat_f == 1)
-        {
-            g_pro.g_immediate_heat_f = 0; // 立即清除触发标志，防止重复执行
-            
-            // 强制、立刻执行一次加热控制函数
-            // 确保底层硬件（如继电器、PWM、PTC）在 20ms 内得到响应
-            immediatley_temp_comare_value();//set_temperature_value_handler(); 
-        }
+   }
+   else{
+     power_on_cycle_handler();
 
-		switch(time_slot){
+   }
 
-		case 0://20ms
+}
+/**********************************************************************
+	*
+	*Functin Name: 
+	*Function :
+	*Input Ref: NO
+	*Return Ref: NO
+	*
+**********************************************************************/
+static void power_on_cycle_handler(void)
+{
 
-           display_digital_3_numbers();
-		break;
-
-		case 1:
-		   smart_phone_timer_power_on_handler();
-
-		break;
-
-
-		case 2://20ms*1 =20
-
-            link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
-		break;
-
-
-		case 3://20ms*2=40
-            set_temperature_value_handler();
-
-		break;
-
-		case 4: //20ms* 3 =60ms
-            set_timer_timing_value_handler();
-
-		break;
-
-		case 5: //20ms* 4=80ms
-
-	        if(g_pro.gTimer_to_disp_counter > 4){//10ms*200 =2000ms =2s
-				g_pro.gTimer_to_disp_counter=0;
-			    read_sensorData();//Update_Dht11_toDisplayBoard_Value();
-
+     // 获取当前系统的绝对时间戳
+      uint32_t current_tick = tx_time_get();
+// ✨【新增：紧急事件拦截响应】✨
+			// 如果按键任务设置完温度，将 g_pro.g_immediate_heat_f 置为 1
+			if (g_pro.g_immediate_heat_f == 1)
+			{
+				g_pro.g_immediate_heat_f = 0; // 立即清除触发标志，防止重复执行
+				
+				// 强制、立刻执行一次加热控制函数
+				// 确保底层硬件（如继电器、PWM、PTC）在 20ms 内得到响应
+				immediatley_temp_comare_value();//set_temperature_value_handler(); 
 			}
-		break;
 
-		case 6: //100ms
-			
+     // 通过时间片轮询核心算法，分时调用各个功能模块
+    for (uint8_t i = 0; i < TASK_NUM; i++) 
+    {
+        if ((current_tick - g_tasks[i].last_tick) >= g_tasks[i].period) 
+        {
+            // 【工业级进化：防轰炸饱和截断】
+            // 如果卡顿/被高优先级抢占的时间超过了 2 个周期，直接对齐当前时间，放弃追赶
+            if ((current_tick - g_tasks[i].last_tick) > (g_tasks[i].period * 2)) 
+            {
+                g_tasks[i].last_tick = current_tick;
+            }
+            else 
+            {
+                // 如果只是正常范围内的轻微抖动，滚动累加周期，死锁锁相，消除长期长跑漂移
+                g_tasks[i].last_tick += g_tasks[i].period;
+            }
+            
+            // 触发对应周期的执行函数（确保不为 NULL，防止空指针崩溃）
+            if (g_tasks[i].task_handler != NULL)
+            {
+                g_tasks[i].task_handler(); 
+            }
+        }
+    }
+
+
+
+}
+
+/**********************************************************************
+	*
+	*Functin Name: 
+	*Function :
+	*Input Ref: NO
+	*Return Ref: NO
+	*
+**********************************************************************/
+static void handler_disp_threee_numbers(void)
+{
+	display_digital_3_numbers();
+}
+	
+static void handler_smart_phone(void)
+{
+    smart_phone_timer_power_on_handler();
+
+}
+
+static void handler_link_wifi(void)		
+{
+      link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
+}		
+
+
+static void handler_set_temperature(void)
+{
+    set_temperature_value_handler();
+
+}
+
+static void handler_set_timer(void)
+{
+      set_timer_timing_value_handler();
+
+}
+
+static void handler_read_dht11(void)
+{
+  if(g_pro.gTimer_to_disp_counter > 4){//10ms*200 =2000ms =2s
+	g_pro.gTimer_to_disp_counter=0;
+	read_sensorData();//Update_Dht11_toDisplayBoard_Value();
+
+ }
+}
+		
+
+static void handler_tx_wifi_ref(void)
+{
+	static uint8_t switch_dht11 =0;	
         if( g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){
 		 
 		if(g_wifi.gTimer_update_dht11_data > 6 && g_wifi.gwifi_link_net_success ==wifi_link_success){
@@ -700,73 +636,66 @@ void power_on_handler(void)
 
          }
 
-		break;
+}
 
 
-		case 7: //20ms *6 =120ms
+static void handler_fault(void)
+{
            
          fault_handler();
-		break;
+}
 
-		case 8:
+static void handler_wifi_led(void)
+{
 
 		 wifi_led_slowly_blink_handler();
 
-		break;
+}
 
-		case 9://90ms 
-			works_run_two_hours_state();
-		break;
-
+static void handler_works_hours(void)
+{
+	works_run_two_hours_state();
 		
+
+}	
         
-		case 10://100ms
-		 ptc_counter ++ ;
-		 if(ptc_counter > 4){//10ms *11 *6 = 2000ms =6s
-		     ptc_counter =0;
-		 	 ptc_teperature_value = ADC_PTC_GetValues();
-	         Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
+static void handler_read_ptc(void)
+{
+  uint16_t ptc_teperature_value ;
+  uint8_t  err_counter =0;
+  	
+	ptc_teperature_value = ADC_PTC_GetValues();
+	Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
 
-			 if(g_pro.read_ntc_temperature_value > 111 ){
-                   err_counter++;
-				  if(err_counter > 1){
-				  	 err_counter =0;
-			        g_pro.ptc_warning = 1;
+	if(g_pro.read_ntc_temperature_value > 111 ){
+	   err_counter++;
+	  if(err_counter > 1){
+	  	 err_counter =0;
+	    g_pro.ptc_warning = 1;
 
-				  }
+	  }
 
-              }
-			  else{
-			     err_counter =0;
+	}
+	else{
+	 err_counter =0;
 
-			  }
-		 }
-       break;
+	}
+}
 
-        case 11 :
-		   temp_counter++;
-		   if(temp_counter > 60){ //10ms * 11 *30= 110 * 60= 6.6s.
-		   	  temp_counter = 0;
-             send_wifi_set_temperature();
+static void handler_main_module(void)
+{
+     mainboard_fun_handler();
+    send_wifi_set_temperature();
 
-		   	}
-		break;
-
-		default:
-
-		break;
+}	
 
 	
 
-          }
+      
 
 		
 		  
-         // ==================== 4. 时间片轮转维护 ====================
-           time_slot++;
-           if (time_slot >11) time_slot = 0; //10ms * 11 = 110ms.
-}
-
+       
 	
 
 

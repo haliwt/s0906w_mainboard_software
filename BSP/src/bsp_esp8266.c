@@ -212,7 +212,7 @@ void Wifi_SoftAP_Config_Handler(void)
          
 		
      //   HAL_UART_Transmit(&huart2, "AT+TCPRDINFOSET?\r\n", strlen("AT+TCPRDINFOSET?\r\n"), 0xffff); //动
-        tx_thread_sleep(10);//HAL_Delay(1000);
+        tx_thread_sleep(1);//HAL_Delay(1000);
         g_wifi.wifi_config_net_lable=0xff;//
 
         }

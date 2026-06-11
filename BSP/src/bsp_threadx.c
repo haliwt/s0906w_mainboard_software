@@ -20,7 +20,7 @@
 											函数声明
 ***********************************************************************************************************/
 #define STACK_SIZE_DECODER  256//512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI      1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
+#define STACK_SIZE_UI      1664//1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
 #define STACK_SIZE_KEY     256//512//512
 #define STACK_SIZE_EVENT   512//640//768//256
 
@@ -179,7 +179,7 @@ static void threadx_handler(void)
    				   0,                    // 传递给回调函数的参数（这里填0即可）
 				   2,                    // 初始超时时间：2 个 Tick (10ms * 2 = 20ms)
 				   0,                    // 周期重装载值：0 表示单次触发（One-shot）
-				   TX_AUTO_ACTIVATE);    
+				   TX_NO_ACTIVATE);    
 
  
 }
@@ -336,7 +336,7 @@ static void vTaskKeyEvent(ULONG thread_input)
         else if(flags & KEY_UP_SHORT)    handle_up_key();
 	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
 	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
-        tx_thread_sleep(3); //WT.EDIT 2026-05-23
+        tx_thread_sleep(2); //WT.EDIT 2026-05-23
          //LL_IWDG_ReloadCounter(IWDG);
         #if DEBUG_ENABLE
              // debug_stack_key_event_check();
@@ -475,6 +475,12 @@ void open_beep_sound(void)
 void tx_set_once_timer(void)
 {
 tx_timer_change(&beep_timer,2,0); 
+
+}
+
+void tx_close_beep(void)
+{
+tx_timer_deactivate(&beep_timer);
 
 }
 

@@ -107,7 +107,8 @@ void Fan_Two_Speed(void)
 
 void Fan_RunSpeed_Fun(void)
 {
-
+    if(g_pro.two_hours_interval_f ==1) return ;
+	
     if(g_wifi.set_wind_speed_value < 34 ){
         Fan_One_Speed();
     }

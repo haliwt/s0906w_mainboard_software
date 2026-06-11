@@ -109,7 +109,7 @@ static void Judge_Fan_State(void)
 
 		  if(g_pro.disp_second_f ==1){
 		  	SendWifiData_To_Cmd(0x09,0x01);//Fan fault warning .
-		     tx_thread_sleep(10);
+		     tx_thread_sleep(1);
 		  }
 
 }
@@ -169,7 +169,7 @@ static void ADC_GetValues(void)
 	   //mean_fan_buf[fan_counter] = compute_voltage(adc_buffer[0]);//(adc_buffer[0] * 3300 )/4095;//compute_voltage(adc_buffer[0]) ;
 	  // mean_fan_buf[fan_counter]
 	   fan_detect_voltage= (adc_buffer[0] * 3300 )/4095;
-       tx_thread_sleep(10);
+       tx_thread_sleep(1);
 	   #if DEBUG_ENABLE
           printf("fan_voltale = %d \r\n",fan_detect_voltage);
 	   #endif 
