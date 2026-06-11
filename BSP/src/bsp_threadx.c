@@ -49,7 +49,7 @@ TX_SEMAPHORE decoder_semaphore;
 
 TX_EVENT_FLAGS_GROUP key_event;
 
-//TX_TIMER beep_timer;
+TX_TIMER beep_timer;
 
 
 static void vTaskUiPro(ULONG thread_input);
@@ -58,7 +58,7 @@ static void vTaskKeyEvent(ULONG thread_input);
 
 
 static void vTaskDecoderPro(ULONG thread_input);
-//static void beep_timer_callback(ULONG input);
+static void beep_timer_callback(ULONG input);
 
 
 static void threadx_handler(void);
@@ -173,13 +173,13 @@ static void threadx_handler(void)
 					   TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
-//   tx_timer_create(&beep_timer,     /* timer of  block */
-//				   "20msTimer",
-//				   beep_timer_callback, /*callback function */
-//   				   0,
-//				   2,                    /* 第一次延迟 20ms*/
-//				   2,                    /*周期 20 ticks*/
-//				   TX_AUTO_ACTIVATE);    
+   tx_timer_create(&beep_timer,     // 定时器控制块指针
+				   "20msTimer",
+				   beep_timer_callback, /*callback function */
+   				   0,                    // 传递给回调函数的参数（这里填0即可）
+				   2,                    // 初始超时时间：2 个 Tick (10ms * 2 = 20ms)
+				   0,                    // 周期重装载值：0 表示单次触发（One-shot）
+				   TX_AUTO_ACTIVATE);    
 
  
 }
@@ -336,18 +336,14 @@ static void vTaskKeyEvent(ULONG thread_input)
         else if(flags & KEY_UP_SHORT)    handle_up_key();
 	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
 	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
-        tx_thread_sleep(2); //WT.EDIT 2026-05-23
+        tx_thread_sleep(3); //WT.EDIT 2026-05-23
          //LL_IWDG_ReloadCounter(IWDG);
         #if DEBUG_ENABLE
              // debug_stack_key_event_check();
           #endif 
 	   
      }
-	 else{
-
-	   tx_thread_sleep(30); 
-
-	 }
+	
     
     
   	}
@@ -465,17 +461,22 @@ void vtask_key_power(void)
   tx_event_flags_set(&key_event, KEY_POWER_SHORT, TX_OR);
 }
 
-//static void beep_timer_callback(ULONG input)
-//{
-//  (void)input;
-//  buzzer_sound_close();
-//}
+static void beep_timer_callback(ULONG input)
+{
+  (void)input;
+  buzzer_sound_close();
+}
 
-//void open_beep_sound(void)
-//{
-//  tx_timer_activate(&beep_timer);
-//}
+void open_beep_sound(void)
+{
+  tx_timer_activate(&beep_timer);
+}
 
+void tx_set_once_timer(void)
+{
+tx_timer_change(&beep_timer,2,0); 
+
+}
 
 #if DEBUG_ENABLE
 static void debug_stack_ui_check(void)
