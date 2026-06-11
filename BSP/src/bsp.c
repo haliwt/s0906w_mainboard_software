@@ -69,51 +69,52 @@ void mainboard_fun_handler(void)
    
    }
 
-	if(g_pro.gDry == 1 && g_pro.g_manual_shutoff_dry_flag ==0 && g_pro.works_two_hours_interval_flag ==0){
-		DRY_OPEN();
+	if(g_pro.gDry == 1 && g_pro.g_manual_shutoff_dry_flag ==0){
+		
 		LED_DRY_ON();
+		if(g_pro.two_hours_interval_f ==0)DRY_OPEN();
+		
 	    if(g_pro.disp_second_f == 1){
-			if(timer_expired(&t_xdp)){
-	    	sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-	    	tx_thread_sleep(10);
+			
+	    	  sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
+	    	   tx_thread_sleep(1);
 			}
-	    }
+	    
 		
 		if(g_wifi.gwifi_link_net_success ==1 && ptc_default != g_pro.set_temp_counter){
-			 ptc_default ++;
+		
 			 ptc_default = g_pro.set_temp_counter;
-		    if(timer_expired(&t_mqtt_1)){
+		  
 			 MqttData_Publish_SetPtc(0x01);
 		  	 tx_thread_sleep(20);//HAL_Delay(350);
-		    }
+		    
 		}
      
 	}
 	else{
-		g_pro.gDry = 0;
 		LED_DRY_OFF();
 		DRY_CLOSE();
 	     if(g_pro.disp_second_f == 1){
-		 	if(timer_expired(&t_xdp)){
+		 	
 			   sendDisplayCommand(0x02,g_pro.gDry); // 关闭干燥功能
-			   tx_thread_sleep(10);
-		 		}
+			   tx_thread_sleep(1);
+		 		
 		  }
 		 if(g_wifi.gwifi_link_net_success ==1 &&  ptc_default != g_pro.set_temp_counter ){
 
-		     ptc_default ++;
+		 
 			 ptc_default = g_pro.set_temp_counter;
-		     if(timer_expired(&t_mqtt_1)){
+		  
 			   MqttData_Publish_SetPtc(0);
 		  	   tx_thread_sleep(20);//HAL_Delay(350);
-		     }
 		 }
+	}
 		   
 
 
-	}
+	
 
-	if(g_pro.gMouse == 1 && g_pro.works_two_hours_interval_flag ==0){
+	if(g_pro.gMouse == 1 && g_pro.two_hours_interval_f ==0){
 		LED_MOUSE_ON();
 		mouse_open();
 	}
@@ -122,7 +123,7 @@ void mainboard_fun_handler(void)
 		mouse_close();
 	}
 
-	if(g_pro.gPlasma == 1 && g_pro.works_two_hours_interval_flag ==0){
+	if(g_pro.gPlasma == 1 && g_pro.two_hours_interval_f ==0){
 		LED_PLASMA_ON();
 		PLASMA_OPEN();
 	}
@@ -133,11 +134,9 @@ void mainboard_fun_handler(void)
 
 	Fan_RunSpeed_Fun();
 	
-   	}
-	
+ }
+}	
    
-}
-
 static void mainboard_special_fun(void)
 {
    //static uint16_t mainboard_time;
@@ -213,17 +212,18 @@ void works_run_two_hours_state(void)
   
 
    #if  DEBUG_ENABLE
-	if(g_pro.gTimer_two_hours_counter > 720 && g_pro.works_two_hours_interval_flag==0){ //five minutes 5x60=300s
+	if(g_pro.gTimer_two_minutes > 5 && g_pro.two_hours_interval_f==0){ //five minutes 5x60=300s
 
 
    #else 
-    if(g_pro.gTimer_two_hours_counter > 7200 && g_pro.works_two_hours_interval_flag==0 ){ //two hours
+    if(g_pro.gTimer_two_minutes> 119 && g_pro.two_hours_interval_f==0 ){ //two hours
 
    #endif 
     g_pro.delay_run_adc_counter=0;
+    g_pro.gTimer_two_minutes=0;
 	g_pro.gTimer_two_hours_counter= 0;
     g_pro.g_fan_switch_gears_flag++;
-    g_pro.works_two_hours_interval_flag=1;
+    g_pro.two_hours_interval_f=1;
 
 	PLASMA_CLOSE(); //
 	DRY_CLOSE();
@@ -236,15 +236,15 @@ void works_run_two_hours_state(void)
    
    }
 
-   switch(g_pro.works_two_hours_interval_flag){
+   if(g_pro.two_hours_interval_f==1){
 
-    case 1:
 
-      if(g_pro.gTimer_two_hours_counter  > 600){ // 10 minutes *60=  minutes =
+      if(g_pro.gTimer_two_minutes  > 9){ // 10 minutes *60=  minutes =
+         g_pro.gTimer_two_minutes =0;
          g_pro.gTimer_two_hours_counter =0; 
 		 
 		 g_pro.delay_run_adc_counter=0;
-         g_pro.works_two_hours_interval_flag=0;
+         g_pro.two_hours_interval_f=0;
          mainboard_special_fun();
       }
 
@@ -271,17 +271,18 @@ void works_run_two_hours_state(void)
 
 	  }
 
-   
-    break;
+   	}
 
-    case 0:
-	    mainboard_fun_handler();
+ }
+
+    
+	    //mainboard_fun_handler();
 	
         
-    break;
-   }
+    
+   
 
-}
+
 
 
 
@@ -299,7 +300,7 @@ void copy_cmd_hanlder(void)
 		
 	   
 	    SendWifiData_Answer_Cmd(CMD_POWER,0x01); //WT.EDIT 2025.01.07 
-		  tx_thread_sleep(10);//10*5 =50ms
+		  tx_thread_sleep(1);//10*5 =50ms
 	    
       g_pro.g_copy_power_onoff_flag =0xff;
 
@@ -308,7 +309,7 @@ void copy_cmd_hanlder(void)
 
 	  g_pro.g_copy_power_onoff_flag =0xfe;
 	  SendWifiData_Answer_Cmd(CMD_POWER,0x0); //WT.EDIT 2025.01.07 
-        tx_thread_sleep(10);
+        tx_thread_sleep(1);
 
 	}
 
@@ -336,7 +337,7 @@ void  smart_phone_timer_power_on_handler(void)
 			g_wifi.app_timer_power_on_flag++; 
             if(timer_expired(&t_mqtt_0)){
 		       MqttData_Publish_Update_Data();//property_report_phone_timer_on_data();// MqttData_Publish_Update_Data();
-	            //tx_thread_sleep(10);//HAL_Delay(100);
+	            //tx_thread_sleep(1);//HAL_Delay(100);
             }
 
 

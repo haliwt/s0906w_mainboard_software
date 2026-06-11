@@ -127,7 +127,7 @@ static void Mqtt_phone_timer_on_update_data(void)
     sg_info.find = 100;//gctl_t.set_wind_speed_value;
     
    
-	sg_info.set_temperature = g_pro.g_temperature_value;
+	sg_info.set_temperature = g_pro.real_temperature_value;
 
 	
 

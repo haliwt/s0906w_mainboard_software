@@ -562,7 +562,7 @@ void Json_Parse_Command_Fun(void)
           if(g_pro.disp_second_f ==1){
 		  	if(timer_expired(&t_xdp)){
 		  	   SendData_Set_Command(0x20,open);
-		    //tx_thread_sleep(10);
+		    //tx_thread_sleep(1);
              }
 		  	 	
           }
@@ -590,7 +590,7 @@ void Json_Parse_Command_Fun(void)
 			if(g_pro.disp_second_f ==1){
 				 if(timer_expired(&t_xdp)){
 				SendData_Set_Command(0x20,close);
-			     //tx_thread_sleep(10);
+			     //tx_thread_sleep(1);
 				 	}
 				}
           
@@ -612,7 +612,7 @@ void Json_Parse_Command_Fun(void)
 		 LED_DRY_ON();
 		 g_pro.g_manual_shutoff_dry_flag = 0;
 
-		 if(g_pro.works_two_hours_interval_flag==0){
+		 if(g_pro.two_hours_interval_f==0){
 		 	LED_DRY_ON();
 		    DRY_OPEN();
 
@@ -621,7 +621,7 @@ void Json_Parse_Command_Fun(void)
          if(g_pro.disp_second_f == 1){
 		 	  if(timer_expired(&t_xdp)){
 			 SendWifiData_To_Cmd(0x02,0x01);
-			 //tx_thread_sleep(10);//HAL_Delay(5);
+			 //tx_thread_sleep(1);//HAL_Delay(5);
 		 	  	}
          }
 		
@@ -649,7 +649,7 @@ void Json_Parse_Command_Fun(void)
 		  if(g_pro.disp_second_f == 1){
 		  	  if(timer_expired(&t_xdp)){
 			 SendWifiData_To_Cmd(0x02,0x0);
-	        // tx_thread_sleep(10);//HAL_Delay(5);
+	        // tx_thread_sleep(1);//HAL_Delay(5);
 		  	  	}
 		  }
          }
@@ -672,7 +672,7 @@ void Json_Parse_Command_Fun(void)
 			if(g_pro.disp_second_f == 1){
 				  if(timer_expired(&t_xdp)){
 			SendWifiData_To_Cmd(0x03,0x0);
-	  	    //tx_thread_sleep(10);//HAL_Delay(5);
+	  	    //tx_thread_sleep(1);//HAL_Delay(5);
 				  	}
 			 }
 	  	}
@@ -692,7 +692,7 @@ void Json_Parse_Command_Fun(void)
               if(g_pro.disp_second_f == 1){
 			  	  if(timer_expired(&t_xdp)){
 					SendWifiData_To_Cmd(0x03,0x01);
-	  	   			//tx_thread_sleep(10);//HAL_Delay(5);
+	  	   			//tx_thread_sleep(1);//HAL_Delay(5);
 			  	  	}
               }
 	  	}
@@ -714,7 +714,7 @@ void Json_Parse_Command_Fun(void)
 			 if(g_pro.disp_second_f == 1){
 			 	  if(timer_expired(&t_xdp)){
 			   SendWifiData_To_Cmd(0x04,0x0);
-			   //tx_thread_sleep(10);
+			   //tx_thread_sleep(1);
 			 	  	}
 			  }
         }
@@ -736,7 +736,7 @@ void Json_Parse_Command_Fun(void)
 		    if(g_pro.disp_second_f == 1){
 				  if(timer_expired(&t_xdp)){
 			SendWifiData_To_Cmd(0x04,0x01);
-			//tx_thread_sleep(10);//HAL_Delay(5);
+			//tx_thread_sleep(1);//HAL_Delay(5);
 				  	}
 		    }
         }
@@ -767,7 +767,7 @@ void Json_Parse_Command_Fun(void)
             if(g_pro.disp_second_f ==1){
 				
     	        SendWifiData_To_Cmd(0x27,0x02);
-				tx_thread_sleep(10);
+				tx_thread_sleep(1);
 				  
             }
 
@@ -801,7 +801,7 @@ void Json_Parse_Command_Fun(void)
               if(g_pro.disp_second_f ==1){
 			  	  if(timer_expired(&t_xdp)){
     		   SendWifiData_To_Cmd(0x27,0x01);
-			   //tx_thread_sleep(10);
+			   //tx_thread_sleep(1);
 			  	  	}
               }
 
@@ -839,7 +839,7 @@ void Json_Parse_Command_Fun(void)
 			if(g_pro.disp_second_f == 1){
 				  if(timer_expired(&t_xdp)){
 				     SendWifiData_One_Data(0x2A, g_wifi.wifi_set_temperature_value); //smart phone set temperature value .
-				//tx_thread_sleep(10);//HAL_Delay(10);
+				//tx_thread_sleep(1);//HAL_Delay(10);
 				  }
 		    }
 			
@@ -868,7 +868,7 @@ void Json_Parse_Command_Fun(void)
 			if(g_pro.disp_second_f == 1){
 				  if(timer_expired(&t_xdp)){
 	    		SendWifiData_To_PanelWindSpeed(g_wifi.set_wind_speed_value);
-				//tx_thread_sleep(10);//HAL_Delay(10);
+				//tx_thread_sleep(1);//HAL_Delay(10);
 				  	}
 			}
           
@@ -903,7 +903,7 @@ void Json_Parse_Command_Fun(void)
 				if(timer_expired(&t_xdp)){
 
 				SendWifiData_To_Cmd(0x21,0x01); //smart phone is open that App timer 
-               //tx_thread_sleep(10);
+               //tx_thread_sleep(1);
 					}
 			   	}
 			    g_wifi.gwifi_link_net_success =1;
@@ -928,7 +928,7 @@ void Json_Parse_Command_Fun(void)
 			if(g_pro.disp_second_f ==1){
                 if(timer_expired(&t_xdp)){
 				SendWifiData_To_Cmd(0x21,0x0); //turn off power off
-			     //tx_thread_sleep(10);//HAL_Delay(10);
+			     //tx_thread_sleep(1);//HAL_Delay(10);
                 }
 				}
              vtask_key_power();//g_pro.gpower_on = power_off;

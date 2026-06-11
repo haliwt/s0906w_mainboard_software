@@ -58,7 +58,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
           buzzer_sound();
 		 
 		   SendWifiData_Answer_Cmd(CMD_POWER,0x01); //WT.EDIT 2025.01.07 
-           tx_thread_sleep(10);
+           tx_thread_sleep(1);
           	
         }
         else{ //close 
@@ -68,7 +68,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  g_pro.gpower_on = power_off;
         
 		   SendWifiData_Answer_Cmd(CMD_POWER,0x0); //WT.EDIT 2025.01.07
-		   tx_thread_sleep(10);
+		   tx_thread_sleep(1);
 		 	
 
         }
@@ -86,7 +86,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		   g_pro.gpower_on = power_on;
 	       
 		   SendWifiData_Answer_Cmd(0x10,0x01);
-	       tx_thread_sleep(10);
+	       tx_thread_sleep(1);
 	       
 	         
 	    }
@@ -94,7 +94,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 
 			  SendWifiData_Answer_Cmd(0x10,0x0); //power off .
 
-               tx_thread_sleep(10); 
+               tx_thread_sleep(1); 
               
       
              
@@ -120,13 +120,13 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  //manual close flag :
 		 
 		  g_pro.g_manual_shutoff_dry_flag = 0;
-		  if(g_pro.works_two_hours_interval_flag==0){
+		  if(g_pro.two_hours_interval_f==0){
 		      DRY_OPEN();
 		  }
 		
 		   if(g_pro.disp_second_f ==1){
 		   	  SendWifiData_Answer_Cmd(CMD_PTC,0x01); //WT.EDIT 2025.01.07
-		      tx_thread_sleep(10);
+		      tx_thread_sleep(1);
 		   	}
     
          if(g_wifi.gwifi_link_net_success==wifi_link_success && ptc_on_default != g_pro.gDry){
@@ -147,7 +147,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
           DRY_CLOSE();
 		  if(g_pro.disp_second_f ==1){
 		  SendWifiData_Answer_Cmd(CMD_PTC,0x0); //WT.EDIT 2025.01.07
-		   tx_thread_sleep(10);
+		   tx_thread_sleep(1);
 		  }
             
          if(g_wifi.gwifi_link_net_success==wifi_link_success && ptc_off_default != g_pro.gDry){
@@ -170,7 +170,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
             buzzer_sound();
 			g_pro.gPlasma = 1;
 		    LED_PLASMA_ON();
-		    if(g_pro.works_two_hours_interval_flag==0){
+		    if(g_pro.two_hours_interval_f==0){
                 PLASMA_OPEN();
 		   }
 		if(g_wifi.gwifi_link_net_success==1){
@@ -207,7 +207,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
             buzzer_sound();
 			g_pro.gMouse = 1;
 		    LED_MOUSE_ON();
-		    if(g_pro.works_two_hours_interval_flag==0){
+		    if(g_pro.two_hours_interval_f==0){
                 mouse_open();
 		   }
 		if(g_wifi.gwifi_link_net_success==1){
@@ -242,7 +242,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
         if(g_pro.gpower_on == power_on){ 
 		  if(g_pro.disp_second_f ==1){
 		  	SendWifiData_Answer_Cmd(0x05,0x01); //WT.EDIT 2024.12.28
-		  tx_thread_sleep(10);
+		  tx_thread_sleep(1);
 		  	}
           buzzer_sound();
 		  
@@ -290,7 +290,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
           g_pro.disp_second_f=1;
           buzzer_sound();
           if(g_pro.disp_second_f ==1){SendWifiData_Answer_Cmd(0x16,0x01); //WT.EDIT 2025.01.07
-          tx_thread_sleep(10);
+          tx_thread_sleep(1);
           	}
           
 
@@ -306,7 +306,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		    g_pro.delay_run_adc_counter=0;
 			g_pro.gTimer_two_hours_counter= 0;
 		    g_pro.g_fan_switch_gears_flag++;
-		    g_pro.works_two_hours_interval_flag=1;
+		    g_pro.two_hours_interval_f=1;
 
 			PLASMA_CLOSE(); //
 			DRY_CLOSE();
@@ -323,7 +323,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
 		  g_pro.gTimer_two_hours_counter =0; 
 		 
 		 g_pro.delay_run_adc_counter=0;
-         g_pro.works_two_hours_interval_flag=0;
+         g_pro.two_hours_interval_f=0;
          mainboard_special_fun();
 
         }
@@ -395,7 +395,7 @@ void receive_data_from_displayboard(uint8_t *pdata)
          g_pro.disp_second_f=1;
         g_pro.gDry = 1;
 		LED_DRY_ON();
-     	if(g_pro.works_two_hours_interval_flag==0 ){
+     	if(g_pro.two_hours_interval_f==0 ){
 		  	DRY_OPEN();
      	 }
          if(g_wifi.gwifi_link_net_success==1 && ptc_on_default != g_pro.gDry){
@@ -444,11 +444,11 @@ void receive_data_from_displayboard(uint8_t *pdata)
 					g_pro.gset_temperture_value = pdata[5];
 					g_wifi.wifi_set_temperature_value = pdata[5];
 
-					if(g_pro.gset_temperture_value > g_pro.g_temperature_value){
+					if(g_pro.gset_temperture_value > g_pro.real_temperature_value){
                    
 				           g_pro.gDry = 1;
 		                   LED_DRY_ON();
-					       if(g_pro.works_two_hours_interval_flag==0){
+					       if(g_pro.two_hours_interval_f==0){
 					        DRY_OPEN();
 					       }
 
@@ -634,7 +634,7 @@ static void copy_receive_data(uint8_t *pdata)
 		   buzzer_sound();
 		   g_pro.gDry=1;
 		   LED_DRY_ON();
-		   if(g_pro.works_two_hours_interval_flag ==0){
+		   if(g_pro.two_hours_interval_f ==0){
 
                DRY_OPEN();
               }

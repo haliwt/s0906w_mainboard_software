@@ -64,7 +64,7 @@ static void tim17_isr_callback_handler(void)
 
 {
    static volatile  uint8_t tm0,c50ms;
-   static volatile uint8_t c100mscnt;
+   static volatile uint8_t c100mscnt,c1mcnt;
        tm0++;
 
 	
@@ -89,7 +89,7 @@ static void tim17_isr_callback_handler(void)
 		   g_pro.gTimer_input_set_temp_times++;
 		   g_pro.gTimer_fan_run_one_minute++;
 		   g_pro.gTimer_input_set_temp_timer++;
-		   g_pro.gTimer_two_hours_counter++;
+		 
 		   g_pro.gTimer_disp_temp_humidity_vlaue++;
 		   g_pro.gTimer_display_adc_value++;
 	
@@ -111,6 +111,14 @@ static void tim17_isr_callback_handler(void)
 		   g_wifi.gTimer_link_net_timer_time++;
 		   g_wifi.gTimer_get_beijing_time++;
 		   g_wifi.gTimer_update_dht11_data++;
+
+		  
+		  g_pro.gTimer_two_hours_counter++;
+		  if(  g_pro.gTimer_two_hours_counter> 59){
+		      g_pro.gTimer_two_hours_counter=0;
+              g_pro.gTimer_two_minutes ++ ;
+
+		  }
 		   LED_Power_Breathing();
 		
        }

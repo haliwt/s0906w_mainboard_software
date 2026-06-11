@@ -205,7 +205,7 @@ static void link_wifi_net_handler(void)
 			  g_wifi.wifi_led_fast_blink_flag=0; //WT.EDIT 2025.05.12
                 
               if(g_pro.disp_second_f ==1){ SendWifiData_To_Cmd(0x1F,0x01);//SendWifiData_One_Data(0x1F,0x01); //link wifi order 1 --link wifi net is success.
-               tx_thread_sleep(10);
+               tx_thread_sleep(1);
               	}
 			   g_wifi.link_net_step = 0xfe;
               
@@ -216,7 +216,7 @@ static void link_wifi_net_handler(void)
                   g_wifi.wifi_led_fast_blink_flag=0;
                   g_wifi.link_net_step = 8;
                   if(g_pro.disp_second_f ==1){SendWifiData_To_Cmd(0x1F,0);//SendWifiData_One_Data(0x1F,0x00) ;	 //Link wifi net is fail .WT.EDTI .2024.08.31
-                   tx_thread_sleep(10);
+                   tx_thread_sleep(1);
                   	}
 				   g_wifi.link_net_step = 0xff;
            

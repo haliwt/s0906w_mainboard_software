@@ -24,9 +24,8 @@ void display_digital_3_numbers(void)
 	 static uint8_t read_error_flag,timer_disp_f;
 
 	// If any warning is active, do nothing
-    if (g_pro.fan_warning || g_pro.ptc_warning){
-        return;
-    }
+    if (g_pro.fan_warning || g_pro.ptc_warning)  return;
+    
 	
 	 if(g_pro.key_set_temperature_flag == 1 || g_wifi.g_wifi_set_temp_flag==1){
 	      if(g_pro.gAI ==0){//if(g_pro.set_timing_or_timer_time_flag ==TIMER_TIME){//if(g_pro.define_ai_f==0){//
@@ -127,7 +126,7 @@ void display_digital_3_numbers(void)
 					LED_TEMP_ICON_ON();
 					LED_HUM_ICON_OFF();
 
-					TM1639_Display_Temperature(g_pro.g_temperature_value);//read_error_flag =DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
+					TM1639_Display_Temperature(g_pro.real_temperature_value);//read_error_flag =DHT11_Display_Data(DISPLAY_TEMP); // 显示温度
 					
 				}
 				else {
@@ -221,7 +220,7 @@ static void execute_system_shutdown(void)
 	handle_power_key();// g_pro.gpower_on = power_off;
 	if(g_disp.g_second_disp_flag ==1){
     SendData_Set_Command(CMD_POWER, close);
-    tx_thread_sleep(10);
+    tx_thread_sleep(1);
     // 可扩展：可以在这里加日志、存Flash等
     }
 }
@@ -256,7 +255,7 @@ static void handle_timer_setting_logic(void )
 
 			if(g_disp.soft_version ==1){
 				SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
-	            tx_thread_sleep(10);
+	            tx_thread_sleep(1);
 				}
 
                g_pro.switch_disp_time_or_temp_item = temperature_mode;
@@ -272,7 +271,7 @@ static void handle_timer_setting_logic(void )
 				
 				if(g_disp.g_second_disp_flag ==1){
 					SendWifiData_One_Data(0x2B,g_pro.gdisp_timer_hours_value);
-	                tx_thread_sleep(10);
+	                tx_thread_sleep(1);
 					}
 			}
 			

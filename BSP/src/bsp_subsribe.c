@@ -25,7 +25,7 @@ void smartphone_timer_power_handler(void)
 				if(g_pro.disp_second_f ==1){
                     if(timer_expired(&t_xdp)){
 					SendWifiData_To_Cmd(0x03,0x01);
-                     //tx_thread_sleep(10);
+                     //tx_thread_sleep(1);
                     }
 				}
                 
@@ -39,7 +39,7 @@ void smartphone_timer_power_handler(void)
 					if(timer_expired(&t_display)){
 
 					SendWifiData_To_Cmd(0x03,0x0);
-				     ///tx_thread_sleep(10);
+				     ///tx_thread_sleep(1);
 					}
 				}
 				
@@ -52,7 +52,7 @@ void smartphone_timer_power_handler(void)
 					if(g_pro.disp_second_f ==1){
                         if(timer_expired(&t_display)){
 						SendWifiData_To_Cmd(0x04,0x01);
-					 //tx_thread_sleep(10);
+					 //tx_thread_sleep(1);
                         	}
 						}
                       	
@@ -65,7 +65,7 @@ void smartphone_timer_power_handler(void)
 					if(g_pro.disp_second_f ==1){
 						if(timer_expired(&t_display)){
 						SendWifiData_To_Cmd(0x04,0x0);
-					 //tx_thread_sleep(10);
+					 //tx_thread_sleep(1);
 							}
 						}
 					   	
@@ -78,7 +78,7 @@ void smartphone_timer_power_handler(void)
 				if(g_pro.disp_second_f ==1){
 					if(timer_expired(&t_display)){
 					SendWifiData_To_Cmd(0x02,0x01);
-				 //tx_thread_sleep(10);
+				 //tx_thread_sleep(1);
 						}
 					}
 				   
@@ -91,7 +91,7 @@ void smartphone_timer_power_handler(void)
 						if(timer_expired(&t_xdp)){
 							
 						SendWifiData_To_Cmd(0x02,0x0);
-						//tx_thread_sleep(10);
+						//tx_thread_sleep(1);
 						}
 						}
                      

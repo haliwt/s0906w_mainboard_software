@@ -134,13 +134,13 @@ typedef struct _process{
 
    //main board reference
    uint16_t fan_detect_voltage;
-   uint16_t gTimer_two_hours_counter;
+  
    uint8_t gpower_on;
    uint8_t gDry;
    uint8_t gPlasma;
    uint8_t gAI;
    uint8_t gMouse;
-   uint8_t works_two_hours_interval_flag;
+   uint8_t two_hours_interval_f;
    uint8_t g_manual_shutoff_dry_flag;
    uint8_t key_add_dec_be_pressed_flag;
 
@@ -152,7 +152,7 @@ typedef struct _process{
    
    
    uint8_t g_humidity_value;
-   uint8_t g_temperature_value;
+   uint8_t real_temperature_value;
    uint8_t disp_second_f ;
 
  
@@ -160,7 +160,7 @@ typedef struct _process{
    //uint8_t key_long_power_pressed;
 
    uint8_t g_fan_switch_gears_flag;
-   uint8_t set_temperature_success_flag;
+ 
    uint8_t key_set_temperature_flag;
    
 
@@ -198,25 +198,27 @@ typedef struct _process{
 
    //timer
    
-   uint8_t  gTimer_disp_time_second;
-   uint8_t  gTimer_timer_time_second;
+	volatile  uint8_t  gTimer_disp_time_second;
+	volatile    uint8_t  gTimer_timer_time_second;
 
-   uint8_t  gTimer_switch_temp_hum;
-   uint8_t  gTimer_switch_set_timer_times;
-   uint8_t  gTimer_input_set_temp_times;
-   uint8_t   gTimer_fan_run_one_minute;
-   uint8_t   gTimer_input_set_temp_timer;
-   uint8_t gTimer_disp_temp_humidity_vlaue;
-   uint8_t gTimer_display_adc_value;
+	volatile    uint8_t  gTimer_switch_temp_hum;
+	volatile    uint8_t  gTimer_switch_set_timer_times;
+	volatile    uint8_t  gTimer_input_set_temp_times;
+	 volatile   uint8_t   gTimer_fan_run_one_minute;
+	volatile    uint8_t   gTimer_input_set_temp_timer;
+	volatile    uint8_t gTimer_disp_temp_humidity_vlaue;
+	volatile    uint8_t gTimer_display_adc_value;
 
-   uint8_t gTimer_send_dht11_disp;
-   uint8_t gTimer_set_temp_counter;
-   uint8_t time_50ms_f;
+	volatile    uint8_t gTimer_send_dht11_disp;
+	volatile    uint8_t gTimer_set_temp_counter;
+	volatile    uint8_t time_50ms_f;
+	volatile    uint8_t gTimer_two_minutes;
 
 
-   uint8_t  gTimer_to_disp_counter;
-   uint8_t gTimer_mainboard_fun_counter;
-   uint8_t gTimer_read_dth11_sensor;
+	volatile    uint8_t  gTimer_to_disp_counter;
+	volatile    uint8_t gTimer_mainboard_fun_counter;
+	volatile    uint8_t gTimer_read_dth11_sensor;
+	volatile     uint16_t gTimer_two_hours_counter;
 
    
 }process_t;

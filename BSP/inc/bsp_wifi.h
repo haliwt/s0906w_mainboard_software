@@ -71,15 +71,15 @@ typedef struct _wifi_state_ref{
 
  // uint32_t randomName[1];
 
-  uint8_t gTimer_get_beijing_time;
+ volatile   uint8_t gTimer_get_beijing_time;
  
 
-  uint8_t  gTimer_wifi_led_fast_blink;
-  uint8_t  gTimer_get_data_from_tencent_data;
-  uint8_t gTimer_auto_link_net_time;
-  uint8_t gTimer_auto_detected_net_state_times;
-  uint8_t gTimer_link_net_timer_time;
-  uint8_t  gTimer_update_dht11_data;
+   volatile uint8_t  gTimer_wifi_led_fast_blink;
+   volatile uint8_t  gTimer_get_data_from_tencent_data;
+   volatile uint8_t gTimer_auto_link_net_time;
+   volatile uint8_t gTimer_auto_detected_net_state_times;
+   volatile uint8_t gTimer_link_net_timer_time;
+   volatile uint8_t  gTimer_update_dht11_data;
 
 
 
