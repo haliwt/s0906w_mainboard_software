@@ -39,9 +39,8 @@ void buzzer_sound(void)
    tim3_stop_buzzer_sound_config();
    
 	tim3_buzzer_sound_config();//HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
-	//tx_close_beep();
+	
     tx_set_once_timer();
-		
 	open_beep_sound();//tim3_stop_buzzer_sound_config();// HAL_TIM_PWM_Stop(&htim3,TIM_CHANNEL_4);
 		
 
