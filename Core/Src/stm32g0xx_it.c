@@ -174,10 +174,16 @@ void EXTI2_3_IRQHandler(void)
 void DMA1_Channel1_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
-
+   if(LL_DMA_IsActiveFlag_TC1(DMA1) != RESET) {
+		  LL_DMA_ClearFlag_TC1(DMA1);
+		  
+	  }
   /* USER CODE END DMA1_Channel1_IRQn 0 */
   /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
-
+      if(LL_DMA_IsActiveFlag_TE1(DMA1) != RESET) {
+		  LL_DMA_ClearFlag_TE1(DMA1);
+		  // 处理DMA传输错误
+	  }
   /* USER CODE END DMA1_Channel1_IRQn 1 */
 }
 
@@ -191,10 +197,18 @@ void DMA1_Channel2_3_IRQHandler(void)
 		  LL_DMA_ClearFlag_TC2(DMA1);
 		  
 	  }
-	  
+	   if(LL_DMA_IsActiveFlag_TC3(DMA1) != RESET) {
+		  LL_DMA_ClearFlag_TC3(DMA1);
+		  
+	  }
 	  /* Check if transfer error interrupt */
 	  if(LL_DMA_IsActiveFlag_TE2(DMA1) != RESET) {
 		  LL_DMA_ClearFlag_TE2(DMA1);
+		  // 处理DMA传输错误
+	  }
+	  
+	   if(LL_DMA_IsActiveFlag_TE3(DMA1) != RESET) {
+		  LL_DMA_ClearFlag_TE3(DMA1);
 		  // 处理DMA传输错误
 	  }
 
@@ -216,10 +230,19 @@ void DMA1_Ch4_5_DMAMUX1_OVR_IRQHandler(void)
 		 dma_tx_done=1;
 		 
 	 }
+	 if(LL_DMA_IsActiveFlag_TC5(DMA1) != RESET) {
+		 LL_DMA_ClearFlag_TC5(DMA1);
+	
+		 
+	 }
 	 
 	 /* Check if transfer error interrupt */
 	 if(LL_DMA_IsActiveFlag_TE4(DMA1) != RESET) {
 		 LL_DMA_ClearFlag_TE4(DMA1);
+		 // 处理DMA传输错误
+	 }
+      if(LL_DMA_IsActiveFlag_TE5(DMA1) != RESET) {
+		 LL_DMA_ClearFlag_TE5(DMA1);
 		 // 处理DMA传输错误
 	 }
 
