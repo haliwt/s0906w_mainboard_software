@@ -130,7 +130,7 @@ static void adjust_temperature(int8_t delta)
     g_pro.gTimer_input_set_temp_times = 0;
     g_pro.gTimer_switch_temp_hum = 0;
 	
-	
+	direct_compare_temperature_value();
 	
 }
 
@@ -166,6 +166,7 @@ void key_dwon_fun(void)
         case temperature_mode:
             adjust_temperature(-1);
 	        g_pro.first_set_ptc_on  = 0;
+		   
             break;
         case timer_time_mode: //WT.EDIT 2025.04.23//timer_time_mode:
             if(g_key.key_mode_long_flag ==1){
@@ -296,6 +297,31 @@ void set_temperature_value_handler(void)
     }
                 
   }
+/*
+* @brief:
+* @note:
+* @param:
+* @retrval:
+*
+*/
+void direct_compare_temperature_value(void)
+{
+
+ if (g_pro.current_temperature >= g_pro.gset_temperture_value){
+
+			g_pro.gDry= DRY_STATE_OFF;
+		    setDryState(g_pro.gDry);
+		
+ } 
+ else{
+	    g_pro.gDry = DRY_STATE_ON;
+	    setDryState(g_pro.gDry);
+
+   }
+			
+ }
+
+
 /*
 * @brief:
 * @note:
