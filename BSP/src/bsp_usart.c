@@ -120,7 +120,7 @@ void usart1_isr_callback_handler(uint8_t data)
                 gl_tMsg.data_length = gl_tMsg.rx_data_counter;
                 gl_tMsg.rx_data_counter =0;
 				 state = 0;
-
+                
 
                 gl_tMsg.bcc_check_code= data;
 

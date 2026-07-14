@@ -384,7 +384,7 @@ static void power_off_init_handler(void)
    	
 	  if(g_wifi.gwifi_link_net_success == wifi_link_success){
             MqttData_Publish_SetOpen(0);  
-			tx_thread_sleep(20);
+		
            
 	  }
      g_pro.process_off_step = 5;
@@ -396,7 +396,7 @@ static void power_off_init_handler(void)
    if(g_wifi.gwifi_link_net_success == wifi_link_success){
           
 	        MqttData_Publish_PowerOff_Ref() ;//
-	        tx_thread_sleep(20);
+	       
         }
 
 
@@ -462,11 +462,11 @@ static void power_off_cycle_handler(void)
 			switch_f = switch_f ^ 0x01;
 	        if(switch_f ==1){
              MqttData_Publish_SetOpen(0);  
-			 tx_thread_sleep(1);
+			
 	        }
 		    else{
 	         MqttData_Publish_PowerOff_Ref() ;//
-	          tx_thread_sleep(1);
+	          
 		    }
 	       
            
@@ -576,19 +576,19 @@ static void handler_smart_phone(void)
 
 static void handler_link_wifi(void)		
 {
-      link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
+  link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
 }		
 
 
 static void handler_set_temperature(void)
 {
-    set_temperature_value_handler();
+   set_temperature_value_handler();
 
 }
 
 static void handler_set_timer(void)
 {
-      set_timer_timing_value_handler();
+  set_timer_timing_value_handler();
 
 }
 

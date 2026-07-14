@@ -19,10 +19,10 @@
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
-#define STACK_SIZE_DECODER  256//512//128//1792//3072//2048//1024//896//768
-#define STACK_SIZE_UI      1920//1664//1536//1024//1536//1280//1024//1536//1024//896//1792//1664//1280
-#define STACK_SIZE_KEY     256//512//512
-#define STACK_SIZE_EVENT   512//640//768//256
+#define STACK_SIZE_DECODER  256//512//
+#define STACK_SIZE_UI      1664//1024//1536//
+#define STACK_SIZE_KEY     384//256//512//512
+#define STACK_SIZE_EVENT   384//512//640//768//256
 
 __attribute__((aligned(8))) static UCHAR stack_ui_pro[STACK_SIZE_UI];
 __attribute__((aligned(8))) static UCHAR stack_decoder_pro[STACK_SIZE_DECODER];
@@ -197,7 +197,7 @@ static void vTaskDecoderPro(ULONG thread_input)
 
     while(1)
     {
-
+     
 	 // 阻塞等待 ISR 投递
       if(tx_semaphore_get(&decoder_semaphore, TX_WAIT_FOREVER) == TX_SUCCESS)
       {
@@ -206,7 +206,14 @@ static void vTaskDecoderPro(ULONG thread_input)
 			 #if DEBUG_ENABLE
               debug_stack_decoder_check();
             #endif 
+			tx_thread_relinquish();//WT.EDIT 2026-06-23
 	  }
+	  else{
+
+	      tx_thread_sleep(10);//10ms *2 
+
+	  }
+	 
 	
    }
 }
@@ -218,9 +225,8 @@ static void vTaskDecoderPro(ULONG thread_input)
   * @param	 None
   * @retval  None
   */
-
- static void vTaskStart(ULONG thread_input)
- {
+static void vTaskStart(ULONG thread_input)
+{
    (void)thread_input;  /* 消除未使用的参数警告 */
 
     static uint16_t mode_cnt = 0;
@@ -336,12 +342,16 @@ static void vTaskKeyEvent(ULONG thread_input)
         else if(flags & KEY_UP_SHORT)    handle_up_key();
 	    else if(flags & KEY_DOWN_SHORT)  handle_down_key();
 	    else if(flags & KEY_DOWN_LONG)   key_down_long_fun();//handle_down_long_key();
-        tx_thread_sleep(2); //WT.EDIT 2026-05-23
+       
          //LL_IWDG_ReloadCounter(IWDG);
         #if DEBUG_ENABLE
              // debug_stack_key_event_check();
           #endif 
-	   
+	    tx_thread_relinquish();//WT.EDIT 2026-06-23
+     }
+     else{
+       tx_thread_sleep(10); //WT.EDIT 2026-05-23
+     
      }
 	
     
@@ -365,7 +375,10 @@ static void vTaskUiPro(ULONG thread_input)
 	
   while(1)
   {
-      if(g_pro.gpower_on == power_on){
+
+
+
+	  if(g_pro.gpower_on == power_on){
           //pw_counter++;
           power_on_handler();
 	  }
