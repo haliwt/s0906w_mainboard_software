@@ -38,6 +38,7 @@
 #include "bsp_adc.h"
 #include "bsp_iap.h"
 #include "bsp_wwdg.h"
+#include "bsp_ntc.h"
 
 #include "interrupt_manager.h"
 
@@ -141,6 +142,7 @@ typedef struct _process{
    uint8_t first_set_ptc_on;
    uint8_t first_rcoder_ptc_on_flag ;
    uint8_t one_minutes_fan_flag;
+   uint8_t read_ntc_temperature_value;
   
 
  

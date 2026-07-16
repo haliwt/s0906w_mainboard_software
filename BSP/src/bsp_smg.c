@@ -88,19 +88,19 @@ void SMG_Display_Err(uint8_t idata)
         
     // 写入十位（中间）
  
-    TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Char_Err_Table[1]);
+    TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Char_Err_Table[1] | 0x08);
         
     if(idata==1){ //ptc warning 
 	// 写入个位（最右边）'H'
-     TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,Number_Table[1]);
+     TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,Number_Table[1] | 0x08);
 
     }
 	else if(idata == 2){
 		
-	  TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,Number_Table[2]);
+	  TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L,Number_Table[2] | 0x08);
     }
 	else{
-	   TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Char_Err_Table[1]);
+	   TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, TM1639_Char_Err_Table[1] | 0x08);
 
 	}
 

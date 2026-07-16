@@ -86,10 +86,10 @@ void power_on_init_ref(void)
 		   
 		
 		 
-		   // function led is turn on 
+		
             power_on_led();
-		   //display smg led turn on
-		    Fan_Full_Speed();
+		  
+		   Fan_Full_Speed(); //测试
 		   
 		    DRY_OPEN();
 			PLASMA_OPEN();
@@ -114,7 +114,8 @@ void power_on_init_ref(void)
 void power_on_run_handler(void)
 {
 
-   static uint8_t temp_second_displboard,switch_dht11,send_net_state;
+    static uint8_t temp_second_displboard,switch_dht11,send_net_state,ptc_counter;
+	volatile uint16_t ptc_teperature_value,err_counter;
 	switch(gl_run.process_on_step){
 
 
@@ -201,6 +202,7 @@ void power_on_run_handler(void)
 		g_pro.gdisp_timer_hours_value =0;
 		g_pro.gdisp_timer_minutes_value =0;
 		g_pro.gTimer_timer_time_second=0;
+		g_pro.read_ntc_temperature_value =0;
         
 		
 	   //two hours works timing
@@ -208,6 +210,7 @@ void power_on_run_handler(void)
 		g_pro.gTimer_two_hours_counter = 0;
 	   //reset fan wind
 		g_wifi.set_wind_speed_value = 100;
+	   
 	 
 	   g_pro.fan_warning =0 ;
 	   g_pro.ptc_warning =0;
@@ -272,8 +275,29 @@ void power_on_run_handler(void)
 
 	case 4: //DISPAY 3 digital numbers . process .
     
-	 // display_digital_3_numbers();
-	  gl_run.process_on_step =5; 
+	      ptc_counter ++ ;
+		 if(ptc_counter > 10){//100ms *10 = 1000ms =1s
+		     ptc_counter =0;
+		 	 ptc_teperature_value = ADC_PTC_GetValues();
+	         Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
+
+			 if(g_pro.read_ntc_temperature_value > 108 ){
+                   err_counter++;
+				  if(err_counter > 1){
+				  	 err_counter =0;
+			        g_pro.ptc_warning = 1;
+
+				  }
+
+              }
+			  else{
+			     err_counter =0;
+
+			  }
+		 }
+		 
+		if(g_pro.ptc_warning == 1) gl_run.process_on_step =3; 
+	    else gl_run.process_on_step =5; 
 	
 
 	 break;
@@ -295,17 +319,12 @@ void power_on_run_handler(void)
 			   	}
 			    else{
 				Update_Dht11_Totencent_Value()	;
-				
-
-
 				}
 			   
 		   	}
 
           }
-		    
-
-         }
+		}
 		    
 	     gl_run.process_on_step =6;
 
@@ -340,7 +359,7 @@ void power_on_run_handler(void)
 
 	 case 7:
      
-	    if(g_pro.gTimer_to_disp_counter > 3){    
+	    if(g_pro.gTimer_to_disp_counter > 3 && g_pro.fan_warning ==0 && g_pro.ptc_warning ==0){    
 			 g_pro.gTimer_to_disp_counter=0;
 			  Update_Dht11_toDisplayBoard_Value();
 		
@@ -359,7 +378,7 @@ void power_on_run_handler(void)
 
 	 case 9:
 	 	
-	    set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
+	     set_temperature_value_handler(); //logic is confuse "set temp ? or timer timing " only displya one.
 		 gl_run.process_on_step =10;		
 	 break;
 
@@ -380,6 +399,8 @@ void power_on_run_handler(void)
          gl_run.process_on_step =3;
 	 break;
 
+
+	
 	 default :
 
 	  break;

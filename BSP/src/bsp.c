@@ -120,7 +120,7 @@ void mainboard_fun_handler(void)
 		PLASMA_CLOSE();
 	}
 
-	Fan_RunSpeed_Fun();
+	  Fan_RunSpeed_Fun(); //测试
 	
    	}
 	
@@ -370,6 +370,11 @@ void fault_handler(void)
 	   LED_DRY_OFF();
        SMG_Display_Err(2);
 	   osDelay(1000);
+	   if(g_wifi.gTimer_wifi_led_fast_blink > 3){
+	   	g_wifi.gTimer_wifi_led_fast_blink =0;
+	    Buzzer_Fan_Error_Sound();
+
+	   }
 
 
 	}
@@ -382,7 +387,10 @@ void fault_handler(void)
          
 	     SMG_Display_Err(1);
 	     osDelay(1000);
-		 
+		if(g_wifi.gTimer_wifi_led_fast_blink > 3){
+	     	g_wifi.gTimer_wifi_led_fast_blink =0;
+	       Buzzer_Ptc_Error_Sound();
+		}
 
 
 	}
