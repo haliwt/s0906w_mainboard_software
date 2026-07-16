@@ -9,6 +9,15 @@
 #define BSP_INC_BSP_FAN_H_
 #include "main.h"
 
+
+
+#define FAN_PWM_100     2560//40
+
+#define FAN_PWM_90      2304//36
+
+#define FAN_PWM_80      0//256//1280//34
+
+
 //#define FAN_COM_SetHigh()         do{FAN_CCW_GPIO_Port->BSRR =FAN_CCW_Pin;}while(0)//HAL_GPIO_WritePin(FAN_GPIO,FAN_CCW,GPIO_PIN_SET)    // output high level
 //#define FAN_COM_SetLow()          do{FAN_CCW_GPIO_Port->BSRR =(uint32_t)FAN_CCW_Pin<<16;}while(0)//HAL_GPIO_WritePin(FAN_GPIO,FAN_CCW,GPIO_PIN_RESET)    // output low level
 
@@ -29,7 +38,8 @@ void Fan_RunSpeed_Fun(void);
 void SetLevel_Fan_PWMA(uint8_t levelval);
 
 
-//void fan_run_handler(void);
+
+
 
 
 

@@ -279,7 +279,7 @@ void power_on_run_handler(void)
 		 if(ptc_counter > 10){//100ms *10 = 1000ms =1s
 		     ptc_counter =0;
 		 	 ptc_teperature_value = ADC_PTC_GetValues();
-	         Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
+	        // Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
 
 			 if(g_pro.read_ntc_temperature_value > 108 ){
                    err_counter++;

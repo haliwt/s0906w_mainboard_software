@@ -52,9 +52,9 @@ void adc_detected_hundler(void)
 {
     
    static uint8_t detectted_has_adc_flag ,counter_error;
-   if(g_pro.fan_warning==0){
+   if(g_pro.fan_warning==0 && g_wifi.set_wind_speed_value > 66){
  
-        Fan_Full_Speed();
+      //  Fan_Full_Speed();
 	   //switch_flag = switch_flag ^ 0x01;
 	  if(ADC_StartConversion()){
 	   	  ADC_GetValues();
