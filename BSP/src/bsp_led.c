@@ -15,7 +15,7 @@
 void power_on_led(void)
 {
     LED_POWER_ON();
-    //LED_TAPE_CTL_ON();
+    LED_TAPE_CTL_ON();//WT.EDIT 2026-07-16
     LED_AI_ON();
     LED_WIFI_ON();
     LED_MOUSE_ON();
