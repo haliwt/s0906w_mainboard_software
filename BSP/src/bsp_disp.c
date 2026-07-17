@@ -316,7 +316,7 @@ static void execute_system_shutdown(void)
     g_pro.gpower_on = power_off;
 	if(g_disp.g_second_disp_flag ==1){
     SendData_Set_Command(CMD_POWER, close);
-    vTaskDelay(100);
+    vTaskDelay(20);
     // 可扩展：可以在这里加日志、存Flash等
     }
 }

@@ -8,8 +8,9 @@
 #ifndef BSP_INC_BSP_H_
 #define BSP_INC_BSP_H_
 #include "main.h"
-#include "stdio.h"
-#include "string.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
 
 
@@ -129,7 +130,7 @@ typedef struct _process{
    //main board reference
    uint16_t fan_detect_voltage;
    uint16_t gTimer_two_hours_counter;
-   uint8_t gpower_on;
+   bool gpower_on;
    uint8_t gDry;
    uint8_t gPlasma;
    uint8_t gAI;

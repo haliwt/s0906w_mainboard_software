@@ -553,7 +553,7 @@ void Json_Parse_Command_Fun(void)
 	case OPEN_ON_ITEM:
       
 		MqttData_Publish_SetOpen(1);  
-		vTaskDelay(200);//HAL_Delay(100);//osDelay(100);//HAL_Delay(100);
+		
 
         Publish_Data_ToTencent_Initial_Data();
 	    vTaskDelay(300);//HAL_Delay(300);
@@ -562,8 +562,10 @@ void Json_Parse_Command_Fun(void)
 		 g_disp.g_second_disp_flag = 1;
 	     g_wifi.gwifi_link_net_success =1;
           g_wifi.gwifi_normal_power_on_flag= 1;
-          SendData_Set_Command(0x20,open);
-		  osDelay(100);
+		  if(g_disp.g_second_disp_flag == 1){
+            SendData_Set_Command(0x20,open);
+		     osDelay(20);
+		  	}
 
        
 		buzzer_temp_on=0;
@@ -573,15 +575,20 @@ void Json_Parse_Command_Fun(void)
 
        case OPEN_OFF_ITEM:
 
-      
-		 	MqttData_Publish_SetOpen(0);  
-			osDelay(200);
-            
             g_pro.gpower_on = power_off;
+			
+	   
+		 	MqttData_Publish_SetOpen(0);  
+		
+            
+           
 	        g_wifi.gwifi_link_net_success =1;
-            g_disp.g_second_disp_flag = 1;
-			SendData_Set_Command(0x20,close);
-			osDelay(100);
+			
+            if(g_disp.g_second_disp_flag == 1){
+			  SendData_Set_Command(0x20,close);
+			  osDelay(20);
+
+            }
           
 			buzzer_temp_on=0;
 	

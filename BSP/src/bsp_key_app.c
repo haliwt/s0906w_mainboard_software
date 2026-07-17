@@ -126,7 +126,7 @@ static void handle_power_key(void)
         g_wifi.gwifi_normal_power_on_flag = 0;
         if(g_disp.g_second_disp_flag ==1){
 			SendData_Set_Command(CMD_POWER,(g_pro.gpower_on == power_on) ? open : close);
-            osDelay(100);
+            osDelay(20);
     	}
     }
 }
@@ -158,7 +158,7 @@ void key_power_longk_fun(void)
      
             if(g_disp.g_second_disp_flag ==1){
 				SendData_Set_Command(CMD_CONNECT_WIFI, 0x01);
-                osDelay(100);
+                osDelay(20);
             }
          
             
