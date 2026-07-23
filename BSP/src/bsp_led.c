@@ -134,6 +134,10 @@ void wifi_led_fast_blink_handler(void)
 		   LED_WIFI_TOGGLE();
 	    }
 	}
+	else if(g_wifi.gwifi_link_net_success==1 && g_pro.gpower_on==power_on){
+	
+		  LED_WIFI_ON();
+	}
 }
 
 

@@ -8,16 +8,7 @@
 
 
 // --- 1. 定义任务的时间周期（单位：毫秒，假设基础Tick为1ms） ---
-#define PERIOD_DISP_NUMBERS     3    // 10ms*3
-#define PERIOD_SMART_PHONE     50    // 10ms* = 2000ms = 2s
-#define PERIOD_WORKS_HOURS     400    //  10ms*150 = 1500ms = 1.5s
-#define PERIOD_LINK_WIFI       10    //  10ms*250 = 2500ms = 2.5s
-#define PERIOD_SET_TEMP        130    //   10ms * 500 = 50000ms = 5s 
-#define PERIOD_READ_DHT11      200    //   10ms * 100 = 1000ms = 1s
-#define PERIOD_SET_TIMER       4    //   10ms * 130 = 1300ms = 1.3s
-#define PERIOD_PERIPHERAL      100     //   10ms* 50 = 500ms
-#define PERIOD_TX_WIFI_REF     200
-#define PERIOD_READ_PTC       300
+
 
 // --- 2. 定义分时任务控制结构体 ---
 typedef struct {
@@ -38,7 +29,6 @@ static void handler_set_temperature(void);
 static void handler_set_timer(void);
 static void handler_read_dht11(void);
 static void handler_tx_wifi_ref(void);
-
 static void handler_wifi_led(void);
 static void handler_works_hours(void);;
 static void handler_read_ptc(void);
@@ -47,17 +37,16 @@ static void handler_main_module(void);
 
 // --- 4. 初始化分时任务表 ---
 TimeSharingTask_t g_tasks[] = {
-    {0, PERIOD_DISP_NUMBERS,       	handler_disp_threee_numbers},
-    {0, PERIOD_SMART_PHONE,      	handler_smart_phone},
-    {0, PERIOD_WORKS_HOURS,      	handler_works_hours},
-    {0, PERIOD_LINK_WIFI,          	handler_link_wifi},
-    {0, PERIOD_SET_TEMP,        	handler_set_temperature},
-    {0, PERIOD_READ_DHT11,       	handler_read_dht11},
-    {0, PERIOD_SET_TIMER,        	handler_set_timer},
-    {0, PERIOD_TX_WIFI_REF,        	handler_tx_wifi_ref},
-    {0, PERIOD_LINK_WIFI,         	handler_wifi_led},
-    {0, PERIOD_READ_PTC,       		handler_read_ptc},
-    {0, PERIOD_PERIPHERAL,       	handler_main_module}
+    {0, 6,       		handler_disp_threee_numbers},//10ms*3 =30ms
+    {0, 50,      		handler_smart_phone},//10ms * 50 = 500ms
+    {0, 400,      		handler_works_hours},
+    {0, 10,          	handler_link_wifi},
+    {0, 130,        	handler_set_temperature},
+    {0, 200,       		handler_read_dht11},
+    {0, 160,        	handler_set_timer},
+    {0, 200,        	handler_tx_wifi_ref},
+    {0, 300,       		handler_read_ptc},
+    {0, 100,       		handler_main_module}
    
     
 	
@@ -302,6 +291,13 @@ void power_off_handler(void)
   off_time_slot ++;
   if(off_time_slot > 4) off_time_slot = 0;
 }
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 
 static void power_off_init_handler(void)
 {
@@ -406,8 +402,13 @@ static void power_off_init_handler(void)
    	}
 }
 
-
-
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 static void power_off_cycle_handler(void)
 {
   
@@ -567,30 +568,65 @@ static void handler_disp_threee_numbers(void)
 {
 	display_digital_3_numbers();
 }
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 	
 static void handler_smart_phone(void)
 {
     smart_phone_timer_power_on_handler();
 
 }
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 
 static void handler_link_wifi(void)		
 {
   link_wifi_to_tencent_handler(g_wifi.wifi_led_fast_blink_flag);
 }		
 
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 
 static void handler_set_temperature(void)
 {
    set_temperature_value_handler();
 
 }
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 
 static void handler_set_timer(void)
 {
   set_timer_timing_value_handler();
 
 }
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 
 static void handler_read_dht11(void)
 {
@@ -601,6 +637,13 @@ static void handler_read_dht11(void)
  }
 }
 		
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 
 static void handler_tx_wifi_ref(void)
 {
@@ -638,6 +681,13 @@ static void handler_tx_wifi_ref(void)
 
 }
 
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 
 static void handler_fault(void)
 {
@@ -645,12 +695,14 @@ static void handler_fault(void)
          fault_handler();
 }
 
-static void handler_wifi_led(void)
-{
 
-		 wifi_led_slowly_blink_handler();
-
-}
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 
 static void handler_works_hours(void)
 {
@@ -658,11 +710,18 @@ static void handler_works_hours(void)
 		
 
 }	
-        
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
+       
 static void handler_read_ptc(void)
 {
   uint16_t ptc_teperature_value ;
-  uint8_t  err_counter =0;
+  static uint8_t  err_counter =0;
   	
 	ptc_teperature_value = ADC_PTC_GetValues();
 	Get_Ntc_Resistance_Temperature_Handler(ptc_teperature_value);
@@ -681,7 +740,20 @@ static void handler_read_ptc(void)
 
 	}
 }
+/**
+	*
+	*@brief 
+	*@notice
+	*@param
+	*
+**/
 
+/**
+  * @brief  
+  * @note  
+  * @param: 
+  *
+**/
 static void handler_main_module(void)
 {
      mainboard_fun_handler();

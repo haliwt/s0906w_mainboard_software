@@ -19,10 +19,10 @@
 /***********************************************************************************************************
 											函数声明
 ***********************************************************************************************************/
-#define STACK_SIZE_DECODER  256//512//
+#define STACK_SIZE_DECODER  512//
 #define STACK_SIZE_UI      1664//1024//1536//
-#define STACK_SIZE_KEY     384//256//512//512
-#define STACK_SIZE_EVENT   384//512//640//768//256
+#define STACK_SIZE_KEY     512//384//256//512//512
+#define STACK_SIZE_EVENT   512//384//512//640//768//256
 
 __attribute__((aligned(8))) static UCHAR stack_ui_pro[STACK_SIZE_UI];
 __attribute__((aligned(8))) static UCHAR stack_decoder_pro[STACK_SIZE_DECODER];
@@ -49,16 +49,16 @@ TX_SEMAPHORE decoder_semaphore;
 
 TX_EVENT_FLAGS_GROUP key_event;
 
-TX_TIMER beep_timer;
+//TX_TIMER beep_timer;
 
 
-static void vTaskUiPro(ULONG thread_input);
-static void vTaskStart(ULONG thread_input);
-static void vTaskKeyEvent(ULONG thread_input);
+static void ui_thread_entry(ULONG thread_input);
+static void key_thread_entry(ULONG thread_input);
+static void key_event_thread_entry(ULONG thread_input);
 
 
-static void vTaskDecoderPro(ULONG thread_input);
-static void beep_timer_callback(ULONG input);
+static void decoder_thread_entry(ULONG thread_input);
+//static void beep_timer_callback(ULONG input);
 
 
 static void threadx_handler(void);
@@ -79,7 +79,7 @@ ULONG unused,unused_key,unused_decoder,unused_event ;
 #endif 
 
 /**
- * @brief  :  static void vTaskStart(void *pvParameters
+ * @brief  :  static void key_thread_entry(void *pvParameters
  * @note    
  * @param   None
  * @retval  None
@@ -130,7 +130,7 @@ static void threadx_handler(void)
    
 	tx_thread_create(&thread_decoder,       /* 任务控制块地址 */ 
 					"DecoderPro",           /* 任务名 */
-					vTaskDecoderPro,       // 每个消息大小，这里用 1 字节
+					decoder_thread_entry,       // 每个消息大小，这里用 1 字节
 					0,                       /* 传递给任务的参数 */
 					stack_decoder_pro,      /* 堆栈基地址 */
 					STACK_SIZE_DECODER,       /* 堆栈空间大小 */ 
@@ -141,7 +141,7 @@ static void threadx_handler(void)
 				
 	tx_thread_create(&thread_ui,                  /* 任务控制块地址 */ 
  	                 "UiPro",                     /* 任务名 */
-                     vTaskUiPro,                  /* 启动任务函数地址 */
+                     ui_thread_entry,                  /* 启动任务函数地址 */
                      0,                            /* 传递给任务的参数 */
                      stack_ui_pro,                /* 堆栈基地址 */
                      STACK_SIZE_UI,               /* 堆栈空间大小 */ 
@@ -153,7 +153,7 @@ static void threadx_handler(void)
 
     tx_thread_create(&thread_start,                /* 任务控制块地址 */    
     				 "Start",                      /* 任务名 */
-                     vTaskStart,                   /* 启动任务函数地址 */
+                     key_thread_entry,                   /* 启动任务函数地址 */
                      0,                            /* 传递给任务的参数 */
                      stack_start_pro,              /* 堆栈基地址 */
                      STACK_SIZE_KEY,			   /* 堆栈空间大小 */  
@@ -164,7 +164,7 @@ static void threadx_handler(void)
   #endif 
   tx_thread_create(&thread_key_event, 			   /* 任务控制块地址 */	  
 					 "KeyEvent",						/* 任务名 */
-					  vTaskKeyEvent,					/* 启动任务函数地址 */
+					  key_event_thread_entry,					/* 启动任务函数地址 */
 					  0,							/* 传递给任务的参数 */
 					  stack_key_event,				/* 堆栈基地址 */
 					  STACK_SIZE_EVENT,				/* 堆栈空间大小 */  
@@ -173,25 +173,25 @@ static void threadx_handler(void)
 					   TX_NO_TIME_SLICE, 			/* 不开启时间片 */
 					  TX_AUTO_START);				/* 创建后立即启动 */
 
-   tx_timer_create(&beep_timer,     // 定时器控制块指针
-				   "20msTimer",
-				   beep_timer_callback, /*callback function */
-   				   0,                    // 传递给回调函数的参数（这里填0即可）
-				   2,                    // 初始超时时间：2 个 Tick (10ms * 2 = 20ms)
-				   0,                    // 周期重装载值：0 表示单次触发（One-shot）
-				   TX_NO_ACTIVATE);    
+//   tx_timer_create(&beep_timer,     // 定时器控制块指针
+//				   "20msTimer",
+//				   beep_timer_callback, /*callback function */
+//   				   0,                    // 传递给回调函数的参数（这里填0即可）
+//				   2,                    // 初始超时时间：2 个 Tick (10ms * 2 = 20ms)
+//				   0,                    // 周期重装载值：0 表示单次触发（One-shot）
+//				   TX_NO_ACTIVATE);    
 
  
 }
 /**********************************************************************************************************
-*	Function Name: static void vTaskDecoderPro(void *pvParameters)
+*	Function Name: static void decoder_thread_entry(void *pvParameters)
 *	Function:
 *	Input Ref: pvParameters 是在创建该任务时传的形参
 *	Return Ref:
 *   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
 
 **********************************************************************************************************/
-static void vTaskDecoderPro(ULONG thread_input)
+static void decoder_thread_entry(ULONG thread_input)
 {
    (void)thread_input;  /* 消除未使用的参数警告 */
 
@@ -220,12 +220,12 @@ static void vTaskDecoderPro(ULONG thread_input)
 
 
 /**
-  * @brief	:  static void vTaskStart(void *pvParameters
+  * @brief	:  static void key_thread_entry(void *pvParameters
   * @note	 
   * @param	 None
   * @retval  None
   */
-static void vTaskStart(ULONG thread_input)
+static void key_thread_entry(ULONG thread_input)
 {
    (void)thread_input;  /* 消除未使用的参数警告 */
 
@@ -303,7 +303,7 @@ static void vTaskStart(ULONG thread_input)
 
      
 
-	 tx_thread_sleep(8);//10ms *2 
+	 tx_thread_sleep(3);//10ms *2 
 
    }
 	
@@ -317,7 +317,7 @@ uint8_t  event_error_counter;
 *	Return Ref:
 *   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
 **********************************************************************************************************/
-static void vTaskKeyEvent(ULONG thread_input)
+static void key_event_thread_entry(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
   ULONG flags;
@@ -347,16 +347,10 @@ static void vTaskKeyEvent(ULONG thread_input)
         #if DEBUG_ENABLE
              // debug_stack_key_event_check();
           #endif 
-	    tx_thread_relinquish();//WT.EDIT 2026-06-23
+	    //tx_thread_relinquish();//WT.EDIT 2026-06-23
      }
-     else{
-       tx_thread_sleep(10); //WT.EDIT 2026-05-23
-     
-     }
-	
     
-    
-  	}
+	}
    
  }
 /**********************************************************************************************************
@@ -366,7 +360,7 @@ static void vTaskKeyEvent(ULONG thread_input)
 *	Return Ref:
 *   priority: 1  (数值越小优先级越低，这个跟uCOS相反)
 **********************************************************************************************************/
-static void vTaskUiPro(ULONG thread_input)
+static void ui_thread_entry(ULONG thread_input)
 {
   (void)thread_input;  /* 消除未使用的参数警告 */
   static uint8_t wifi_check_counter = 0;
@@ -429,7 +423,7 @@ static void vTaskUiPro(ULONG thread_input)
 
 /****************************************************************
 *
-*	Function Name: vTaskStart
+*	Function Name: key_thread_entry
 *	Function:
 *	Input Ref: pvParameters 是在创建该任务时传�?�的形参
 *	Return Ref:
@@ -449,9 +443,12 @@ void tx_thread_stack_error_handler(TX_THREAD *thread_ptr)
     /* 3. 记录日志（如果有 Flash/EEPROM） */
     // Log_Fault(FAULT_STACK_OVERFLOW, thread_ptr->tx_thread_name);
 
+	// 禁用中断，保护现场
+    __disable_irq();
+
     /* 4. 触发系统复位（汽车级） */
-    //NVIC_SystemReset();
-    tx_thread_sleep(20);
+    NVIC_SystemReset();
+   
     //while(1);  // 调试阶段可以卡住
 }
 
@@ -482,18 +479,18 @@ static void beep_timer_callback(ULONG input)
 
 void open_beep_sound(void)
 {
-  tx_timer_activate(&beep_timer);
+  //tx_timer_activate(&beep_timer);
 }
 
 void tx_set_once_timer(void)
 {
-tx_timer_change(&beep_timer,2,0); 
+//tx_timer_change(&beep_timer,2,0); 
 
 }
 
 void tx_close_beep(void)
 {
-tx_timer_deactivate(&beep_timer);
+//tx_timer_deactivate(&beep_timer);
 
 }
 
